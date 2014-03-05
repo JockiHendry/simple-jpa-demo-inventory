@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPluginFixes.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPluginFixes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPlugins.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPlugins.iml" />
+    </modules>
+  </component>
+</project>
+
