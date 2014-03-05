@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 package project
 
 import org.jdesktop.swingx.prompt.PromptSupport
@@ -38,7 +40,6 @@ application(title: 'Produk',
 
         panel(constraints: PAGE_START) {
             flowLayout(alignment: FlowLayout.LEADING)
-            label("Nama")
             textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
@@ -93,4 +94,4 @@ application(title: 'Produk',
     }
 }
 
-PromptSupport.setPrompt("Ketik kata kunci pencarian disini!", namaSearch)
+PromptSupport.setPrompt("Cari Nama...", namaSearch)

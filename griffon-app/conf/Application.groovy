@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
+
+
 application {
     title = 'Demo Sistem Inventory'
     startupGroups = ['mainGroup']
     autoShutdown = true
     locale = 'id_ID'
 }
-
 mvcGroups {
+    // MVC Group for "supplier"
+    'supplier' {
+        model      = 'project.SupplierModel'
+        view       = 'project.SupplierView'
+        controller = 'project.SupplierController'
+    }
+
     // MVC Group for "mainGroup"
     'mainGroup' {
         model      = 'project.MainGroupModel'

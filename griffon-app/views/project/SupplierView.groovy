@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 package project
 
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
@@ -25,7 +23,7 @@ import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
-application(title: 'Gudang',
+application(title: 'Supplier',
         preferredSize: [520, 340],
         pack: true,
         locationByPlatform: true,
@@ -49,9 +47,10 @@ application(title: 'Gudang',
                 label(text: bind('searchMessage', source: model))
             }
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.gudangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-					glazedColumn(name: 'Nama', expression: { it.nama + (it.utama?' [Pusat]':'') })
-					glazedColumn(name: 'Keterangan', property: 'keterangan')
+                glazedTable(id: 'table', list: model.supplierList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+					glazedColumn(name: 'Nama', property: 'nama')
+					glazedColumn(name: 'Alamat', property: 'alamat')
+					glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
                 }
             }
         }
@@ -60,12 +59,12 @@ application(title: 'Gudang',
 			label('Nama:')
 			textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
 			errorLabel(path: 'nama', constraints: 'wrap')
-			label('Gudang Pusat:')
-			checkBox(id: 'utama', selected: bind('utama', target: model, mutual: true), errorPath: 'utama')
-			errorLabel(path: 'utama', constraints: 'wrap')
-			label('Keterangan:')
-			textField(id: 'keterangan', columns: 20, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
-			errorLabel(path: 'keterangan', constraints: 'wrap')
+			label('Alamat:')
+			textField(id: 'alamat', columns: 20, text: bind('alamat', target: model, mutual: true), errorPath: 'alamat')
+			errorLabel(path: 'alamat', constraints: 'wrap')
+			label('Nomor Telepon:')
+			textField(id: 'nomorTelepon', columns: 20, text: bind('nomorTelepon', target: model, mutual: true), errorPath: 'nomorTelepon')
+			errorLabel(path: 'nomorTelepon', constraints: 'wrap')
 
 
             panel(constraints: 'span, growx, wrap') {

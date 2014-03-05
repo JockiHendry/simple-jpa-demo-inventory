@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+
+
 package project
 
 import util.BusyLayerUI
@@ -34,7 +36,9 @@ actions {
     action(id: 'maintenance', name: 'Maintenance', actionCommandKey: 'maintenance', mnemonic: KeyEvent.VK_M,
         smallIcon: imageIcon('/menu_maintenance.png'), closure: popupMaintenance)
     action(id: 'gudang', name: 'Gudang', actionCommandKey: 'gudang', mnemonic: KeyEvent.VK_G,
-        smallIcon: imageIcon('/menu_gudang.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_maintenance_gudang.png'), closure: controller.switchPage)
+    action(id: 'supplier', name: 'Supplier', actionCommandKey: 'supplier', mnemonic: KeyEvent.VK_S,
+        smallIcon: imageIcon('/menu_maintenance_supplier.png'), closure: controller.switchPage)
 }
 
 application(id: 'mainFrame',
@@ -44,6 +48,7 @@ application(id: 'mainFrame',
         locationByPlatform: true) {
 
     popupMenu(id: "maintenancePopup") {
+        menuItem(action: supplier)
         menuItem(action: gudang)
     }
 

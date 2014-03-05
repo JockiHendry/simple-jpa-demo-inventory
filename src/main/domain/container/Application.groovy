@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+
+
 package domain.container
 
 import domain.repository.GudangRepository
 import domain.repository.ProdukRepository
+import domain.repository.SupplierRepository
 
 class Application {
 
@@ -25,10 +28,12 @@ class Application {
 
     private GudangRepository gudangRepository
     private ProdukRepository produkRepository
+    private SupplierRepository supplierRepository
 
     private Application() {
         gudangRepository = new GudangRepository()
         produkRepository = new ProdukRepository()
+        supplierRepository = new SupplierRepository()
     }
 
     public GudangRepository getGudangRepository() {
@@ -37,6 +42,10 @@ class Application {
 
     public ProdukRepository getProdukRepository() {
         produkRepository
+    }
+
+    public SupplierRepository getSupplierRepository() {
+        supplierRepository
     }
 
 }
