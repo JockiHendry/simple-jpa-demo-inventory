@@ -16,8 +16,8 @@
 
 package project
 
-import domain.container.Application
-import domain.*
+import domain.Application
+import domain.inventory.Gudang
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.testing.DbUnitTestCase

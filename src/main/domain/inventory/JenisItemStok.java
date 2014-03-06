@@ -14,27 +14,8 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory;
 
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
-
-@DomainClass @Entity @Canonical
-class Supplier {
-
-    @NotEmpty @Size(min=2, max=100)
-    String nama
-
-    @Size(min=2, max=150)
-    String alamat
-
-    @Size(min=2, max=50)
-    String nomorTelepon
-
+public enum JenisItemStok {
+    PEMBELIAN, PENJUALAN, RETUR_PEMBELIAN, RETUR_PENJUALAN, PENYESUAIAN
 }
-

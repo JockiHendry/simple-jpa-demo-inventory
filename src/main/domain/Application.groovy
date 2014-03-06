@@ -16,11 +16,11 @@
 
 
 
-package domain.container
+package domain
 
-import domain.repository.GudangRepository
-import domain.repository.ProdukRepository
-import domain.repository.SupplierRepository
+import domain.inventory.GudangRepository
+import domain.inventory.ProdukRepository
+import domain.pembelian.SupplierRepository
 
 class Application {
 

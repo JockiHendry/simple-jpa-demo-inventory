@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory
 
-import domain.container.Application
 import groovy.transform.*
 import simplejpa.DomainClass
-import type.Periode
 
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -49,11 +47,16 @@ class Produk {
     @Min(0l)
     Integer jumlah = 0
 
-    @OneToMany(cascade=CascadeType.ALL) @JoinColumn(name='produk_id')
-    Set<StokProduk> daftarStok = new HashSet<>()
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
+    Map<Gudang, StokProduk> daftarStok = [:]
 
     public StokProduk stok(Gudang gudang) {
-        daftarStok.find { it.gudang == gudang }
+        StokProduk result = daftarStok[gudang]
+        if (!result) {
+            result = new StokProduk(gudang: gudang, produk: this)
+            daftarStok[gudang] = result
+        }
+        result
     }
 
 }

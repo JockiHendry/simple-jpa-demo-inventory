@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package domain.repository
+package domain.inventory
 
-import domain.PeriodeItemStok
-import domain.Produk
-import domain.StokProduk
+import domain.inventory.PeriodeItemStok
+import domain.inventory.Produk
+import domain.inventory.StokProduk
 import domain.exception.DataDuplikat
 import simplejpa.transaction.Transaction
 
@@ -39,7 +39,7 @@ class ProdukRepository {
 
         List daftarProduk = findAllProduk()
         for (Produk p: daftarProduk) {
-            for (StokProduk s: p.daftarStok) {
+            p.daftarStok.each { Gudang g, StokProduk s ->
                 for (PeriodeItemStok pi: s.periodeUntukArsip(deltaTahun)) {
                     pi.arsip = true
                     pi.listItemStok.clear()

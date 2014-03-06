@@ -16,7 +16,7 @@
 
 package simple.jpa.demo.inventory
 
-import domain.Diskon
+import domain.faktur.Diskon
 import griffon.test.*
 
 class DiskonTests extends GriffonUnitTestCase {

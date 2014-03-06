@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory
 
 import groovy.transform.*
+import org.apache.tools.ant.taskdefs.condition.Not
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
@@ -25,19 +26,13 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-class ItemStok {
+class Gudang {
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggal
+    @NotBlank @Size(min=3, max=50)
+    String nama
 
     @NotNull
-    Long fakturId
-
-    @NotNull @Enumerated
-    JenisItemStok jenis
-
-    @NotNull @Min(1l)
-    Integer jumlah
+    Boolean utama
 
     @Size(min=3, max=100)
     String keterangan

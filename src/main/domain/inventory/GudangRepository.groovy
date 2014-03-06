@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package domain.repository
+package domain.inventory
 
-import domain.Gudang
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
 import simplejpa.transaction.Transaction

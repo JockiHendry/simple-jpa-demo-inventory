@@ -17,12 +17,12 @@
 package project
 
 import com.google.common.base.Strings
-import domain.*
-import domain.container.Application
+import domain.Application
 import domain.exception.DataDuplikat
-import domain.repository.ProdukRepository
+import domain.inventory.Produk
+import domain.inventory.ProdukRepository
 import simplejpa.transaction.Transaction
-import javax.swing.*
+
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 

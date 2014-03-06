@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory
 
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -23,7 +23,7 @@ import type.Periode
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
+
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical(excludes="listItemStok")
@@ -41,8 +41,7 @@ class PeriodeItemStok {
     @NotNull
     Boolean arsip = Boolean.FALSE
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinColumn(name="periodeItemStok_id")
-    @OrderColumn(name='idx')
+    @ElementCollection @OrderColumn
     List<ItemStok> listItemStok = []
 
     public boolean termasuk(LocalDate tanggal) {

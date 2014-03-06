@@ -13,9 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.faktur
 
-package domain;
+import domain.Application
+import org.hibernate.annotations.Type
+import org.hibernate.validator.constraints.NotBlank
+import org.joda.time.LocalDate
 
-public enum JenisItemStok {
-    PEMBELIAN, PENJUALAN, RETUR_PEMBELIAN, RETUR_PENJUALAN, PENYESUAIAN
+import javax.persistence.Embeddable
+import javax.validation.constraints.NotNull
+
+@Embeddable
+class FakturId {
+
+    @NotNull
+    Long fakturId
+
+    @NotBlank
+    String nomor
+
+    @NotBlank
+    String nama
+
+    public Faktur cariFaktur() {
+        // TODO: Add implementation later!
+    }
 }

@@ -16,10 +16,12 @@
 
 package project
 
-import domain.*
-import domain.container.Application
-import domain.repository.ProdukRepository
-import org.dbunit.Assertion
+import domain.Application
+import domain.inventory.Gudang
+import domain.inventory.PeriodeItemStok
+import domain.inventory.Produk
+import domain.inventory.StokProduk
+import domain.inventory.ProdukRepository
 import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -129,7 +131,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Proses pengarsipan selesai."
 
         ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
-                "SELECT * FROM itemstok WHERE periodeItemStok_Id <> -18")
+                "SELECT * FROM periodeitemstok_listitemStok WHERE periodeItemStok_Id <> -18")
         assertEquals(19, aktualItemStok.rowCount)
 
         log.debug "Mencari produk Z..."

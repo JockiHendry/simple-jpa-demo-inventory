@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory
 
-import domain.container.Application
 import domain.exception.DataDuplikat
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -27,20 +26,20 @@ import javax.validation.constraints.*
 
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical(excludes='listItemStok')
+@DomainClass @Entity @Canonical(excludes='daftarPeriodeItemStok')
 class StokProduk {
 
     @NotNull @ManyToOne
     Gudang gudang
 
-    @Min(0l)
-    Integer jumlah = 0
-
     @NotNull @ManyToOne
     Produk produk
 
-    @OneToMany(cascade=CascadeType.ALL) @JoinColumn(name="stokProduk_id")
-    Set<PeriodeItemStok> daftarPeriodeItemStok = new HashSet<>()
+    @Min(0l)
+    Integer jumlah = 0
+
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinColumn(name='stokProduk_id') @OrderColumn
+    List<PeriodeItemStok> daftarPeriodeItemStok = []
 
     /**
      * Membuat sebuah <code>PeriodeItemStok</code> dimana tanggal tertentu merupakan bagian
@@ -126,23 +125,5 @@ class StokProduk {
         result
     }
 
-    boolean equals(o) {
-        if (this.is(o)) return true
-        if (getClass() != o.class) return false
-
-        StokProduk that = (StokProduk) o
-
-        if (gudang != that.gudang) return false
-        if (produk != that.produk) return false
-
-        return true
-    }
-
-    int hashCode() {
-        int result
-        result = gudang.hashCode()
-        result = 31 * result + produk.hashCode()
-        return result
-    }
 }
 

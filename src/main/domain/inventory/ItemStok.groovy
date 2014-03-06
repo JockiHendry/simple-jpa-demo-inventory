@@ -14,25 +14,34 @@
  * limitations under the License.
  */
 
-package domain
+package domain.inventory
 
+import domain.faktur.Faktur
+import domain.faktur.FakturId
 import groovy.transform.*
-import org.apache.tools.ant.taskdefs.condition.Not
+import org.w3c.dom.Attr
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
+
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-class Gudang {
+@Embeddable @Canonical(excludes='fakturId')
+class ItemStok {
 
-    @NotBlank @Size(min=3, max=50)
-    String nama
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @Column(name='tanggalItemStok')
+    LocalDate tanggal
 
-    @NotNull
-    Boolean utama
+    @NotNull @Embedded
+    FakturId fakturId
+
+    @NotNull @Enumerated
+    JenisItemStok jenis
+
+    @NotNull @Min(1l)
+    Integer jumlah
 
     @Size(min=3, max=100)
     String keterangan
