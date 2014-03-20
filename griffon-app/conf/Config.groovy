@@ -32,6 +32,8 @@ log4j = {
             debug additivity: false, stdout: ['org.hibernate.SQL', 'project']
             info  additivity: false, stdout: [
                     'simplejpa',
+                    'project',
+                    'domain',
                     //'net.sf.jasperreports',
                     //'org.jboss',
                     //'org.codehaus',
@@ -54,7 +56,8 @@ log4j = {
             error  additivity: false, stdout: ['org.dbunit']
             debug additivity: false, stdout: [
                 'org.hibernate.SQL',
-                'project'
+                'project',
+                'domain',
             ]
             info additivity: false, stdout: [
                 //'net.sf.jasperreports',
@@ -82,3 +85,4 @@ i18n.basenames = ['messages','ValidationMessages']
 
 griffon.simplejpa.finders.injectInto = []
 griffon.simplejpa.validation.convertEmptyStringToNull = true
+//griffon.simplejpa.model.package = 'domain.pembelian'

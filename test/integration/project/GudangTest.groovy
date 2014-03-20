@@ -16,7 +16,7 @@
 
 package project
 
-import domain.Application
+import domain.Container
 import domain.inventory.Gudang
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,7 +28,7 @@ class GudangTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("gudang", "/project/data.xls")
+        setUpDatabase("gudang", "/project/data_inventory.xls")
     }
 
     protected void tearDown() {
@@ -36,7 +36,7 @@ class GudangTest extends DbUnitTestCase {
     }
 
     public void testCariGudangUtama() {
-        Gudang gudangUtama = Application.instance.gudangRepository.cariGudangUtama()
+        Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
         assertEquals('Gudang', gudangUtama.nama)
         assertTrue(gudangUtama.utama)
     }

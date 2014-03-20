@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package domain
+package domain.faktur
 
+import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
 class ItemFaktur {
@@ -43,7 +41,7 @@ class ItemFaktur {
     Diskon diskon
 
     public BigDecimal total() {
-        (diskon? diskon.hasilDiskon(harga): harga) * jumlah
+        (diskon? diskon.hasil(harga): harga) * jumlah
     }
 
 }

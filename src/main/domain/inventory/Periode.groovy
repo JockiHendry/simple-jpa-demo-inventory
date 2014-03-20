@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package type
+package domain.inventory
 
 import org.joda.time.Interval
 import org.joda.time.LocalDate
-import org.joda.time.Months
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 

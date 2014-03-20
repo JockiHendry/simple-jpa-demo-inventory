@@ -16,12 +16,17 @@
 
 package domain.inventory
 
+import domain.faktur.Faktur
+import domain.pembelian.PenerimaanBarang
 import groovy.transform.*
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
+
+import java.text.NumberFormat
 
 @NamedEntityGraph(name='Produk.Complete', attributeNodes = [
     @NamedAttributeNode(value='daftarStok', subgraph='stokProduk')
@@ -36,7 +41,7 @@ import org.hibernate.validator.constraints.*
     )
 ])
 @DomainClass @Entity @Canonical(excludes='daftarStok')
-class Produk {
+class Produk implements Comparable {
 
     @NotBlank @Size(min=3, max=150)
     String nama
@@ -59,5 +64,34 @@ class Produk {
         result
     }
 
+    public void perubahanStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
+        stok(daftarBarang.gudang).perubahan(jumlah, daftarBarang, keterangan)
+        this.jumlah += (daftarBarang.faktor() * jumlah)
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Produk produk = (Produk) o
+
+        if (nama != produk.nama) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nama.hashCode()
+    }
+
+    String toString() {
+        "$nama - ${NumberFormat.currencyInstance.format(harga)}"
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (!(o instanceof Produk)) return -1
+        nama.compareTo(o.nama)
+    }
 }
 

@@ -23,6 +23,34 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "restore"
+    'restore' {
+        model      = 'project.RestoreModel'
+        view       = 'project.RestoreView'
+        controller = 'project.RestoreController'
+    }
+
+    // MVC Group for "backup"
+    'backup' {
+        model      = 'project.BackupModel'
+        view       = 'project.BackupView'
+        controller = 'project.BackupController'
+    }
+
+    // MVC Group for "itemBarangAsChild"
+    'itemBarangAsChild' {
+        model      = 'project.ItemBarangAsChildModel'
+        view       = 'project.ItemBarangAsChildView'
+        controller = 'project.ItemBarangAsChildController'
+    }
+
+    // MVC Group for "penerimaanBarang"
+    'penerimaanBarang' {
+        model      = 'project.PenerimaanBarangModel'
+        view       = 'project.PenerimaanBarangView'
+        controller = 'project.PenerimaanBarangController'
+    }
+
     // MVC Group for "supplier"
     'supplier' {
         model      = 'project.SupplierModel'

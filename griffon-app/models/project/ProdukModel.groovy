@@ -32,4 +32,6 @@ class ProdukModel {
 
     BasicEventList<Produk> produkList = new BasicEventList<>()
 
+    @Bindable boolean popupMode = false
+
 }

@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.inventory
 
-package project
+import groovy.transform.Canonical
 
-import ca.odell.glazedlists.*
-import domain.pembelian.Supplier
+import javax.persistence.Embeddable
+import javax.persistence.ManyToOne
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
 
-class SupplierModel {
+@Embeddable @Canonical
+class ItemBarang {
 
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
+    @NotNull @ManyToOne
+    Produk produk
 
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    @NotNull @Min(1l)
+    Integer jumlah
 
 }

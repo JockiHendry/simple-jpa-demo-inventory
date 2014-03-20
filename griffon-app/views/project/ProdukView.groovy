@@ -20,11 +20,25 @@ package project
 
 import org.jdesktop.swingx.prompt.PromptSupport
 
+import javax.swing.JComponent
+import javax.swing.KeyStroke
+import javax.swing.SwingConstants
+import javax.swing.SwingUtilities
+import java.awt.event.KeyEvent
+
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
 import org.joda.time.*
 import java.awt.*
+
+actions {
+    action(id: 'pilih', name: 'Pilih', mnemonic: KeyEvent.VK_P, closure: {
+        if (model.popupMode) {
+            SwingUtilities.getWindowAncestor(mainPanel).visible = false
+        }
+    })
+}
 
 application(title: 'Produk',
         preferredSize: [520, 340],
@@ -39,9 +53,18 @@ application(title: 'Produk',
         borderLayout()
 
         panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search)
-            button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+            borderLayout()
+            label('<html><b>Petunjuk:</b> <i>Cari dan pilih jenis pekerjaan di tabel dan tekan Enter untuk selesai!</i></html>',
+                visible: bind{model.popupMode}, horizontalAlignment: CENTER, constraints: PAGE_START)
+            panel(constraints: CENTER) {
+                flowLayout(alignment: FlowLayout.LEADING)
+                textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search,
+                    keyPressed: { KeyEvent k ->
+                        if (k.keyCode==KeyEvent.VK_DOWN) table.requestFocusInWindow()
+                    }
+                )
+                button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+            }
         }
 
         panel(constraints: CENTER) {
@@ -50,7 +73,8 @@ application(title: 'Produk',
                 label(text: bind('searchMessage', source: model))
             }
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                        mouseClicked: { e -> e.clickCount==2? pilih.actionPerformed(null): null}) {
 					glazedColumn(name: 'Nama', property: 'nama')
 					glazedColumn(name: 'Harga Eceran Tertinggi (HET)', property: 'harga', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
@@ -58,6 +82,8 @@ application(title: 'Produk',
                     glazedColumn(name: 'Total', property: 'jumlah', columnClass: Integer) {
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
+                    keyStrokeAction(actionKey: 'pilih', condition: JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
+                        keyStroke: KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), action: pilih)
                 }
             }
         }
@@ -72,6 +98,7 @@ application(title: 'Produk',
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
+                button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                     if (model.id!=null) {
                         if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
@@ -83,7 +110,7 @@ application(title: 'Produk',
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
-                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind{table.isRowSelected}, actionPerformed: {
+                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {
                     if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
                         app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                             controller.delete()

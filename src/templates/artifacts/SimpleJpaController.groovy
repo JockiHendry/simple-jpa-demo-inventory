@@ -1,14 +1,13 @@
 package $packageName
 
 import ${domainPackage}.*
-import ${domainPackage}.container.*
 import ${domainPackage}.exception.*
-import ${domainPackage}.repository.*
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import com.google.common.base.Strings
 import domain.exception.DataDuplikat
+import domain.Container
 
 class $className {
 
@@ -18,7 +17,7 @@ class $className {
     ${domainClass}Repository ${domainClassAsProp}Repository
 
     void mvcGroupInit(Map args) {
-        ${domainClassAsProp}Repository = Application.instance.${domainClassAsProp}Repository
+        ${domainClassAsProp}Repository = Container.app.${domainClassAsProp}Repository
         search()
     }
 
@@ -101,7 +100,7 @@ class $className {
                     clear()
                 }
             } else {
-                ${domainClassAsProp} = ${domainClassAsProp}Repository.merge(${domainClassAsProp})
+                ${domainClassAsProp} = ${domainClassAsProp}Repository.update(${domainClassAsProp})
                 execInsideUISync {
                     view.table.selectionModel.selected[0] = ${domainClassAsProp}
                     clear()

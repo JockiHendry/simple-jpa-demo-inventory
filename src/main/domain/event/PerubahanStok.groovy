@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.event
 
-package project
+import domain.faktur.Faktur
+import domain.inventory.Gudang
+import griffon.core.Event
+import domain.inventory.DaftarBarang
+import groovy.transform.Canonical
 
-import ca.odell.glazedlists.*
-import domain.pembelian.Supplier
+@Canonical
+class PerubahanStok extends Event {
 
-class SupplierModel {
-
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
-
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    PerubahanStok(DaftarBarang daftarBarang) {
+        super(daftarBarang)
+    }
 
 }

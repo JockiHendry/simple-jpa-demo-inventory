@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.exception;
 
-package project
+public class DataTidakLengkap extends RuntimeException {
 
-import ca.odell.glazedlists.*
-import domain.pembelian.Supplier
+    public DataTidakLengkap(Object object) {
+        super("Data tidak lengkap untuk " + object);
+    }
 
-class SupplierModel {
-
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
-
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    public DataTidakLengkap(String pesan) {
+        super(pesan);
+    }
 
 }

@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package project
 
-import ca.odell.glazedlists.*
+
+package domain.pembelian
+
 import domain.pembelian.Supplier
+import domain.exception.DataDuplikat
+import simplejpa.transaction.Transaction
 
-class SupplierModel {
+@Transaction
+class SupplierRepository {
 
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
-
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
-
+    public Supplier buat(Supplier supplier) {
+        if (findSupplierByNama(supplier.nama)) {
+            throw new DataDuplikat(supplier)
+        }
+        persist(supplier)
+        supplier
+    }
 }

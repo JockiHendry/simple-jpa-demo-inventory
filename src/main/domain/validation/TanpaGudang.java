@@ -13,22 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.validation;
 
-package project
-
-import ca.odell.glazedlists.*
-import domain.pembelian.Supplier
-
-class SupplierModel {
-
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
-
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
-
+public interface TanpaGudang {
 }

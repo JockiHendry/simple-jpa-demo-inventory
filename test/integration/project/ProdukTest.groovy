@@ -16,7 +16,7 @@
 
 package project
 
-import domain.Application
+import domain.Container
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
@@ -27,7 +27,7 @@ import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.testing.DbUnitTestCase
-import type.Periode
+import domain.inventory.Periode
 
 class ProdukTest extends DbUnitTestCase {
 
@@ -35,7 +35,7 @@ class ProdukTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("produk", "/project/data.xls")
+        setUpDatabase("produk", "/project/data_inventory.xls")
     }
 
     protected void tearDown() {
@@ -43,7 +43,7 @@ class ProdukTest extends DbUnitTestCase {
     }
 
     public void testStokProduk() {
-        ProdukRepository repo = Application.instance.produkRepository
+        ProdukRepository repo = Container.app.produkRepository
 
         Gudang gudang = repo.findGudangByNama("Gudang")
         Gudang warehouseA = repo.findGudangByNama("Warehouse A")
@@ -53,9 +53,9 @@ class ProdukTest extends DbUnitTestCase {
         Gudang warehouseE = repo.findGudangByNama("Warehouse E")
         Gudang warehouseF = repo.findGudangByNama("Warehouse F")
 
-        Produk produk = repo.findProdukByNama("Produk A", [fetchGraph: 'Produk.Complete'])
+        Produk produk = repo.findProdukByNamaFetchComplete("Produk A")
         assertEquals(7, produk.daftarStok.size())
-        assertEquals(5, produk.stok(gudang).jumlah)
+        assertEquals(10, produk.stok(gudang).jumlah)
         assertEquals(4, produk.stok(warehouseA).jumlah)
         assertEquals(10, produk.stok(warehouseB).jumlah)
         assertEquals(5, produk.stok(warehouseC).jumlah)
@@ -63,22 +63,22 @@ class ProdukTest extends DbUnitTestCase {
         assertEquals(2, produk.stok(warehouseE).jumlah)
         assertEquals(3, produk.stok(warehouseF).jumlah)
 
-        produk = repo.findProdukByNama("Produk B", [fetchGraph: 'Produk.Complete'])
+        produk = repo.findProdukByNamaFetchComplete("Produk B")
         assertEquals(3, produk.daftarStok.size())
-        assertEquals(4, produk.stok(gudang).jumlah)
+        assertEquals(14, produk.stok(gudang).jumlah)
         assertEquals(6, produk.stok(warehouseA).jumlah)
         assertEquals(7, produk.stok(warehouseB).jumlah)
     }
 
     public void testPeriodeItemStok() {
-        ProdukRepository repo = Application.instance.produkRepository
+        ProdukRepository repo = Container.app.produkRepository
 
         Gudang gudang = repo.findGudangByNama("Gudang")
         Gudang warehouseC = repo.findGudangByNama("Warehouse C")
 
-        Produk produk = repo.findProdukByNama("Produk A", [fetchGraph: 'Produk.Complete'])
+        Produk produk = repo.findProdukByNamaFetchComplete("Produk A")
         StokProduk stok = produk.stok(gudang)
-        assertEquals(2, stok.daftarPeriodeItemStok.size())
+        assertEquals(3, stok.daftarPeriodeItemStok.size())
         assertEquals(3, stok.periode(Periode.format.parseLocalDate('15-12-2013')).jumlah)
         assertEquals(Periode.format.parseLocalDate('01-12-2013'), stok.periode(Periode.format.parseLocalDate('15-12-2013')).tanggalMulai)
         assertEquals(Periode.format.parseLocalDate('31-12-2013'), stok.periode(Periode.format.parseLocalDate('15-12-2013')).tanggalSelesai)
@@ -105,7 +105,7 @@ class ProdukTest extends DbUnitTestCase {
     public void testArsipItemStok() {
         log.debug "Mulai dari testArsipItemStok..."
 
-        ProdukRepository repo = Application.instance.produkRepository
+        ProdukRepository repo = Container.app.produkRepository
 
         log.debug "Mencari produk Z..."
         Produk produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
@@ -132,7 +132,7 @@ class ProdukTest extends DbUnitTestCase {
 
         ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
                 "SELECT * FROM periodeitemstok_listitemStok WHERE periodeItemStok_Id <> -18")
-        assertEquals(19, aktualItemStok.rowCount)
+        assertEquals(22, aktualItemStok.rowCount)
 
         log.debug "Mencari produk Z..."
         produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])

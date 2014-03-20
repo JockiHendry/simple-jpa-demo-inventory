@@ -17,7 +17,7 @@
 package project
 
 import com.google.common.base.Strings
-import domain.Application
+import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
 import domain.inventory.Gudang
@@ -34,7 +34,7 @@ class GudangController {
     GudangRepository gudangRepository
 
     void mvcGroupInit(Map args) {
-        gudangRepository = Application.instance.gudangRepository
+        gudangRepository = Container.app.gudangRepository
         search()
     }
 

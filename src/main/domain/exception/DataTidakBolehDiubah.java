@@ -13,22 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.exception;
 
-package project
+public class DataTidakBolehDiubah extends RuntimeException {
 
-import ca.odell.glazedlists.*
-import domain.pembelian.Supplier
-
-class SupplierModel {
-
-    @Bindable Long id
-	@Bindable String nama
-	@Bindable String alamat
-	@Bindable String nomorTelepon
-
-    @Bindable String namaSearch
-    @Bindable String searchMessage
-
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
-
+    public DataTidakBolehDiubah(Object object) {
+        super("Data tidak boleh diubah untuk " + object);
+    }
 }

@@ -17,7 +17,7 @@
 package project
 
 import com.google.common.base.Strings
-import domain.Application
+import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
 import domain.inventory.ProdukRepository
@@ -34,7 +34,8 @@ class ProdukController {
     ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
-        produkRepository = Application.instance.produkRepository
+        model.popupMode = args.'popup'?: false
+        produkRepository = Container.app.produkRepository
         search()
     }
 
@@ -65,7 +66,7 @@ class ProdukController {
                     clear()
                 }
             } else {
-                produk = produkRepository.merge(produk)
+                produk = produkRepository.update(produk)
                 execInsideUISync {
                     view.table.selectionModel.selected[0] = produk
                     clear()

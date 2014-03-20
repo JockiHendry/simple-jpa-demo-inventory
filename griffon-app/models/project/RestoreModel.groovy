@@ -13,23 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project
 
+import groovy.beans.Bindable
 
+class RestoreModel {
 
-package domain.repository
+    @Bindable File fileRestore
 
-import domain.Supplier
-import domain.exception.DataDuplikat
-import simplejpa.transaction.Transaction
-
-@Transaction
-class SupplierRepository {
-
-    public Supplier buat(Supplier supplier) {
-        if (findSupplierByNama(supplier.nama)) {
-            throw new DataDuplikat(supplier)
-        }
-        persist(supplier)
-        supplier
-    }
 }

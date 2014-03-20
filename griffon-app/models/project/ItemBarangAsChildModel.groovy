@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project
 
-package domain
+import ca.odell.glazedlists.BasicEventList
+import domain.inventory.DaftarBarang
+import domain.inventory.ItemBarang
+import domain.inventory.Produk
+import groovy.beans.Bindable
 
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
+class ItemBarangAsChildModel {
 
-@DomainClass @Entity @Canonical
-class Supplier {
+    DaftarBarang parent
 
-    @NotEmpty @Size(min=2, max=100)
-    String nama
+    @Bindable Produk produk
+    @Bindable Integer jumlah
 
-    @Size(min=2, max=150)
-    String alamat
+    BasicEventList<ItemBarang> itemBarangList = new BasicEventList<>()
 
-    @Size(min=2, max=50)
-    String nomorTelepon
+    @Bindable boolean editable
 
 }
-

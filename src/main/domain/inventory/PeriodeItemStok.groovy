@@ -18,7 +18,6 @@ package domain.inventory
 
 import groovy.transform.*
 import simplejpa.DomainClass
-import type.Periode
 
 import javax.persistence.*
 import org.hibernate.annotations.Type
@@ -35,7 +34,6 @@ class PeriodeItemStok {
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalSelesai
 
-    @Min(0l)
     Integer jumlah = 0
 
     @NotNull
@@ -53,6 +51,11 @@ class PeriodeItemStok {
         Interval i1 = new Interval(tanggalMulai.toDateMidnight(), tanggalSelesai.plusDays(1).toDateMidnight())
         Interval i2 = new Interval(periode.tanggalMulai.toDateMidnight(), periode.tanggalSelesai.plusDays(1).toDateMidnight())
         i1.overlaps(i2)
+    }
+
+    public void tambahItemStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
+        listItemStok << new ItemStok(LocalDate.now(), daftarBarang, jumlah, keterangan)
+        this.jumlah += (daftarBarang.faktor() * jumlah)
     }
 
     boolean equals(o) {

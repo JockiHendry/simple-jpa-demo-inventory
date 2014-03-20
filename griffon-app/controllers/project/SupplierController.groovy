@@ -16,11 +16,10 @@
 
 package project
 
-import domain.*
-import domain.container.*
-import domain.exception.*
-import domain.repository.*
-import javax.swing.*
+import domain.Container
+import domain.pembelian.Supplier
+import domain.pembelian.SupplierRepository
+
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import com.google.common.base.Strings
@@ -34,7 +33,7 @@ class SupplierController {
     SupplierRepository supplierRepository
 
     void mvcGroupInit(Map args) {
-        supplierRepository = Application.instance.supplierRepository
+        supplierRepository = Container.app.supplierRepository
         search()
     }
 

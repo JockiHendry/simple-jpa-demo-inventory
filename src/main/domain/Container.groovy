@@ -18,22 +18,36 @@
 
 package domain
 
+import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
+import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.SupplierRepository
+import griffon.util.*
 
-class Application {
+class Container {
 
-    public static Application instance = new Application()
+    public static Container app = new Container()
 
     private GudangRepository gudangRepository
     private ProdukRepository produkRepository
     private SupplierRepository supplierRepository
+    private PenerimaanBarangRepository penerimaanBarangRepository
 
-    private Application() {
+    private InventoryEventConsumer inventoryEventConsumer
+
+    private Container() {}
+
+    public void setup() {
+        // Create repositories
         gudangRepository = new GudangRepository()
         produkRepository = new ProdukRepository()
         supplierRepository = new SupplierRepository()
+        penerimaanBarangRepository = new PenerimaanBarangRepository()
+
+        // Create event consumers
+        inventoryEventConsumer = new InventoryEventConsumer()
+        ApplicationHolder.application.addApplicationEventListener(inventoryEventConsumer)
     }
 
     public GudangRepository getGudangRepository() {
@@ -46,6 +60,10 @@ class Application {
 
     public SupplierRepository getSupplierRepository() {
         supplierRepository
+    }
+
+    public PenerimaanBarangRepository getPenerimaanBarangRepository() {
+        penerimaanBarangRepository
     }
 
 }

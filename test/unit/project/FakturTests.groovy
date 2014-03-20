@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package simple.jpa.demo.inventory
+package project
 
-import domain.Diskon
-import domain.Faktur
-import domain.ItemFaktur
+import domain.faktur.Diskon
+import domain.faktur.Faktur
+import domain.faktur.ItemFaktur
 import griffon.test.*
 
 class FakturTests extends GriffonUnitTestCase {

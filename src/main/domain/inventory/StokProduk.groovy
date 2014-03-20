@@ -19,7 +19,6 @@ package domain.inventory
 import domain.exception.DataDuplikat
 import groovy.transform.*
 import simplejpa.DomainClass
-import type.Periode
 
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -123,6 +122,11 @@ class StokProduk {
             }
         }
         result
+    }
+
+    public void perubahan(int jumlah, DaftarBarang daftarBarang, String keterangan) {
+        periode(LocalDate.now()).tambahItemStok(jumlah, daftarBarang, keterangan)
+        this.jumlah += (daftarBarang.faktor() * jumlah)
     }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package domain
+package domain.faktur
 
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -25,6 +25,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical(excludes='listItemFaktur')
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 abstract class Faktur {
 
     @NotEmpty @Size(min=2, max=100)
@@ -39,8 +40,7 @@ abstract class Faktur {
     @Size(min=2, max=200)
     String keterangan
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinColumn(name="faktur_id")
-    @OrderColumn(name='idx')
+    @ElementCollection @OrderColumn
     List<ItemFaktur> listItemFaktur = []
 
     public void tambah(ItemFaktur itemFaktur) {
@@ -50,7 +50,7 @@ abstract class Faktur {
     public BigDecimal total() {
         def total = listItemFaktur.sum { it.total() }
         if (diskon) {
-            total = diskon.hasilDiskon(total)
+            total = diskon.hasil(total)
         }
         total
     }

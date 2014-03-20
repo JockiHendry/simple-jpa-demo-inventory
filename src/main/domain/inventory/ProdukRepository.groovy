@@ -16,10 +16,13 @@
 
 package domain.inventory
 
+import domain.Container
+import domain.faktur.Faktur
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.exception.DataDuplikat
+import domain.pembelian.PenerimaanBarang
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -54,6 +57,19 @@ class ProdukRepository {
         }
         persist(produk)
         produk
+    }
+
+    public Produk update(Produk produk) {
+        Produk p = findProdukById(produk.id)
+        p.nama = produk.nama
+        p.harga = produk.harga
+        p
+    }
+
+    public void perubahanStok(Produk produk, int jumlah, DaftarBarang daftarBarang, String keterangan = null) {
+        if (keterangan==null) keterangan = daftarBarang.keterangan
+        Produk p = findProdukById(produk.id)
+        p.perubahanStok(jumlah, daftarBarang, keterangan)
     }
 
 }

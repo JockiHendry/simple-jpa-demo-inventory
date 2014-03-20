@@ -16,13 +16,12 @@
 
 
 
-package domain
+package domain.faktur
 
 import groovy.transform.Canonical
 
 import javax.persistence.Embeddable
 import javax.validation.constraints.Digits
-import javax.validation.constraints.NotNull
 import java.text.NumberFormat
 
 @Embeddable @Canonical
@@ -34,11 +33,11 @@ class Diskon {
     @Digits(integer=12, fraction=2)
     BigDecimal potonganLangsung
 
-    BigDecimal hasilDiskon(BigDecimal nilai) {
-        nilai - jumlahDiskon(nilai)
+    BigDecimal hasil(BigDecimal nilai) {
+        nilai - jumlah(nilai)
     }
 
-    BigDecimal jumlahDiskon(BigDecimal nilai) {
+    BigDecimal jumlah(BigDecimal nilai) {
         BigDecimal hasil = 0
         if (potonganPersen > 0) {
             hasil += (potonganPersen/100) * nilai

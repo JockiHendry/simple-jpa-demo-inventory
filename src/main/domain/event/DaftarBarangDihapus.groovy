@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.faktur
+package domain.event
 
-import domain.Application
-import org.hibernate.annotations.Type
-import org.hibernate.validator.constraints.NotBlank
-import org.joda.time.LocalDate
+import domain.inventory.DaftarBarang
+import griffon.core.Event
 
-import javax.persistence.Embeddable
-import javax.validation.constraints.NotNull
+class DaftarBarangDihapus extends Event {
 
-@Embeddable
-class FakturId {
-
-    @NotNull
-    Long fakturId
-
-    @NotBlank
-    String nomor
-
-    @NotBlank
-    String nama
-
-    public Faktur cariFaktur() {
-        // TODO: Add implementation later!
+    DaftarBarangDihapus(DaftarBarang daftarBarang) {
+        super(daftarBarang)
     }
 }

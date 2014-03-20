@@ -30,6 +30,9 @@ def popupMaintenance = {
 }
 
 actions {
+    action(id: 'penerimaanBarang', name: 'Terima Barang', actionCommandKey: 'penerimaanBarang', mnemonic: KeyEvent.VK_T,
+        smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: controller.switchPage)
+
     action(id: 'produk', name: 'Produk', actionCommandKey: 'produk', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_produk.png'), closure: controller.switchPage)
 
@@ -39,6 +42,10 @@ actions {
         smallIcon: imageIcon('/menu_maintenance_gudang.png'), closure: controller.switchPage)
     action(id: 'supplier', name: 'Supplier', actionCommandKey: 'supplier', mnemonic: KeyEvent.VK_S,
         smallIcon: imageIcon('/menu_maintenance_supplier.png'), closure: controller.switchPage)
+    action(id: 'backup', name: 'Backup', actionCommandKey: 'backup', mnemonic: KeyEvent.VK_B,
+        smallIcon: imageIcon('/menu_maintenance_backup.png'), closure: controller.switchPage)
+    action(id: 'restore', name: 'Restore', actionCommandKey: 'restore', mnemonic: KeyEvent.VK_R,
+        smallIcon: imageIcon('/menu_maintenance_restore.png'), closure: controller.switchPage)
 }
 
 application(id: 'mainFrame',
@@ -50,6 +57,9 @@ application(id: 'mainFrame',
     popupMenu(id: "maintenancePopup") {
         menuItem(action: supplier)
         menuItem(action: gudang)
+        separator(border: BorderFactory.createEmptyBorder(3,0,3,0))
+        menuItem(action: backup)
+        menuItem(action: restore)
     }
 
     borderLayout()
@@ -59,6 +69,8 @@ application(id: 'mainFrame',
 
             toolBar(constraints: BorderLayout.PAGE_START) {
                 buttonGroup(id: 'buttons')
+                toggleButton(buttonGroup: buttons, action: penerimaanBarang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
             }

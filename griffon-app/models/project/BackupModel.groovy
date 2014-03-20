@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project
 
-package domain.inventory;
+import groovy.beans.Bindable
 
-public enum JenisItemStok {
-    PEMBELIAN, PENJUALAN, RETUR_PEMBELIAN, RETUR_PENJUALAN, PENYESUAIAN
+class BackupModel {
+
+    @Bindable String basedir
+    @Bindable File lokasiTujuan
+    @Bindable String arguments
+
 }

@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package domain.inventory
+package domain.pembelian
 
-import domain.faktur.Faktur
 import groovy.transform.*
-import org.w3c.dom.Attr
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-
+import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@Embeddable @Canonical
-class ItemStok {
+@DomainClass @Entity @Canonical
+class Supplier implements Comparable {
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    @Column(name='tanggalItemStok')
-    LocalDate tanggal
+    @NotEmpty @Size(min=2, max=100)
+    String nama
 
-    @ManyToOne
-    DaftarBarang daftarBarang
+    @Size(min=2, max=150)
+    String alamat
 
-    @NotNull
-    Integer jumlah
+    @Size(min=2, max=50)
+    String nomorTelepon
 
-    @Size(min=3, max=100)
-    String keterangan
+    @Override
+    String toString() {
+        "$nama"
+    }
 
+    @Override
+    int compareTo(Object o) {
+        if (!(o instanceof Supplier)) return -1
+        nama.compareTo(o.nama)
+    }
 }
 
