@@ -56,60 +56,65 @@ class PenerimaanBarangTest extends DbUnitTestCase {
 
     void testCreate() {
         PenerimaanBarangRepository repo = Container.app.penerimaanBarangRepository
-        Supplier s = repo.findSupplierById(-1)
-        PenerimaanBarang p = new PenerimaanBarang(nomor: 'P5', tanggal: Periode.format.parseLocalDate('01-02-2013'), supplier: s)
-        p.tambah(new ItemBarang(repo.findProdukById(-1), 10))
-        p.tambah(new ItemBarang(repo.findProdukById(-2), 5))
-        p.tambah(new ItemBarang(repo.findProdukById(-3), 3))
-        repo.buat(p)
+        repo.withTransaction {
+            Supplier s = repo.findSupplierById(-1)
+            PenerimaanBarang p = new PenerimaanBarang(nomor: 'P5', tanggal: Periode.format.parseLocalDate('01-02-2013'), supplier: s)
+            p.tambah(new ItemBarang(repo.findProdukById(-1), 10))
+            p.tambah(new ItemBarang(repo.findProdukById(-2), 5))
+            p.tambah(new ItemBarang(repo.findProdukById(-3), 3))
+            repo.buat(p)
 
-        Gudang gudang = Container.app.gudangRepository.cariGudangUtama()
-        Produk produkA = repo.findProdukByIdFetchComplete(-1l)
-        Produk produkB = repo.findProdukByIdFetchComplete(-2l)
-        Produk produkC = repo.findProdukByIdFetchComplete(-3l)
+            Gudang gudang = Container.app.gudangRepository.cariGudangUtama()
+            Produk produkA = repo.findProdukByIdFetchComplete(-1l)
+            Produk produkB = repo.findProdukByIdFetchComplete(-2l)
+            Produk produkC = repo.findProdukByIdFetchComplete(-3l)
 
-        assertEquals(47, produkA.jumlah)
-        assertEquals(20, produkA.stok(gudang).jumlah)
-        assertEquals(10, produkA.stok(gudang).periode(LocalDate.now()).jumlah)
-        assertTrue(produkA.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 10)))
+            assertEquals(47, produkA.jumlah)
+            assertEquals(20, produkA.stok(gudang).jumlah)
+            assertEquals(10, produkA.stok(gudang).periode(LocalDate.now()).jumlah)
+            assertTrue(produkA.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 10)))
 
-        assertEquals(32, produkB.jumlah)
-        assertEquals(19, produkB.stok(gudang).jumlah)
-        assertEquals(5, produkB.stok(gudang).periode(LocalDate.now()).jumlah)
-        assertTrue(produkB.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 5)))
+            assertEquals(32, produkB.jumlah)
+            assertEquals(19, produkB.stok(gudang).jumlah)
+            assertEquals(5, produkB.stok(gudang).periode(LocalDate.now()).jumlah)
+            assertTrue(produkB.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 5)))
 
-        assertEquals(31, produkC.jumlah)
-        assertEquals(18, produkC.stok(gudang).jumlah)
-        assertEquals(3,  produkC.stok(gudang).periode(LocalDate.now()).jumlah)
-        assertTrue(produkC.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 3)))
+            assertEquals(31, produkC.jumlah)
+            assertEquals(18, produkC.stok(gudang).jumlah)
+            assertEquals(3,  produkC.stok(gudang).periode(LocalDate.now()).jumlah)
+            assertTrue(produkC.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 3)))
+        }
     }
 
     void testDelete() {
         PenerimaanBarangRepository repo = Container.app.penerimaanBarangRepository
-        PenerimaanBarang p = repo.findPenerimaanBarangById(-4l)
-        p = repo.hapus(p)
+        repo.withTransaction {
+            PenerimaanBarang p = repo.findPenerimaanBarangById(-4l)
+            p = repo.hapus(p)
 
-        assertEquals('Y', p.deleted)
+            assertEquals('Y', p.deleted)
 
-        Produk p1 = repo.findProdukByIdFetchComplete(-1l)
-        Produk p2 = repo.findProdukByIdFetchComplete(-2l)
-        Produk p3 = repo.findProdukByIdFetchComplete(-3l)
-        Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
+            Produk p1 = repo.findProdukByIdFetchComplete(-1l)
+            Produk p2 = repo.findProdukByIdFetchComplete(-2l)
+            Produk p3 = repo.findProdukByIdFetchComplete(-3l)
+            Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
 
-        assertEquals(32, p1.jumlah)
-        assertEquals(5, p1.stok(gudangUtama).jumlah)
-        List<ItemStok> listItemStok = p1.stok(gudangUtama).periode(LocalDate.now()).listItemStok
-        assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -5, 'Invers Akibat Penghapusan')))
 
-        assertEquals(17, p2.jumlah)
-        assertEquals(4, p2.stok(gudangUtama).jumlah)
-        listItemStok = p2.stok(gudangUtama).periode(LocalDate.now()).listItemStok
-        assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -10, 'Invers Akibat Penghapusan')))
+            assertEquals(32, p1.jumlah)
+            assertEquals(5, p1.stok(gudangUtama).jumlah)
+            List<ItemStok> listItemStok = p1.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -5, 'Invers Akibat Penghapusan')))
 
-        assertEquals(21, p3.jumlah)
-        assertEquals(8, p3.stok(gudangUtama).jumlah)
-        listItemStok = p3.stok(gudangUtama).periode(LocalDate.now()).listItemStok
-        assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -7, 'Invers Akibat Penghapusan')))
+            assertEquals(17, p2.jumlah)
+            assertEquals(4, p2.stok(gudangUtama).jumlah)
+            listItemStok = p2.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -10, 'Invers Akibat Penghapusan')))
+
+            assertEquals(21, p3.jumlah)
+            assertEquals(8, p3.stok(gudangUtama).jumlah)
+            listItemStok = p3.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -7, 'Invers Akibat Penghapusan')))
+        }
     }
 
     void testTidakBolehDelete() {

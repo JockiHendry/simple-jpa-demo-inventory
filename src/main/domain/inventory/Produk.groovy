@@ -34,10 +34,6 @@ import java.text.NumberFormat
     @NamedSubgraph(
         name = 'stokProduk',
         attributeNodes=[@NamedAttributeNode(value='daftarPeriodeItemStok', subgraph='periodeItemStok')]
-    ),
-    @NamedSubgraph(
-        name = 'periodeItemStok',
-        attributeNodes = [@NamedAttributeNode(value='listItemStok')]
     )
 ])
 @DomainClass @Entity @Canonical(excludes='daftarStok')
@@ -62,6 +58,10 @@ class Produk implements Comparable {
             daftarStok[gudang] = result
         }
         result
+    }
+
+    public List<StokProduk> stokSemuaGudang() {
+        daftarStok.values().toList().sort { it.gudang.nama }
     }
 
     public void perubahanStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {

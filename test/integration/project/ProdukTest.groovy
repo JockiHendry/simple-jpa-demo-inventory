@@ -134,25 +134,28 @@ class ProdukTest extends DbUnitTestCase {
                 "SELECT * FROM periodeitemstok_listitemStok WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 
-        log.debug "Mencari produk Z..."
-        produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
-        log.debug "Produk ditemukan."
+        repo.withTransaction {
+            log.debug "Mencari produk Z..."
+            produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
+            log.debug "Produk ditemukan."
 
-        log.debug "Mencari gudang Gudang..."
-        gudang = repo.findGudangByNama("Gudang")
-        log.debug "Gudang ditemukan."
+            log.debug "Mencari gudang Gudang..."
+            gudang = repo.findGudangByNama("Gudang")
+            log.debug "Gudang ditemukan."
 
-        log.debug "Mencari StokProduk untuk produk Z dan Gudang..."
-        stok = produk.stok(gudang)
-        log.debug "Stok ditemukan."
+            log.debug "Mencari StokProduk untuk produk Z dan Gudang..."
+            stok = produk.stok(gudang)
+            log.debug "Stok ditemukan."
 
-        log.debug "Mencari periode item stok untuk tahun 2010..."
-        periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
-        log.debug "Periode item stok ditemukan."
+            log.debug "Mencari periode item stok untuk tahun 2010..."
+            periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
+            log.debug "Periode item stok ditemukan."
 
-        assertTrue(periodeLampau.arsip)
-        assertEquals(10, periodeLampau.jumlah)
-        assertTrue(periodeLampau.listItemStok.isEmpty())
+            assertTrue(periodeLampau.arsip)
+            assertEquals(10, periodeLampau.jumlah)
+
+            assertTrue(periodeLampau.listItemStok.isEmpty())
+        }
     }
 
 }

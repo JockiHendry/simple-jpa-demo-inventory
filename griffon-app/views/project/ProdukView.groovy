@@ -99,6 +99,10 @@ application(title: 'Produk',
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
+                mvcPopupButton(id: 'stokProduk', text: 'Stok Produk...', mvcGroup: 'stokProduk',
+                    args: {[parent: view.table.selectionModel.selected[0]]},
+                    dialogProperties: [title: 'Stok Produk', size: new Dimension(900,420)],
+                    visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                     if (model.id!=null) {
                         if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
