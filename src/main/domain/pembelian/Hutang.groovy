@@ -39,12 +39,12 @@ class Hutang {
     List<PembayaranHutang> listPembayaran = []
 
     BigDecimal sisa(LocalDate hinggaTanggal = LocalDate.now()) {
-        jumlah - jumlahDibayar(hinggaTanggal)?: 0
+        jumlah - jumlahDibayar(hinggaTanggal)
     }
 
     BigDecimal jumlahDibayar(LocalDate hinggaTanggal = LocalDate.now()) {
         listPembayaran.findAll { it.tanggal.equals(hinggaTanggal) || it.tanggal.isBefore(hinggaTanggal) }
-            .sum { it.jumlah }
+            .sum { it.jumlah }?: 0
     }
 
     void bayar(PembayaranHutang pembayaranHutang) {
