@@ -15,6 +15,8 @@
  */
 package project
 
+import domain.faktur.Faktur
+import domain.faktur.ItemFaktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -60,5 +62,45 @@ class PenerimaanBarangTests extends GriffonUnitTestCase {
         assertNotNull(hasil.listItemBarang.find { it.produk == produkC})
     }
 
+    void testIsiSamaDenganDaftarBarang() {
+        Produk produkA = new Produk('Produk A', 10000)
+        Produk produkB = new Produk('Produk B', 15000)
+        Produk produkC = new Produk('Produk C',  7000)
+
+        PenerimaanBarang penerimaanBarang1 = new PenerimaanBarang(nomor: 'P1')
+        penerimaanBarang1.tambah(new ItemBarang(produkA, 10))
+        penerimaanBarang1.tambah(new ItemBarang(produkB, 20))
+        penerimaanBarang1.tambah(new ItemBarang(produkC,  5))
+
+        PenerimaanBarang penerimaanBarang2 = new PenerimaanBarang(nomor: 'P2')
+        penerimaanBarang2.tambah(new ItemBarang(produkA, 3))
+        penerimaanBarang2.tambah(new ItemBarang(produkC, 2))
+        penerimaanBarang2.tambah(new ItemBarang(produkA, 7))
+        penerimaanBarang2.tambah(new ItemBarang(produkB, 20))
+        penerimaanBarang2.tambah(new ItemBarang(produkC, 3))
+
+        assertTrue(penerimaanBarang1.isiSamaDengan(penerimaanBarang2))
+    }
+
+    void testIsiSamaDenganFaktur() {
+        Produk produkA = new Produk('Produk A', 10000)
+        Produk produkB = new Produk('Produk B', 15000)
+        Produk produkC = new Produk('Produk C',  7000)
+
+        PenerimaanBarang penerimaanBarang = new PenerimaanBarang(nomor: 'P1')
+        penerimaanBarang.tambah(new ItemBarang(produkA, 10))
+        penerimaanBarang.tambah(new ItemBarang(produkB, 20))
+        penerimaanBarang.tambah(new ItemBarang(produkC,  5))
+
+        Faktur faktur = new Faktur() {}
+        faktur.tambah(new ItemFaktur(produkA, 3))
+        faktur.tambah(new ItemFaktur(produkC, 3))
+        faktur.tambah(new ItemFaktur(produkC, 2))
+        faktur.tambah(new ItemFaktur(produkB, 10))
+        faktur.tambah(new ItemFaktur(produkA, 7))
+        faktur.tambah(new ItemFaktur(produkB, 10))
+
+        assertTrue(penerimaanBarang.isiSamaDengan(faktur))
+    }
 
 }

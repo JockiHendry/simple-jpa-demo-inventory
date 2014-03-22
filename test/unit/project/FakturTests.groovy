@@ -19,6 +19,8 @@ package project
 import domain.faktur.Diskon
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
+import domain.inventory.ItemBarang
+import domain.inventory.Produk
 import griffon.test.*
 
 class FakturTests extends GriffonUnitTestCase {
@@ -61,5 +63,21 @@ class FakturTests extends GriffonUnitTestCase {
         faktur.tambah(new ItemFaktur(jumlah: 3,  harga: 1000, diskon: new Diskon(2)))
         faktur.diskon = new Diskon(5)
         assertEquals(111473, faktur.total())
+    }
+
+    void testNormalisasi() {
+        Produk produkA = new Produk('Produk A', 12000)
+        Produk produkB = new Produk('Produk B', 11000)
+        Produk produkC = new Produk('Produk C',  9000)
+
+        Faktur faktur = new Faktur() {}
+        faktur.tambah(new ItemFaktur(produkA, 10))
+        faktur.tambah(new ItemFaktur(produkB, 4))
+        faktur.tambah(new ItemFaktur(produkC, 5))
+        faktur.tambah(new ItemFaktur(produkA, 2))
+        faktur.tambah(new ItemFaktur(produkB, 6))
+
+        Set hasil = [new ItemBarang(produkA, 12), new ItemBarang(produkC, 5), new ItemBarang(produkB, 10)]
+        assertEquals(hasil, faktur.normalisasi().toSet())
     }
 }

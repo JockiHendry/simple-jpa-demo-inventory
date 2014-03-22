@@ -16,7 +16,7 @@
 
 package domain.faktur
 
-import domain.pembelian.FakturBeli
+import domain.inventory.ItemBarang
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -59,5 +59,12 @@ abstract class Faktur {
         total
     }
 
+    public List<ItemBarang> normalisasi() {
+        List hasil = []
+        listItemFaktur.groupBy { it.produk }.each { k, v ->
+            hasil << new ItemBarang(k, v.sum {it.jumlah})
+        }
+        hasil
+    }
 }
 

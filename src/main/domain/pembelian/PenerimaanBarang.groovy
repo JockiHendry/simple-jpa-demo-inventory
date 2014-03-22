@@ -15,6 +15,7 @@
  */
 package domain.pembelian
 
+import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.validation.TanpaGudang
@@ -50,7 +51,11 @@ class PenerimaanBarang extends DaftarBarang {
     }
 
     boolean isiSamaDengan(DaftarBarang daftarBarangLain) {
-        normalisasi() == daftarBarangLain.normalisasi()
+        normalisasi().toSet() == daftarBarangLain.normalisasi().toSet()
+    }
+
+    boolean isiSamaDengan(Faktur faktur) {
+        normalisasi().toSet() == faktur.normalisasi().toSet()
     }
 
 }
