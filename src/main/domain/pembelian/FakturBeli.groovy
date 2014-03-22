@@ -15,9 +15,11 @@
  */
 package domain.pembelian
 
+import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import groovy.transform.*
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -31,5 +33,22 @@ class FakturBeli extends Faktur {
     @NotNull @Enumerated
     StatusFakturBeli status = StatusFakturBeli.DIBUAT
 
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
+    Hutang hutang
+
+    Hutang buatHutang(LocalDate jatuhTempo) {
+        if (status != StatusFakturBeli.BARANG_DITERIMA) {
+            throw new DataTidakBolehDiubah(this)
+        }
+        if (!jatuhTempo) jatuhTempo = LocalDate.now().plusDays(30)
+        hutang = new Hutang(jatuhTempo, false, total())
+    }
+
+    void bayarHutang(PembayaranHutang pembayaranHutang) {
+        hutang.bayar(pembayaranHutang)
+        if (hutang.lunas) {
+            status = StatusFakturBeli.LUNAS
+        }
+    }
 }
 

@@ -13,27 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.exception;
+package domain.pembelian
 
-public class DataTidakBolehDiubah extends RuntimeException {
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
+import org.hibernate.annotations.Type
+import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
+import org.joda.time.*
 
-    private Object target;
 
-    public DataTidakBolehDiubah(Object object) {
-        super("Data tidak boleh diubah untuk " + object);
-        setTarget(object);
-    }
+@Embeddable @Canonical
+class PembayaranHutang {
 
-    public DataTidakBolehDiubah(String pesan, Object object) {
-        super(pesan);
-        setTarget(object);
-    }
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggal
 
-    public Object getTarget() {
-        return target;
-    }
+    @NotNull @Min(0l)
+    BigDecimal jumlah
 
-    public void setTarget(Object target) {
-        this.target = target;
-    }
 }
+
