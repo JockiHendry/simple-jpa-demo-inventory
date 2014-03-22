@@ -13,36 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project
 
-package domain.faktur
-
+import ca.odell.glazedlists.BasicEventList
+import domain.faktur.Faktur
+import domain.faktur.ItemFaktur
 import domain.inventory.Produk
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import javax.validation.constraints.*
+import groovy.beans.Bindable
 
-@Embeddable @Canonical
-class ItemFaktur {
+class ItemFakturAsChildModel {
 
-    @NotNull @ManyToOne
-    Produk produk
+    Faktur parent
 
-    @NotNull @Min(1l)
-    Integer jumlah
+    @Bindable Produk produk
+    @Bindable Integer jumlah
+    @Bindable BigDecimal harga
+    @Bindable BigDecimal diskonPotonganPersen
+    @Bindable BigDecimal diskonPotonganLangsung
+    @Bindable String keterangan
 
-    @NotNull @Digits(integer=12, fraction=2)
-    BigDecimal harga
+    BasicEventList<ItemFaktur> itemFakturList = new BasicEventList<>()
 
-    @Size(min=2, max=200)
-    String keterangan
-
-    @Embedded
-    Diskon diskon
-
-    public BigDecimal total() {
-        (diskon? diskon.hasil(harga): harga) * jumlah
-    }
-
+    @Bindable boolean editable
 }
-

@@ -40,7 +40,7 @@ application(title: 'simple-jpa-demo-inventory',
         panel(layout: new MigLayout('', '[left][left]', ''), constraints: PAGE_START) {
             label('File Restore: ')
             label(text: bind('fileRestore', source: model), constraints: 'split 2')
-            button('Pilih Lokasi Tujuan', constraints: 'gapleft 10px, wrap', actionPerformed: {
+            button('Pilih Lokasi File Backup', constraints: 'gapleft 10px, wrap', actionPerformed: {
                 if (fileChooser.showOpenDialog(view.mainPanel)==JFileChooser.APPROVE_OPTION) {
                     model.fileRestore = fileChooser.selectedFile
                 }

@@ -16,45 +16,40 @@
 package project
 
 import domain.Container
-import domain.inventory.ItemBarang
+import domain.faktur.Diskon
+import domain.faktur.ItemFaktur
 import domain.inventory.Produk
-import simplejpa.swing.DialogUtils
 
-import javax.swing.JDialog
-import javax.swing.JOptionPane
-import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import java.awt.Dialog
-import java.awt.Dimension
-import java.awt.Window
 
-class ItemBarangAsChildController {
+class ItemFakturAsChildController {
 
-    ItemBarangAsChildModel model
+    ItemFakturAsChildModel model
     def view
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
         model.editable = !model.parent?.id
-        model.itemBarangList.clear()
-        model.itemBarangList.addAll(args.'listItemBarang')
+        model.itemFakturList.clear()
+        model.itemFakturList.addAll(args.'listItemFaktur')
     }
 
     def save = {
-        ItemBarang itemBarang = new ItemBarang(produk: model.produk, jumlah: model.jumlah)
+        ItemFaktur itemFaktur = new ItemFaktur(produk: model.produk, jumlah: model.jumlah, harga: model.harga, keterangan: model.keterangan)
+        itemFaktur.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
 
-        if (!Container.app.penerimaanBarangRepository.validate(itemBarang, Default, model)) return
+        if (!Container.app.fakturBeliRepository.validate(itemFaktur, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             execInsideUISync {
-                model.itemBarangList << itemBarang
-                view.table.changeSelection(model.itemBarangList.size()-1, 0, false, false)
+                model.itemFakturList << itemFaktur
+                view.table.changeSelection(model.itemFakturList.size()-1, 0, false, false)
                 clear()
             }
         } else {
             execInsideUISync {
-                view.table.selectionModel.selected[0] = itemBarang
+                view.table.selectionModel.selected[0] = itemFaktur
                 clear()
             }
         }
@@ -70,7 +65,7 @@ class ItemBarangAsChildController {
 
     def delete = {
         execInsideUISync {
-            model.itemBarangList.remove(view.table.selectionModel.selected[0])
+            model.itemFakturList.remove(view.table.selectionModel.selected[0])
             clear()
         }
     }
@@ -79,6 +74,9 @@ class ItemBarangAsChildController {
         execInsideUISync {
             model.produk = null
             model.jumlah = null
+            model.harga = null
+            model.diskonPotonganLangsung = null
+            model.diskonPotonganPersen = null
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -89,12 +87,27 @@ class ItemBarangAsChildController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                ItemBarang selected = view.table.selectionModel.selected[0]
+                ItemFaktur selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.produk = selected.produk
                 model.jumlah = selected.jumlah
+                model.harga = selected.harga
+                model.diskonPotonganPersen = selected.diskon?.potonganPersen
+                model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
             }
         }
     }
 
+    // void mvcGroupDestroy() {
+    //    // this method is called when the group is destroyed
+    // }
+
+    /*
+        Remember that actions will be called outside of the UI thread
+        by default. You can change this setting of course.
+        Please read chapter 9 of the Griffon Guide to know more.
+       
+    def action = { evt = null ->
+    }
+    */
 }

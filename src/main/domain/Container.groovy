@@ -21,6 +21,7 @@ package domain
 import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
+import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.SupplierRepository
 import griffon.util.*
@@ -29,10 +30,13 @@ class Container {
 
     public static Container app = new Container()
 
+    public static final String SEMUA = "Semua"
+
     private GudangRepository gudangRepository
     private ProdukRepository produkRepository
     private SupplierRepository supplierRepository
     private PenerimaanBarangRepository penerimaanBarangRepository
+    private FakturBeliRepository fakturBeliRepository
 
     private InventoryEventConsumer inventoryEventConsumer
 
@@ -44,6 +48,7 @@ class Container {
         produkRepository = new ProdukRepository()
         supplierRepository = new SupplierRepository()
         penerimaanBarangRepository = new PenerimaanBarangRepository()
+        fakturBeliRepository = new FakturBeliRepository()
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()
@@ -66,4 +71,13 @@ class Container {
         penerimaanBarangRepository
     }
 
+    public FakturBeliRepository getFakturBeliRepository() {
+        fakturBeliRepository
+    }
+
+    public List searchEnum(Class enumeration) {
+        List result = [SEMUA]
+        result.addAll(EnumSet.allOf(enumeration))
+        result
+    }
 }

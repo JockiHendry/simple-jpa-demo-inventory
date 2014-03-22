@@ -13,36 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.pembelian
 
-package domain.faktur
-
-import domain.inventory.Produk
+import domain.faktur.Faktur
+import domain.inventory.DaftarBarang
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Embeddable @Canonical
-class ItemFaktur {
+@DomainClass @Entity @Canonical
+class FakturBeli extends Faktur {
 
     @NotNull @ManyToOne
-    Produk produk
+    Supplier supplier
 
-    @NotNull @Min(1l)
-    Integer jumlah
-
-    @NotNull @Digits(integer=12, fraction=2)
-    BigDecimal harga
-
-    @Size(min=2, max=200)
-    String keterangan
-
-    @Embedded
-    Diskon diskon
-
-    public BigDecimal total() {
-        (diskon? diskon.hasil(harga): harga) * jumlah
-    }
+    @NotNull @Enumerated
+    StatusFakturBeli status = StatusFakturBeli.DIBUAT
 
 }
 

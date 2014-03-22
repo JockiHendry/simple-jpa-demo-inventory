@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-package domain.faktur
+package domain.pembelian;
 
-import domain.inventory.Produk
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import javax.validation.constraints.*
+public enum StatusFakturBeli {
+    DIBUAT("Dibuat"), BARANG_DITERIMA("Barang Diterima"), LUNAS("Lunas");
 
-@Embeddable @Canonical
-class ItemFaktur {
+    private String caption;
 
-    @NotNull @ManyToOne
-    Produk produk
-
-    @NotNull @Min(1l)
-    Integer jumlah
-
-    @NotNull @Digits(integer=12, fraction=2)
-    BigDecimal harga
-
-    @Size(min=2, max=200)
-    String keterangan
-
-    @Embedded
-    Diskon diskon
-
-    public BigDecimal total() {
-        (diskon? diskon.hasil(harga): harga) * jumlah
+    StatusFakturBeli(String caption) {
+        this.caption = caption;
     }
 
-}
+    public boolean setelah(StatusFakturBeli status) {
+        return (this.ordinal() > status.ordinal());
+    }
 
+    @Override
+    public String toString() {
+        return caption;
+    }
+}

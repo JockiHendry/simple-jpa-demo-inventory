@@ -93,11 +93,15 @@ class PenerimaanBarangController {
     }
 
     def delete = {
-        PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
-        penerimaanBarang = penerimaanBarangRepository.hapus(penerimaanBarang)
-        execInsideUISync {
-            view.table.selectionModel.selected[0] = penerimaanBarang
-            clear()
+        try {
+            PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
+            penerimaanBarang = penerimaanBarangRepository.hapus(penerimaanBarang)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = penerimaanBarang
+                clear()
+            }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

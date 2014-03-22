@@ -30,7 +30,7 @@ import griffon.util.*
 class PenerimaanBarangRepository {
 
     public List<PenerimaanBarang> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
-        findAllPenerimaanBarangByDslFetchComplete {
+        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
                 and()
@@ -60,10 +60,10 @@ class PenerimaanBarangRepository {
     }
 
     public PenerimaanBarang update(PenerimaanBarang penerimaanBarang) {
-        if (penerimaanBarang.faktur) {
+        PenerimaanBarang p = findPenerimaanBarangByIdFetchComplete(penerimaanBarang.id)
+        if (p.faktur || p.deleted == 'Y') {
             throw new DataTidakBolehDiubah(penerimaanBarang)
         }
-        PenerimaanBarang p = findPenerimaanBarangById(penerimaanBarang.id)
         p.nomor = penerimaanBarang.nomor
         p.tanggal = penerimaanBarang.tanggal
         p.keterangan = penerimaanBarang.keterangan
@@ -72,16 +72,18 @@ class PenerimaanBarangRepository {
     }
 
     public PenerimaanBarang hapus(PenerimaanBarang penerimaanBarang) {
-        if (penerimaanBarang.faktur) {
+        PenerimaanBarang p = findPenerimaanBarangByIdFetchComplete(penerimaanBarang.id)
+        if (p.faktur) {
             throw new DataTidakBolehDiubah(penerimaanBarang)
         }
-        PenerimaanBarang p = findPenerimaanBarangById(penerimaanBarang.id)
-        p.deleted = 'Y'
-        ApplicationHolder.application.event(new DaftarBarangDihapus(p))
+        if (p.deleted != 'Y') {
+            p.deleted = 'Y'
+            ApplicationHolder.application.event(new DaftarBarangDihapus(p))
+        }
         p
     }
 
     public List<PenerimaanBarang> findReceivedNotInvoiced() {
-        findAllPenerimaanBarangByDsl([orderBy: 'nomor']) { faktur isNull() }
+        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) { faktur isNull() }
     }
 }

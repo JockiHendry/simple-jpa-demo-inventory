@@ -16,11 +16,31 @@
 
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
+import griffon.util.*
+import javax.validation.ConstraintViolationException
 
 onUncaughtExceptionThrown = { Exception e ->
     BusyLayerUI.instance.hide()
     if (e instanceof org.codehaus.groovy.runtime.InvokerInvocationException) e = e.cause
-    javax.swing.JOptionPane.showMessageDialog(null, e.message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+    if (e.cause instanceof ConstraintViolationException) {
+        ConstraintViolationException cv = e.cause
+        StringBuilder pesan = new StringBuilder()
+        cv.constraintViolations.each {
+            if (it.propertyPath) {
+                pesan.append(GriffonNameUtils.getNaturalName(it.propertyPath.toString()))
+                pesan.append(' di ')
+            }
+            if (it.rootBeanClass) {
+                pesan.append(GriffonNameUtils.getNaturalName(it.rootBeanClass.simpleName))
+                pesan.append(' ')
+            }
+            pesan.append(it.message)
+            pesan.append('\n')
+        }
+        javax.swing.JOptionPane.showMessageDialog(null, pesan.toString(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(null, e.message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
 }
 
 onSimpleJpaNewTransaction = { TransactionHolder th ->

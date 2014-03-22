@@ -23,6 +23,20 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "itemFakturAsChild"
+    'itemFakturAsChild' {
+        model      = 'project.ItemFakturAsChildModel'
+        view       = 'project.ItemFakturAsChildView'
+        controller = 'project.ItemFakturAsChildController'
+    }
+
+    // MVC Group for "fakturBeli"
+    'fakturBeli' {
+        model      = 'project.FakturBeliModel'
+        view       = 'project.FakturBeliView'
+        controller = 'project.FakturBeliController'
+    }
+
     // MVC Group for "itemStok"
     'itemStok' {
         model      = 'project.ItemStokModel'

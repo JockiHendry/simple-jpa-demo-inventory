@@ -16,6 +16,7 @@
 
 package domain.faktur
 
+import domain.pembelian.FakturBeli
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -24,8 +25,11 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical(excludes='listItemFaktur')
+@NamedEntityGraph(name='FakturBeli.Complete', attributeNodes = [
+    @NamedAttributeNode(value='listItemFaktur'),
+])
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DomainClass @Entity @Canonical(excludes='listItemFaktur')
 abstract class Faktur {
 
     @NotEmpty @Size(min=2, max=100)
@@ -40,7 +44,7 @@ abstract class Faktur {
     @Size(min=2, max=200)
     String keterangan
 
-    @ElementCollection @OrderColumn
+    @ElementCollection @OrderColumn @NotEmpty
     List<ItemFaktur> listItemFaktur = []
 
     public void tambah(ItemFaktur itemFaktur) {

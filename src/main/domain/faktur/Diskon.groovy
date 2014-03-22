@@ -25,7 +25,7 @@ import javax.validation.constraints.Digits
 import java.text.NumberFormat
 
 @Embeddable @Canonical
-class Diskon {
+class Diskon implements Comparable {
 
     @Digits(integer=3, fraction=3)
     BigDecimal potonganPersen
@@ -54,7 +54,7 @@ class Diskon {
             result << "${NumberFormat.numberInstance.format(potonganPersen.doubleValue())} %"
         }
         if (potonganLangsung) {
-            result << NumberFormat.numberInstance.format(potonganLangsung.doubleValue())
+            result << NumberFormat.currencyInstance.format(potonganLangsung.doubleValue())
         }
         result.join(' + ')
     }

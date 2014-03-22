@@ -21,10 +21,18 @@ import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
 import domain.inventory.ProdukRepository
+import simplejpa.swing.DialogUtils
 import simplejpa.transaction.Transaction
+import griffon.util.ApplicationHolder
 
+import javax.swing.JDialog
+import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dialog
+import java.awt.Dimension
+import java.awt.Window
 
 class ProdukController {
 
@@ -32,6 +40,38 @@ class ProdukController {
     def view
 
     ProdukRepository produkRepository
+
+    private static MVCGroup produkPopupMVC
+
+    public static MVCGroup getProdukPopupMVC() {
+        if (!produkPopupMVC) {
+            produkPopupMVC = ApplicationHolder.application.mvcGroupManager.buildMVCGroup('produk', 'produkPopupDiItemBarang', [popup: true])
+        }
+        produkPopupMVC
+    }
+
+    public static Produk displayProdukPopup(view) {
+        def v = getProdukPopupMVC().view
+        Window thisWindow = SwingUtilities.getWindowAncestor(view.mainPanel)
+        JDialog dialog = new JDialog(thisWindow, Dialog.ModalityType.APPLICATION_MODAL)
+        if (DialogUtils.defaultContentDecorator) {
+            dialog.contentPane = DialogUtils.defaultContentDecorator(v.mainPanel)
+        } else {
+            dialog.contentPane = v.mainPanel
+        }
+        dialog.pack()
+        dialog.title = "Cari Produk"
+        dialog.size = new Dimension(900, 420)
+        dialog.setLocationRelativeTo(thisWindow)
+        dialog.setVisible(true)
+
+        // Setelah dialog selesai ditampilkan
+        if (v.table.selectionModel.isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+            return null
+        }
+        return v.view.table.selectionModel.selected[0]
+    }
 
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popup'?: false

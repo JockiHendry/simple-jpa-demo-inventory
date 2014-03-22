@@ -22,7 +22,7 @@ import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
-application(title: 'Penerimaan Barang',
+application(title: 'Faktur Beli',
         preferredSize: [520, 340],
         pack: true,
         locationByPlatform: true,
@@ -39,6 +39,7 @@ application(title: 'Penerimaan Barang',
             dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
             label(' s/d ')
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
+            comboBox(id: 'statusSearch', model: model.statusSearch)
             textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
             textField(id: 'supplierSearch', columns: 10, text: bind('supplierSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
@@ -46,25 +47,28 @@ application(title: 'Penerimaan Barang',
 
         panel(constraints: CENTER) {
             borderLayout()
-            panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
-                label(text: bind('searchMessage', source: model))
-            }
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.penerimaanBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.fakturBeliList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                     glazedColumn(name: '', property: 'deleted', width: 20) {
-                        templateRenderer(exp: { it=='Y'?'D':''})
+                        templateRenderer(exp: {it=='Y'?'D':''})
                     }
                     glazedColumn(name: 'Nomor', property: 'nomor', width: 120)
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
-                        templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
+                        templateRenderer(exp: {it.toString('dd-MM-yyyy')})
                     }
                     glazedColumn(name: 'Supplier', property: 'supplier') {
-                        templateRenderer(exp: {it?.nama})
-                    }
-                    glazedColumn(name: 'Faktur', property: 'faktur') {
-                        templateRenderer(exp: {it?.nomor?: '-'})
+                        templateRenderer(exp: {it.nama})
                     }
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
+                    glazedColumn(name: 'Status', property: 'status')
+                    glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer)
+                    glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.total())}, columnClass: Integer) {
+                        templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer) {
+                        templateRenderer(exp: {currencyFormat(it)}, horizontalAlignment: RIGHT)
+                    }
+
                 }
             }
         }
@@ -79,23 +83,30 @@ application(title: 'Penerimaan Barang',
             label('Supplier:')
             comboBox(id: 'supplier', model: model.supplier, templateRenderer: '${value}', errorPath: 'supplier')
             errorLabel(path: 'supplier', constraints: 'wrap')
+            label('Diskon:')
+            panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
+                numberTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
+                label('% dan Potongan Langsung Rp')
+                numberTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
+            }
+            errorLabel(path: 'diskon', constraints: 'wrap')
             label('Isi:')
             panel {
-                mvcPopupButton(id: 'listItemBarang', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
-                    errorPath: 'listItemBarang', mvcGroup: 'itemBarangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang]},
-                    dialogProperties: [title: 'Daftar Barang', size: new Dimension(900,420)],
+                label(text: bind { model.informasi })
+                mvcPopupButton(id: 'listItemFaktur', text: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur...',
+                    errorPath: 'listItemFaktur', mvcGroup: 'itemFakturAsChild',
+                    args: {[parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur]},
+                    dialogProperties: [title: 'Item Faktur', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
-                        model.listItemBarang.clear()
-                        model.listItemBarang.addAll(m.itemBarangList)
+                        model.listItemFaktur.clear()
+                        model.listItemFaktur.addAll(m.itemFakturList)
                     }
                 )
             }
-            errorLabel(path: 'listItemBarang', constraints: 'wrap')
+            errorLabel(path: 'listItemFaktur', constraints: 'wrap')
             label('Keterangan:')
             textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')
-
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
