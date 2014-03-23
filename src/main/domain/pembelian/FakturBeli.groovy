@@ -40,7 +40,7 @@ class FakturBeli extends Faktur {
         if (status != StatusFakturBeli.BARANG_DITERIMA) {
             throw new DataTidakBolehDiubah(this)
         }
-        if (!jatuhTempo) jatuhTempo = LocalDate.now().plusDays(30)
+        if (!jatuhTempo) jatuhTempo = tanggal.plusDays(30)
         hutang = new Hutang(jatuhTempo, false, total())
     }
 

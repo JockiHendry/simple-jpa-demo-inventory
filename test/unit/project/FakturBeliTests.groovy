@@ -39,14 +39,14 @@ class FakturBeliTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A', 10000)
         Produk produkB = new Produk('Produk B', 12000)
         Produk produkC = new Produk('Produk C',  8000)
-        FakturBeli fakturBeli = new FakturBeli()
+        FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now())
         fakturBeli.status = StatusFakturBeli.BARANG_DITERIMA
         fakturBeli.tambah(new ItemFaktur(produkA, 10,  9000))
         fakturBeli.tambah(new ItemFaktur(produkB,  5, 11000))
         fakturBeli.tambah(new ItemFaktur(produkC,  8,  5000))
 
         fakturBeli.buatHutang()
-        assertEquals(LocalDate.now().plusDays(30), fakturBeli.hutang.jatuhTempo)
+        assertEquals(fakturBeli.tanggal.plusDays(30), fakturBeli.hutang.jatuhTempo)
         assertEquals(185000, fakturBeli.hutang.jumlah)
 
         fakturBeli.buatHutang(Periode.format.parseLocalDate('28-02-2014'))
@@ -63,7 +63,7 @@ class FakturBeliTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A', 10000)
         Produk produkB = new Produk('Produk B', 12000)
         Produk produkC = new Produk('Produk C',  8000)
-        FakturBeli fakturBeli = new FakturBeli()
+        FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now())
         fakturBeli.status = StatusFakturBeli.BARANG_DITERIMA
         fakturBeli.tambah(new ItemFaktur(produkA, 10,  9000))
         fakturBeli.tambah(new ItemFaktur(produkB,  5, 11000))
