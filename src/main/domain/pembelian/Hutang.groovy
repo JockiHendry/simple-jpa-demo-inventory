@@ -35,7 +35,7 @@ class Hutang {
     @NotNull @Min(0l)
     BigDecimal jumlah
 
-    @ElementCollection @OrderColumn
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn
     List<PembayaranHutang> listPembayaran = []
 
     BigDecimal sisa(LocalDate hinggaTanggal = LocalDate.now()) {
