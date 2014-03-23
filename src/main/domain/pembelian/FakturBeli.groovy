@@ -24,6 +24,9 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
+@NamedEntityGraph(name='FakturBeli.Complete', includeAllAttributes=true, attributeNodes = [
+    @NamedAttributeNode(value='hutang')
+])
 @DomainClass @Entity @Canonical
 class FakturBeli extends Faktur {
 
@@ -33,7 +36,7 @@ class FakturBeli extends Faktur {
     @NotNull @Enumerated
     StatusFakturBeli status = StatusFakturBeli.DIBUAT
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     Hutang hutang
 
     Hutang buatHutang(LocalDate jatuhTempo) {

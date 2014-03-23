@@ -25,9 +25,6 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@NamedEntityGraph(name='FakturBeli.Complete', attributeNodes = [
-    @NamedAttributeNode(value='listItemFaktur'),
-])
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DomainClass @Entity @Canonical(excludes='listItemFaktur')
 abstract class Faktur {
