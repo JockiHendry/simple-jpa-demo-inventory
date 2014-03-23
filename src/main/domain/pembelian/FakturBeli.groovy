@@ -24,8 +24,13 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@NamedEntityGraph(name='FakturBeli.Complete', includeAllAttributes=true, attributeNodes = [
-    @NamedAttributeNode(value='hutang')
+@NamedEntityGraph(name='FakturBeli.Complete', attributeNodes = [
+    @NamedAttributeNode(value='listItemFaktur'),
+    @NamedAttributeNode(value='hutang', subgraph='sHutang')
+], subgraphs=[
+    @NamedSubgraph(name='hutang', type=Hutang, attributeNodes = [
+        @NamedAttributeNode(value='listPembayaran')
+    ])
 ])
 @DomainClass @Entity @Canonical
 class FakturBeli extends Faktur {
@@ -36,7 +41,7 @@ class FakturBeli extends Faktur {
     @NotNull @Enumerated
     StatusFakturBeli status = StatusFakturBeli.DIBUAT
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
     Hutang hutang
 
     Hutang buatHutang(LocalDate jatuhTempo) {

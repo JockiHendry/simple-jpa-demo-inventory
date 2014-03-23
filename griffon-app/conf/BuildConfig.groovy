@@ -176,12 +176,13 @@ griffon.project.dependency.resolution = {
     log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     repositories {
         griffonHome()
+        mavenLocal()
         mavenCentral()
         mavenRepo "http://jasperreports.sourceforge.net/maven2"
     }
     dependencies {
         runtime 'mysql:mysql-connector-java:5.1.20'
-        runtime 'org.hibernate:hibernate-entitymanager:4.3.1.Final'
+        runtime 'org.hibernate:hibernate-entitymanager:4.3.4.Final'
         runtime 'org.hibernate:hibernate-validator:4.3.0.Final'
         compile('net.sf.jasperreports:jasperreports:5.1.0') {
             exclude 'commons-collections'
