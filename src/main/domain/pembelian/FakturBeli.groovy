@@ -26,7 +26,7 @@ import javax.validation.constraints.*
 
 @NamedEntityGraph(name='FakturBeli.Complete', attributeNodes = [
     @NamedAttributeNode(value='listItemFaktur'),
-    @NamedAttributeNode(value='hutang', subgraph='sHutang')
+    @NamedAttributeNode(value='hutang', subgraph='hutang')
 ], subgraphs=[
     @NamedSubgraph(name='hutang', type=Hutang, attributeNodes = [
         @NamedAttributeNode(value='listPembayaran')
