@@ -32,6 +32,8 @@ def popupMaintenance = {
 actions {
     action(id: 'penerimaanBarang', name: 'Terima Barang', actionCommandKey: 'penerimaanBarang', mnemonic: KeyEvent.VK_T,
         smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: controller.switchPage)
+    action(id: 'receivedNotInvoiced', name: 'RNI', actionCommandKey: 'receivedNotInvoiced', mnemonic: KeyEvent.VK_R,
+        smallIcon: imageIcon('/menu_rni.png'), closure: controller.switchPage)
 
     action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'fakturBeli', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_pembelian.png'), closure: controller.switchPage)
@@ -73,6 +75,7 @@ application(id: 'mainFrame',
             toolBar(constraints: BorderLayout.PAGE_START) {
                 buttonGroup(id: 'buttons')
                 toggleButton(buttonGroup: buttons, action: penerimaanBarang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                toggleButton(buttonGroup: buttons, action: receivedNotInvoiced, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()

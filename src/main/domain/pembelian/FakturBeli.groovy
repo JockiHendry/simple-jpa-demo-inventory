@@ -32,7 +32,7 @@ import javax.validation.constraints.*
         @NamedAttributeNode(value='listPembayaran')
     ])
 ])
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical @ToString(excludes='hutang')
 class FakturBeli extends Faktur {
 
     @NotNull @ManyToOne

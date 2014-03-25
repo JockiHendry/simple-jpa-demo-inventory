@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "receivedNotInvoiced"
+    'receivedNotInvoiced' {
+        model      = 'project.ReceivedNotInvoicedModel'
+        view       = 'project.ReceivedNotInvoicedView'
+        controller = 'project.ReceivedNotInvoicedController'
+    }
+
     // MVC Group for "itemFakturAsChild"
     'itemFakturAsChild' {
         model      = 'project.ItemFakturAsChildModel'

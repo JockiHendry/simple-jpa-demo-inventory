@@ -17,10 +17,19 @@ package domain.pembelian
 
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
+import domain.exception.FakturTidakDitemukan
 import simplejpa.transaction.Transaction
 
 @Transaction
 class PenerimaanBarangService {
+
+    public PenerimaanBarang assign(PenerimaanBarang penerimaanBarang, String nomorFakturBeli) {
+        FakturBeli fakturBeli = findFakturBeliByNomor(nomorFakturBeli)
+        if (!fakturBeli) {
+            throw new FakturTidakDitemukan(nomorFakturBeli)
+        }
+        assign(penerimaanBarang, fakturBeli)
+    }
 
     public PenerimaanBarang assign(PenerimaanBarang penerimaanBarang, FakturBeli fakturBeli) {
         if (penerimaanBarang.deleted == 'Y') {
@@ -36,7 +45,7 @@ class PenerimaanBarangService {
             throw new DataTidakBolehDiubah('Barang untuk faktur ini sudah diterima secara lengkap!', fakturBeli)
         }
         if (!fakturBeli.supplier.equals(penerimaanBarang.supplier)) {
-            throw new DataTidakKonsisten('Supplier tidak sama!')
+            throw new DataTidakKonsisten('Supplier tidak sama!', fakturBeli)
         }
         penerimaanBarang = merge(penerimaanBarang)
         fakturBeli = merge(fakturBeli)

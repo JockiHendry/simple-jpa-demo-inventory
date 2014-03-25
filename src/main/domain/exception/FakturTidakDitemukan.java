@@ -15,25 +15,10 @@
  */
 package domain.exception;
 
-public class DataTidakKonsisten extends RuntimeException {
+public class FakturTidakDitemukan extends RuntimeException {
 
-    private Object target;
-
-    public DataTidakKonsisten(Object object) {
-        super("Data tidak konsisten untuk " + object);
-        setTarget(object);
+    public FakturTidakDitemukan(String nomorFaktur) {
+        super("Faktur dengan nomor " + nomorFaktur + " tidak ditemukan!");
     }
 
-    public DataTidakKonsisten(String pesan, Object object) {
-        super(pesan);
-        setTarget(object);
-    }
-
-    public Object getTarget() {
-        return target;
-    }
-
-    public void setTarget(Object target) {
-        this.target = target;
-    }
 }

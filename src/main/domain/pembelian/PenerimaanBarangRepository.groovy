@@ -43,6 +43,22 @@ class PenerimaanBarangRepository {
         }
     }
 
+    public List<PenerimaanBarang> cariReceivedNotInvoiced(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
+        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) {
+            faktur isNull()
+            and()
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (supplierSearch) {
+                and()
+                supplier__nama like("%${supplierSearch}%")
+            }
+        }
+    }
+
     public PenerimaanBarang buat(PenerimaanBarang penerimaanBarang) {
         if (findPenerimaanBarangByNomor(penerimaanBarang.nomor)) {
             throw new DataDuplikat(penerimaanBarang)
@@ -83,7 +99,4 @@ class PenerimaanBarangRepository {
         p
     }
 
-    public List<PenerimaanBarang> findReceivedNotInvoiced() {
-        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) { faktur isNull() }
-    }
 }

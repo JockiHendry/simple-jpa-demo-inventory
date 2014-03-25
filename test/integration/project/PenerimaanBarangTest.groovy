@@ -44,7 +44,7 @@ class PenerimaanBarangTest extends DbUnitTestCase {
     }
 
     void testFindReceivedNotInvoiced() {
-        List result = Container.app.penerimaanBarangRepository.findReceivedNotInvoiced()
+        List result = Container.app.penerimaanBarangRepository.cariReceivedNotInvoiced()
         assertEquals(3, result.size())
         assertEquals(-2, result[0].id)
         assertEquals('P2', result[0].nomor)
