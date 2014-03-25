@@ -44,7 +44,7 @@ class PenerimaanBarangTest extends DbUnitTestCase {
     }
 
     void testFindReceivedNotInvoiced() {
-        List result = Container.app.penerimaanBarangRepository.cariReceivedNotInvoiced()
+        List result = Container.app.penerimaanBarangRepository.cariReceivedNotInvoiced(Periode.format.parseLocalDate('01-01-1900'), Periode.format.parseLocalDate('01-01-2099'), null, null)
         assertEquals(3, result.size())
         assertEquals(-2, result[0].id)
         assertEquals('P2', result[0].nomor)
