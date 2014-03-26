@@ -38,18 +38,17 @@ class Hutang {
     @ElementCollection @OrderColumn
     List<PembayaranHutang> listPembayaran = []
 
-    BigDecimal sisa(LocalDate hinggaTanggal = LocalDate.now()) {
-        jumlah - jumlahDibayar(hinggaTanggal)
+    BigDecimal sisa() {
+        jumlah - jumlahDibayar()
     }
 
-    BigDecimal jumlahDibayar(LocalDate hinggaTanggal = LocalDate.now()) {
-        listPembayaran.findAll { it.tanggal.equals(hinggaTanggal) || it.tanggal.isBefore(hinggaTanggal) }
-            .sum { it.jumlah }?: 0
+    BigDecimal jumlahDibayar() {
+        listPembayaran.sum { it.jumlah }?: 0
     }
 
     void bayar(PembayaranHutang pembayaranHutang) {
-        if (pembayaranHutang.jumlah > sisa(pembayaranHutang.tanggal)) {
-            throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa(pembayaranHutang.tanggal)}")
+        if (pembayaranHutang.jumlah > sisa()) {
+            throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa()}")
         }
         listPembayaran << pembayaranHutang
         if (sisa()==0) {

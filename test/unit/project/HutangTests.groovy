@@ -52,8 +52,6 @@ class HutangTests extends GriffonUnitTestCase {
         hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('14-03-2013'), 210000))
 
         assertEquals(1070000, hutang.jumlahDibayar())
-        assertEquals( 860000, hutang.jumlahDibayar(Periode.format.parseLocalDate('15-02-2013')))
-        assertEquals( 540000, hutang.jumlahDibayar(Periode.format.parseLocalDate('30-01-2013')))
     }
 
     void testSisa() {
@@ -62,8 +60,6 @@ class HutangTests extends GriffonUnitTestCase {
         hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('04-02-2013'),  820000))
         hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('14-03-2013'), 1320000))
 
-        assertEquals( 910000, hutang.sisa())
-        assertEquals(2230000, hutang.sisa(Periode.format.parseLocalDate('15-02-2013')))
-        assertEquals(3050000, hutang.sisa(Periode.format.parseLocalDate('30-01-2013')))
+        assertEquals(910000, hutang.sisa())
     }
 }
