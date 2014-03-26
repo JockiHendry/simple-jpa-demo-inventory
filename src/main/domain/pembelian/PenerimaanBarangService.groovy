@@ -71,7 +71,7 @@ class PenerimaanBarangService {
     }
 
     public List<ItemBarang> sisaBelumDiterima(FakturBeli fakturBeli) {
-        List daftarBarang = findFakturBeliByIdFetchComplete(fakturBeli.id).normalisasi()
+        List daftarBarang = findFakturBeliByIdFetchItems(fakturBeli.id).normalisasi()
         log.debug "Barang yang tertera di faktur: $daftarBarang"
 
         PenerimaanBarang p

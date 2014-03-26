@@ -28,10 +28,10 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ProdukRepository {
 
-    public List<Produk> cari(String nama) {
+    public List<Produk> cari(String namaSearch) {
         findAllProdukByDslFetchComplete([excludeDeleted: false]) {
-            if (nama) {
-                nama like("%${nama}%")
+            if (namaSearch) {
+                nama like("%${namaSearch}%")
             }
         }
     }

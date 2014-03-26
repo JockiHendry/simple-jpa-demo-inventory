@@ -28,7 +28,7 @@ import simplejpa.transaction.Transaction
 class FakturBeliRepository {
 
     public List<FakturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, def statusSearch) {
-        findAllFakturBeliByDslFetchComplete([orderBy: 'tanggal', excludeDeleted: false]) {
+        findAllFakturBeliByDslFetchItems([orderBy: 'tanggal', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != Container.SEMUA) {
                 and()
@@ -46,7 +46,7 @@ class FakturBeliRepository {
     }
 
     public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
-        findAllFakturBeliByDslFetchComplete([orderBy: 'tanggal']) {
+        findAllFakturBeliByDslFetchHutang([orderBy: 'tanggal']) {
             hutang isNotNull()
             and()
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
@@ -71,7 +71,7 @@ class FakturBeliRepository {
     }
 
     public FakturBeli update(FakturBeli fakturBeli) {
-        FakturBeli f = findFakturBeliByIdFetchComplete(fakturBeli.id)
+        FakturBeli f = findFakturBeliById(fakturBeli.id)
         if (f.status.setelah(StatusFakturBeli.DIBUAT) || f.deleted == 'Y') {
             throw new DataTidakBolehDiubah(fakturBeli)
         }
@@ -84,7 +84,7 @@ class FakturBeliRepository {
     }
 
     public FakturBeli hapus(FakturBeli fakturBeli) {
-        FakturBeli f = findFakturBeliByIdFetchComplete(fakturBeli.id)
+        FakturBeli f = findFakturBeliById(fakturBeli.id)
         if (f.status.setelah(StatusFakturBeli.DIBUAT)) {
             throw new DataTidakBolehDiubah(fakturBeli)
         }

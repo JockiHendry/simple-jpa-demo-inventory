@@ -49,7 +49,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     void testAssign() {
         PenerimaanBarangService service = Container.app.penerimaanBarangService
 
-        FakturBeli fakturBeli = service.findFakturBeliByIdFetchComplete(-1l)
+        FakturBeli fakturBeli = service.findFakturBeliByIdFetchItems(-1l)
         PenerimaanBarang penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-1l)
         PenerimaanBarang penerimaan2 = service.findPenerimaanBarangByIdFetchComplete(-2l)
         PenerimaanBarang penerimaan3 = service.findPenerimaanBarangByIdFetchComplete(-3l)
@@ -74,19 +74,19 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     void testAssignGagal() {
         PenerimaanBarangService service = Container.app.penerimaanBarangService
 
-        FakturBeli fakturBeli = service.findFakturBeliByIdFetchComplete(-2l)
+        FakturBeli fakturBeli = service.findFakturBeliByIdFetchItems(-2l)
         PenerimaanBarang penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-1l)
         GroovyAssert.shouldFail(DataTidakBolehDiubah) {
             service.assign(penerimaan1, fakturBeli)
         }
 
-        fakturBeli = service.findFakturBeliByIdFetchComplete(-3l)
+        fakturBeli = service.findFakturBeliByIdFetchItems(-3l)
         penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-4l)
         GroovyAssert.shouldFail(DataTidakBolehDiubah) {
             service.assign(penerimaan1, fakturBeli)
         }
 
-        fakturBeli = service.findFakturBeliByIdFetchComplete(-3l)
+        fakturBeli = service.findFakturBeliByIdFetchItems(-3l)
         penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-1l)
         GroovyAssert.shouldFail(DataTidakKonsisten) {
             service.assign(penerimaan1, fakturBeli)
@@ -100,7 +100,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
         Produk produkB = service.findProdukByNama('Produk B')
         Produk produkC = service.findProdukByNama('Produk C')
 
-        FakturBeli f = service.findFakturBeliByIdFetchComplete(-1l)
+        FakturBeli f = service.findFakturBeliByIdFetchItems(-1l)
         List hasil = service.sisaBelumDiterima(f)
         assertEquals(3, hasil.size())
         assertEquals(produkA, hasil[0].produk)
@@ -152,7 +152,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
             service.hapusAssignment(penerimaanBarang)
         }
 
-        FakturBeli fakturBeli = service.findFakturBeliByIdFetchComplete(-4l)
+        FakturBeli fakturBeli = service.findFakturBeliByIdFetchHutang(-4l)
         penerimaanBarang = service.findPenerimaanBarangByIdFetchComplete(-6l)
         fakturBeli.bayarHutang(new PembayaranHutang(Periode.format.parseLocalDate('15-03-2014'), 5000))
         fakturBeli = service.merge(fakturBeli)

@@ -68,9 +68,6 @@ application(title: 'hutang',
                     glazedColumn(name: 'Jatuh Tempo', expression: {it.hutang.jatuhTempo}) {
                         templateRenderer(exp: {it.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer) {
-                        templateRenderer(exp: {currencyFormat(it)}, horizontalAlignment: RIGHT)
-                    }
                     glazedColumn(name: 'Jumlah Hutang', expression: {it.hutang.jumlah}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }

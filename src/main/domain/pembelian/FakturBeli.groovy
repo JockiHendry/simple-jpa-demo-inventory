@@ -24,13 +24,17 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@NamedEntityGraph(name='FakturBeli.Complete', attributeNodes = [
-    @NamedAttributeNode(value='listItemFaktur'),
-    @NamedAttributeNode(value='hutang', subgraph='hutang')
-], subgraphs=[
-    @NamedSubgraph(name='hutang', type=Hutang, attributeNodes = [
-        @NamedAttributeNode(value='listPembayaran')
-    ])
+@NamedEntityGraphs([
+    @NamedEntityGraph(name='FakturBeli.Items', attributeNodes = [
+        @NamedAttributeNode(value='listItemFaktur')
+    ]),
+    @NamedEntityGraph(name='FakturBeli.Hutang', attributeNodes = [
+        @NamedAttributeNode(value='hutang', subgraph='hutang')
+    ], subgraphs=[
+        @NamedSubgraph(name='hutang', type=Hutang, attributeNodes = [
+            @NamedAttributeNode(value='listPembayaran')
+        ])
+    ]),
 ])
 @DomainClass @Entity @Canonical @ToString(excludes='hutang')
 class FakturBeli extends Faktur {
