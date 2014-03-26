@@ -30,7 +30,7 @@ import griffon.util.*
 class PenerimaanBarangRepository {
 
     public List<PenerimaanBarang> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
-        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) {
+        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
                 and()
@@ -44,7 +44,7 @@ class PenerimaanBarangRepository {
     }
 
     public List<PenerimaanBarang> cariReceivedNotInvoiced(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
-        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal']) {
+        findAllPenerimaanBarangByDslFetchComplete([orderBy: 'tanggal', excludeDeleted: false]) {
             faktur isNull()
             and()
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)

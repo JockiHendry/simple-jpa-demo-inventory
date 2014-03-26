@@ -28,6 +28,14 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ProdukRepository {
 
+    public List<Produk> cari(String nama) {
+        findAllProdukByDslFetchComplete([excludeDeleted: false]) {
+            if (nama) {
+                nama like("%${nama}%")
+            }
+        }
+    }
+
     /**
      * Menghapus data item stok lama dan memberi tanda bahwa operasi untuk masa waktu stok tersebut
      * tidak boleh dilakukan lagi.  Setelah pengarsipan, data <code>PeriodeItemStok</code> menjadi

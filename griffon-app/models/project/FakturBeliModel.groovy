@@ -35,6 +35,7 @@ class FakturBeliModel {
     @Bindable BigDecimal diskonPotonganPersen
     @Bindable BigDecimal diskonPotonganLangsung
     @Bindable String keterangan
+    @Bindable boolean notDeleted = true
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
     List<ItemFaktur> listItemFaktur = []

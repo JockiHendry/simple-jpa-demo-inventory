@@ -80,12 +80,7 @@ class ProdukController {
     }
 
     def search = {
-        List produkResult
-        if (Strings.isNullOrEmpty(model.namaSearch)) {
-            produkResult = produkRepository.findAllProdukFetchComplete()
-        } else {
-            produkResult = produkRepository.findAllProdukByNamaLikeFetchComplete("%${model.namaSearch}%")
-        }
+        List produkResult = produkRepository.cari(model.namaSearch)
         execInsideUISync {
             model.produkList.clear()
             model.produkList.addAll(produkResult)

@@ -85,4 +85,5 @@ i18n.basenames = ['messages','ValidationMessages']
 
 griffon.simplejpa.finders.injectInto = []
 griffon.simplejpa.validation.convertEmptyStringToNull = true
+griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
 //griffon.simplejpa.model.package = 'domain.pembelian'

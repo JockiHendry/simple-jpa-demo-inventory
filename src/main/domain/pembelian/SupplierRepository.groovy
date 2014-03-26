@@ -25,6 +25,14 @@ import simplejpa.transaction.Transaction
 @Transaction
 class SupplierRepository {
 
+    public List<Supplier> cari(String nama) {
+        findAllSupplierByDsl([excludeDeleted: false]) {
+            if (nama) {
+                nama like("%${nama}%")
+            }
+        }
+    }
+
     public Supplier buat(Supplier supplier) {
         if (findSupplierByNama(supplier.nama)) {
             throw new DataDuplikat(supplier)

@@ -108,7 +108,7 @@ application(title: 'Faktur Beli',
             textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')
 
-            panel(constraints: 'span, growx, wrap') {
+            panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                     if (model.id != null) {

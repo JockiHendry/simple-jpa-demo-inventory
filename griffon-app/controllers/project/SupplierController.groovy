@@ -38,12 +38,7 @@ class SupplierController {
     }
 
     def search = {
-        List result
-        if (Strings.isNullOrEmpty(model.namaSearch)) {
-            result = supplierRepository.findAllSupplier()
-        } else {
-            result = supplierRepository.findAllSupplierByNamaLike("%${model.namaSearch}%")
-        }
+        List result = supplierRepository.cari(model.namaSearch)
         execInsideUISync {
             model.supplierList.clear()
             model.supplierList.addAll(result)

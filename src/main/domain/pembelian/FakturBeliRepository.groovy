@@ -28,7 +28,7 @@ import simplejpa.transaction.Transaction
 class FakturBeliRepository {
 
     public List<FakturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, def statusSearch) {
-        findAllFakturBeliByDslFetchComplete([orderBy: 'tanggal']) {
+        findAllFakturBeliByDslFetchComplete([orderBy: 'tanggal', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != Container.SEMUA) {
                 and()

@@ -31,6 +31,7 @@ class PenerimaanBarangModel {
     @Bindable String nomor
     @Bindable LocalDate tanggal
     @Bindable String keterangan
+    @Bindable boolean notDeleted = true
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
 

@@ -108,6 +108,7 @@ class PenerimaanBarangController {
     def clear = {
         execInsideUISync {
             model.id = null
+            model.notDeleted = true
             model.nomor = null
             model.tanggal = null
             model.keterangan = null
@@ -127,6 +128,7 @@ class PenerimaanBarangController {
                 PenerimaanBarang selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
+                model.notDeleted = (selected.deleted == 'N')
                 model.nomor = selected.nomor
                 model.tanggal = selected.tanggal
                 model.keterangan = selected.keterangan
