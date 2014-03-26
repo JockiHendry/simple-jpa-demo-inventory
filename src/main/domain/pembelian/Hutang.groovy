@@ -48,10 +48,21 @@ class Hutang {
     }
 
     void bayar(PembayaranHutang pembayaranHutang) {
+        if (pembayaranHutang.jumlah > sisa(pembayaranHutang.tanggal)) {
+            throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa(pembayaranHutang.tanggal)}")
+        }
         listPembayaran << pembayaranHutang
         if (sisa()==0) {
             lunas = true
         }
+    }
+
+    void hapus(PembayaranHutang pembayaranHutang) {
+        if (!listPembayaran.contains(pembayaranHutang)) {
+            throw new IllegalArgumentException("Tidak menemukan pembayaran hutang $pembayaranHutang")
+        }
+        listPembayaran.remove(pembayaranHutang)
+        lunas = false
     }
 
     boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {

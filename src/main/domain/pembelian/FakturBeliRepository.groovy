@@ -45,6 +45,22 @@ class FakturBeliRepository {
         }
     }
 
+    public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
+        findAllFakturBeliByDslFetchComplete([orderBy: 'tanggal']) {
+            hutang isNotNull()
+            and()
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (supplierSearch) {
+                and()
+                supplier__nama like("%${supplierSearch}%")
+            }
+        }
+    }
+
     public FakturBeli buat(FakturBeli fakturBeli) {
         if (findFakturBeliByNomor(fakturBeli.nomor)) {
             throw new DataDuplikat(fakturBeli)

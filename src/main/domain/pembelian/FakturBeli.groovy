@@ -58,5 +58,11 @@ class FakturBeli extends Faktur {
             status = StatusFakturBeli.LUNAS
         }
     }
+
+    void hapus(PembayaranHutang pembayaranHutang) {
+        hutang.hapus(pembayaranHutang)
+        status = StatusFakturBeli.BARANG_DITERIMA
+    }
+
 }
 
