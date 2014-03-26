@@ -20,11 +20,20 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.exception.FakturTidakDitemukan
+import domain.inventory.ItemBarang
+import domain.pembelian.FakturBeli
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PenerimaanBarangRepository
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
+import simplejpa.swing.DialogUtils
 
+import javax.swing.JDialog
+import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
+import java.awt.Dialog
+import java.awt.Dimension
+import java.awt.Window
 
 class ReceivedNotInvoicedController {
 
@@ -77,6 +86,21 @@ class ReceivedNotInvoicedController {
         } catch (FakturTidakDitemukan | DataTidakKonsisten | DataTidakBolehDiubah ex) {
             model.errors['nomorFaktur'] = ex.message
         }
+    }
+
+    def sisaBarang = {
+        PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
+        FakturBeli fakturBeli = view.table.selectionModel.selected[0].faktur
+        List<ItemBarang> hasil
+        if (!fakturBeli) {
+            hasil = penerimaanBarang.listItemBarang
+        } else {
+            hasil = Container.app.penerimaanBarangService.sisaBelumDiterima(fakturBeli)
+        }
+        DialogUtils.showMVCGroup('itemBarangAsChild',
+            [editable: false, listItemBarang: hasil],
+            app, view,
+            [title: 'Daftar Barang', size: new Dimension(900, 420)])
     }
 
     def clear = {

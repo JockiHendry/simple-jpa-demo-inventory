@@ -18,10 +18,15 @@ package domain.pembelian
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.exception.FakturTidakDitemukan
+import domain.inventory.ItemBarang
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import simplejpa.transaction.Transaction
 
 @Transaction
 class PenerimaanBarangService {
+
+    private static final Logger log = LoggerFactory.getLogger(PenerimaanBarangService)
 
     public PenerimaanBarang assign(PenerimaanBarang penerimaanBarang, String nomorFakturBeli) {
         FakturBeli fakturBeli = findFakturBeliByNomor(nomorFakturBeli)
@@ -32,6 +37,7 @@ class PenerimaanBarangService {
     }
 
     public PenerimaanBarang assign(PenerimaanBarang penerimaanBarang, FakturBeli fakturBeli) {
+        log.debug "Assign $penerimaanBarang ke $fakturBeli..."
         if (penerimaanBarang.deleted == 'Y') {
             throw new DataTidakBolehDiubah(penerimaanBarang)
         }
@@ -55,11 +61,39 @@ class PenerimaanBarangService {
         PenerimaanBarang p = new PenerimaanBarang()
         findAllPenerimaanBarangByFaktur(fakturBeli).each { p += it }
         if (p.isiSamaDengan(fakturBeli)) {
+            log.debug "Faktur $fakturBeli sudah diterima seluruh barangnya."
             fakturBeli.status = StatusFakturBeli.BARANG_DITERIMA
             fakturBeli.buatHutang()
         }
 
+        log.debug "Proses assign selesai."
         penerimaanBarang
+    }
+
+    public List<ItemBarang> sisaBelumDiterima(FakturBeli fakturBeli) {
+        List daftarBarang = findFakturBeliByIdFetchComplete(fakturBeli.id).normalisasi()
+        log.debug "Barang yang tertera di faktur: $daftarBarang"
+
+        PenerimaanBarang p
+        findAllPenerimaanBarangByFaktur(fakturBeli).each {
+            p = (!p? it: (p + it))
+        }
+        if (!p) return daftarBarang
+        List diterima = p.normalisasi()
+        log.debug "Barang yang telah diterima: $diterima"
+
+        diterima.each { d ->
+            def i = daftarBarang.findIndexOf { it.produk == d.produk }
+            if (i>=0) {
+                if (daftarBarang[i].jumlah == d.jumlah) {
+                    daftarBarang.remove(i)
+                } else {
+                    daftarBarang[i].jumlah -= d.jumlah
+                }
+            }
+        }
+
+        daftarBarang
     }
 
     public PenerimaanBarang hapusAssignment(PenerimaanBarang penerimaanBarang) {

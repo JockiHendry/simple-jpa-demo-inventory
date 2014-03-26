@@ -72,21 +72,18 @@ application(title: 'Received Not Invoiced',
             }
         }
 
-        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
+        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind {table.isRowSelected}, constraints: PAGE_END, focusCycleRoot: true) {
             label('Nomor Faktur:')
             textField(id: 'nomorFaktur', columns: 20, text: bind('nomorFaktur', target: model, mutual: true), errorPath: 'nomorFaktur')
             errorLabel(path: 'nomorFaktur', constraints: 'wrap')
             label('Isi:')
             panel {
-                mvcPopupButton(id: 'listItemBarang', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
-                        errorPath: 'listItemBarang', mvcGroup: 'itemBarangAsChild',
-                        args: { [parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang] },
-                        dialogProperties: [title: 'Daftar Barang', size: new Dimension(900, 420)],
-                        onFinish: { m, v, c ->
-                            model.listItemBarang.clear()
-                            model.listItemBarang.addAll(m.itemBarangList)
-                        }
+                mvcPopupButton(id: 'listItemBarang', text: 'Barang Yang Dikirim...',
+                    errorPath: 'listItemBarang', mvcGroup: 'itemBarangAsChild',
+                    args: { [parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang] },
+                    dialogProperties: [title: 'Daftar Barang', size: new Dimension(900, 420)]
                 )
+                button('Sisa Barang Yang Belum Diterima...', actionPerformed: controller.sisaBarang)
             }
             errorLabel(path: 'listItemBarang', constraints: 'wrap')
 

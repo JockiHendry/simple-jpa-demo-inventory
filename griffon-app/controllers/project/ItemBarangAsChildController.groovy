@@ -36,9 +36,11 @@ class ItemBarangAsChildController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
-        model.editable = !model.parent?.id
-        model.itemBarangList.clear()
-        model.itemBarangList.addAll(args.'listItemBarang')
+        model.editable = args.containsKey('editable')? args.'editable': (!model.parent?.id)
+        execInsideUISync {
+            model.itemBarangList.clear()
+            model.itemBarangList.addAll(args.'listItemBarang')
+        }
     }
 
     def save = {

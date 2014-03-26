@@ -20,6 +20,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.inventory.DaftarBarang
 import domain.inventory.Periode
+import domain.inventory.Produk
 import domain.pembelian.FakturBeli
 import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PembayaranHutang
@@ -90,6 +91,45 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
         GroovyAssert.shouldFail(DataTidakKonsisten) {
             service.assign(penerimaan1, fakturBeli)
         }
+    }
+
+    void testSisaBelumDiterima() {
+        PenerimaanBarangService service = Container.app.penerimaanBarangService
+
+        Produk produkA = service.findProdukByNama('Produk A')
+        Produk produkB = service.findProdukByNama('Produk B')
+        Produk produkC = service.findProdukByNama('Produk C')
+
+        FakturBeli f = service.findFakturBeliByIdFetchComplete(-1l)
+        List hasil = service.sisaBelumDiterima(f)
+        assertEquals(3, hasil.size())
+        assertEquals(produkA, hasil[0].produk)
+        assertEquals(5, hasil[0].jumlah)
+        assertEquals(produkB, hasil[1].produk)
+        assertEquals(3, hasil[1].jumlah)
+        assertEquals(produkC, hasil[2].produk)
+        assertEquals(4, hasil[2].jumlah)
+
+        PenerimaanBarang p2 = service.findPenerimaanBarangByNomorFetchComplete('P2')
+        service.assign(p2, f)
+        hasil = service.sisaBelumDiterima(f)
+        assertEquals(2, hasil.size())
+        assertEquals(produkA, hasil[0].produk)
+        assertEquals(5, hasil[0].jumlah)
+        assertEquals(produkC, hasil[1].produk)
+        assertEquals(4, hasil[1].jumlah)
+
+        PenerimaanBarang p3 = service.findPenerimaanBarangByNomorFetchComplete('P3')
+        service.assign(p3, f)
+        hasil = service.sisaBelumDiterima(f)
+        assertEquals(1, hasil.size())
+        assertEquals(produkA, hasil[0].produk)
+        assertEquals(5, hasil[0].jumlah)
+
+        PenerimaanBarang p1 = service.findPenerimaanBarangByNomorFetchComplete('P1')
+        service.assign(p1, f)
+        hasil = service.sisaBelumDiterima(f)
+        assertEquals(0, hasil.size())
     }
 
     void testHapusAssignment() {
