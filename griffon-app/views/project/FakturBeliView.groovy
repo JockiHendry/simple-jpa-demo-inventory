@@ -100,6 +100,7 @@ application(title: 'Faktur Beli',
                     onFinish: {m, v, c ->
                         model.listItemFaktur.clear()
                         model.listItemFaktur.addAll(m.itemFakturList)
+                        controller.refreshInformasi()
                     }
                 )
             }
