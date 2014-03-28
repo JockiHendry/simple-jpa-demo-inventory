@@ -45,7 +45,9 @@ class FakturBeliRepository {
         }
     }
 
-    public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
+    public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
+            String supplierSearch, LocalDate tanggalJatuhTempo = null, StatusHutangSearch statusHutangSearch = StatusHutangSearch.SEMUA) {
+
         findAllFakturBeliByDslFetchHutang([orderBy: 'tanggal,nomor']) {
             hutang isNotNull()
             and()
@@ -58,7 +60,19 @@ class FakturBeliRepository {
                 and()
                 supplier__nama like("%${supplierSearch}%")
             }
+            if (tanggalJatuhTempo) {
+                and()
+                hutang__jatuhTempo eq(tanggalJatuhTempo)
+            }
+            if (statusHutangSearch == StatusHutangSearch.BELUM_LUNAS) {
+                and()
+                hutang__lunas eq(false)
+            } else if (statusHutangSearch == StatusHutangSearch.LUNAS) {
+                and()
+                hutang__lunas eq(true)
+            }
         }
+
     }
 
     public FakturBeli buat(FakturBeli fakturBeli) {
@@ -90,6 +104,21 @@ class FakturBeliRepository {
         }
         if (f.deleted != 'Y') f.deleted = 'Y'
         f
+    }
+
+    public enum StatusHutangSearch {
+        SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas')
+
+        String description
+
+        public StatusHutangSearch(String description) {
+            this.description = description
+        }
+
+        @Override
+        String toString() {
+            description
+        }
     }
 
 }

@@ -39,11 +39,13 @@ class HutangController {
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
+            model.statusSearch.selectedItem = FakturBeliRepository.StatusHutangSearch.SEMUA
         }
     }
 
     def search = {
-        List result = fakturBeliRepository.cariHutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch)
+        List result = fakturBeliRepository.cariHutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+            model.nomorSearch, model.supplierSearch, model.chkJatuhTempo? model.jatuhTempoSearch: null, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturBeliList.clear()
             model.fakturBeliList.addAll(result)

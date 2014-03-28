@@ -47,6 +47,10 @@ application(title: 'hutang',
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
             textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
             textField(id: 'supplierSearch', columns: 10, text: bind('supplierSearch', target: model, mutual: true), actionPerformed: controller.search)
+            checkBox('Jatuh Tempo ', id: 'chkJatuhTempo', selected: bind('chkJatuhTempo', target: model, mutual: true))
+            dateTimePicker(id: 'jatuhTempoSearch', localDate: bind('jatuhTempoSearch', target: model, mutual: true), timeVisible: false,
+                visible: bind('chkJatuhTempo', source: model))
+            comboBox(id: 'statusSearch', model: model.statusSearch)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
 
@@ -59,22 +63,22 @@ application(title: 'hutang',
                     }
                     glazedColumn(name: 'Nomor', property: 'nomor', width: 120)
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
-                        templateRenderer(exp: {it.toString('dd-MM-yyyy')})
+                        templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
                     glazedColumn(name: 'Supplier', property: 'supplier') {
-                        templateRenderer(exp: {it.nama})
+                        templateRenderer(exp: {it?.nama})
                     }
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
-                    glazedColumn(name: 'Jatuh Tempo', expression: {it.hutang.jatuhTempo}) {
-                        templateRenderer(exp: {it.toString('dd-MM-yyyy')})
+                    glazedColumn(name: 'Jatuh Tempo', expression: {it.hutang?.jatuhTempo}) {
+                        templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Jumlah Hutang', expression: {it.hutang.jumlah}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Hutang', expression: {it.hutang?.jumlah}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.hutang.jumlahDibayar()}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.hutang?.jumlahDibayar()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Sisa Hutang', expression: {it.hutang.sisa()}, columnClass: Integer) {
+                    glazedColumn(name: 'Sisa Hutang', expression: {it.hutang?.sisa()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
                 }

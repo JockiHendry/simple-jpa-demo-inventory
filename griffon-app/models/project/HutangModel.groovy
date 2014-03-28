@@ -17,8 +17,10 @@ package project
 
 import ca.odell.glazedlists.BasicEventList
 import domain.pembelian.FakturBeli
+import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PembayaranHutang
 import groovy.beans.Bindable
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 
 class HutangModel {
@@ -32,5 +34,8 @@ class HutangModel {
     @Bindable String supplierSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
+    @Bindable boolean chkJatuhTempo
+    @Bindable LocalDate jatuhTempoSearch
+    EnumComboBoxModel statusSearch = new EnumComboBoxModel(FakturBeliRepository.StatusHutangSearch)
 
 }
