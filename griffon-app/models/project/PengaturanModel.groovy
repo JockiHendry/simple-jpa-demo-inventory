@@ -13,22 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.Container
+package project
 
-/*
- * This script is executed inside the UI thread, so be sure to  call
- * long running code in another thread.
- *
- * You have the following options
- * - execOutsideUI { // your code }
- * - execFuture { // your code }
- * - Thread.start { // your code }
- *
- * You have the following options to run code again inside the UI thread
- * - execInsideUIAsync { // your code }
- * - execInsideUISync { // your code }
- */
+import ca.odell.glazedlists.BasicEventList
+import domain.pengaturan.KeyPengaturan
+import domain.pengaturan.Pengaturan
+import groovy.beans.Bindable
+import groovy.transform.Canonical
 
-execOutsideUI {
-    Container.app.pengaturanRepository.refreshAll()
+class PengaturanModel {
+
+    @Bindable Long id
+    @Bindable KeyPengaturan keyPengaturan
+    @Bindable Object nilai
+
+    BasicEventList<PengaturanDTO> pengaturanList = new BasicEventList<>()
+
+    @Bindable boolean genericValue = false
+    @Bindable boolean passwordValue = false
+
+}
+
+@Canonical
+public class PengaturanDTO {
+    KeyPengaturan keyPengaturan
+    Object nilai
 }

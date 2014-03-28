@@ -25,6 +25,7 @@ import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.PenerimaanBarangService
 import domain.pembelian.SupplierRepository
+import domain.pengaturan.PengaturanRepository
 import griffon.util.*
 
 class Container {
@@ -38,6 +39,7 @@ class Container {
     private SupplierRepository supplierRepository
     private PenerimaanBarangRepository penerimaanBarangRepository
     private FakturBeliRepository fakturBeliRepository
+    private PengaturanRepository pengaturanRepository
 
     private InventoryEventConsumer inventoryEventConsumer
 
@@ -52,6 +54,7 @@ class Container {
         supplierRepository = new SupplierRepository()
         penerimaanBarangRepository = new PenerimaanBarangRepository()
         fakturBeliRepository = new FakturBeliRepository()
+        pengaturanRepository = new PengaturanRepository()
 
         // Create services
         penerimaanBarangService = new PenerimaanBarangService()
@@ -83,6 +86,10 @@ class Container {
 
     public PenerimaanBarangService getPenerimaanBarangService() {
         penerimaanBarangService
+    }
+
+    public PengaturanRepository getPengaturanRepository() {
+        pengaturanRepository
     }
 
     public List searchEnum(Class enumeration) {

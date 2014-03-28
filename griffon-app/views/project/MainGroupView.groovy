@@ -49,6 +49,8 @@ actions {
         smallIcon: imageIcon('/menu_maintenance_gudang.png'), closure: controller.switchPage)
     action(id: 'supplier', name: 'Supplier', actionCommandKey: 'supplier', mnemonic: KeyEvent.VK_S,
         smallIcon: imageIcon('/menu_maintenance_supplier.png'), closure: controller.switchPage)
+    action(id: 'pengaturan', name: 'Pengaturan', actionCommandKey: 'pengaturan', mnemonic: KeyEvent.VK_P,
+        smallIcon: imageIcon('/menu_maintenance_pengaturan.png'), closure: controller.switchPage)
     action(id: 'backup', name: 'Backup', actionCommandKey: 'backup', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_maintenance_backup.png'), closure: controller.switchPage)
     action(id: 'restore', name: 'Restore', actionCommandKey: 'restore', mnemonic: KeyEvent.VK_R,
@@ -65,6 +67,7 @@ application(id: 'mainFrame',
         menuItem(action: supplier)
         menuItem(action: gudang)
         separator(border: BorderFactory.createEmptyBorder(3,0,3,0))
+        menuItem(action: pengaturan)
         menuItem(action: backup)
         menuItem(action: restore)
     }
