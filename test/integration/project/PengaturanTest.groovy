@@ -19,6 +19,7 @@ import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
 import domain.pengaturan.PengaturanRepository
+import domain.util.PasswordService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.testing.DbUnitTestCase
@@ -39,30 +40,28 @@ class PengaturanTest extends DbUnitTestCase {
     }
 
     void testSerializing() {
-        PengaturanRepository p = new PengaturanRepository()
+        PengaturanRepository repo = new PengaturanRepository()
+        PasswordService p = new PasswordService()
         byte[] nilai
 
         String s = "My name is Jocki Hendry"
-        nilai = p.serialize(s, JenisNilai.STRING)
-        assertEquals(s, p.deserialize(nilai, JenisNilai.STRING))
+        nilai = repo.serialize(s, JenisNilai.STRING)
+        assertEquals(s, repo.deserialize(nilai, JenisNilai.STRING))
 
         String pwd = "super-secret-password-12345"
-        nilai = p.serialize(pwd, JenisNilai.PASSWORD)
-        MessageDigest digester = MessageDigest.getInstance('MD5')
-        digester.update(pwd.bytes)
-        assertTrue(Arrays.equals(digester.digest(), p.deserialize(nilai, JenisNilai.PASSWORD)))
+        nilai = repo.serialize(pwd, JenisNilai.PASSWORD)
+        assertTrue(Arrays.equals(p.plainTextToEncrypted(pwd), repo.deserialize(nilai, JenisNilai.PASSWORD)))
 
         Integer i = 12345678
-        nilai = p.serialize(i, JenisNilai.INTEGER)
-        assertEquals(i, p.deserialize(nilai, JenisNilai.INTEGER))
+        nilai = repo.serialize(i, JenisNilai.INTEGER)
+        assertEquals(i, repo.deserialize(nilai, JenisNilai.INTEGER))
     }
 
     void testSave() {
         PengaturanRepository repo = new PengaturanRepository()
+        PasswordService p = new PasswordService()
         Pengaturan pengaturan = repo.save(KeyPengaturan.SUPERVISOR_PASSWORD, 'super_secret_password')
         assertEquals(KeyPengaturan.SUPERVISOR_PASSWORD, pengaturan.keyPengaturan)
-        MessageDigest digester = MessageDigest.getInstance('MD5')
-        digester.update('super_secret_password'.bytes)
-        assertEquals(digester.digest(), repo.cache[KeyPengaturan.SUPERVISOR_PASSWORD])
+        assertEquals(p.plainTextToEncrypted('super_secret_password'), repo.cache[KeyPengaturan.SUPERVISOR_PASSWORD])
     }
 }

@@ -15,6 +15,8 @@
  */
 package domain.pengaturan
 
+import domain.Container
+import domain.util.PasswordService
 import simplejpa.transaction.Transaction
 
 import java.nio.ByteBuffer
@@ -32,9 +34,7 @@ class PengaturanRepository {
                 return ((String) value).bytes
 
             case JenisNilai.PASSWORD:
-                MessageDigest digester = MessageDigest.getInstance('MD5')
-                digester.update(((String) value).bytes)
-                return digester.digest()
+                return Container.app.passwordService.plainTextToEncrypted((String)value)
 
             case JenisNilai.INTEGER:
                 return ByteBuffer.allocate(4).putInt(value).array()

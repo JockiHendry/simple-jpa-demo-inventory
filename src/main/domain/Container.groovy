@@ -26,6 +26,7 @@ import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.PenerimaanBarangService
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
+import domain.util.PasswordService
 import griffon.util.*
 
 class Container {
@@ -44,6 +45,7 @@ class Container {
     private InventoryEventConsumer inventoryEventConsumer
 
     private PenerimaanBarangService penerimaanBarangService
+    private PasswordService passwordService
 
     private Container() {}
 
@@ -58,6 +60,7 @@ class Container {
 
         // Create services
         penerimaanBarangService = new PenerimaanBarangService()
+        passwordService = new PasswordService()
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()
@@ -86,6 +89,10 @@ class Container {
 
     public PenerimaanBarangService getPenerimaanBarangService() {
         penerimaanBarangService
+    }
+
+    public PasswordService getPasswordService() {
+        passwordService
     }
 
     public PengaturanRepository getPengaturanRepository() {
