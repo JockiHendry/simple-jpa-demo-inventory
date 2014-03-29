@@ -15,6 +15,7 @@
  */
 package project
 
+import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
 import domain.pembelian.*
@@ -23,7 +24,6 @@ import org.joda.time.LocalDate
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 import domain.Container
 
@@ -95,6 +95,7 @@ class FakturBeliController {
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         try {
             FakturBeli fakturBeli = view.table.selectionModel.selected[0]

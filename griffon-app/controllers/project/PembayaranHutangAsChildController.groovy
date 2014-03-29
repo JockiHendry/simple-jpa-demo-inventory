@@ -15,6 +15,7 @@
  */
 package project
 
+import ast.NeedSupervisorPassword
 import domain.Container
 import domain.pembelian.FakturBeli
 import domain.pembelian.FakturBeliRepository
@@ -59,6 +60,7 @@ class PembayaranHutangAsChildController {
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         try {
             PembayaranHutang pembayaranHutang = view.table.selectionModel.selected[0]

@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "supervisorPassword"
+    'supervisorPassword' {
+        model      = 'project.SupervisorPasswordModel'
+        view       = 'project.SupervisorPasswordView'
+        controller = 'project.SupervisorPasswordController'
+    }
+
     // MVC Group for "pengaturan"
     'pengaturan' {
         model      = 'project.PengaturanModel'

@@ -15,17 +15,15 @@
  */
 package project
 
+import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
-import domain.inventory.Periode
 import domain.pembelian.*
 import domain.validation.TanpaGudang
 import org.joda.time.LocalDate
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
-import javax.validation.groups.Default
-import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 
 class PenerimaanBarangController {
@@ -92,6 +90,7 @@ class PenerimaanBarangController {
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         try {
             PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
