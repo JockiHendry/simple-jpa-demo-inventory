@@ -36,7 +36,7 @@ class PengaturanController {
 
     def refresh = {
         List result = []
-        pengaturanRepository.cache.each { KeyPengaturan k, def v ->
+        pengaturanRepository.cache.sort().each { KeyPengaturan k, def v ->
             def nilai = v
             if (nilai!=null) {
                 if (k.jenisNilai == JenisNilai.PASSWORD) {

@@ -55,7 +55,7 @@ class PengaturanRepository {
     }
 
     public void refreshAll() {
-        KeyPengaturan.values().sort{it.description}.each { KeyPengaturan keyPengaturan ->
+        KeyPengaturan.values().each { KeyPengaturan keyPengaturan ->
             Pengaturan pengaturan = findPengaturanByKeyPengaturan(keyPengaturan)
             def value = null
             if (pengaturan?.nilai != null) {
