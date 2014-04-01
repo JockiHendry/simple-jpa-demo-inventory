@@ -18,6 +18,7 @@ package project
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
 
+import javax.swing.JOptionPane
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
@@ -92,6 +93,11 @@ application(title: 'Received Not Invoiced',
                 button('Asosiasi Ke Faktur Beli', visible: bind('isRowSelected', source: table, converter: { it && !model.faktur }), actionPerformed: {
                     controller.assign()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
+                })
+                button('Hapus Asosiasi', visible: bind('isRowSelected', source: table, converter: { it && model.faktur}), actionPerformed: {
+                    if (JOptionPane.showConfirmDialog(mainPanel, 'Anda yakin ingin menghapus asosiasi ke faktur untuk penerimaan barang ini?', 'Konfirmasi Hapus Asosiasi', JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                        controller.hapusAssignment()
+                    }
                 })
             }
 

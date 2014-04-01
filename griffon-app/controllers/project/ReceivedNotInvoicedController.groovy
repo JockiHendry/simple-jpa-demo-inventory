@@ -15,6 +15,7 @@
  */
 package project
 
+import ast.NeedSupervisorPassword
 import com.google.common.base.Strings
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
@@ -83,6 +84,20 @@ class ReceivedNotInvoicedController {
         }
     }
 
+    @NeedSupervisorPassword
+    def hapusAssignment = {
+        try {
+            PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
+            penerimaanBarang = Container.app.receivedNotInvoicedService.hapusAssignment(penerimaanBarang)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = penerimaanBarang
+            }
+            clear()
+        } catch (DataTidakBolehDiubah ex) {
+            model.errors['nomorFaktur'] = ex.message
+        }
+    }
+
     def sisaBarang = {
         PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
         FakturBeli fakturBeli = view.table.selectionModel.selected[0].faktur
@@ -119,6 +134,7 @@ class ReceivedNotInvoicedController {
                 model.errors.clear()
                 model.id = selected.id
                 model.faktur = selected.faktur
+                model.nomorFaktur = selected.faktur?.nomor
                 model.listItemBarang.clear()
                 model.listItemBarang.addAll(selected.listItemBarang)
             }
