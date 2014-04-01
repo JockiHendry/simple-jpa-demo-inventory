@@ -41,15 +41,15 @@ class SupervisorPasswordController {
             return
         }
 
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin untuk menyetujui proses ini?',
-                'Konfirmasi Persetujuan', JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
-            return
-        }
-
         if (!Arrays.equals(
                 Container.app.passwordService.plainTextToEncrypted(view.password.getPassword()),
                 Container.app.pengaturanRepository.cache[KeyPengaturan.SUPERVISOR_PASSWORD])) {
             model.errors['password'] = 'Password Anda salah!'
+            return
+        }
+
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin untuk menyetujui proses ini?',
+                'Konfirmasi Persetujuan', JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
             return
         }
 
