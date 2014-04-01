@@ -51,7 +51,7 @@ class Hutang {
             throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa()}")
         }
         listPembayaran << pembayaranHutang
-        if (sisa()==0) {
+        if (sisa().compareTo(BigDecimal.ZERO) == 0) {
             lunas = true
         }
     }
