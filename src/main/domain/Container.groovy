@@ -23,7 +23,7 @@ import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
 import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PenerimaanBarangRepository
-import domain.pembelian.PenerimaanBarangService
+import domain.pembelian.ReceivedNotInvoicedService
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
 import domain.util.PasswordService
@@ -44,7 +44,7 @@ class Container {
 
     private InventoryEventConsumer inventoryEventConsumer
 
-    private PenerimaanBarangService penerimaanBarangService
+    private ReceivedNotInvoicedService receivedNotInvoicedService
     private PasswordService passwordService
 
     private Container() {}
@@ -59,7 +59,7 @@ class Container {
         pengaturanRepository = new PengaturanRepository()
 
         // Create services
-        penerimaanBarangService = new PenerimaanBarangService()
+        receivedNotInvoicedService = new ReceivedNotInvoicedService()
         passwordService = new PasswordService()
 
         // Create event consumers
@@ -87,8 +87,8 @@ class Container {
         fakturBeliRepository
     }
 
-    public PenerimaanBarangService getPenerimaanBarangService() {
-        penerimaanBarangService
+    public ReceivedNotInvoicedService getReceivedNotInvoicedService() {
+        receivedNotInvoicedService
     }
 
     public PasswordService getPasswordService() {

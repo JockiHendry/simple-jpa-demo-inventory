@@ -18,24 +18,20 @@ package project
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
-import domain.inventory.DaftarBarang
 import domain.inventory.Periode
 import domain.inventory.Produk
 import domain.pembelian.FakturBeli
-import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PembayaranHutang
 import domain.pembelian.PenerimaanBarang
-import domain.pembelian.PenerimaanBarangService
+import domain.pembelian.ReceivedNotInvoicedService
 import domain.pembelian.StatusFakturBeli
-import griffon.core.GriffonApplication
-import griffon.test.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.testing.DbUnitTestCase
 
-class PenerimaanBarangServiceTests extends DbUnitTestCase {
+class ReceivedNotInvoicedServiceTests extends DbUnitTestCase {
 
-    private static final Logger log = LoggerFactory.getLogger(ProdukTest)
+    private static final Logger log = LoggerFactory.getLogger(ReceivedNotInvoicedServiceTests)
 
     protected void setUp() {
         super.setUp()
@@ -47,7 +43,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     }
 
     void testAssign() {
-        PenerimaanBarangService service = Container.app.penerimaanBarangService
+        ReceivedNotInvoicedService service = Container.app.receivedNotInvoicedService
 
         FakturBeli fakturBeli = service.findFakturBeliByIdFetchItems(-1l)
         PenerimaanBarang penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-1l)
@@ -72,7 +68,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     }
 
     void testAssignGagal() {
-        PenerimaanBarangService service = Container.app.penerimaanBarangService
+        ReceivedNotInvoicedService service = Container.app.receivedNotInvoicedService
 
         FakturBeli fakturBeli = service.findFakturBeliByIdFetchItems(-2l)
         PenerimaanBarang penerimaan1 = service.findPenerimaanBarangByIdFetchComplete(-1l)
@@ -94,7 +90,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     }
 
     void testSisaBelumDiterima() {
-        PenerimaanBarangService service = Container.app.penerimaanBarangService
+        ReceivedNotInvoicedService service = Container.app.receivedNotInvoicedService
 
         Produk produkA = service.findProdukByNama('Produk A')
         Produk produkB = service.findProdukByNama('Produk B')
@@ -133,7 +129,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     }
 
     void testHapusAssignment() {
-        PenerimaanBarangService service = Container.app.penerimaanBarangService
+        ReceivedNotInvoicedService service = Container.app.receivedNotInvoicedService
 
         PenerimaanBarang penerimaanBarang = service.findPenerimaanBarangByIdFetchComplete(-6l)
         penerimaanBarang = service.hapusAssignment(penerimaanBarang)
@@ -145,7 +141,7 @@ class PenerimaanBarangServiceTests extends DbUnitTestCase {
     }
 
     void testHapusAssignmentGagal() {
-        PenerimaanBarangService service = Container.app.penerimaanBarangService
+        ReceivedNotInvoicedService service = Container.app.receivedNotInvoicedService
 
         PenerimaanBarang penerimaanBarang = service.findPenerimaanBarangByIdFetchComplete(-7l)
         GroovyAssert.shouldFail(DataTidakBolehDiubah) {

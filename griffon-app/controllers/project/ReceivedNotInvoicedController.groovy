@@ -25,15 +25,10 @@ import domain.pembelian.FakturBeli
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PenerimaanBarangRepository
 import org.joda.time.LocalDate
-import simplejpa.SimpleJpaUtil
 import simplejpa.swing.DialogUtils
 
-import javax.swing.JDialog
-import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
-import java.awt.Dialog
 import java.awt.Dimension
-import java.awt.Window
 
 class ReceivedNotInvoicedController {
 
@@ -74,7 +69,7 @@ class ReceivedNotInvoicedController {
         }
         try {
             PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
-            penerimaanBarang = Container.app.penerimaanBarangService.assign(penerimaanBarang, model.nomorFaktur)
+            penerimaanBarang = Container.app.receivedNotInvoicedService.assign(penerimaanBarang, model.nomorFaktur)
             execInsideUISync {
                 if (model.tampilkanHanyaRNI) {
                     model.penerimaanBarangList.remove(view.table.selectionModel.selected[0])
@@ -95,7 +90,7 @@ class ReceivedNotInvoicedController {
         if (!fakturBeli) {
             hasil = penerimaanBarang.listItemBarang
         } else {
-            hasil = Container.app.penerimaanBarangService.sisaBelumDiterima(fakturBeli)
+            hasil = Container.app.receivedNotInvoicedService.sisaBelumDiterima(fakturBeli)
         }
         DialogUtils.showMVCGroup('itemBarangAsChild',
             [editable: false, listItemBarang: hasil],

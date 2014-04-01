@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory
 import simplejpa.transaction.Transaction
 
 @Transaction
-class PenerimaanBarangService {
+class ReceivedNotInvoicedService {
 
-    private static final Logger log = LoggerFactory.getLogger(PenerimaanBarangService)
+    private static final Logger log = LoggerFactory.getLogger(ReceivedNotInvoicedService)
 
     public PenerimaanBarang assign(PenerimaanBarang penerimaanBarang, String nomorFakturBeli) {
         FakturBeli fakturBeli = findFakturBeliByNomor(nomorFakturBeli)
