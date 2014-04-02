@@ -16,6 +16,7 @@
 package project
 
 import domain.exception.DataTidakBolehDiubah
+import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Periode
 import domain.inventory.Produk
@@ -83,6 +84,26 @@ class FakturBeliTests extends GriffonUnitTestCase {
         assertFalse(fakturBeli.hutang.lunas)
 
         fakturBeli.bayarHutang(new PembayaranHutang(Periode.format.parseLocalDate('01-05-2013'), 15000))
+        assertEquals(0, fakturBeli.hutang.sisa())
+        assertTrue(fakturBeli.hutang.lunas)
+    }
+
+    void testBayarHutangDesimal() {
+        Produk produkA = new Produk('Produk A', 10000)
+        Produk produkB = new Produk('Produk B', 12000)
+        Produk produkC = new Produk('Produk C',  8000)
+        FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now(), diskon: new Diskon(1))
+        fakturBeli.status = StatusFakturBeli.BARANG_DITERIMA
+        fakturBeli.tambah(new ItemFaktur(produkA, 5, 1000, null, new Diskon(1, 100)))
+        fakturBeli.tambah(new ItemFaktur(produkB, 3, 2000, null, new Diskon(2)))
+        fakturBeli.tambah(new ItemFaktur(produkC, 4, 3000, null, new Diskon(3)))
+        fakturBeli.buatHutang()
+
+        fakturBeli.bayarHutang(new PembayaranHutang(Periode.format.parseLocalDate('01-02-2013'), 10000))
+        assertEquals(11750.3, fakturBeli.hutang.sisa())
+        assertFalse(fakturBeli.hutang.lunas)
+
+        fakturBeli.bayarHutang(new PembayaranHutang(Periode.format.parseLocalDate('01-03-2013'), 11750.3))
         assertEquals(0, fakturBeli.hutang.sisa())
         assertTrue(fakturBeli.hutang.lunas)
     }
