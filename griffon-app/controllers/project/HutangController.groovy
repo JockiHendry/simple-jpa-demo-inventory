@@ -39,7 +39,7 @@ class HutangController {
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.statusSearch.selectedItem = FakturBeliRepository.StatusHutangSearch.SEMUA
+            model.statusSearch.selectedItem = FakturBeliRepository.StatusHutangSearch.BELUM_LUNAS
         }
     }
 

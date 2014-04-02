@@ -50,8 +50,10 @@ class FakturBeliRepository {
 
         findAllFakturBeliByDslFetchHutang([orderBy: 'tanggal,nomor']) {
             hutang isNotNull()
-            and()
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusHutangSearch != StatusHutangSearch.BELUM_LUNAS) {
+                and()
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            }
             if (nomorSearch) {
                 and()
                 nomor like("%${nomorSearch}%")
