@@ -48,6 +48,9 @@ class Produk implements Comparable {
     @Min(0l)
     Integer jumlah = 0
 
+    @Min(0l)
+    Integer jumlahAkanDikirim = 0
+
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
     Map<Gudang, StokProduk> daftarStok = [:]
 
@@ -67,6 +70,13 @@ class Produk implements Comparable {
     public void perubahanStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
         stok(daftarBarang.gudang).perubahan(jumlah, daftarBarang, keterangan)
         this.jumlah += (daftarBarang.faktor() * jumlah)
+    }
+
+    public boolean tersediaUntuk(int jumlahYangDibutuhkan) {
+        if ((jumlah - jumlahAkanDikirim) < jumlahYangDibutuhkan) {
+            return false
+        }
+        true
     }
 
     boolean equals(o) {
