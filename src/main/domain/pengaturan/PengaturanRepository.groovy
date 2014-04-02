@@ -28,6 +28,12 @@ class PengaturanRepository {
 
     public final Map cache = new ConcurrentHashMap()
 
+    @Transaction(Transaction.Policy.SKIP)
+    public def getValue(KeyPengaturan keyPengaturan) {
+        cache[keyPengaturan]?: keyPengaturan.defaultValue
+    }
+
+    @Transaction(Transaction.Policy.SKIP)
     public byte[] serialize(def value, JenisNilai jenisNilai) {
         switch (jenisNilai) {
             case JenisNilai.STRING:
@@ -41,6 +47,7 @@ class PengaturanRepository {
         }
     }
 
+    @Transaction(Transaction.Policy.SKIP)
     public def deserialize(byte[] source, JenisNilai jenisNilai) {
         switch (jenisNilai) {
             case JenisNilai.STRING:

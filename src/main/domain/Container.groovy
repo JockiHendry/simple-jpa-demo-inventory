@@ -28,8 +28,12 @@ import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
 import domain.util.PasswordService
 import griffon.util.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class Container {
+
+    private final Logger log = LoggerFactory.getLogger(Container)
 
     public static Container app = new Container()
 
@@ -47,9 +51,11 @@ class Container {
     private ReceivedNotInvoicedService receivedNotInvoicedService
     private PasswordService passwordService
 
-    private Container() {}
+    private Container() {
+        setup()
+    }
 
-    public void setup() {
+    private void setup() {
         // Create repositories
         gudangRepository = new GudangRepository()
         produkRepository = new ProdukRepository()
@@ -64,7 +70,11 @@ class Container {
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()
-        ApplicationHolder.application.addApplicationEventListener(inventoryEventConsumer)
+        if (ApplicationHolder.application) {
+            ApplicationHolder.application.addApplicationEventListener(inventoryEventConsumer)
+        } else {
+            log.warn 'Can not find Griffon application. Is this launched by Griffon? Event listener will not working!'
+        }
     }
 
     public GudangRepository getGudangRepository() {

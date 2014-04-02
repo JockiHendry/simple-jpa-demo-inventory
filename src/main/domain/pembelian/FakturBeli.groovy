@@ -15,9 +15,10 @@
  */
 package domain.pembelian
 
+import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
-import domain.inventory.DaftarBarang
+import domain.pengaturan.KeyPengaturan
 import groovy.transform.*
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
@@ -52,7 +53,7 @@ class FakturBeli extends Faktur {
         if (status != StatusFakturBeli.BARANG_DITERIMA) {
             throw new DataTidakBolehDiubah(this)
         }
-        if (!jatuhTempo) jatuhTempo = tanggal.plusDays(30)
+        if (!jatuhTempo) jatuhTempo = tanggal.plusDays(Container.app.pengaturanRepository.getValue(KeyPengaturan.MASA_JATUH_TEMPO_HUTANG))
         hutang = new Hutang(jatuhTempo, false, total())
     }
 

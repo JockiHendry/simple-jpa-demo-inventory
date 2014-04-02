@@ -43,7 +43,7 @@ class SupervisorPasswordController {
 
         if (!Arrays.equals(
                 Container.app.passwordService.plainTextToEncrypted(view.password.getPassword()),
-                Container.app.pengaturanRepository.cache[KeyPengaturan.SUPERVISOR_PASSWORD])) {
+                Container.app.pengaturanRepository.getValue(KeyPengaturan.SUPERVISOR_PASSWORD))) {
             model.errors['password'] = 'Password Anda salah!'
             return
         }
