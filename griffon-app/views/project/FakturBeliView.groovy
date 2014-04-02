@@ -85,9 +85,9 @@ application(title: 'Faktur Beli',
             errorLabel(path: 'supplier', constraints: 'wrap')
             label('Diskon:')
             panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
-                numberTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
+                decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
                 label('% dan Potongan Langsung Rp')
-                numberTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
+                decimalTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
             }
             errorLabel(path: 'diskon', constraints: 'wrap')
             label('Isi:')

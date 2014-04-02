@@ -93,7 +93,7 @@ application(title: 'Produk',
 			textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
 			errorLabel(path: 'nama', constraints: 'wrap')
 			label('Harga:')
-			numberTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
+			decimalTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
 			errorLabel(path: 'harga', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {

@@ -70,13 +70,13 @@ application(title: 'simple-jpa-demo-inventory',
             numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
             label('Harga:')
-            numberTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
+            decimalTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
             errorLabel(path: 'harga', constraints: 'wrap')
             label('Diskon:')
             panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
-                numberTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
+                decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
                 label('% dan Potongan Langsung Rp')
-                numberTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
+                decimalTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
             }
             errorLabel(path: 'diskon', constraints: 'wrap')
             label('Keterangan:')

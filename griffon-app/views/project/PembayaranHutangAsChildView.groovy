@@ -56,7 +56,7 @@ application(title: 'simple-jpa-demo-inventory',
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
             errorLabel(path: 'tanggal', constraints: 'wrap')
             label('Jumlah:')
-            numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
+            decimalTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
