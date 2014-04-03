@@ -18,7 +18,7 @@ package project
 
 import domain.Container
 import domain.inventory.Gudang
-import domain.inventory.PeriodeItemStok
+import domain.riwayat.PeriodeRiwayat
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.inventory.ProdukRepository
@@ -78,7 +78,7 @@ class ProdukTest extends DbUnitTestCase {
 
         Produk produk = repo.findProdukByNamaFetchComplete("Produk A")
         StokProduk stok = produk.stok(gudang)
-        assertEquals(3, stok.daftarPeriodeItemStok.size())
+        assertEquals(3, stok.listPeriodeRiwayat.size())
         assertEquals(3, stok.periode(Periode.format.parseLocalDate('15-12-2013')).jumlah)
         assertEquals(Periode.format.parseLocalDate('01-12-2013'), stok.periode(Periode.format.parseLocalDate('15-12-2013')).tanggalMulai)
         assertEquals(Periode.format.parseLocalDate('31-12-2013'), stok.periode(Periode.format.parseLocalDate('15-12-2013')).tanggalSelesai)
@@ -94,7 +94,7 @@ class ProdukTest extends DbUnitTestCase {
         assertTrue(stok.periodeUntukArsip(3).isEmpty())
 
         LocalDate lampau = Periode.format.parseLocalDate('15-01-2010')
-        PeriodeItemStok periodeLampau = stok.buatPeriode(lampau)
+        PeriodeRiwayat periodeLampau = stok.buatPeriode(lampau)
         assertEquals(Periode.format.parseLocalDate('01-01-2010'), periodeLampau.tanggalMulai)
         assertEquals(Periode.format.parseLocalDate('31-01-2010'), periodeLampau.tanggalSelesai)
 
@@ -120,7 +120,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Stok ditemukan."
 
         log.debug "Mencari periode item stok untuk tahun 2010..."
-        PeriodeItemStok periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
+        PeriodeRiwayat periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
         log.debug "Periode item stok ditemukan."
 
         assertNotNull(periodeLampau)
@@ -131,7 +131,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Proses pengarsipan selesai."
 
         ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
-                "SELECT * FROM periodeitemstok_listitemStok WHERE periodeItemStok_Id <> -18")
+                "SELECT * FROM periodeitemstok_listitem WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 
         repo.withTransaction {
@@ -154,7 +154,7 @@ class ProdukTest extends DbUnitTestCase {
             assertTrue(periodeLampau.arsip)
             assertEquals(10, periodeLampau.jumlah)
 
-            assertTrue(periodeLampau.listItemStok.isEmpty())
+            assertTrue(periodeLampau.listItem.isEmpty())
         }
     }
 

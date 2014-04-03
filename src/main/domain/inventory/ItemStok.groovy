@@ -17,6 +17,7 @@
 package domain.inventory
 
 import domain.faktur.Faktur
+import domain.riwayat.DapatDibuatRiwayat
 import groovy.transform.*
 import org.w3c.dom.Attr
 import simplejpa.DomainClass
@@ -27,7 +28,7 @@ import javax.validation.constraints.*
 import org.joda.time.*
 
 @Embeddable @Canonical
-class ItemStok {
+class ItemStok implements DapatDibuatRiwayat {
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @Column(name='tanggalItemStok')
@@ -42,5 +43,14 @@ class ItemStok {
     @Size(min=3, max=100)
     String keterangan
 
+    @Override
+    int efekPadaJumlah() {
+        daftarBarang.faktor() * jumlah
+    }
+
+    @Override
+    LocalDate tanggalRiwayat() {
+        tanggal
+    }
 }
 

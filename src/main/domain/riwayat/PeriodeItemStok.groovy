@@ -13,31 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.riwayat
 
-package domain.inventory
-
-import domain.riwayat.PeriodeItemStok
-import domain.riwayat.Riwayat
+import domain.inventory.ItemStok
 import groovy.transform.*
 import simplejpa.DomainClass
-
 import javax.persistence.*
-import javax.validation.constraints.*
 
-import org.joda.time.*
+@DomainClass @Entity @Canonical(excludes="listItem") @EqualsAndHashCode(callSuper=true)
+class PeriodeItemStok extends PeriodeRiwayat<ItemStok> {
 
-@DomainClass @Entity @Canonical
-class StokProduk extends Riwayat<PeriodeItemStok, ItemStok> {
-
-    public StokProduk() {
-        super(PeriodeItemStok)
-    }
-
-    @NotNull @ManyToOne
-    Gudang gudang
-
-    @NotNull @ManyToOne
-    Produk produk
+    @ElementCollection @OrderColumn
+    List<ItemStok> listItem = []
 
 }
 

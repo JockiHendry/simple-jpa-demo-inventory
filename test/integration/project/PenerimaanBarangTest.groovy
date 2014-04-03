@@ -72,17 +72,17 @@ class PenerimaanBarangTest extends DbUnitTestCase {
             assertEquals(47, produkA.jumlah)
             assertEquals(20, produkA.stok(gudang).jumlah)
             assertEquals(10, produkA.stok(gudang).periode(LocalDate.now()).jumlah)
-            assertTrue(produkA.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 10)))
+            assertTrue(produkA.stok(gudang).periode(LocalDate.now()).listItem.contains(new ItemStok(LocalDate.now(), p, 10)))
 
             assertEquals(32, produkB.jumlah)
             assertEquals(19, produkB.stok(gudang).jumlah)
             assertEquals(5, produkB.stok(gudang).periode(LocalDate.now()).jumlah)
-            assertTrue(produkB.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 5)))
+            assertTrue(produkB.stok(gudang).periode(LocalDate.now()).listItem.contains(new ItemStok(LocalDate.now(), p, 5)))
 
             assertEquals(31, produkC.jumlah)
             assertEquals(18, produkC.stok(gudang).jumlah)
             assertEquals(3,  produkC.stok(gudang).periode(LocalDate.now()).jumlah)
-            assertTrue(produkC.stok(gudang).periode(LocalDate.now()).listItemStok.contains(new ItemStok(LocalDate.now(), p, 3)))
+            assertTrue(produkC.stok(gudang).periode(LocalDate.now()).listItem.contains(new ItemStok(LocalDate.now(), p, 3)))
         }
     }
 
@@ -102,17 +102,17 @@ class PenerimaanBarangTest extends DbUnitTestCase {
 
             assertEquals(32, p1.jumlah)
             assertEquals(5, p1.stok(gudangUtama).jumlah)
-            List<ItemStok> listItemStok = p1.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            List<ItemStok> listItemStok = p1.stok(gudangUtama).periode(LocalDate.now()).listItem
             assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -5, 'Invers Akibat Penghapusan')))
 
             assertEquals(17, p2.jumlah)
             assertEquals(4, p2.stok(gudangUtama).jumlah)
-            listItemStok = p2.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            listItemStok = p2.stok(gudangUtama).periode(LocalDate.now()).listItem
             assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -10, 'Invers Akibat Penghapusan')))
 
             assertEquals(21, p3.jumlah)
             assertEquals(8, p3.stok(gudangUtama).jumlah)
-            listItemStok = p3.stok(gudangUtama).periode(LocalDate.now()).listItemStok
+            listItemStok = p3.stok(gudangUtama).periode(LocalDate.now()).listItem
             assertTrue(listItemStok.contains(new ItemStok(LocalDate.now(), p, -7, 'Invers Akibat Penghapusan')))
         }
     }

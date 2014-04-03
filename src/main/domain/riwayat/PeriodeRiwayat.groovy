@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package domain.inventory
+package domain.riwayat
 
+import domain.inventory.Periode
 import groovy.transform.*
-import simplejpa.DomainClass
 
 import javax.persistence.*
 import org.hibernate.annotations.Type
@@ -25,8 +25,8 @@ import javax.validation.constraints.*
 
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical(excludes="listItemStok")
-class PeriodeItemStok {
+@MappedSuperclass @Canonical
+abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalMulai
@@ -39,8 +39,7 @@ class PeriodeItemStok {
     @NotNull
     Boolean arsip = Boolean.FALSE
 
-    @ElementCollection @OrderColumn
-    List<ItemStok> listItemStok = []
+    public abstract List<V> getListItem();
 
     public boolean termasuk(LocalDate tanggal) {
         (tanggal.isEqual(tanggalMulai) || tanggal.isAfter(tanggalMulai)) &&
@@ -53,16 +52,16 @@ class PeriodeItemStok {
         i1.overlaps(i2)
     }
 
-    public void tambahItemStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
-        listItemStok << new ItemStok(LocalDate.now(), daftarBarang, jumlah, keterangan)
-        this.jumlah += (daftarBarang.faktor() * jumlah)
+    public void tambah(V item) {
+        getListItem().add(item)
+        this.jumlah += item.efekPadaJumlah()
     }
 
     boolean equals(o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
 
-        PeriodeItemStok that = (PeriodeItemStok) o
+        PeriodeRiwayat that = (PeriodeRiwayat) o
 
         if (tanggalMulai != that.tanggalMulai) return false
         if (tanggalSelesai != that.tanggalSelesai) return false

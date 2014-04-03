@@ -19,10 +19,8 @@ import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.ItemStok
-import domain.inventory.PeriodeItemStok
+import domain.riwayat.PeriodeItemStok
 import domain.inventory.StokProduk
-import groovy.beans.Bindable
-import org.joda.time.LocalDate
 
 class ItemStokModel {
 

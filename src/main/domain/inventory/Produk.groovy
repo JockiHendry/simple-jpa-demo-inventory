@@ -33,7 +33,7 @@ import java.text.NumberFormat
 ], subgraphs = [
     @NamedSubgraph(
         name = 'stokProduk',
-        attributeNodes=[@NamedAttributeNode(value='daftarPeriodeItemStok', subgraph='periodeItemStok')]
+        attributeNodes=[@NamedAttributeNode(value='listPeriodeRiwayat')]
     )
 ])
 @DomainClass @Entity @Canonical(excludes='daftarStok')
@@ -68,8 +68,9 @@ class Produk implements Comparable {
     }
 
     public void perubahanStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
-        stok(daftarBarang.gudang).perubahan(jumlah, daftarBarang, keterangan)
-        this.jumlah += (daftarBarang.faktor() * jumlah)
+        ItemStok itemStok = new ItemStok(LocalDate.now(), daftarBarang, jumlah, keterangan)
+        stok(daftarBarang.gudang).tambah(itemStok)
+        this.jumlah += itemStok.efekPadaJumlah()
     }
 
     public boolean tersediaUntuk(int jumlahYangDibutuhkan) {

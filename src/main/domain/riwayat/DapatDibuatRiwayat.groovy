@@ -13,31 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.riwayat
 
-package domain.inventory
+import org.joda.time.LocalDate
 
-import domain.riwayat.PeriodeItemStok
-import domain.riwayat.Riwayat
-import groovy.transform.*
-import simplejpa.DomainClass
+public interface DapatDibuatRiwayat {
 
-import javax.persistence.*
-import javax.validation.constraints.*
+    public abstract int efekPadaJumlah()
 
-import org.joda.time.*
-
-@DomainClass @Entity @Canonical
-class StokProduk extends Riwayat<PeriodeItemStok, ItemStok> {
-
-    public StokProduk() {
-        super(PeriodeItemStok)
-    }
-
-    @NotNull @ManyToOne
-    Gudang gudang
-
-    @NotNull @ManyToOne
-    Produk produk
+    public abstract LocalDate tanggalRiwayat()
 
 }
-
