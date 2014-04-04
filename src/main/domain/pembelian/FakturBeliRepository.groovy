@@ -16,11 +16,8 @@
 package domain.pembelian
 
 import domain.Container
-import domain.event.DaftarBarangDihapus
-import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.inventory.Gudang
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 

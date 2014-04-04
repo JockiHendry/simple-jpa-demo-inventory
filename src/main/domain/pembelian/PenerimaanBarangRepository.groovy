@@ -16,12 +16,10 @@
 package domain.pembelian
 
 import domain.Container
-import domain.event.DaftarBarangDihapus
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.Gudang
-import domain.inventory.Periode
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 import griffon.util.*
@@ -94,7 +92,7 @@ class PenerimaanBarangRepository {
         }
         if (p.deleted != 'Y') {
             p.deleted = 'Y'
-            ApplicationHolder.application.event(new DaftarBarangDihapus(p))
+            ApplicationHolder.application.event(new PerubahanStok(p, true))
         }
         p
     }

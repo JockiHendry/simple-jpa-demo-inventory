@@ -19,8 +19,6 @@ import domain.Container
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.ProdukRepository
-import domain.pembelian.PenerimaanBarang
-import groovy.transform.Canonical
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 import simplejpa.transaction.Transaction
@@ -34,34 +32,23 @@ class InventoryEventConsumer {
         log.info "Event onPerubahanStok mulai dikerjakan..."
 
         ProdukRepository produkRepository = Container.app.produkRepository
+        DaftarBarang daftarBarang = perubahanStok.source
 
-        if (perubahanStok.source instanceof PenerimaanBarang) {
-
-            PenerimaanBarang penerimaanBarang = (PenerimaanBarang) perubahanStok.source
-            penerimaanBarang.normalisasi().each { ItemBarang i ->
+        if (perubahanStok.invers) {
+            daftarBarang.normalisasi().each { ItemBarang i ->
+                log.info "Memproses negasi untuk item $i..."
+                produkRepository.perubahanStok(i.produk, -i.jumlah, daftarBarang, 'Invers Akibat Penghapusan')
+                log.info "Selesai memperoses item $i!"
+            }
+        } else {
+            daftarBarang.normalisasi().each { ItemBarang i ->
                 log.info "Memproses item $i..."
-                produkRepository.perubahanStok(i.produk, i.jumlah, penerimaanBarang)
+                produkRepository.perubahanStok(i.produk, i.jumlah, daftarBarang)
                 log.info "Selesai memproses item $i!"
             }
-
         }
 
         log.info "Event onPerubahanStok selesai dikerjakan!"
-    }
-
-    void onDaftarBarangDihapus(DaftarBarangDihapus daftarBarangDihapus) {
-        log.info "Event onDaftarBarangDihapus mulai dikerjakan..."
-
-        ProdukRepository produkRepository = Container.app.produkRepository
-        DaftarBarang daftarBarang = daftarBarangDihapus.source
-
-        daftarBarang.normalisasi().each { ItemBarang i ->
-            log.info "Memproses negasi untuk item $i..."
-            produkRepository.perubahanStok(i.produk, -i.jumlah, daftarBarang, 'Invers Akibat Penghapusan')
-            log.info "Selesai memperoses item $i!"
-        }
-
-        log.info "Event onDaftarBarangDihapus selesai dikerjakan!"
     }
 
 }
