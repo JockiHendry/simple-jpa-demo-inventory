@@ -95,6 +95,13 @@ INSERT INTO `produk` (`id`, `createdDate`, `deleted`, `harga`, `jumlah`, `jumlah
 INSERT INTO `produk` (`id`, `createdDate`, `deleted`, `harga`, `jumlah`, `jumlahAkanDikirim`, `modifiedDate`, `nama`) VALUES (-3,'2014-02-22 07:00:00','N',900.00,28,0,NULL,'Produk C');
 INSERT INTO `produk` (`id`, `createdDate`, `deleted`, `harga`, `jumlah`, `jumlahAkanDikirim`, `modifiedDate`, `nama`) VALUES (-2,'2014-02-22 07:00:00','N',1500.00,27,0,NULL,'Produk B');
 INSERT INTO `produk` (`id`, `createdDate`, `deleted`, `harga`, `jumlah`, `jumlahAkanDikirim`, `modifiedDate`, `nama`) VALUES (-1,'2014-02-22 07:00:00','N',1000.00,37,0,NULL,'Produk A');
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-7,'2014-02-22 07:00:00','N',NULL,'Sales Luar Kota D',NULL,-5);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-6,'2014-02-22 07:00:00','N',NULL,'Sales Luar Kota C',NULL,-4);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-5,'2014-02-22 07:00:00','N',NULL,'Sales Luar Kota B',NULL,-3);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-4,'2014-02-22 07:00:00','N',NULL,'Sales Luar Kota A',NULL,-2);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-3,'2014-02-22 07:00:00','N',NULL,'Sales Dalam Kota B',NULL,-1);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-2,'2014-02-22 07:00:00','N',NULL,'Sales Dalam Kota A',NULL,-1);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-1,'2014-02-22 07:00:00','N',NULL,'Sales Showroom','021-xxx-yyy',-1);
 INSERT INTO `stokproduk` (`id`, `jumlah`, `createdDate`, `deleted`, `modifiedDate`, `gudang_id`, `produk_id`) VALUES (-14,10,'2014-02-22 07:00:00','N',NULL,-1,-11);
 INSERT INTO `stokproduk` (`id`, `jumlah`, `createdDate`, `deleted`, `modifiedDate`, `gudang_id`, `produk_id`) VALUES (-13,4,'2014-02-22 07:00:00','N',NULL,-5,-3);
 INSERT INTO `stokproduk` (`id`, `jumlah`, `createdDate`, `deleted`, `modifiedDate`, `gudang_id`, `produk_id`) VALUES (-12,9,'2014-02-22 07:00:00','N',NULL,-4,-3);

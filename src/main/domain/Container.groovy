@@ -26,6 +26,7 @@ import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.ReceivedNotInvoicedService
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
+import domain.penjualan.SalesRepository
 import domain.util.PasswordService
 import griffon.util.*
 import org.slf4j.Logger
@@ -45,6 +46,7 @@ class Container {
     private PenerimaanBarangRepository penerimaanBarangRepository
     private FakturBeliRepository fakturBeliRepository
     private PengaturanRepository pengaturanRepository
+    private SalesRepository salesRepository
 
     private InventoryEventConsumer inventoryEventConsumer
 
@@ -63,6 +65,7 @@ class Container {
         penerimaanBarangRepository = new PenerimaanBarangRepository()
         fakturBeliRepository = new FakturBeliRepository()
         pengaturanRepository = new PengaturanRepository()
+        salesRepository = new SalesRepository()
 
         // Create services
         receivedNotInvoicedService = new ReceivedNotInvoicedService()
@@ -107,6 +110,10 @@ class Container {
 
     public PengaturanRepository getPengaturanRepository() {
         pengaturanRepository
+    }
+
+    public SalesRepository getSalesRepository() {
+        salesRepository
     }
 
     public List searchEnum(Class enumeration) {

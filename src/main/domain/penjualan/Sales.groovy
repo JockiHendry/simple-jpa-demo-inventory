@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.penjualan
 
-package domain.inventory
-
+import domain.inventory.Gudang
 import groovy.transform.*
 import org.apache.tools.ant.taskdefs.condition.Not
 import simplejpa.DomainClass
@@ -26,26 +26,20 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-class Gudang implements Comparable {
+class Sales {
 
-    @NotBlank @Size(min=3, max=50)
+    @NotEmpty @Size(min=2, max=100)
     String nama
 
-    @NotNull
-    Boolean utama
+    @Size(min=2, max=50)
+    String nomorTelepon
 
-    @Size(min=3, max=100)
-    String keterangan
+    @NotNull @ManyToOne
+    Gudang gudang
 
-    @Override
-    int compareTo(Object o) {
-        if (!(o instanceof Gudang)) return -1
-        nama.compareTo(o.nama)
+    public boolean dalamKota() {
+        gudang.utama
     }
 
-    @Override
-    String toString() {
-        nama
-    }
 }
 
