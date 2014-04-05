@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "region"
+    'region' {
+        model      = 'project.RegionModel'
+        view       = 'project.RegionView'
+        controller = 'project.RegionController'
+    }
+
     // MVC Group for "sales"
     'sales' {
         model      = 'project.SalesModel'

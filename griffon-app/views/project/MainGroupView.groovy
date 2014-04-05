@@ -47,6 +47,8 @@ actions {
         smallIcon: imageIcon('/menu_maintenance.png'), closure: popupMaintenance)
     action(id: 'sales', name: 'Sales', actionCommandKey: 'sales', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_maintenance_sales.png'), closure: controller.switchPage)
+    action(id: 'region', name: 'Region', actionCommandKey: 'region', mnemonic: KeyEvent.VK_E,
+        smallIcon: imageIcon('/menu_maintenance_region.png'), closure: controller.switchPage)
     action(id: 'gudang', name: 'Gudang', actionCommandKey: 'gudang', mnemonic: KeyEvent.VK_G,
         smallIcon: imageIcon('/menu_maintenance_gudang.png'), closure: controller.switchPage)
     action(id: 'supplier', name: 'Supplier', actionCommandKey: 'supplier', mnemonic: KeyEvent.VK_S,
@@ -67,6 +69,7 @@ application(id: 'mainFrame',
 
     popupMenu(id: "maintenancePopup") {
         menuItem(action: sales)
+        menuItem(action: region)
         separator(border: BorderFactory.createEmptyBorder(3,0,3,0))
         menuItem(action: supplier)
         menuItem(action: gudang)

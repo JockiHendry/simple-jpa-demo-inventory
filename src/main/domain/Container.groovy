@@ -26,6 +26,7 @@ import domain.pembelian.PenerimaanBarangRepository
 import domain.pembelian.ReceivedNotInvoicedService
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
+import domain.penjualan.RegionRepository
 import domain.penjualan.SalesRepository
 import domain.util.PasswordService
 import griffon.util.*
@@ -47,6 +48,7 @@ class Container {
     private FakturBeliRepository fakturBeliRepository
     private PengaturanRepository pengaturanRepository
     private SalesRepository salesRepository
+    private RegionRepository regionRepository
 
     private InventoryEventConsumer inventoryEventConsumer
 
@@ -66,6 +68,7 @@ class Container {
         fakturBeliRepository = new FakturBeliRepository()
         pengaturanRepository = new PengaturanRepository()
         salesRepository = new SalesRepository()
+        regionRepository = new RegionRepository()
 
         // Create services
         receivedNotInvoicedService = new ReceivedNotInvoicedService()
@@ -114,6 +117,10 @@ class Container {
 
     public SalesRepository getSalesRepository() {
         salesRepository
+    }
+
+    public RegionRepository getRegionRepository() {
+        regionRepository
     }
 
     public List searchEnum(Class enumeration) {
