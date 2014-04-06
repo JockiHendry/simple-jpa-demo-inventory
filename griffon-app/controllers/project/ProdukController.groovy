@@ -41,17 +41,10 @@ class ProdukController {
 
     ProdukRepository produkRepository
 
-    private static MVCGroup produkPopupMVC
-
-    public static MVCGroup getProdukPopupMVC() {
-        if (!produkPopupMVC) {
-            produkPopupMVC = ApplicationHolder.application.mvcGroupManager.buildMVCGroup('produk', 'produkPopupDiItemBarang', [popup: true])
-        }
-        produkPopupMVC
-    }
-
-    public static Produk displayProdukPopup(view) {
-        def v = getProdukPopupMVC().view
+    public static Produk displayProdukPopup(view, boolean allowTambahProduk = true) {
+        MVCGroup produkPopupMVC = ApplicationHolder.application.mvcGroupManager.buildMVCGroup('produk',
+            'produkPopupDiItemBarang', [popup: true, allowTambahProduk: allowTambahProduk])
+        def v = produkPopupMVC.view
         Window thisWindow = SwingUtilities.getWindowAncestor(view.mainPanel)
         JDialog dialog = new JDialog(thisWindow, Dialog.ModalityType.APPLICATION_MODAL)
         if (DialogUtils.defaultContentDecorator) {
@@ -66,15 +59,19 @@ class ProdukController {
         dialog.setVisible(true)
 
         // Setelah dialog selesai ditampilkan
+        Produk result
         if (v.table.selectionModel.isSelectionEmpty()) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
-            return null
+        } else {
+            result = v.view.table.selectionModel.selected[0]
         }
-        return v.view.table.selectionModel.selected[0]
+        ApplicationHolder.application.mvcGroupManager.destroyMVCGroup('produkPopupDiItemBarang')
+        result
     }
 
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popup'?: false
+        model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         produkRepository = Container.app.produkRepository
         search()
     }

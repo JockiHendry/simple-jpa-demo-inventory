@@ -26,16 +26,10 @@ import org.joda.time.*
 @DomainClass @Entity @Canonical
 class Hutang {
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate jatuhTempo
-
-    @NotNull
-    Boolean lunas = Boolean.FALSE
-
     @NotNull @Min(0l)
     BigDecimal jumlah
 
-    @ElementCollection @OrderColumn
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn
     List<PembayaranHutang> listPembayaran = []
 
     BigDecimal sisa() {
@@ -46,14 +40,15 @@ class Hutang {
         listPembayaran.sum { it.jumlah }?: 0
     }
 
+    boolean isLunas() {
+        sisa().compareTo(BigDecimal.ZERO) == 0
+    }
+
     void bayar(PembayaranHutang pembayaranHutang) {
         if (pembayaranHutang.jumlah > sisa()) {
             throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa()}")
         }
         listPembayaran << pembayaranHutang
-        if (sisa().compareTo(BigDecimal.ZERO) == 0) {
-            lunas = true
-        }
     }
 
     void hapus(PembayaranHutang pembayaranHutang) {
@@ -61,11 +56,7 @@ class Hutang {
             throw new IllegalArgumentException("Tidak menemukan pembayaran hutang $pembayaranHutang")
         }
         listPembayaran.remove(pembayaranHutang)
-        lunas = false
     }
 
-    boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {
-        padaTanggal.equals(jatuhTempo) || padaTanggal.isAfter(jatuhTempo)
-    }
 }
 

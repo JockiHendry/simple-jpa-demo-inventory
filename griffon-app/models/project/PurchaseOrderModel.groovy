@@ -15,31 +15,41 @@
  */
 package project
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.Container
 import domain.faktur.ItemFaktur
-import domain.pembelian.*
-import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
+import domain.pembelian.PurchaseOrder
+import domain.pembelian.StatusPurchaseOrder
+import domain.pembelian.Supplier
 import org.jdesktop.swingx.combobox.ListComboBoxModel
-import org.joda.time.*
+import org.joda.time.LocalDate
 
-class FakturBeliModel {
+class PurchaseOrderModel {
 
-    PurchaseOrder purchaseOrder
-    FakturBeli fakturBeli
-    @Bindable boolean editable
+    MainGroupModel.POViewMode mode
+    @Bindable boolean showPenerimaan
+    @Bindable boolean showFakturBeli
     @Bindable boolean allowTambahProduk
 
     @Bindable Long id
     @Bindable String nomor
     @Bindable LocalDate tanggal
-    @Bindable LocalDate jatuhTempo
-    @Bindable Integer hariJatuhTempo
     @Bindable BigDecimal diskonPotonganPersen
     @Bindable BigDecimal diskonPotonganLangsung
     @Bindable String keterangan
-    @Bindable boolean notDeleted = true
     List<ItemFaktur> listItemFaktur = []
+    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
+    ListComboBoxModel statusSearch = new ListComboBoxModel(Container.app.searchEnum(StatusPurchaseOrder))
+
+    BasicEventList<PurchaseOrder> purchaseOrderList = new BasicEventList<>()
+
+    @Bindable String nomorSearch
+    @Bindable String supplierSearch
+    @Bindable LocalDate tanggalMulaiSearch
+    @Bindable LocalDate tanggalSelesaiSearch
 
     @Bindable String informasi
 

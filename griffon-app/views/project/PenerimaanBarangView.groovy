@@ -15,6 +15,8 @@
  */
 package project
 
+import java.awt.event.KeyEvent
+
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -34,16 +36,6 @@ application(title: 'Penerimaan Barang',
     panel(id: 'mainPanel') {
         borderLayout()
 
-        panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
-            label(' s/d ')
-            dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
-            textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
-            textField(id: 'supplierSearch', columns: 10, text: bind('supplierSearch', target: model, mutual: true), actionPerformed: controller.search)
-            button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
-        }
-
         panel(constraints: CENTER) {
             borderLayout()
             panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
@@ -58,13 +50,8 @@ application(title: 'Penerimaan Barang',
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Supplier', property: 'supplier') {
-                        templateRenderer(exp: {it?.nama})
-                    }
-                    glazedColumn(name: 'Faktur', property: 'faktur') {
-                        templateRenderer(exp: {it?.nomor?: '-'})
-                    }
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
+                    glazedColumn(name: 'Qty', expression: { it.jumlah() }, columnClass: Integer)
                 }
             }
         }
@@ -76,14 +63,11 @@ application(title: 'Penerimaan Barang',
             label('Tanggal:')
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
             errorLabel(path: 'tanggal', constraints: 'wrap')
-            label('Supplier:')
-            comboBox(id: 'supplier', model: model.supplier, templateRenderer: '${value}', errorPath: 'supplier')
-            errorLabel(path: 'supplier', constraints: 'wrap')
             label('Isi:')
             panel {
                 mvcPopupButton(id: 'listItemBarang', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
                     errorPath: 'listItemBarang', mvcGroup: 'itemBarangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang]},
+                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]},
                     dialogProperties: [title: 'Daftar Barang', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
                         model.listItemBarang.clear()
@@ -96,16 +80,9 @@ application(title: 'Penerimaan Barang',
             textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')
 
-
             panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
-                    if (model.id != null) {
-                        if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                                app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                            return
-                        }
-                    }
+                button(app.getMessage("simplejpa.dialog.save.button"), visible: bind { !table.isRowSelected }, actionPerformed: {
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
@@ -120,10 +97,10 @@ application(title: 'Penerimaan Barang',
                         controller.delete()
                     }
                 })
+                button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
+                    SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
+                }, mnemonic: KeyEvent.VK_T)
             }
         }
     }
 }
-
-PromptSupport.setPrompt("Cari Nomor...", nomorSearch)
-PromptSupport.setPrompt("Cari Supplier...", supplierSearch)

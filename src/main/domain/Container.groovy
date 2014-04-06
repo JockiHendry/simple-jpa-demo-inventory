@@ -21,11 +21,10 @@ package domain
 import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
-import domain.pembelian.FakturBeliRepository
-import domain.pembelian.PenerimaanBarangRepository
-import domain.pembelian.ReceivedNotInvoicedService
+import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
+import domain.penjualan.NomorService
 import domain.penjualan.RegionRepository
 import domain.penjualan.SalesRepository
 import domain.util.PasswordService
@@ -41,19 +40,18 @@ class Container {
 
     public static final String SEMUA = "Semua"
 
-    private GudangRepository gudangRepository
-    private ProdukRepository produkRepository
-    private SupplierRepository supplierRepository
-    private PenerimaanBarangRepository penerimaanBarangRepository
-    private FakturBeliRepository fakturBeliRepository
-    private PengaturanRepository pengaturanRepository
-    private SalesRepository salesRepository
-    private RegionRepository regionRepository
+    GudangRepository gudangRepository
+    ProdukRepository produkRepository
+    SupplierRepository supplierRepository
+    PengaturanRepository pengaturanRepository
+    SalesRepository salesRepository
+    RegionRepository regionRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
-    private InventoryEventConsumer inventoryEventConsumer
+    InventoryEventConsumer inventoryEventConsumer
 
-    private ReceivedNotInvoicedService receivedNotInvoicedService
-    private PasswordService passwordService
+    PasswordService passwordService
+    NomorService nomorService
 
     private Container() {
         setup()
@@ -64,15 +62,14 @@ class Container {
         gudangRepository = new GudangRepository()
         produkRepository = new ProdukRepository()
         supplierRepository = new SupplierRepository()
-        penerimaanBarangRepository = new PenerimaanBarangRepository()
-        fakturBeliRepository = new FakturBeliRepository()
         pengaturanRepository = new PengaturanRepository()
         salesRepository = new SalesRepository()
         regionRepository = new RegionRepository()
+        purchaseOrderRepository = new PurchaseOrderRepository()
 
         // Create services
-        receivedNotInvoicedService = new ReceivedNotInvoicedService()
         passwordService = new PasswordService()
+        nomorService = new NomorService()
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()
@@ -81,46 +78,6 @@ class Container {
         } else {
             log.warn 'Can not find Griffon application. Is this launched by Griffon? Event listener will not working!'
         }
-    }
-
-    public GudangRepository getGudangRepository() {
-        gudangRepository
-    }
-
-    public ProdukRepository getProdukRepository() {
-        produkRepository
-    }
-
-    public SupplierRepository getSupplierRepository() {
-        supplierRepository
-    }
-
-    public PenerimaanBarangRepository getPenerimaanBarangRepository() {
-        penerimaanBarangRepository
-    }
-
-    public FakturBeliRepository getFakturBeliRepository() {
-        fakturBeliRepository
-    }
-
-    public ReceivedNotInvoicedService getReceivedNotInvoicedService() {
-        receivedNotInvoicedService
-    }
-
-    public PasswordService getPasswordService() {
-        passwordService
-    }
-
-    public PengaturanRepository getPengaturanRepository() {
-        pengaturanRepository
-    }
-
-    public SalesRepository getSalesRepository() {
-        salesRepository
-    }
-
-    public RegionRepository getRegionRepository() {
-        regionRepository
     }
 
     public List searchEnum(Class enumeration) {

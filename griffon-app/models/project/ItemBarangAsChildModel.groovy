@@ -23,6 +23,8 @@ import groovy.beans.Bindable
 
 class ItemBarangAsChildModel {
 
+    @Bindable boolean allowTambahProduk
+
     DaftarBarang parent
 
     @Bindable Produk produk

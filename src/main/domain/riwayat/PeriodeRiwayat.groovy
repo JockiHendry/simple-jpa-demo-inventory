@@ -54,7 +54,7 @@ abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
 
     public void tambah(V item) {
         getListItem().add(item)
-        this.jumlah += item.efekPadaJumlah()
+        this.jumlah += item.jumlah
     }
 
     boolean equals(o) {

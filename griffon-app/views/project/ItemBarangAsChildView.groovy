@@ -56,7 +56,7 @@ application(title: 'simple-jpa-demo-inventory',
                 button('Cari Produk...', id: 'cariProduk', errorPath: 'produk', mnemonic: KeyEvent.VK_P, actionPerformed: controller.showProduk)
             }
             errorLabel(path: 'produk', constraints: 'wrap')
-            label('Jumlah:')
+            label('Qty:')
             numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
 

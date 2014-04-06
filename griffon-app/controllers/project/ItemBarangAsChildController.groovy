@@ -37,6 +37,7 @@ class ItemBarangAsChildController {
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
         model.editable = args.containsKey('editable')? args.'editable': (model.parent?.id == null)
+        model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         execInsideUISync {
             model.itemBarangList.clear()
             model.itemBarangList.addAll(args.'listItemBarang')
@@ -46,7 +47,7 @@ class ItemBarangAsChildController {
     def save = {
         ItemBarang itemBarang = new ItemBarang(produk: model.produk, jumlah: model.jumlah)
 
-        if (!Container.app.penerimaanBarangRepository.validate(itemBarang, Default, model)) return
+        if (!Container.app.purchaseOrderRepository.validate(itemBarang, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             execInsideUISync {
@@ -63,7 +64,7 @@ class ItemBarangAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view)
+        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk)
         if (produk) {
             model.produk = produk
             view.jumlah.requestFocusInWindow()

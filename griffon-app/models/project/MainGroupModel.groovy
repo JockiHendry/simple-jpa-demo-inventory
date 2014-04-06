@@ -19,5 +19,9 @@ package project
 import groovy.beans.Bindable
 
 class MainGroupModel {
-    // @Bindable String propName
+
+    public enum POViewMode {
+        PENERIMAAN, FAKTUR_BELI, ALL
+    }
+
 }

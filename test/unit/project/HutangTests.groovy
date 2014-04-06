@@ -31,20 +31,6 @@ class HutangTests extends GriffonUnitTestCase {
         super.tearDown()
     }
 
-    void testSudahJatuhTempo() {
-        Hutang hutang = new Hutang(LocalDate.now())
-        assertTrue(hutang.sudahJatuhTempo())
-        hutang.jatuhTempo = LocalDate.now().minusDays(1)
-        assertTrue(hutang.sudahJatuhTempo())
-        hutang.jatuhTempo = LocalDate.now().plusDays(1)
-        assertFalse(hutang.sudahJatuhTempo())
-
-        hutang.jatuhTempo = Periode.format.parseLocalDate('01-01-2013')
-        assertTrue(hutang.sudahJatuhTempo(Periode.format.parseLocalDate('01-01-2013')))
-        assertTrue(hutang.sudahJatuhTempo(Periode.format.parseLocalDate('02-01-2013')))
-        assertFalse(hutang.sudahJatuhTempo(Periode.format.parseLocalDate('31-12-2012')))
-    }
-
     void testJumlahDibayar() {
         Hutang hutang = new Hutang(jumlah: 3500000)
         hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-01-2013'), 540000))

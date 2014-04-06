@@ -20,7 +20,6 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.*
 import domain.validation.TanpaGudang
-import org.joda.time.LocalDate
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -31,57 +30,32 @@ class PenerimaanBarangController {
     PenerimaanBarangModel model
     def view
 
-    PenerimaanBarangRepository penerimaanBarangRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        penerimaanBarangRepository = Container.app.penerimaanBarangRepository
+        purchaseOrderRepository = Container.app.purchaseOrderRepository
+        model.purchaseOrder = args.'purchaseOrder'
+        model.editable = args.containsKey('editable')? args.'editable': false
+        model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         init()
-        search()
     }
 
     def init = {
         execInsideUISync {
-            model.supplierList.clear()
-        }
-        List supplier = penerimaanBarangRepository.findAllSupplier()
-        execInsideUISync {
-            model.supplierList.addAll(supplier)
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
-            model.tanggalSelesaiSearch = LocalDate.now()
-        }
-    }
-
-    def search = {
-        List result
-        result = penerimaanBarangRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.supplierSearch)
-        execInsideUISync {
             model.penerimaanBarangList.clear()
-            model.penerimaanBarangList.addAll(result)
+            model.penerimaanBarangList.addAll(model.purchaseOrder.listPenerimaanBarang)
         }
     }
 
     def save = {
-        PenerimaanBarang penerimaanBarang = new PenerimaanBarang(id: model.id, nomor: model.nomor,
-            tanggal: model.tanggal, keterangan: model.keterangan, supplier: model.supplier.selectedItem)
-        penerimaanBarang.listItemBarang.addAll(model.listItemBarang)
-
-        if (!penerimaanBarangRepository.validate(penerimaanBarang, TanpaGudang, model)) return
-
+        PenerimaanBarang penerimaanBarang = new PenerimaanBarang(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan)
+        if (!purchaseOrderRepository.validate(penerimaanBarang, TanpaGudang, model)) return
         try {
-            if (penerimaanBarang.id == null) {
-                penerimaanBarangRepository.buat(penerimaanBarang)
-                execInsideUISync {
-                    model.penerimaanBarangList << penerimaanBarang
-                    view.table.changeSelection(model.penerimaanBarangList.size() - 1, 0, false, false)
-                    clear()
-                }
-            } else {
-                penerimaanBarang = penerimaanBarangRepository.update(penerimaanBarang)
-                execInsideUISync {
-                    view.table.selectionModel.selected[0] = penerimaanBarang
-                    clear()
-                }
+            model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, penerimaanBarang, model.listItemBarang)
+            execInsideUISync {
+                model.penerimaanBarangList << penerimaanBarang
+                view.table.changeSelection(model.penerimaanBarangList.size() - 1, 0, false, false)
+                clear()
             }
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
@@ -94,7 +68,9 @@ class PenerimaanBarangController {
     def delete = {
         try {
             PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
-            penerimaanBarang = penerimaanBarangRepository.hapus(penerimaanBarang)
+            def (resultPurchaseOrder,resultPenerimaanBarang) = purchaseOrderRepository.hapus(model.purchaseOrder, penerimaanBarang)
+            model.purchaseOrder = resultPurchaseOrder
+            penerimaanBarang = resultPenerimaanBarang
             execInsideUISync {
                 view.table.selectionModel.selected[0] = penerimaanBarang
                 clear()
@@ -111,7 +87,6 @@ class PenerimaanBarangController {
             model.nomor = null
             model.tanggal = null
             model.keterangan = null
-            model.supplier.selectedItem = null
             model.listItemBarang.clear()
 
             model.errors.clear()
@@ -131,7 +106,6 @@ class PenerimaanBarangController {
                 model.nomor = selected.nomor
                 model.tanggal = selected.tanggal
                 model.keterangan = selected.keterangan
-                model.supplier.selectedItem = selected.supplier
                 model.listItemBarang.clear()
                 model.listItemBarang.addAll(selected.listItemBarang)
             }

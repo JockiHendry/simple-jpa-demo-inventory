@@ -57,11 +57,12 @@ application(title: 'hutang',
         panel(constraints: CENTER) {
             borderLayout()
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.fakturBeliList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.purchaseOrderList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: {it=='Y'?'D':''})
                     }
-                    glazedColumn(name: 'Nomor', property: 'nomor', width: 120)
+                    glazedColumn(name: 'Nomor PO', property: 'nomor', width: 150)
+                    glazedColumn(name: 'Nomor Faktur Beli', expression: {it.fakturBeli?.nomor})
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
@@ -69,16 +70,17 @@ application(title: 'hutang',
                         templateRenderer(exp: {it?.nama})
                     }
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
-                    glazedColumn(name: 'Jatuh Tempo', expression: {it.hutang?.jatuhTempo}) {
+                    glazedColumn(name: 'Status', property: 'status')
+                    glazedColumn(name: 'Jatuh Tempo', expression: {it.fakturBeli?.jatuhTempo}) {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Jumlah Hutang', expression: {it.hutang?.jumlah}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Hutang', expression: {it.fakturBeli?.hutang?.jumlah}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.hutang?.jumlahDibayar()}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.fakturBeli?.hutang?.jumlahDibayar()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Sisa Hutang', expression: {it.hutang?.sisa()}, columnClass: Integer) {
+                    glazedColumn(name: 'Sisa Hutang', expression: {it.fakturBeli?.hutang?.sisa()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
                 }
@@ -89,12 +91,12 @@ application(title: 'hutang',
             label('Pembayaran:')
             mvcPopupButton(id: 'listPembayaranHutang', text: 'Klik Disini Untuk Melihat Pembayaran Yang Telah Dilakukan...',
                     errorPath: 'listPembayaranHutang', mvcGroup: 'pembayaranHutangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listPembayaranHutang: model.listPembayaranHutang]},
+                    args: {[purchaseOrder: view.table.selectionModel.selected[0], listPembayaranHutang: model.listPembayaranHutang]},
                     dialogProperties: [title: 'Pembayaran Hutang', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
                         model.listPembayaranHutang.clear()
                         model.listPembayaranHutang.addAll(m.pembayaranHutangList)
-                        view.table.selectionModel.selected[0] = m.parent
+                        view.table.selectionModel.selected[0] = m.purchaseOrder
                     }
             )
             errorLabel(path: 'listPembayaranHutang', constraints: 'wrap')
@@ -103,5 +105,5 @@ application(title: 'hutang',
 
 }
 
-PromptSupport.setPrompt("Cari Nomor...", nomorSearch)
+PromptSupport.setPrompt("Cari Faktur...", nomorSearch)
 PromptSupport.setPrompt("Cari Supplier...", supplierSearch)

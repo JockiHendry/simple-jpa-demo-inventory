@@ -40,18 +40,17 @@ class PenerimaanBarangTests extends GriffonUnitTestCase {
         Produk produkC = new Produk('Produk C')
 
         Supplier s = new Supplier()
-        PenerimaanBarang penerimaanBarang1 = new PenerimaanBarang(nomor: 'P1', supplier: s)
+        PenerimaanBarang penerimaanBarang1 = new PenerimaanBarang(nomor: 'P1')
         penerimaanBarang1.tambah(new ItemBarang(produkA, 10))
         penerimaanBarang1.tambah(new ItemBarang(produkB, 20))
 
-        PenerimaanBarang penerimaanBarang2 = new PenerimaanBarang(nomor: 'P2', supplier: s)
+        PenerimaanBarang penerimaanBarang2 = new PenerimaanBarang(nomor: 'P2')
         penerimaanBarang2.tambah(new ItemBarang(produkA, 3))
         penerimaanBarang2.tambah(new ItemBarang(produkB, 5))
         penerimaanBarang2.tambah(new ItemBarang(produkC, 30))
 
         PenerimaanBarang hasil = penerimaanBarang1 + penerimaanBarang2
         assertEquals('P1', hasil.nomor)
-        assertEquals(s, hasil.supplier)
         assertEquals(68, hasil.jumlah())
         assertEquals(13, hasil.jumlah(produkA))
         assertEquals(25, hasil.jumlah(produkB))

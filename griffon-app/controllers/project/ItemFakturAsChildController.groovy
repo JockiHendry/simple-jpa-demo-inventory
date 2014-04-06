@@ -30,7 +30,8 @@ class ItemFakturAsChildController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
-        model.editable = !model.parent?.id
+        model.editable = args.containsKey('editable')? args.'editable': !model.parent?.id
+        model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         model.itemFakturList.clear()
         model.itemFakturList.addAll(args.'listItemFaktur')
     }
@@ -39,7 +40,7 @@ class ItemFakturAsChildController {
         ItemFaktur itemFaktur = new ItemFaktur(produk: model.produk, jumlah: model.jumlah, harga: model.harga, keterangan: model.keterangan)
         itemFaktur.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
 
-        if (!Container.app.fakturBeliRepository.validate(itemFaktur, Default, model)) return
+        if (!Container.app.purchaseOrderRepository.validate(itemFaktur, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             execInsideUISync {
@@ -56,7 +57,7 @@ class ItemFakturAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view)
+        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk)
         if (produk) {
             model.produk = produk
             view.jumlah.requestFocusInWindow()
@@ -98,16 +99,4 @@ class ItemFakturAsChildController {
         }
     }
 
-    // void mvcGroupDestroy() {
-    //    // this method is called when the group is destroyed
-    // }
-
-    /*
-        Remember that actions will be called outside of the UI thread
-        by default. You can change this setting of course.
-        Please read chapter 9 of the Griffon Guide to know more.
-       
-    def action = { evt = null ->
-    }
-    */
 }

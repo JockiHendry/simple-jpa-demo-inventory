@@ -16,15 +16,14 @@
 package project
 
 import ca.odell.glazedlists.BasicEventList
-import domain.pembelian.FakturBeli
-import domain.pembelian.Hutang
 import domain.pembelian.PembayaranHutang
+import domain.pembelian.PurchaseOrder
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class PembayaranHutangAsChildModel {
 
-    FakturBeli parent
+    PurchaseOrder purchaseOrder
 
     @Bindable LocalDate tanggal
     @Bindable BigDecimal jumlah

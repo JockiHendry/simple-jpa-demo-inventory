@@ -17,6 +17,7 @@
 package domain.faktur
 
 import domain.inventory.ItemBarang
+import domain.validation.InputPurchaseOrder
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -25,23 +26,24 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DomainClass @Entity @Canonical(excludes='listItemFaktur')
+import javax.validation.groups.Default
+
+@MappedSuperclass @Canonical(excludes='listItemFaktur')
 abstract class Faktur {
 
-    @NotEmpty @Size(min=2, max=100)
+    @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])
     String nomor
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @NotNull(groups=[Default,InputPurchaseOrder]) @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggal
 
     @Embedded
     Diskon diskon
 
-    @Size(min=2, max=200)
+    @Size(min=2, max=200, groups=[Default,InputPurchaseOrder])
     String keterangan
 
-    @ElementCollection @OrderColumn @NotEmpty
+    @ElementCollection @OrderColumn @NotEmpty(groups=[Default,InputPurchaseOrder])
     List<ItemFaktur> listItemFaktur = []
 
     public void tambah(ItemFaktur itemFaktur) {

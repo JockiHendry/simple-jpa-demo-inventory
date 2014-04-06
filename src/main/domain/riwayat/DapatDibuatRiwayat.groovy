@@ -19,8 +19,8 @@ import org.joda.time.LocalDate
 
 public interface DapatDibuatRiwayat {
 
-    public abstract int efekPadaJumlah()
+    public LocalDate tanggalRiwayat()
 
-    public abstract LocalDate tanggalRiwayat()
+    public Integer getJumlah()
 
 }

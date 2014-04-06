@@ -69,10 +69,4 @@ class ProdukRepository {
         p
     }
 
-    public void perubahanStok(Produk produk, int jumlah, DaftarBarang daftarBarang, String keterangan = null) {
-        if (keterangan==null) keterangan = daftarBarang.keterangan
-        Produk p = findProdukById(produk.id)
-        p.perubahanStok(jumlah, daftarBarang, keterangan)
-    }
-
 }

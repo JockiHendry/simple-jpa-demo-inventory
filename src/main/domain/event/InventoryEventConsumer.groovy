@@ -16,14 +16,13 @@
 package domain.event
 
 import domain.Container
+import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.ProdukRepository
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
-import simplejpa.transaction.Transaction
 
-@Transaction
 class InventoryEventConsumer {
 
     private final Log log = LogFactory.getLog(InventoryEventConsumer)
@@ -33,19 +32,22 @@ class InventoryEventConsumer {
 
         ProdukRepository produkRepository = Container.app.produkRepository
         DaftarBarang daftarBarang = perubahanStok.source
+        Faktur faktur = perubahanStok.faktur
 
-        if (perubahanStok.invers) {
-            daftarBarang.normalisasi().each { ItemBarang i ->
-                log.info "Memproses negasi untuk item $i..."
-                produkRepository.perubahanStok(i.produk, -i.jumlah, daftarBarang, 'Invers Akibat Penghapusan')
-                log.info "Selesai memperoses item $i!"
+        daftarBarang.normalisasi().each { ItemBarang i ->
+            log.info "Memproses item $i..."
+            int pengali = daftarBarang.faktor()
+            String keterangan = null
+            if (perubahanStok.invers) {
+                pengali *= -1
+                keterangan = 'Invers akibat penghapusan'
+                log.info "Item ini adalah item negasi dengan pengali [${pengali}]"
             }
-        } else {
-            daftarBarang.normalisasi().each { ItemBarang i ->
-                log.info "Memproses item $i..."
-                produkRepository.perubahanStok(i.produk, i.jumlah, daftarBarang)
-                log.info "Selesai memproses item $i!"
-            }
+
+            if (keterangan==null) keterangan = faktur.keterangan
+            i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
+
+            log.info "Selesai memproses item $i!"
         }
 
         log.info "Event onPerubahanStok selesai dikerjakan!"

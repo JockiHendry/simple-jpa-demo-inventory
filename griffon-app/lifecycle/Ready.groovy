@@ -31,4 +31,5 @@ import domain.Container
 
 execOutsideUI {
     Container.app.pengaturanRepository.refreshAll()
+    Container.app.nomorService.refreshAll()
 }

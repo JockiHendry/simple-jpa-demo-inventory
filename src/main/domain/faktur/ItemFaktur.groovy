@@ -17,24 +17,26 @@
 package domain.faktur
 
 import domain.inventory.Produk
+import domain.validation.InputPurchaseOrder
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
+import javax.validation.groups.Default
 
 @Embeddable @Canonical
 class ItemFaktur {
 
-    @NotNull @ManyToOne
+    @NotNull(groups=[Default,InputPurchaseOrder]) @ManyToOne
     Produk produk
 
-    @NotNull @Min(1l)
+    @NotNull(groups=[Default,InputPurchaseOrder]) @Min(value=1l, groups=[Default,InputPurchaseOrder])
     Integer jumlah
 
-    @NotNull @Digits(integer=12, fraction=2)
+    @NotNull(groups=[Default]) @Digits(integer=12, fraction=2, groups=[Default,InputPurchaseOrder])
     BigDecimal harga
 
-    @Size(min=2, max=200)
+    @Size(min=2, max=200, groups=[Default,InputPurchaseOrder])
     String keterangan
 
     @Embedded

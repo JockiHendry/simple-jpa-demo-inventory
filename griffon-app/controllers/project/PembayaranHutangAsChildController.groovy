@@ -17,10 +17,10 @@ package project
 
 import ast.NeedSupervisorPassword
 import domain.Container
-import domain.pembelian.FakturBeli
-import domain.pembelian.FakturBeliRepository
+import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.PembayaranHutang
-
+import domain.pembelian.PurchaseOrderRepository
+import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
@@ -29,11 +29,11 @@ class PembayaranHutangAsChildController {
     PembayaranHutangAsChildModel model
     def view
 
-    FakturBeliRepository fakturBeliRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        fakturBeliRepository = Container.app.fakturBeliRepository
-        model.parent = args.'parent'
+        purchaseOrderRepository = Container.app.purchaseOrderRepository
+        model.purchaseOrder = args.'purchaseOrder'
         model.editable = true
         execInsideUISync {
             model.pembayaranHutangList.clear()
@@ -43,20 +43,21 @@ class PembayaranHutangAsChildController {
 
     def save = {
         PembayaranHutang pembayaranHutang = new PembayaranHutang(tanggal: model.tanggal, jumlah: model.jumlah)
-        if (!fakturBeliRepository.validate(pembayaranHutang, Default, model)) return
+        if (!purchaseOrderRepository.validate(pembayaranHutang, Default, model)) return
 
         try {
-            fakturBeliRepository.withTransaction {
-                model.parent = fakturBeliRepository.merge(model.parent)
-                model.parent.bayarHutang(pembayaranHutang)
+            purchaseOrderRepository.withTransaction {
+                model.purchaseOrder = merge(model.purchaseOrder)
+                model.purchaseOrder.bayar(pembayaranHutang)
             }
             execInsideUISync {
                 model.pembayaranHutangList << pembayaranHutang
                 clear()
             }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dilakukan lagi!', 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException ex) {
             model.errors['jumlah'] = ex.message
-            return
         }
     }
 
@@ -64,17 +65,18 @@ class PembayaranHutangAsChildController {
     def delete = {
         try {
             PembayaranHutang pembayaranHutang = view.table.selectionModel.selected[0]
-            fakturBeliRepository.withTransaction {
-                model.parent = fakturBeliRepository.merge(model.parent)
-                model.parent.hapus(pembayaranHutang)
+            purchaseOrderRepository.withTransaction {
+                model.purchaseOrder = purchaseOrderRepository.merge(model.purchaseOrder)
+                model.purchaseOrder.hapus(pembayaranHutang)
             }
             execInsideUISync {
                 model.pembayaranHutangList.remove(pembayaranHutang)
                 clear()
             }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dihapus lagi!', 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException ex) {
             model.errors['jumlah'] = ex.message
-            return
         }
     }
 

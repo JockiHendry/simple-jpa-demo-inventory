@@ -66,10 +66,10 @@ mvcGroups {
     }
 
     // MVC Group for "receivedNotInvoiced"
-    'receivedNotInvoiced' {
-        model      = 'project.ReceivedNotInvoicedModel'
-        view       = 'project.ReceivedNotInvoicedView'
-        controller = 'project.ReceivedNotInvoicedController'
+    'purchaseOrder' {
+        model      = 'project.PurchaseOrderModel'
+        view       = 'project.PurchaseOrderView'
+        controller = 'project.PurchaseOrderController'
     }
 
     // MVC Group for "itemFakturAsChild"

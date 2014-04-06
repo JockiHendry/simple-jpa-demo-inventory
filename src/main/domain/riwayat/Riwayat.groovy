@@ -126,6 +126,6 @@ abstract class Riwayat<T extends PeriodeRiwayat, V extends DapatDibuatRiwayat> {
 
     void tambah(V item) {
         periode(item.tanggalRiwayat()).tambah(item)
-        this.jumlah += item.efekPadaJumlah()
+        this.jumlah += item.jumlah
     }
 }

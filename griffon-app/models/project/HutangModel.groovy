@@ -17,8 +17,8 @@ package project
 
 import ca.odell.glazedlists.BasicEventList
 import domain.pembelian.FakturBeli
-import domain.pembelian.FakturBeliRepository
 import domain.pembelian.PembayaranHutang
+import domain.pembelian.PurchaseOrderRepository
 import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
@@ -28,7 +28,7 @@ class HutangModel {
     @Bindable Long id
     List<PembayaranHutang> listPembayaranHutang = []
 
-    BasicEventList<FakturBeli> fakturBeliList = new BasicEventList<>()
+    BasicEventList<FakturBeli> purchaseOrderList = new BasicEventList<>()
 
     @Bindable String nomorSearch
     @Bindable String supplierSearch
@@ -36,6 +36,6 @@ class HutangModel {
     @Bindable LocalDate tanggalSelesaiSearch
     @Bindable boolean chkJatuhTempo
     @Bindable LocalDate jatuhTempoSearch
-    EnumComboBoxModel statusSearch = new EnumComboBoxModel(FakturBeliRepository.StatusHutangSearch)
+    EnumComboBoxModel statusSearch = new EnumComboBoxModel(PurchaseOrderRepository.StatusHutangSearch)
 
 }

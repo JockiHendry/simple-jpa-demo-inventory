@@ -27,22 +27,18 @@ import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class PenerimaanBarangModel {
 
+    @Bindable boolean allowTambahProduk
+
+    PurchaseOrder purchaseOrder
+    @Bindable boolean editable
+
     @Bindable Long id
     @Bindable String nomor
     @Bindable LocalDate tanggal
     @Bindable String keterangan
     @Bindable boolean notDeleted = true
-    BasicEventList<Supplier> supplierList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
-
     List<ItemBarang> listItemBarang = []
 
     BasicEventList<PenerimaanBarang> penerimaanBarangList = new BasicEventList<>()
-
-    @Bindable String nomorSearch
-    @Bindable String supplierSearch
-    @Bindable LocalDate tanggalMulaiSearch
-    @Bindable LocalDate tanggalSelesaiSearch
-
 
 }

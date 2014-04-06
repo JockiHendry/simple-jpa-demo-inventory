@@ -17,6 +17,7 @@ package project
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.DataTidakKonsisten
 import domain.faktur.Diskon
 import domain.pembelian.*
 import org.joda.time.LocalDate
@@ -34,62 +35,49 @@ class FakturBeliController {
     FakturBeliModel model
     def view
 
-    FakturBeliRepository fakturBeliRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        fakturBeliRepository = Container.app.fakturBeliRepository
-        init()
-        search()
-    }
+        purchaseOrderRepository = Container.app.purchaseOrderRepository
+        model.purchaseOrder = args.'purchaseOrder'
+        model.fakturBeli = model.purchaseOrder.fakturBeli
+        model.editable = args.containsKey('editable')? args.'editable': false
+        model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
+        refreshInformasi()
 
-    def init = {
-        execInsideUISync {
-            model.supplierList.clear()
+        // init data
+        model.errors.clear()
+        if (model.fakturBeli) {
+            model.fakturBeli.with {
+                model.id = id
+                model.notDeleted = (deleted == 'N')
+                model.nomor = nomor
+                model.tanggal = tanggal
+                model.jatuhTempo = jatuhTempo
+                model.keterangan = keterangan
+                model.diskonPotonganLangsung = diskon?.potonganLangsung
+                model.diskonPotonganPersen = diskon?.potonganPersen
+                model.listItemFaktur.clear()
+                model.listItemFaktur.addAll(listItemFaktur)
+            }
         }
-        List supplier = fakturBeliRepository.findAllSupplier()
-        execInsideUISync {
-            model.supplierList.addAll(supplier)
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
-            model.tanggalSelesaiSearch = LocalDate.now()
-            model.statusSearch.selectedItem = Container.SEMUA
-        }
-    }
 
-    def search = {
-        List result = fakturBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.supplierSearch, model.statusSearch.selectedItem)
-        execInsideUISync {
-            model.fakturBeliList.clear()
-            model.fakturBeliList.addAll(result)
-            refreshInformasi()
-        }
     }
 
     def save = {
-        FakturBeli fakturBeli = new FakturBeli(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
-            keterangan: model.keterangan, supplier: model.supplier.selectedItem)
-        model.listItemFaktur.each { fakturBeli.tambah(it) }
+        FakturBeli fakturBeli = new FakturBeli(nomor: model.nomor, tanggal: model.tanggal, jatuhTempo: model.jatuhTempo, keterangan: model.keterangan)
         fakturBeli.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
+        model.listItemFaktur.each { fakturBeli.tambah(it) }
 
-        if (!fakturBeliRepository.validate(fakturBeli, Default, model)) return
+        if (!purchaseOrderRepository.validate(fakturBeli, Default, model)) return
 
         try {
-            if (fakturBeli.id == null) {
-                fakturBeliRepository.buat(fakturBeli)
-                execInsideUISync {
-                    model.fakturBeliList << fakturBeli
-                    view.table.changeSelection(model.fakturBeliList.size() - 1, 0, false, false)
-                    clear()
-                }
-            } else {
-                fakturBeli = fakturBeliRepository.update(fakturBeli)
-                execInsideUISync {
-                    view.table.selectionModel.selected[0] = fakturBeli
-                    clear()
-                }
-            }
+            model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, fakturBeli)
+            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli berhasil disimpan!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
+        } catch (DataTidakKonsisten ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Isi faktur berbeda dengan yang dipesan di PO!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
@@ -98,11 +86,11 @@ class FakturBeliController {
     @NeedSupervisorPassword
     def delete = {
         try {
-            FakturBeli fakturBeli = view.table.selectionModel.selected[0]
-            fakturBeli = fakturBeliRepository.hapus(fakturBeli)
-            execInsideUISync {
-                view.table.selectionModel.selected[0] = fakturBeli
-                clear()
+            if (model.fakturBeli) {
+                model.purchaseOrder = purchaseOrderRepository.hapus(model.purchaseOrder, model.fakturBeli)
+                execInsideUISync {
+                    clear()
+                }
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
@@ -112,7 +100,12 @@ class FakturBeliController {
     def refreshInformasi = {
         def jumlahItem = model.listItemFaktur.sum { it.jumlah }?: 0
         def total = model.listItemFaktur.sum { it.total() }?: 0
-        model.informasi = "Jumlah ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
+        model.informasi = "Qty ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
+    }
+
+    def hitungJatuhTempo = {
+        if (!model.hariJatuhTempo) return
+        model.jatuhTempo = model.tanggal.plusDays(model.hariJatuhTempo)
     }
 
     def clear = {
@@ -121,37 +114,14 @@ class FakturBeliController {
             model.notDeleted = true
             model.nomor = null
             model.tanggal = null
+            model.jatuhTempo = null
             model.keterangan = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
-            model.supplier.selectedItem = null
             model.listItemFaktur.clear()
 
             model.errors.clear()
-            view.table.selectionModel.clearSelection()
             refreshInformasi()
-        }
-    }
-
-    def tableSelectionChanged = { ListSelectionEvent event ->
-        execInsideUISync {
-            if (view.table.selectionModel.isSelectionEmpty()) {
-                clear()
-            } else {
-                FakturBeli selected = view.table.selectionModel.selected[0]
-                model.errors.clear()
-                model.id = selected.id
-                model.notDeleted = (selected.deleted == 'N')
-                model.nomor = selected.nomor
-                model.tanggal = selected.tanggal
-                model.keterangan = selected.keterangan
-                model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
-                model.diskonPotonganPersen = selected.diskon?.potonganPersen
-                model.supplier.selectedItem = selected.supplier
-                model.listItemFaktur.clear()
-                model.listItemFaktur.addAll(selected.listItemFaktur)
-                refreshInformasi()
-            }
         }
     }
 

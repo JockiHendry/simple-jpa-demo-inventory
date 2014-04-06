@@ -13,24 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.validation;
 
-package domain.pembelian;
-
-public enum StatusFakturBeli {
-    DIBUAT("Dibuat"), BARANG_DITERIMA("Barang Diterima"), LUNAS("Lunas");
-
-    private String caption;
-
-    StatusFakturBeli(String caption) {
-        this.caption = caption;
-    }
-
-    public boolean setelah(StatusFakturBeli status) {
-        return (this.ordinal() > status.ordinal());
-    }
-
-    @Override
-    public String toString() {
-        return caption;
-    }
+public interface InputPurchaseOrder {
 }

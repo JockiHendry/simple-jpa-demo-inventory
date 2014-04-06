@@ -34,19 +34,15 @@ class ItemStok implements DapatDibuatRiwayat {
     @Column(name='tanggalItemStok')
     LocalDate tanggal
 
-    @ManyToOne
-    DaftarBarang daftarBarang
+    String nomorReferensi
+
+    String jenisReferensi
 
     @NotNull
     Integer jumlah
 
     @Size(min=3, max=100)
     String keterangan
-
-    @Override
-    int efekPadaJumlah() {
-        daftarBarang.faktor() * jumlah
-    }
 
     @Override
     LocalDate tanggalRiwayat() {

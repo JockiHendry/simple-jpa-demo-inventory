@@ -30,13 +30,17 @@ class MainGroupController {
     def view
     def groupId
 
-    def switchPage = { ActionEvent event ->
+    def switchPage = { ActionEvent event, Map arguments = [:] ->
+
+        execInsideUISync {
+            BusyLayerUI.instance.show()
+        }
+
         // destroying previous MVCGroup before switching to a new one
         if (groupId) {
             app.mvcGroupManager.destroyMVCGroup(groupId)
         }
 
-        BusyLayerUI.instance.show()
         groupId = event.actionCommand
 
         // destroying current MVCGroup if it was not destroyed properly before
@@ -44,14 +48,15 @@ class MainGroupController {
             app.mvcGroupManager.destroyMVCGroup(groupId)
         }
 
-        def (m, v, c) = app.mvcGroupManager.createMVCGroup(groupId, groupId)
+        def (m, v, c) = app.mvcGroupManager.createMVCGroup(groupId, groupId, arguments)
 
         execInsideUISync {
-            v.mainPanel.visible = false
-            view.mainPanel.add(v.mainPanel, groupId)
-            view.cardLayout.show(view.mainPanel, groupId)
+            view.mainPanel.removeAll()
+            view.mainPanel.add(v.mainPanel, BorderLayout.CENTER)
+            view.mainPanel.revalidate()
+            view.mainPanel.repaint()
+            BusyLayerUI.instance.hide()                        
             view.mainFrame.title = "${app.config.application.title} ${app.metadata.getApplicationVersion()}: ${GriffonNameUtils.getNaturalName(groupId)}"
-            BusyLayerUI.instance.hide()
         }
     }
 

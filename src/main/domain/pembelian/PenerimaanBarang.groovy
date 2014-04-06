@@ -29,11 +29,8 @@ import org.joda.time.*
 
 import javax.validation.groups.Default
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
 class PenerimaanBarang extends DaftarBarang {
-
-    @NotNull(groups=[Default,TanpaGudang]) @ManyToOne
-    Supplier supplier
 
     @Override
     int faktor() {
@@ -41,12 +38,9 @@ class PenerimaanBarang extends DaftarBarang {
     }
 
     PenerimaanBarang plus(PenerimaanBarang penerimaanBarangLain) {
-        PenerimaanBarang hasil = new PenerimaanBarang(nomor: this.nomor, tanggal: this.tanggal, keterangan: this.keterangan,
-            faktur: this.faktur, supplier: this.supplier)
-
+        PenerimaanBarang hasil = new PenerimaanBarang(nomor: this.nomor, tanggal: this.tanggal, keterangan: this.keterangan)
         hasil.listItemBarang = this.listItemBarang + penerimaanBarangLain.listItemBarang
         hasil.listItemBarang = hasil.normalisasi()
-
         hasil
     }
 

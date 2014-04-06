@@ -43,7 +43,7 @@ application(title: 'simple-jpa-demo-inventory',
                     glazedColumn(name: 'Produk', property: 'produk') {
                         templateRenderer('${it.nama}')
                     }
-                    glazedColumn(name: 'Jumlah', property: 'jumlah', columnClass: Integer, width: [80, 80, 200])
+                    glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: [80, 80, 200])
                     glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
@@ -66,7 +66,7 @@ application(title: 'simple-jpa-demo-inventory',
                 button('Cari Produk...', id: 'cariProduk', errorPath: 'produk', mnemonic: KeyEvent.VK_P, actionPerformed: controller.showProduk)
             }
             errorLabel(path: 'produk', constraints: 'wrap')
-            label('Jumlah:')
+            label('Qty:')
             numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
             label('Harga:')

@@ -26,22 +26,15 @@ import org.joda.time.LocalDate
 import simplejpa.DomainClass
 
 import javax.persistence.ElementCollection
-import javax.persistence.Entity
-import javax.persistence.Inheritance
-import javax.persistence.InheritanceType
+import javax.persistence.FetchType
 import javax.persistence.ManyToOne
-import javax.persistence.NamedAttributeNode
-import javax.persistence.NamedEntityGraph
-import javax.persistence.NamedSubgraph
+import javax.persistence.MappedSuperclass
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.validation.groups.Default
 
-@NamedEntityGraph(name='PenerimaanBarang.Complete', attributeNodes = [
-    @NamedAttributeNode(value='listItemBarang')
-])
-@DomainClass @Entity @Canonical(excludes='listItemBarang')
+@MappedSuperclass @Canonical(excludes='listItemBarang')
 abstract class DaftarBarang {
 
     @NotBlank(groups=[Default,TanpaGudang]) @Size(min=2, max=100, groups=[Default,TanpaGudang])
@@ -56,10 +49,7 @@ abstract class DaftarBarang {
     @NotNull(groups=[Default]) @ManyToOne
     Gudang gudang
 
-    @ManyToOne
-    Faktur faktur
-
-    @ElementCollection @OrderColumn @NotEmpty(groups=[Default,TanpaGudang])
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty(groups=[Default])
     List<ItemBarang> listItemBarang = []
 
     abstract int faktor()

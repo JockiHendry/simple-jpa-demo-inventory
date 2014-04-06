@@ -67,10 +67,10 @@ class Produk implements Comparable {
         daftarStok.values().toList().sort { it.gudang.nama }
     }
 
-    public void perubahanStok(int jumlah, DaftarBarang daftarBarang, String keterangan) {
-        ItemStok itemStok = new ItemStok(LocalDate.now(), daftarBarang, jumlah, keterangan)
-        stok(daftarBarang.gudang).tambah(itemStok)
-        this.jumlah += itemStok.efekPadaJumlah()
+    public void perubahanStok(int jumlah, Faktur faktur, Gudang gudang, String keterangan) {
+        ItemStok itemStok = new ItemStok(LocalDate.now(), faktur.nomor, faktur.class.simpleName, jumlah, keterangan)
+        stok(gudang).tambah(itemStok)
+        this.jumlah += jumlah
     }
 
     public boolean tersediaUntuk(int jumlahYangDibutuhkan) {

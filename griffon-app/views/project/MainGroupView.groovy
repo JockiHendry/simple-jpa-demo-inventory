@@ -29,14 +29,20 @@ def popupMaintenance = {
     maintenancePopup.show(maintenanceButton, 0, maintenanceButton.getHeight())
 }
 
-actions {
-    action(id: 'penerimaanBarang', name: 'Terima Barang', actionCommandKey: 'penerimaanBarang', mnemonic: KeyEvent.VK_T,
-        smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: controller.switchPage)
-    action(id: 'receivedNotInvoiced', name: 'RNI', actionCommandKey: 'receivedNotInvoiced', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_rni.png'), closure: controller.switchPage)
+def switchPageWithArguments = { Map arguments ->
+    return { ActionEvent event ->
+        controller.switchPage(event, arguments)
+    }
+}
 
-    action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'fakturBeli', mnemonic: KeyEvent.VK_B,
-        smallIcon: imageIcon('/menu_pembelian.png'), closure: controller.switchPage)
+actions {
+    action(id: 'penerimaanBarang', name: 'Terima Barang', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_T,
+        smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.PENERIMAAN]))
+
+    action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
+        smallIcon: imageIcon('/menu_purchaseorder.png'), closure: controller.switchPage)
+    action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_B,
+        smallIcon: imageIcon('/menu_pembelian.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.FAKTUR_BELI]))
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
 
@@ -84,11 +90,11 @@ application(id: 'mainFrame',
         panel() {
             borderLayout()
 
-            toolBar(constraints: BorderLayout.PAGE_START) {
+            toolBar(id: 'toolbar', constraints: BorderLayout.PAGE_START) {
                 buttonGroup(id: 'buttons')
                 toggleButton(buttonGroup: buttons, action: penerimaanBarang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
-                toggleButton(buttonGroup: buttons, action: receivedNotInvoiced, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
+                toggleButton(buttonGroup: buttons, action: purchaseOrder, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: hutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
@@ -97,7 +103,7 @@ application(id: 'mainFrame',
             }
 
             panel(id: "mainPanel", constraints: BorderLayout.CENTER) {
-                cardLayout(id: "cardLayout")
+                borderLayout()
             }
 
             statusBar(constraints: BorderLayout.PAGE_END, border: BorderFactory.createBevelBorder(BevelBorder.LOWERED)) {

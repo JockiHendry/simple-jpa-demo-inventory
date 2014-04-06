@@ -16,8 +16,8 @@
 package project
 
 import domain.Container
-import domain.pembelian.FakturBeli
-import domain.pembelian.FakturBeliRepository
+import domain.pembelian.PurchaseOrder
+import domain.pembelian.PurchaseOrderRepository
 import org.joda.time.LocalDate
 
 import javax.swing.event.ListSelectionEvent
@@ -27,10 +27,10 @@ class HutangController {
     HutangModel model
     def view
 
-    FakturBeliRepository fakturBeliRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        fakturBeliRepository = Container.app.fakturBeliRepository
+        purchaseOrderRepository = Container.app.purchaseOrderRepository
         init()
         search()
     }
@@ -39,16 +39,16 @@ class HutangController {
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.statusSearch.selectedItem = FakturBeliRepository.StatusHutangSearch.BELUM_LUNAS
+            model.statusSearch.selectedItem = PurchaseOrderRepository.StatusHutangSearch.BELUM_LUNAS
         }
     }
 
     def search = {
-        List result = fakturBeliRepository.cariHutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+        List result = purchaseOrderRepository.cariHutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
             model.nomorSearch, model.supplierSearch, model.chkJatuhTempo? model.jatuhTempoSearch: null, model.statusSearch.selectedItem)
         execInsideUISync {
-            model.fakturBeliList.clear()
-            model.fakturBeliList.addAll(result)
+            model.purchaseOrderList.clear()
+            model.purchaseOrderList.addAll(result)
         }
     }
 
@@ -67,11 +67,11 @@ class HutangController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                FakturBeli selected = view.table.selectionModel.selected[0]
+                PurchaseOrder selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
                 model.listPembayaranHutang.clear()
-                model.listPembayaranHutang.addAll(selected.hutang?.listPembayaran)
+                model.listPembayaranHutang.addAll(selected.fakturBeli.hutang.listPembayaran)
             }
         }
     }

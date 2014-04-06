@@ -20,53 +20,34 @@ import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.pengaturan.KeyPengaturan
 import groovy.transform.*
+import org.hibernate.annotations.Type
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@NamedEntityGraphs([
-    @NamedEntityGraph(name='FakturBeli.Items', attributeNodes = [
-        @NamedAttributeNode(value='listItemFaktur')
-    ]),
-    @NamedEntityGraph(name='FakturBeli.Hutang', attributeNodes = [
-        @NamedAttributeNode(value='hutang', subgraph='hutang')
-    ], subgraphs=[
-        @NamedSubgraph(name='hutang', type=Hutang, attributeNodes = [
-            @NamedAttributeNode(value='listPembayaran')
-        ])
-    ]),
-])
 @DomainClass @Entity @Canonical @ToString(excludes='hutang')
 class FakturBeli extends Faktur {
-
-    @NotNull @ManyToOne
-    Supplier supplier
-
-    @NotNull @Enumerated
-    StatusFakturBeli status = StatusFakturBeli.DIBUAT
 
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
     Hutang hutang
 
-    Hutang buatHutang(LocalDate jatuhTempo) {
-        if (status != StatusFakturBeli.BARANG_DITERIMA) {
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate jatuhTempo
+
+    void setJatuhTempoPer(int hari) {
+        jatuhTempo = tanggal.plusDays(hari)
+    }
+
+    Hutang buatHutang() {
+        if (hutang) {
             throw new DataTidakBolehDiubah(this)
         }
-        if (!jatuhTempo) jatuhTempo = tanggal.plusDays(Container.app.pengaturanRepository.getValue(KeyPengaturan.MASA_JATUH_TEMPO_HUTANG))
-        hutang = new Hutang(jatuhTempo, false, total())
+        hutang = new Hutang(jumlah: total())
     }
 
-    void bayarHutang(PembayaranHutang pembayaranHutang) {
-        hutang.bayar(pembayaranHutang)
-        if (hutang.lunas) {
-            status = StatusFakturBeli.LUNAS
-        }
-    }
-
-    void hapus(PembayaranHutang pembayaranHutang) {
-        hutang.hapus(pembayaranHutang)
-        status = StatusFakturBeli.BARANG_DITERIMA
+    boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {
+        padaTanggal.equals(jatuhTempo) || padaTanggal.isAfter(jatuhTempo)
     }
 
 }

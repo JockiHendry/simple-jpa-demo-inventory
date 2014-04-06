@@ -22,6 +22,8 @@ import domain.inventory.StokProduk
 
 class ProdukModel {
 
+    @Bindable boolean allowTambahProduk
+
     @Bindable Long id
 	@Bindable String nama
 	@Bindable BigDecimal harga
