@@ -59,7 +59,7 @@ application(title: 'simple-jpa-demo-inventory',
             }
         }
 
-        taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END) {
+        taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind { model.editable }, constraints: PAGE_END) {
             label('Produk:')
             panel {
                 label(text: bind {model.produk?: '- kosong -'})

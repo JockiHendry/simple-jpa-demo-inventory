@@ -101,7 +101,7 @@ application(title: 'Received Not Invoiced',
                 label(text: bind { model.informasi })
                 mvcPopupButton(id: 'listItemFaktur', text: 'Klik Disini Untuk Melihat Atau Mengisi Item Purchase Order...',
                     errorPath: 'listItemFaktur', mvcGroup: 'itemFakturAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, editable: true]},
+                    args: {[parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, editable: model.allowAddPO]},
                     dialogProperties: [title: 'Item Faktur', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
                         model.listItemFaktur.clear()
@@ -117,7 +117,9 @@ application(title: 'Received Not Invoiced',
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
+                button(app.getMessage("simplejpa.dialog.save.button"),
+                        visible: bind { model.allowAddPO },
+                        actionPerformed: {
                     if (model.id != null) {
                         if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
                                 app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {

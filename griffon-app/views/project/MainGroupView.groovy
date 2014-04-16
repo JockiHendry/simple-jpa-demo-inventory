@@ -40,7 +40,7 @@ actions {
         smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.PENERIMAAN]))
 
     action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_purchaseorder.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.ALL]))
     action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_pembelian.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.FAKTUR_BELI]))
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,

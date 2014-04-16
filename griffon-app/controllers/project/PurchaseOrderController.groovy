@@ -45,16 +45,19 @@ class PurchaseOrderController {
                 model.showPenerimaan = false
                 model.showFakturBeli = true
                 model.allowTambahProduk = false
+                model.allowAddPO = false
                 break
             case MainGroupModel.POViewMode.PENERIMAAN:
                 model.showPenerimaan = true
                 model.showFakturBeli = false
                 model.allowTambahProduk = false
+                model.allowAddPO = false
                 break
-            default:
+            case MainGroupModel.POViewMode.ALL:
                 model.showPenerimaan = true
                 model.showFakturBeli = true
                 model.allowTambahProduk = true
+                model.allowAddPO = true
         }
 
         init()

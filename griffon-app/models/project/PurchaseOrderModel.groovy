@@ -32,6 +32,7 @@ class PurchaseOrderModel {
     @Bindable boolean showPenerimaan
     @Bindable boolean showFakturBeli
     @Bindable boolean allowTambahProduk
+    @Bindable boolean allowAddPO
 
     @Bindable Long id
     @Bindable String nomor
