@@ -138,6 +138,12 @@ class PurchaseOrderController {
         }
     }
 
+    def onShowSisaBarang = { def button, Map args ->
+        PurchaseOrder selected = view.table.selectionModel.selected[0]
+        args.'listItemBarang' = selected.sisaBelumDiterima()
+        args.'editable' = false
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null

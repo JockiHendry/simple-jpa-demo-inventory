@@ -136,6 +136,9 @@ application(title: 'Received Not Invoiced',
                     },
                     visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan })
                 )
+                mvcPopupButton(id: 'itemBarangAsChild', text: 'Sisa Belum Diterima', mvcGroup: 'itemBarangAsChild', onBeforeDisplay: controller.onShowSisaBarang,
+                    dialogProperties: [title: 'Penerimaan Barang', size: new Dimension(900,420)],
+                    visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }))
                 mvcPopupButton(id: 'fakturBeli', text: 'Faktur Pembelian', mvcGroup: 'fakturBeli',
                     args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},
                     dialogProperties: [title: 'Faktur Pembelian'],
