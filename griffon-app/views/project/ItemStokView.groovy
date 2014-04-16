@@ -56,7 +56,8 @@ application(title: 'simple-jpa-demo-inventory',
                     glazedColumn(name: 'Jumlah', property: 'jumlah') {
                         templateRenderer('${numberFormat(it)}')
                     }
-                    glazedColumn(name: 'Nomor Order', expression: {it?.faktur?.nomor?:''})
+                    glazedColumn(name: 'Nomor Referensi', property: 'nomorReferensi')
+                    glazedColumn(name: 'Jenis', property: 'jenisReferensi')
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
                 }
             }
