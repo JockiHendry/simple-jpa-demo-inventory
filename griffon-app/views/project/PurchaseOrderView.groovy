@@ -68,9 +68,8 @@ application(title: 'Received Not Invoiced',
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
                     glazedColumn(name: 'Status', property: 'status')
                     glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showFakturBeli })
-                    glazedColumn(name: 'Jumlah Diskon', visible: bind { model.showFakturBeli }, expression: {
-                        it.diskon?.jumlah(it.total())
-                    }, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Diskon', visible: bind { model.showFakturBeli },
+                            expression: { it.jumlahDiskon() }, columnClass: Integer) {
                         templateRenderer(exp: { !it ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Total', expression: { it.total() }, columnClass: Integer, visible: bind { model.showFakturBeli }) {

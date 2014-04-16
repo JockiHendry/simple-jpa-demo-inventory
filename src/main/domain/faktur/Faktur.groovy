@@ -58,6 +58,12 @@ abstract class Faktur {
         total
     }
 
+    public BigDecimal jumlahDiskon() {
+        def jumlahDiskonItem = listItemFaktur.sum { it.jumlahDiskon() }
+        def jumlahDiskonFaktur = diskon?.jumlah(listItemFaktur.sum { it.total() })?: 0
+        jumlahDiskonItem + jumlahDiskonFaktur
+    }
+
     public List<ItemBarang> normalisasi() {
         List hasil = []
         listItemFaktur.groupBy { it.produk }.each { k, v ->

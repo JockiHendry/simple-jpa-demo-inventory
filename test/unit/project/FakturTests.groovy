@@ -80,4 +80,22 @@ class FakturTests extends GriffonUnitTestCase {
         Set hasil = [new ItemBarang(produkA, 12), new ItemBarang(produkC, 5), new ItemBarang(produkB, 10)]
         assertEquals(hasil, faktur.normalisasi().toSet())
     }
+
+    void testDiskon() {
+        Produk produkA = new Produk('Produk A', 1000)
+        Produk produkB = new Produk('Produk B', 1500)
+        Produk produkC = new Produk('Produk C', 900)
+        Produk produkD = new Produk('Produk D', 13000)
+
+        Faktur faktur1 = new Faktur() {}
+        faktur1.tambah(new ItemFaktur(produkA, 50, 1000, null, new Diskon(3)))
+        faktur1.tambah(new ItemFaktur(produkB, 50, 1500, null, new Diskon(5)))
+        assertEquals(5250, faktur1.jumlahDiskon())
+
+        Faktur faktur2 = new Faktur() {}
+        faktur2.tambah(new ItemFaktur(produkC, 50, 900, null, new Diskon(2)))
+        faktur2.tambah(new ItemFaktur(produkD, 70, 13000, null, new Diskon(3)))
+        faktur2.diskon = new Diskon(1)
+        assertEquals(37468, faktur2.jumlahDiskon())
+    }
 }
