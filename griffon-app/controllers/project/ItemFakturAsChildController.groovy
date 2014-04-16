@@ -19,6 +19,8 @@ import domain.Container
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Produk
+import domain.pembelian.FakturBeli
+import domain.pembelian.PurchaseOrder
 
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -60,6 +62,9 @@ class ItemFakturAsChildController {
         Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk)
         if (produk) {
             model.produk = produk
+            if ((model.parent==null) || (model.parent instanceof PurchaseOrder) || (model.parent instanceof FakturBeli)) {
+                model.harga = model.produk.harga
+            }
             view.jumlah.requestFocusInWindow()
         }
     }
