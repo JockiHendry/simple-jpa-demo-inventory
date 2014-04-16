@@ -76,10 +76,11 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
 
-        // Memeriksa apakah produk yang diterima adalah salah satu bagian dari produk yang dipesan
-        penerimaanBarang.listItemBarang.each { ItemBarang i ->
-            if (listItemFaktur.find { it.produk == i.produk } == null) {
-                throw new DataTidakKonsisten("Tidak ada ${i.produk.nama} yang dipesan untuk PO ${nomor}!", penerimaanBarang)
+        // Melakukan pemeriksaan apakah barang yang ditambahkan adalah bagian dari yang dipesan.
+        List<ItemBarang> sisaBarang = sisaBelumDiterima()
+        penerimaanBarang.normalisasi().each { ItemBarang i ->
+            if (!sisaBarang.find { i.produk == it.produk && i.jumlah <= it.jumlah }) {
+                throw new DataTidakKonsisten("Tidak pemesanan ${i.produk.nama} sejumlah ${i.jumlah} yang dipesan untuk PO ${nomor}!", penerimaanBarang)
             }
         }
 
