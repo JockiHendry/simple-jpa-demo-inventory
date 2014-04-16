@@ -129,8 +129,8 @@ class PurchaseOrderController {
     }
 
     def refreshInformasi = {
-        def jumlahItem = model.listItemFaktur.sum { it.jumlah }?: 0
-        def total = model.listItemFaktur.sum { it.total() }?: 0
+        def jumlahItem = model.listItemFaktur.toArray().sum { it.jumlah }?: 0
+        def total = model.listItemFaktur.toArray().sum { it.total() }?: 0
         if (model.showFakturBeli) {
             model.informasi = "Jumlah ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
         } else {
