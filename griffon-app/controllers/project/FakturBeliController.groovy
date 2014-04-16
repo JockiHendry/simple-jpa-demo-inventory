@@ -77,7 +77,7 @@ class FakturBeliController {
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (DataTidakKonsisten ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Isi faktur berbeda dengan yang dipesan di PO!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }

@@ -132,6 +132,9 @@ class PurchaseOrder extends Faktur {
         if (normalisasi().toSet() != f.normalisasi().toSet()) {
             throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
         }
+        if (f.total().compareTo(this.total()) != 0) {
+            throw new DataTidakKonsisten("Total untuk faktur ${f.nomor} sebesar ${f.total()} berbeda dengan yang dipesan untuk PO ${nomor} sebesar ${total()}!", f)
+        }
 
         fakturBeli = f
         if (diterimaPenuh()) {
