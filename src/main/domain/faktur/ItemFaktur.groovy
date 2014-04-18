@@ -46,6 +46,10 @@ class ItemFaktur {
         (diskon? diskon.hasil(harga): harga) * jumlah
     }
 
+    public BigDecimal totalSebelumDiskon() {
+        jumlah * harga
+    }
+
     public BigDecimal jumlahDiskon() {
         (diskon? diskon.jumlah(harga): 0) * jumlah
     }

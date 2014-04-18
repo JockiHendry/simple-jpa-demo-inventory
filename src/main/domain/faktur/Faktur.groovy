@@ -50,18 +50,32 @@ abstract class Faktur {
         listItemFaktur << itemFaktur
     }
 
+    public BigDecimal subtotal() {
+        listItemFaktur.sum { it.total() }?: 0
+    }
+
     public BigDecimal total() {
-        def total = listItemFaktur.sum { it.total() }
+        def total = subtotal()
         if (diskon) {
             total = diskon.hasil(total)
         }
         total
     }
 
+    public BigDecimal totalSebelumDiskon() {
+        listItemFaktur.sum { it.totalSebelumDiskon() }?: 0
+    }
+
+    public BigDecimal jumlahDiskonTanpaDiskonItem() {
+        diskon?.jumlah(totalSebelumDiskon())?: 0
+    }
+
+    public BigDecimal jumlahDiskonItem() {
+        listItemFaktur.sum { it.jumlahDiskon() }?: 0
+    }
+
     public BigDecimal jumlahDiskon() {
-        def jumlahDiskonItem = listItemFaktur.sum { it.jumlahDiskon() }
-        def jumlahDiskonFaktur = diskon?.jumlah(listItemFaktur.sum { it.total() })?: 0
-        jumlahDiskonItem + jumlahDiskonFaktur
+        jumlahDiskonItem() + jumlahDiskonTanpaDiskonItem()
     }
 
     public List<ItemBarang> normalisasi() {

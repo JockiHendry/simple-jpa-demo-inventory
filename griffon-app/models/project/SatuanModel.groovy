@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package project
 
+import domain.inventory.*
 import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
-import ca.odell.glazedlists.swing.GlazedListsSwing
-import domain.inventory.Produk
-import domain.inventory.Satuan
-import domain.inventory.StokProduk
+import ca.odell.glazedlists.swing.*
+import groovy.beans.Bindable
+import org.joda.time.*
+import javax.swing.event.*
+import simplejpa.swing.*
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-class ProdukModel {
-
-    @Bindable boolean allowTambahProduk
+class SatuanModel {
 
     @Bindable Long id
-	@Bindable String nama
-	@Bindable BigDecimal harga
-    BasicEventList<Satuan> satuanList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Satuan> satuan = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(satuanList)
+    @Bindable String nama
+    @Bindable String singkatan
 
     @Bindable String namaSearch
     @Bindable String searchMessage
-	List<StokProduk> daftarStok = []
 
-    BasicEventList<Produk> produkList = new BasicEventList<>()
-
-    @Bindable boolean popupMode = false
+    BasicEventList<Satuan> satuanList = new BasicEventList<>()
 
 }

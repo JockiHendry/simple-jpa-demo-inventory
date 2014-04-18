@@ -66,6 +66,7 @@ class ProdukRepository {
         Produk p = findProdukById(produk.id)
         p.nama = produk.nama
         p.harga = produk.harga
+        p.satuan = produk.satuan
         p
     }
 

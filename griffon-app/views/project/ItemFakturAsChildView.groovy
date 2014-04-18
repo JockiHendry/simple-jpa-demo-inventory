@@ -44,6 +44,7 @@ application(title: 'simple-jpa-demo-inventory',
                         templateRenderer('${it.nama}')
                     }
                     glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: [80, 80, 200])
+                    glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
                     glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }

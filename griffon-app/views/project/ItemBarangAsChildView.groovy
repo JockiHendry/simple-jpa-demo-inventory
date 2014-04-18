@@ -44,7 +44,8 @@ application(title: 'simple-jpa-demo-inventory',
                     glazedColumn(name: 'Produk', property: 'produk') {
                         templateRenderer('${it.nama}')
                     }
-                    glazedColumn(name: 'Jumlah', property: 'jumlah')
+                    glazedColumn(name: 'Qty', property: 'jumlah')
+                    glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
                 }
             }
         }

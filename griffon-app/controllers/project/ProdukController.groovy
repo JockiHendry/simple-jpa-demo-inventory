@@ -73,7 +73,18 @@ class ProdukController {
         model.popupMode = args.'popup'?: false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         produkRepository = Container.app.produkRepository
+        init()
         search()
+    }
+
+    def init = {
+        execInsideUISync {
+            model.satuanList.clear()
+        }
+        List satuan = produkRepository.findAllSatuan()
+        execInsideUISync {
+            model.satuanList.addAll(satuan)
+        }
     }
 
     def search = {
@@ -86,7 +97,7 @@ class ProdukController {
     }
 
     def save = {
-        Produk produk = new Produk(id: model.id, nama: model.nama, harga: model.harga)
+        Produk produk = new Produk(id: model.id, nama: model.nama, harga: model.harga, satuan: model.satuan.selectedItem)
         if (!produkRepository.validate(produk, Default, model)) return
 
         try {
@@ -123,6 +134,7 @@ class ProdukController {
             model.id = null
 			model.nama = null
 			model.harga = null
+            model.satuan.selectedItem = null
 			model.daftarStok.clear()
 
             model.errors.clear()
@@ -141,6 +153,7 @@ class ProdukController {
                 model.id = selected.id
 				model.nama = selected.nama
 				model.harga = selected.harga
+                model.satuan.selectedItem = selected.satuan
 				model.daftarStok.clear()
 				model.daftarStok.addAll(selected.daftarStok)
             }

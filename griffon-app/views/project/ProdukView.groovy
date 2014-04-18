@@ -79,9 +79,10 @@ application(title: 'Produk',
 					glazedColumn(name: 'Harga Eceran Tertinggi (HET)', property: 'harga', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Total', property: 'jumlah', columnClass: Integer) {
+                    glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer) {
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
+                    glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan })
                     keyStrokeAction(actionKey: 'pilih', condition: JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
                         keyStroke: KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), action: pilih)
                 }
@@ -96,14 +97,11 @@ application(title: 'Produk',
 			label('Harga:')
 			decimalTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
 			errorLabel(path: 'harga', constraints: 'wrap')
-
+            label('Satuan:')
+            comboBox(id: 'satuan', model: model.satuan, templateRenderer: '${value}', errorPath: 'satuan')
+            errorLabel(path: 'satuan', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
-                mvcPopupButton(id: 'stokProduk', text: 'Stok Produk...', mvcGroup: 'stokProduk',
-                    args: {[parent: view.table.selectionModel.selected[0]]},
-                    dialogProperties: [title: 'Stok Produk', size: new Dimension(900,420)],
-                    visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                     if (model.id!=null) {
                         if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
@@ -114,6 +112,11 @@ application(title: 'Produk',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
+                button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
+                mvcPopupButton(id: 'stokProduk', text: 'Stok Produk...', mvcGroup: 'stokProduk',
+                        args: {[parent: view.table.selectionModel.selected[0]]},
+                        dialogProperties: [title: 'Stok Produk', size: new Dimension(900,420)],
+                        visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
                 button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {
                     if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),

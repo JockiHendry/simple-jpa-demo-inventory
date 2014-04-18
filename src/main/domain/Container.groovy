@@ -21,6 +21,7 @@ package domain
 import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
+import domain.inventory.SatuanRepository
 import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
@@ -47,6 +48,7 @@ class Container {
     SalesRepository salesRepository
     RegionRepository regionRepository
     PurchaseOrderRepository purchaseOrderRepository
+    SatuanRepository satuanRepository
 
     InventoryEventConsumer inventoryEventConsumer
 
@@ -66,6 +68,7 @@ class Container {
         salesRepository = new SalesRepository()
         regionRepository = new RegionRepository()
         purchaseOrderRepository = new PurchaseOrderRepository()
+        satuanRepository = new SatuanRepository()
 
         // Create services
         passwordService = new PasswordService()

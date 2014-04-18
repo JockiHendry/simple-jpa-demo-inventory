@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fakturbeli" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cfe3ab8d-8ad9-4205-993e-333cebbd4dd5">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="183"/>
+	<property name="ireport.y" value="0"/>
 	<style name="label" mode="Transparent" hAlign="Right" vAlign="Middle" isBlankWhenNull="false" fontName="SansSerif" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="isi" style="label" hAlign="Left" fontName="SansSerif" isBold="false"/>
 	<style name="table">
@@ -43,6 +43,9 @@
 		</field>
 		<field name="produk.nama" class="java.lang.String">
 			<fieldDescription><![CDATA[produk.nama]]></fieldDescription>
+		</field>
+		<field name="produk.satuan" class="domain.inventory.Satuan">
+			<fieldDescription><![CDATA[produk.satuan]]></fieldDescription>
 		</field>
 		<field name="_THIS" class="java.lang.Object"/>
 		<variable name="total" class="java.math.BigDecimal" calculation="Sum">
@@ -114,7 +117,7 @@
 JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="28" uuid="acb46bf0-6a69-46f9-a4e0-b957054727c5">
-						<jr:columnHeader height="24" rowSpan="1">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement style="table_CH" x="0" y="0" width="28" height="18" uuid="f0213218-39ec-4989-bcf1-0b169b4d1375"/>
 								<box>
@@ -126,7 +129,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[No.]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField>
 								<reportElement x="0" y="1" width="18" height="14" uuid="133846c2-be45-4c80-bd5b-984a16a44bac"/>
 								<textElement textAlignment="Right"/>
@@ -134,10 +137,10 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="202" uuid="2d789d8e-9466-47e0-89bb-4fa27b35480c">
-						<jr:columnHeader height="24" rowSpan="1">
+					<jr:column width="201" uuid="2d789d8e-9466-47e0-89bb-4fa27b35480c">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement style="table_CH" x="0" y="0" width="202" height="18" uuid="a90861e0-a30c-4826-8587-6e228585e75f"/>
+								<reportElement style="table_CH" x="0" y="0" width="201" height="18" uuid="a90861e0-a30c-4826-8587-6e228585e75f"/>
 								<box>
 									<topPen lineWidth="1.0"/>
 								</box>
@@ -147,17 +150,17 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[Nama Produk]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="1" width="202" height="14" uuid="55a20383-7283-48c8-ae6b-eeec9acee59a"/>
+								<reportElement x="0" y="1" width="201" height="14" uuid="55a20383-7283-48c8-ae6b-eeec9acee59a"/>
 								<textFieldExpression><![CDATA[$F{produk.nama}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="71" uuid="d4473301-6aab-40ca-a960-cccb9fe18638">
-						<jr:columnHeader height="24" rowSpan="1">
+					<jr:column width="43" uuid="d4473301-6aab-40ca-a960-cccb9fe18638">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
-								<reportElement style="table_CH" x="0" y="0" width="71" height="18" uuid="b5bac0de-1efe-4937-996a-b6db2ca9a09f"/>
+								<reportElement style="table_CH" x="0" y="0" width="43" height="18" uuid="b5bac0de-1efe-4937-996a-b6db2ca9a09f"/>
 								<box>
 									<topPen lineWidth="1.0"/>
 								</box>
@@ -167,16 +170,37 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[Qty]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField pattern="#,##0">
-								<reportElement x="0" y="1" width="71" height="14" uuid="2c7cc656-1a34-4902-a0ee-f092b4abff51"/>
+								<reportElement x="0" y="1" width="43" height="14" uuid="2c7cc656-1a34-4902-a0ee-f092b4abff51"/>
 								<textElement textAlignment="Right"/>
 								<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
+					<jr:column width="48" uuid="98926102-4d58-47cd-aadb-cb4304dac815">
+						<jr:columnHeader height="30" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="48" height="18" uuid="a4a90e69-5f4e-484b-8591-e7bad090048c"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Satuan]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="18" rowSpan="1">
+							<textField pattern="#,##0">
+								<reportElement x="0" y="0" width="48" height="15" uuid="cabfa0d5-f3d2-4a54-9eb5-8d9f589201db"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{produk.satuan}.singkatan]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
 					<jr:column width="80" uuid="059321a0-1541-4075-819c-431a736dbdf8">
-						<jr:columnHeader height="24" rowSpan="1">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement style="table_CH" x="0" y="0" width="80" height="18" uuid="434294b4-5fe1-453e-a171-7e86f3d3fc6e"/>
 								<box>
@@ -188,7 +212,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[Harga Beli]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField pattern="#,##0">
 								<reportElement x="0" y="1" width="80" height="14" uuid="9966ea6d-0d95-4b48-be90-6ac8caebbcbc"/>
 								<textElement textAlignment="Right"/>
@@ -197,7 +221,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="78" uuid="2b0faf59-7b01-4a82-8f5b-710d8513a392">
-						<jr:columnHeader height="24" rowSpan="1">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement mode="Opaque" x="0" y="0" width="78" height="18" forecolor="#000000" backcolor="#FFFFFF" uuid="a8ed7d2b-16d7-46ee-99bd-615d130afcba"/>
 								<box>
@@ -211,7 +235,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[Disc Rp.]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField pattern="#,##0">
 								<reportElement style="isi" x="0" y="0" width="78" height="15" uuid="f460f2e8-0430-4e9c-9741-d8ce1711b952"/>
 								<textElement textAlignment="Right"/>
@@ -220,7 +244,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="79" uuid="4b587d6a-bf74-4e3d-aaf3-59edc916b151">
-						<jr:columnHeader height="24" rowSpan="1">
+						<jr:columnHeader height="30" rowSpan="1">
 							<staticText>
 								<reportElement style="table_CH" x="0" y="0" width="74" height="18" uuid="8775904b-a4c7-4e3f-865e-9dc88acab922"/>
 								<box>
@@ -232,7 +256,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 								<text><![CDATA[Jumlah (Rp)]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell height="20" rowSpan="1">
+						<jr:detailCell height="18" rowSpan="1">
 							<textField pattern="#,##0">
 								<reportElement x="0" y="1" width="74" height="14" uuid="c1916821-2f42-4790-8940-24b6e149e29f"/>
 								<textElement textAlignment="Right"/>
@@ -264,44 +288,44 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 		</band>
 	</detail>
 	<summary>
-		<band height="160">
+		<band height="115">
 			<staticText>
-				<reportElement style="label" x="325" y="15" width="100" height="20" uuid="762f95f4-be64-4dc9-9fdb-c945ac24332e"/>
+				<reportElement style="label" x="325" y="35" width="100" height="20" uuid="762f95f4-be64-4dc9-9fdb-c945ac24332e"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sub Total:]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0">
-				<reportElement style="isi" x="425" y="15" width="110" height="20" uuid="da0d6e68-d102-49f8-bd77-badc5a06bc0b"/>
+				<reportElement style="isi" x="425" y="35" width="110" height="20" uuid="da0d6e68-d102-49f8-bd77-badc5a06bc0b"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{_THIS}.listItemFaktur*.total().sum()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{_THIS}.subtotal()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="label" x="325" y="35" width="100" height="20" uuid="b5ac31e1-4aa9-4b1c-92d3-e63f14dfeebe"/>
+				<reportElement style="label" x="325" y="15" width="100" height="20" uuid="b5ac31e1-4aa9-4b1c-92d3-e63f14dfeebe"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Diskon:]]></text>
+				<text><![CDATA[Jumlah Diskon:]]></text>
 			</staticText>
-			<textField pattern="¤ #,##0.00">
-				<reportElement style="isi" x="425" y="35" width="110" height="20" uuid="faf717b7-1d4d-4d1b-b3e4-8b859620d2ec"/>
+			<textField pattern="¤ #,##0">
+				<reportElement style="isi" x="425" y="15" width="110" height="20" uuid="faf717b7-1d4d-4d1b-b3e4-8b859620d2ec"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{_THIS}.jumlahDiskon()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{_THIS}.jumlahDiskonItem()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="label" x="325" y="55" width="100" height="20" uuid="9a863ea8-5037-4ab7-bd5e-01c7c44c4fde"/>
+				<reportElement style="label" x="325" y="75" width="100" height="20" uuid="9a863ea8-5037-4ab7-bd5e-01c7c44c4fde"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Order:]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0">
-				<reportElement style="isi" x="425" y="55" width="110" height="20" uuid="24fece59-8cc8-49a2-91d7-2983e57ed949"/>
+				<reportElement style="isi" x="425" y="75" width="110" height="20" uuid="24fece59-8cc8-49a2-91d7-2983e57ed949"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="true"/>
 				</textElement>
@@ -311,16 +335,30 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 				<reportElement x="0" y="0" width="555" height="1" uuid="5002c80a-3940-4c27-b4d5-38b546adde69"/>
 			</line>
 			<textField>
-				<reportElement x="14" y="74" width="227" height="20" uuid="223ceafa-2743-4771-86d6-504dc2a10925"/>
+				<reportElement x="14" y="15" width="227" height="20" uuid="223ceafa-2743-4771-86d6-504dc2a10925"/>
 				<textFieldExpression><![CDATA["Jakarta, " + $F{tanggal}.toString('dd MMMM YYYY')]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="14" y="94" width="100" height="20" uuid="2fc6e983-7ef2-49d0-8191-d1e961c5ad38"/>
+				<reportElement x="14" y="35" width="100" height="20" uuid="2fc6e983-7ef2-49d0-8191-d1e961c5ad38"/>
 				<text><![CDATA[Hormat kami,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="14" y="140" width="127" height="20" uuid="310cc360-266f-4211-97c9-3adcc58e32d0"/>
+				<reportElement x="14" y="81" width="127" height="20" uuid="310cc360-266f-4211-97c9-3adcc58e32d0"/>
 				<text><![CDATA[(Purchasing Department)]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0">
+				<reportElement style="isi" x="425" y="55" width="110" height="20" uuid="ac5a595f-6693-438a-bcad-882c369a8eea"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{diskon}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="label" x="325" y="55" width="100" height="20" uuid="aebd4ca4-00c9-45c4-bd64-bf91baa26a64"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Diskon Tambahan:]]></text>
 			</staticText>
 		</band>
 	</summary>
