@@ -20,12 +20,11 @@ import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
-import domain.inventory.DaftarBarang
+import domain.faktur.Pembayaran
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
 import groovy.transform.Canonical
 import groovy.transform.EqualsAndHashCode
-import org.slf4j.LoggerFactory
 import simplejpa.DomainClass
 import griffon.util.*
 import javax.persistence.CascadeType
@@ -42,7 +41,6 @@ import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 import javax.validation.groups.Default
 
 @NamedEntityGraphs([
@@ -112,7 +110,7 @@ class PurchaseOrder extends Faktur {
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this, true))
     }
 
-    void hapus(PembayaranHutang pembayaranHutang) {
+    void hapus(Pembayaran pembayaranHutang) {
         if (status!=StatusPurchaseOrder.OK || fakturBeli==null) {
             throw new DataTidakBolehDiubah(this)
         }
@@ -157,7 +155,7 @@ class PurchaseOrder extends Faktur {
         }
     }
 
-    void bayar(PembayaranHutang pembayaranHutang) {
+    void bayar(Pembayaran pembayaranHutang) {
         if (status!=StatusPurchaseOrder.OK || fakturBeli==null) {
             throw new DataTidakBolehDiubah(this)
         }

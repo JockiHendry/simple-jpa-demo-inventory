@@ -37,6 +37,7 @@ class PengaturanTest extends DbUnitTestCase {
 
     protected void tearDown() {
         super.tearDown()
+        super.deleteAll()
     }
 
     void testSerializing() {

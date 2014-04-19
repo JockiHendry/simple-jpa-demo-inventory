@@ -13,25 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pembelian
+package domain.validation;
 
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
-
-
-@Embeddable @Canonical
-class PembayaranHutang {
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggal
-
-    @NotNull @Min(0l)
-    BigDecimal jumlah
-
+public interface PenjualanOlehSales {
 }
-

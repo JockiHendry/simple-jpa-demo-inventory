@@ -18,7 +18,7 @@ package domain.pengaturan;
 public enum KeyPengaturan {
 
     SUPERVISOR_PASSWORD("Supervisor Password", JenisNilai.PASSWORD, new byte[] {-126, 124, -53, 14, -22, -118, 112, 108, 76, 52, -95, 104, -111, -8, 78, 123}),
-    MASA_JATUH_TEMPO_HUTANG("Jatuh Tempo Hutang (Hari)", JenisNilai.INTEGER, 30),
+    MASA_JATUH_TEMPO("Jatuh Tempo (Hari)", JenisNilai.INTEGER, 30),
     ;
 
     private String description;

@@ -38,6 +38,7 @@ class PurchaseOrderTest extends DbUnitTestCase {
 
     protected void tearDown() {
         super.tearDown()
+        super.deleteAll()
     }
 
     public void testTidakBolehDiUpdate() {

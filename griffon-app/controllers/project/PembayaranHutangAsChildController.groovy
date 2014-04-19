@@ -18,7 +18,7 @@ package project
 import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
-import domain.pembelian.PembayaranHutang
+import domain.faktur.Pembayaran
 import domain.pembelian.PurchaseOrderRepository
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -42,7 +42,7 @@ class PembayaranHutangAsChildController {
     }
 
     def save = {
-        PembayaranHutang pembayaranHutang = new PembayaranHutang(tanggal: model.tanggal, jumlah: model.jumlah)
+        Pembayaran pembayaranHutang = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah)
         if (!purchaseOrderRepository.validate(pembayaranHutang, Default, model)) return
 
         try {
@@ -64,7 +64,7 @@ class PembayaranHutangAsChildController {
     @NeedSupervisorPassword
     def delete = {
         try {
-            PembayaranHutang pembayaranHutang = view.table.selectionModel.selected[0]
+            Pembayaran pembayaranHutang = view.table.selectionModel.selected[0]
             purchaseOrderRepository.withTransaction {
                 model.purchaseOrder = purchaseOrderRepository.merge(model.purchaseOrder)
                 model.purchaseOrder.hapus(pembayaranHutang)
@@ -94,7 +94,7 @@ class PembayaranHutangAsChildController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                PembayaranHutang selected = view.table.selectionModel.selected[0]
+                Pembayaran selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah

@@ -96,6 +96,6 @@ class FakturTests extends GriffonUnitTestCase {
         faktur2.tambah(new ItemFaktur(produkC, 50, 900, null, new Diskon(2)))
         faktur2.tambah(new ItemFaktur(produkD, 70, 13000, null, new Diskon(3)))
         faktur2.diskon = new Diskon(1)
-        assertEquals(37468, faktur2.jumlahDiskon())
+        assertEquals(37750, faktur2.jumlahDiskon())
     }
 }

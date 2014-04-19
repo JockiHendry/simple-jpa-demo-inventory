@@ -24,7 +24,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Periode
 import domain.inventory.Produk
 import domain.pembelian.FakturBeli
-import domain.pembelian.PembayaranHutang
+import domain.faktur.Pembayaran
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PurchaseOrder
 import domain.pembelian.StatusPurchaseOrder
@@ -106,9 +106,9 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A', 10000)
         Produk produkB = new Produk('Produk B', 12000)
         Produk produkC = new Produk('Produk C',  8000)
-        p.tambah(new ItemFaktur(produkA, 10))
-        p.tambah(new ItemFaktur(produkB, 5))
-        p.tambah(new ItemFaktur(produkC, 8))
+        p.tambah(new ItemFaktur(produkA, 10, 9000))
+        p.tambah(new ItemFaktur(produkB, 5,  11000))
+        p.tambah(new ItemFaktur(produkC, 8,  5000))
         PenerimaanBarang penerimaanBarang = new PenerimaanBarang()
         penerimaanBarang.tambah(new ItemBarang(produkA, 10))
         penerimaanBarang.tambah(new ItemBarang(produkB, 5))
@@ -120,22 +120,22 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         fakturBeli.tambah(new ItemFaktur(produkC,  8,  5000))
         p.tambah(fakturBeli)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-02-2013'), 50000))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-02-2013'), 50000))
         assertEquals(135000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-03-2013'), 70000))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-03-2013'), 70000))
         assertEquals(65000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-04-2013'), 50000))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-04-2013'), 50000))
         assertEquals(15000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-05-2013'), 15000))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-05-2013'), 15000))
         assertEquals(0, p.sisaHutang())
         assertTrue(p.fakturBeli.hutang.lunas)
         assertTrue(p.status == StatusPurchaseOrder.LUNAS)
@@ -143,12 +143,13 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
 
     void testBayarHutangDesimal() {
         PurchaseOrder p = new PurchaseOrder()
-        Produk produkA = new Produk('Produk A', 10000)
-        Produk produkB = new Produk('Produk B', 12000)
-        Produk produkC = new Produk('Produk C',  8000)
-        p.tambah(new ItemFaktur(produkA, 5))
-        p.tambah(new ItemFaktur(produkB, 3))
-        p.tambah(new ItemFaktur(produkC, 4))
+        Produk produkA = new Produk('Produk A', 1000)
+        Produk produkB = new Produk('Produk B', 2000)
+        Produk produkC = new Produk('Produk C', 3000)
+        p.tambah(new ItemFaktur(produkA, 5, 1000, null, new Diskon(1, 100)))
+        p.tambah(new ItemFaktur(produkB, 3, 2000, null, new Diskon(2)))
+        p.tambah(new ItemFaktur(produkC, 4, 3000, null, new Diskon(3)))
+        p.diskon = new Diskon(1)
         PenerimaanBarang penerimaanBarang = new PenerimaanBarang()
         penerimaanBarang.tambah(new ItemBarang(produkA, 5))
         penerimaanBarang.tambah(new ItemBarang(produkB, 3))
@@ -160,12 +161,12 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         fakturBeli.tambah(new ItemFaktur(produkC, 4, 3000, null, new Diskon(3)))
         p.tambah(fakturBeli)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-02-2013'), 10000))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-02-2013'), 10000))
         assertEquals(11750.3, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        p.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-03-2013'), 11750.3))
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-03-2013'), 11750.3))
         assertEquals(0, fakturBeli.hutang.sisa())
         assertTrue(p.fakturBeli.hutang.lunas)
         assertTrue(p.status == StatusPurchaseOrder.LUNAS)
@@ -209,8 +210,9 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         PurchaseOrder p = new PurchaseOrder()
         Produk produkA = new Produk('Produk A', 10000)
         Produk produkB = new Produk('Produk B', 12000)
-        p.tambah(new ItemFaktur(produkA, 5))
-        p.tambah(new ItemFaktur(produkB, 3))
+        p.tambah(new ItemFaktur(produkA, 5, 1000, null, new Diskon(1, 100)))
+        p.tambah(new ItemFaktur(produkB, 3, 2000, null, new Diskon(2)))
+        p.diskon = new Diskon(1)
         assertEquals(StatusPurchaseOrder.DIBUAT, p.status)
 
         // Tambah Faktur Beli
@@ -254,7 +256,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertEquals(StatusPurchaseOrder.OK, p.status)
 
         // Bayar hutang
-        p.bayar(new PembayaranHutang(LocalDate.now(), p.fakturBeli.total()))
+        p.bayar(new Pembayaran(LocalDate.now(), p.fakturBeli.total()))
         assertEquals(StatusPurchaseOrder.LUNAS, p.status)
     }
 

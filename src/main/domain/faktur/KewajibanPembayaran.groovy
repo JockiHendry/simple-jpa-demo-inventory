@@ -13,24 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pembelian
+package domain.faktur
 
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-class Hutang {
+class KewajibanPembayaran {
 
-    @NotNull @Min(0l)
+    @NotNull @Digits(integer=12, fraction=2) @Min(0l)
     BigDecimal jumlah
 
-    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn
-    List<PembayaranHutang> listPembayaran = []
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @CollectionTable(name='kewajibanpembayaran_items')
+    List<Pembayaran> listPembayaran = []
 
     BigDecimal sisa() {
         jumlah - jumlahDibayar()
@@ -44,18 +41,18 @@ class Hutang {
         sisa().compareTo(BigDecimal.ZERO) == 0
     }
 
-    void bayar(PembayaranHutang pembayaranHutang) {
-        if (pembayaranHutang.jumlah > sisa()) {
-            throw new IllegalArgumentException("Pembayaran hutang ${pembayaranHutang.jumlah} melebihi sisa hutang ${sisa()}")
+    void bayar(Pembayaran pembayaran) {
+        if (pembayaran.jumlah > sisa()) {
+            throw new IllegalArgumentException("Pembayaran ${pembayaran.jumlah} melebihi sisa sebesar ${sisa()}")
         }
-        listPembayaran << pembayaranHutang
+        listPembayaran << pembayaran
     }
 
-    void hapus(PembayaranHutang pembayaranHutang) {
-        if (!listPembayaran.contains(pembayaranHutang)) {
-            throw new IllegalArgumentException("Tidak menemukan pembayaran hutang $pembayaranHutang")
+    void hapus(Pembayaran pembayaran) {
+        if (!listPembayaran.contains(pembayaran)) {
+            throw new IllegalArgumentException("Tidak menemukan pembayaran $pembayaran")
         }
-        listPembayaran.remove(pembayaranHutang)
+        listPembayaran.remove(pembayaran)
     }
 
 }

@@ -40,6 +40,7 @@ class ProdukTest extends DbUnitTestCase {
 
     protected void tearDown() {
         super.tearDown()
+        super.deleteAll()
     }
 
     public void testStokProduk() {

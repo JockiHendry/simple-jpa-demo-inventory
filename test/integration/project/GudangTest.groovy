@@ -33,6 +33,7 @@ class GudangTest extends DbUnitTestCase {
 
     protected void tearDown() {
         super.tearDown()
+        super.deleteAll()
     }
 
     public void testCariGudangUtama() {

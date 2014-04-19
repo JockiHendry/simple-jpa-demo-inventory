@@ -13,41 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pembelian
+package domain.faktur
 
 import domain.exception.DataTidakBolehDiubah
-import domain.faktur.Faktur
-import domain.faktur.KewajibanPembayaran
 import groovy.transform.*
-import org.hibernate.annotations.Type
-import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
+import org.hibernate.annotations.Type
 import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
+import org.joda.time.*
 
-@DomainClass @Entity @Canonical @ToString(excludes='hutang')
-class FakturBeli extends Faktur {
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true)
-    KewajibanPembayaran hutang
+@Embeddable @Canonical
+class Pembayaran {
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate jatuhTempo
+    LocalDate tanggal
 
-    void setJatuhTempoPer(int hari) {
-        jatuhTempo = tanggal.plusDays(hari)
-    }
+    @NotNull @Min(0l)
+    BigDecimal jumlah
 
-    KewajibanPembayaran buatHutang() {
-        if (hutang) {
+    @ManyToOne
+    BilyetGiro bilyetGiro
+
+    public void melaluiGiro(String nomorSeri, LocalDate tanggalPenerbitan, LocalDate tanggalEfektif) {
+        if (bilyetGiro) {
             throw new DataTidakBolehDiubah(this)
         }
-        hutang = new KewajibanPembayaran(jumlah: total())
+        bilyetGiro = new BilyetGiro(nomorSeri, tanggalPenerbitan, tanggalEfektif)
     }
 
-    boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {
-        padaTanggal.equals(jatuhTempo) || padaTanggal.isAfter(jatuhTempo)
-    }
 
 }
 

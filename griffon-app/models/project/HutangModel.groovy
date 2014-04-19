@@ -17,16 +17,15 @@ package project
 
 import ca.odell.glazedlists.BasicEventList
 import domain.pembelian.FakturBeli
-import domain.pembelian.PembayaranHutang
+import domain.faktur.Pembayaran
 import domain.pembelian.PurchaseOrderRepository
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 
 class HutangModel {
 
     @Bindable Long id
-    List<PembayaranHutang> listPembayaranHutang = []
+    List<Pembayaran> listPembayaranHutang = []
 
     BasicEventList<FakturBeli> purchaseOrderList = new BasicEventList<>()
 

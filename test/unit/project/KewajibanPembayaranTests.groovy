@@ -16,12 +16,11 @@
 package project
 
 import domain.inventory.Periode
-import domain.pembelian.Hutang
-import domain.pembelian.PembayaranHutang
+import domain.faktur.KewajibanPembayaran
+import domain.faktur.Pembayaran
 import griffon.test.*
-import org.joda.time.LocalDate
 
-class HutangTests extends GriffonUnitTestCase {
+class KewajibanPembayaranTests extends GriffonUnitTestCase {
 
     protected void setUp() {
         super.setUp()
@@ -32,19 +31,19 @@ class HutangTests extends GriffonUnitTestCase {
     }
 
     void testJumlahDibayar() {
-        Hutang hutang = new Hutang(jumlah: 3500000)
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-01-2013'), 540000))
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('04-02-2013'), 320000))
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('14-03-2013'), 210000))
+        KewajibanPembayaran hutang = new KewajibanPembayaran(jumlah: 3500000)
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 540000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('04-02-2013'), 320000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('14-03-2013'), 210000))
 
         assertEquals(1070000, hutang.jumlahDibayar())
     }
 
     void testSisa() {
-        Hutang hutang = new Hutang(jumlah: 3500000)
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('01-01-2013'),  450000))
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('04-02-2013'),  820000))
-        hutang.bayar(new PembayaranHutang(Periode.format.parseLocalDate('14-03-2013'), 1320000))
+        KewajibanPembayaran hutang = new KewajibanPembayaran(jumlah: 3500000)
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'),  450000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('04-02-2013'),  820000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('14-03-2013'), 1320000))
 
         assertEquals(910000, hutang.sisa())
     }

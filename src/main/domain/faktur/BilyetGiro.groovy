@@ -13,27 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pembelian
+package domain.faktur
 
-import domain.inventory.DaftarBarang
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
+import org.hibernate.annotations.Type
+import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
+import org.joda.time.*
 
-@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
-class PenerimaanBarang extends DaftarBarang {
+@DomainClass @Entity @Canonical
+class BilyetGiro {
 
-    @Override
-    int faktor() {
-        1
-    }
+    @NotEmpty @Size(min=2, max=50)
+    String nomorSeri
 
-    PenerimaanBarang plus(PenerimaanBarang penerimaanBarangLain) {
-        PenerimaanBarang hasil = new PenerimaanBarang(nomor: this.nomor, tanggal: this.tanggal, keterangan: this.keterangan)
-        hasil.items = this.items + penerimaanBarangLain.items
-        hasil.items = hasil.normalisasi()
-        hasil
-    }
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggalPenerbitan
+
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggalEfektif
 
 }
 

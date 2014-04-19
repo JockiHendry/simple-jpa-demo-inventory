@@ -65,17 +65,17 @@ application(title: 'Penerimaan Barang',
             errorLabel(path: 'tanggal', constraints: 'wrap')
             label('Isi:')
             panel {
-                mvcPopupButton(id: 'listItemBarang', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
-                    errorPath: 'listItemBarang', mvcGroup: 'itemBarangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]},
+                mvcPopupButton(id: 'items', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
+                    errorPath: 'items', mvcGroup: 'itemBarangAsChild',
+                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.items, allowTambahProduk: model.allowTambahProduk]},
                     dialogProperties: [title: 'Daftar Barang', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
-                        model.listItemBarang.clear()
-                        model.listItemBarang.addAll(m.itemBarangList)
+                        model.items.clear()
+                        model.items.addAll(m.itemBarangList)
                     }
                 )
             }
-            errorLabel(path: 'listItemBarang', constraints: 'wrap')
+            errorLabel(path: 'items', constraints: 'wrap')
             label('Keterangan:')
             textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')

@@ -13,22 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project
+package domain.validation;
 
-import ca.odell.glazedlists.BasicEventList
-import domain.faktur.Pembayaran
-import domain.pembelian.PurchaseOrder
-import org.joda.time.LocalDate
-
-class PembayaranHutangAsChildModel {
-
-    PurchaseOrder purchaseOrder
-
-    @Bindable LocalDate tanggal
-    @Bindable BigDecimal jumlah
-
-    BasicEventList<Pembayaran> pembayaranHutangList = new BasicEventList<>()
-
-    @Bindable boolean editable
-
+public interface PenjualanDiterima {
 }

@@ -18,13 +18,12 @@ package domain.inventory
 import domain.faktur.Faktur
 import domain.validation.TanpaGudang
 import groovy.transform.Canonical
-import org.apache.tools.ant.taskdefs.condition.Not
 import org.hibernate.annotations.Type
 import org.hibernate.validator.constraints.NotBlank
 import org.hibernate.validator.constraints.NotEmpty
 import org.joda.time.LocalDate
-import simplejpa.DomainClass
 
+import javax.persistence.CollectionTable
 import javax.persistence.ElementCollection
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne
@@ -34,7 +33,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.validation.groups.Default
 
-@MappedSuperclass @Canonical(excludes='listItemBarang')
+@MappedSuperclass @Canonical(excludes='items')
 abstract class DaftarBarang {
 
     @NotBlank(groups=[Default,TanpaGudang]) @Size(min=2, max=100, groups=[Default,TanpaGudang])
@@ -50,16 +49,16 @@ abstract class DaftarBarang {
     Gudang gudang
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty(groups=[Default])
-    List<ItemBarang> listItemBarang = []
+    List<ItemBarang> items = []
 
     abstract int faktor()
 
     void tambah(ItemBarang itemBarang) {
-        listItemBarang << itemBarang
+        items << itemBarang
     }
 
     int jumlah() {
-        listItemBarang.sum { it.jumlah }?: 0
+        items.sum { it.jumlah }?: 0
     }
 
     int jumlah(Produk produk) {
@@ -68,10 +67,19 @@ abstract class DaftarBarang {
 
     List<ItemBarang> normalisasi() {
         List hasil = []
-        listItemBarang.groupBy { it.produk }.each { k, v ->
+        items.groupBy { it.produk }.each { k, v ->
             hasil << new ItemBarang(k, v.sum { it.jumlah })
         }
         hasil
     }
+
+    boolean isiSamaDengan(DaftarBarang daftarBarangLain) {
+        normalisasi().toSet() == daftarBarangLain.normalisasi().toSet()
+    }
+
+    boolean isiSamaDengan(Faktur faktur) {
+        normalisasi().toSet() == faktur.normalisasi().toSet()
+    }
+
 
 }

@@ -13,22 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project
+package domain.exception;
 
-import ca.odell.glazedlists.BasicEventList
-import domain.faktur.Pembayaran
-import domain.pembelian.PurchaseOrder
-import org.joda.time.LocalDate
+import domain.penjualan.Konsumen;
 
-class PembayaranHutangAsChildModel {
+public class MelebihiBatasKredit extends RuntimeException {
 
-    PurchaseOrder purchaseOrder
+    private Konsumen konsumen;
 
-    @Bindable LocalDate tanggal
-    @Bindable BigDecimal jumlah
+    public MelebihiBatasKredit(Konsumen konsumen) {
+        super("Konsumen " + konsumen.getNama() + " tidak boleh melakukan kredit lagi!");
+        this.konsumen = konsumen;
+    }
 
-    BasicEventList<Pembayaran> pembayaranHutangList = new BasicEventList<>()
+    public Konsumen getKonsumen() {
+        return konsumen;
+    }
 
-    @Bindable boolean editable
+    public void setKonsumen(Konsumen konsumen) {
+        this.konsumen = konsumen;
+    }
 
 }

@@ -107,7 +107,7 @@ class PenerimaanBarangController {
                 model.tanggal = selected.tanggal
                 model.keterangan = selected.keterangan
                 model.listItemBarang.clear()
-                model.listItemBarang.addAll(selected.listItemBarang)
+                model.listItemBarang.addAll(selected.items)
             }
         }
     }

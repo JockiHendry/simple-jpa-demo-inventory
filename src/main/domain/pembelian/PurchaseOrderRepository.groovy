@@ -89,12 +89,14 @@ class PurchaseOrderRepository {
     public PurchaseOrder update(PurchaseOrder purchaseOrder) {
         PurchaseOrder mergedPurchaseOrder = findPurchaseOrderById(purchaseOrder.id)
         if (!mergedPurchaseOrder.status.bolehDiubah) {
-            throw new DataTidakBolehDiubah(mergedPurchaseOrder)
+            throw new DataTidakBolehDiubah(purchaseOrder)
         }
-        mergedPurchaseOrder.tanggal = mergedPurchaseOrder.tanggal
-        mergedPurchaseOrder.diskon = mergedPurchaseOrder.diskon
-        mergedPurchaseOrder.supplier = mergedPurchaseOrder.supplier
-        mergedPurchaseOrder.keterangan = mergedPurchaseOrder.keterangan
+        mergedPurchaseOrder.with {
+            tanggal = purchaseOrder.tanggal
+            diskon = purchaseOrder.diskon
+            supplier = purchaseOrder.supplier
+            keterangan = purchaseOrder.keterangan
+        }
         mergedPurchaseOrder
     }
 

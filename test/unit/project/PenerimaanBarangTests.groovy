@@ -17,7 +17,6 @@ package project
 
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
-import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
@@ -55,10 +54,10 @@ class PenerimaanBarangTests extends GriffonUnitTestCase {
         assertEquals(13, hasil.jumlah(produkA))
         assertEquals(25, hasil.jumlah(produkB))
         assertEquals(30, hasil.jumlah(produkC))
-        assertEquals(3, hasil.listItemBarang.size())
-        assertNotNull(hasil.listItemBarang.find { it.produk == produkA})
-        assertNotNull(hasil.listItemBarang.find { it.produk == produkB})
-        assertNotNull(hasil.listItemBarang.find { it.produk == produkC})
+        assertEquals(3, hasil.items.size())
+        assertNotNull(hasil.items.find { it.produk == produkA})
+        assertNotNull(hasil.items.find { it.produk == produkB})
+        assertNotNull(hasil.items.find { it.produk == produkC})
     }
 
     void testIsiSamaDenganDaftarBarang() {

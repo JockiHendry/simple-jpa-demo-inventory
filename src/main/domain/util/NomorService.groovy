@@ -26,8 +26,9 @@ class NomorService {
     private final Logger log = LoggerFactory.getLogger(NomorService)
 
     public enum TIPE {
-        //FAKTUR_JUAL('FakturJual', '%06d-FJ-KB-%s'),
-        //PENGELUARAN_BARANG('PengeluaranBarang', '%06d-SJ-KB-%s'),
+        FAKTUR_JUAL('FakturJual', '%06d-FJ-KB-%s'),
+        PENGELUARAN_BARANG('PengeluaranBarang', '%06d-SJ-KB-%s'),
+        PENGELUARAN_BONUS('BonusPenjualan', '%06d-BONUS-%s'),
         PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s')
 
         String format;
