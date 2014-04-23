@@ -58,7 +58,8 @@ application(title: 'Received Not Invoiced',
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: { it == 'Y' ? 'D' : '' })
                     }
-                    glazedColumn(name: 'Nomor', property: 'nomor', width: 140)
+                    glazedColumn(name: 'Nomor PO', property: 'nomor', width: 140)
+                    glazedColumn(name: 'Nomor Faktur', expression: { it.fakturBeli?.nomor })
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                         templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                     }

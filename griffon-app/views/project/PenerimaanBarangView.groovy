@@ -46,7 +46,7 @@ application(title: 'Penerimaan Barang',
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: { it=='Y'?'D':''})
                     }
-                    glazedColumn(name: 'Nomor', property: 'nomor', width: 120)
+                    glazedColumn(name: 'Nomor PO', property: 'nomor', width: 120)
                     glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
@@ -57,7 +57,7 @@ application(title: 'Penerimaan Barang',
         }
 
         panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
-            label('Nomor:')
+            label('Nomor Surat Jalan:')
             textField(id: 'nomor', columns: 20, text: bind('nomor', target: model, mutual: true), errorPath: 'nomor')
             errorLabel(path: 'nomor', constraints: 'wrap')
             label('Tanggal:')
@@ -67,11 +67,11 @@ application(title: 'Penerimaan Barang',
             panel {
                 mvcPopupButton(id: 'items', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
                     errorPath: 'items', mvcGroup: 'itemBarangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.items, allowTambahProduk: model.allowTambahProduk]},
+                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]},
                     dialogProperties: [title: 'Daftar Barang', size: new Dimension(900,420)],
                     onFinish: {m, v, c ->
-                        model.items.clear()
-                        model.items.addAll(m.itemBarangList)
+                        model.listItemBarang.clear()
+                        model.listItemBarang.addAll(m.itemBarangList)
                     }
                 )
             }

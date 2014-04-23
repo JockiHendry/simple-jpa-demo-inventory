@@ -19,7 +19,7 @@ public enum StatusPurchaseOrder {
 
     DIBUAT("Dibuat", true, true, true),
     DIPROSES("Diproses", true, true, true),
-    OK("OK", false, false, false),
+    OK("OK (Faktur & Barang Sudah Diterima)", false, false, false),
     LUNAS("Lunas", false, false, false);
 
     private String desc;

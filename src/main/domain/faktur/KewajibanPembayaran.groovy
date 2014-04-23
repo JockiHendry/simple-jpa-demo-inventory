@@ -23,7 +23,7 @@ import javax.validation.constraints.*
 @DomainClass @Entity @Canonical
 class KewajibanPembayaran {
 
-    @NotNull @Digits(integer=12, fraction=2) @Min(0l)
+    @NotNull @Min(0l)
     BigDecimal jumlah
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @CollectionTable(name='kewajibanpembayaran_items')

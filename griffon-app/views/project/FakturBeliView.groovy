@@ -34,7 +34,7 @@ application(title: 'Faktur Beli',
                 imageIcon('/griffon-icon-16x16.png').image]) {
 
     panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')) {
-        label('Nomor:')
+        label('Nomor PO:')
         textField(id: 'nomor', columns: 20, text: bind('nomor', target: model, mutual: true), errorPath: 'nomor')
         errorLabel(path: 'nomor', constraints: 'wrap')
         label('Tanggal:')
