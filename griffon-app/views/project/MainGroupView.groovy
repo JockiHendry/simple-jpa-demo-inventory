@@ -29,6 +29,10 @@ def popupMaintenance = {
     maintenancePopup.show(maintenanceButton, 0, maintenanceButton.getHeight())
 }
 
+def popupPenjualan = {
+    penjualanPopup.show(fakturJualButton, 0, fakturJualButton.getHeight())
+}
+
 def switchPageWithArguments = { Map arguments ->
     return { ActionEvent event ->
         controller.switchPage(event, arguments)
@@ -43,6 +47,10 @@ actions {
         smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.ALL]))
     action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_pembelian.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.FAKTUR_BELI]))
+    action(id: 'fakturJual', name: 'Penjualan', actionCommandKey: 'penjualan', mnemonic: KeyEvent.VK_J,
+        smallIcon: imageIcon('/menu_penjualan.png'), closure: popupPenjualan)
+    action(id: 'fakturJualEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
+        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage)
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
 
@@ -88,6 +96,10 @@ application(id: 'mainFrame',
         menuItem(action: restore)
     }
 
+    popupMenu(id: 'penjualanPopup') {
+        menuItem(action: fakturJualEceran)
+    }
+
     borderLayout()
     jxlayer(UI: BusyLayerUI.instance, constraints: BorderLayout.CENTER) {
         panel() {
@@ -99,6 +111,7 @@ application(id: 'mainFrame',
                 separator()
                 toggleButton(buttonGroup: buttons, action: purchaseOrder, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                toggleButton(buttonGroup: buttons, action: fakturJual, id: 'fakturJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: hutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)

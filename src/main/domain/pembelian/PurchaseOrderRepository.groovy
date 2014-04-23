@@ -88,7 +88,7 @@ class PurchaseOrderRepository {
 
     public PurchaseOrder update(PurchaseOrder purchaseOrder) {
         PurchaseOrder mergedPurchaseOrder = findPurchaseOrderById(purchaseOrder.id)
-        if (!mergedPurchaseOrder.status.bolehDiubah) {
+        if (!mergedPurchaseOrder || !mergedPurchaseOrder.status.bolehDiubah) {
             throw new DataTidakBolehDiubah(purchaseOrder)
         }
         mergedPurchaseOrder.with {
@@ -145,7 +145,7 @@ class PurchaseOrderRepository {
 
     public PurchaseOrder hapus(PurchaseOrder purchaseOrder) {
         purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
-        if (!purchaseOrder.status.bolehDiubah) {
+        if (!purchaseOrder || !purchaseOrder.status.bolehDiubah) {
             throw new DataTidakBolehDiubah(purchaseOrder)
         }
         purchaseOrder.deleted = 'Y'

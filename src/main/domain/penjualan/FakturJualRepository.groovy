@@ -28,7 +28,7 @@ import simplejpa.transaction.Transaction
 @Transaction
 class FakturJualRepository {
 
-    List<FakturJual> cari(LocalDate tanggalMulaiCari, LocalDate tanggalSelesaiCari, String nomorSearch, String konsumenSearch, def statusSearch) {
+    List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != Container.SEMUA) {
@@ -42,6 +42,24 @@ class FakturJualRepository {
             if (konsumenSearch) {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
+            }
+        }
+    }
+
+    List<FakturJualEceran> cariFakturJualEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String namaPembeliSearch, def statusSearch) {
+        findAllFakturJualEceranByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch != Container.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (namaPembeliSearch) {
+                and()
+                namaPembeli like("%${namaPembeliSearch}%")
             }
         }
     }
@@ -111,7 +129,7 @@ class FakturJualRepository {
 
     FakturJual update(FakturJual fakturJual) {
         FakturJual mergedFakturJual = findFakturJualById(fakturJual.id)
-        if (!mergedFakturJual.status.bolehDiubah) {
+        if (!mergedFakturJual || !mergedFakturJual.status.bolehDiubah) {
             throw new DataTidakBolehDiubah(fakturJual)
         }
         mergedFakturJual.with {
@@ -135,7 +153,7 @@ class FakturJualRepository {
 
     FakturJual hapus(FakturJual fakturJual) {
         fakturJual = findFakturJualById(fakturJual.id)
-        if (!fakturJual.status.bolehDiubah) {
+        if (!fakturJual || !fakturJual.status.bolehDiubah) {
             throw new DataTidakBolehDiubah(fakturJual)
         }
         fakturJual.deleted = 'Y'
