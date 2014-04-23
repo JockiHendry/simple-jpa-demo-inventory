@@ -60,6 +60,7 @@ class FakturBeliController {
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(listItemFaktur)
             }
+            refreshInformasi()
         }
 
     }
@@ -77,7 +78,9 @@ class FakturBeliController {
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (DataTidakKonsisten ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            if (JOptionPane.showConfirmDialog(view.mainPanel, "${ex.message}.\nAnda yakin ingin melanjutkan?", 'Konfirmasi', JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, fakturBeli, false)
+            }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }

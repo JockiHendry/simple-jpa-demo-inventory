@@ -116,7 +116,7 @@ class PurchaseOrderRepository {
         purchaseOrder
     }
 
-    public PurchaseOrder tambah(PurchaseOrder purchaseOrder, FakturBeli fakturBeli) {
+    public PurchaseOrder tambah(PurchaseOrder purchaseOrder, FakturBeli fakturBeli, boolean strictMode = true) {
         if (findFakturBeliByNomor(fakturBeli.nomor)) {
             throw new DataDuplikat(fakturBeli)
         }
@@ -124,8 +124,8 @@ class PurchaseOrderRepository {
             throw new DataTidakBolehDiubah(fakturBeli)
         }
         purchaseOrder = merge(purchaseOrder)
+        purchaseOrder.tambah(fakturBeli, strictMode)
         persist(fakturBeli)
-        purchaseOrder.tambah(fakturBeli)
         purchaseOrder
     }
 

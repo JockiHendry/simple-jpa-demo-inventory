@@ -42,6 +42,7 @@ import javax.persistence.OneToOne
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotNull
 import javax.validation.groups.Default
+import java.text.NumberFormat
 
 @NamedEntityGraphs([
     @NamedEntityGraph(name='PurchaseOrder.Complete', attributeNodes = [
@@ -121,7 +122,7 @@ class PurchaseOrder extends Faktur {
     }
 
 
-    void tambah(FakturBeli f) {
+    void tambah(FakturBeli f, boolean strictMode = true) {
         if (!status.fakturBolehDiubah || fakturBeli) {
             throw new DataTidakBolehDiubah(this)
         }
@@ -130,8 +131,12 @@ class PurchaseOrder extends Faktur {
         if (normalisasi().toSet() != f.normalisasi().toSet()) {
             throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
         }
-        if (f.total().compareTo(this.total()) != 0) {
-            throw new DataTidakKonsisten("Total untuk faktur ${f.nomor} sebesar ${f.total()} berbeda dengan yang dipesan untuk PO ${nomor} sebesar ${total()}!", f)
+        if (strictMode) {
+            if (f.total().compareTo(this.total()) != 0) {
+                throw new DataTidakKonsisten("Total untuk faktur ${f.nomor} sebesar ${NumberFormat.currencyInstance.format(f.total())} " +
+                    "berbeda dengan yang dipesan untuk PO ${nomor} sebesar " +
+                    "${NumberFormat.currencyInstance.format(total())}!", f)
+            }
         }
 
         fakturBeli = f
