@@ -24,6 +24,7 @@ import groovy.beans.Bindable
 class ItemFakturAsChildModel {
 
     @Bindable boolean allowTambahProduk
+    @Bindable boolean showHarga
 
     Faktur parent
 

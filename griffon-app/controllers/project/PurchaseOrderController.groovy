@@ -152,7 +152,8 @@ class PurchaseOrderController {
 
     def showItemFaktur = {
         execInsideUISync {
-            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, editable: model.allowAddPO]
+            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
+                        editable: model.allowAddPO, showHarga: model.showFakturBeli]
             def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()

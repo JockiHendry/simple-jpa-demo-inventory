@@ -45,15 +45,16 @@ application(title: 'simple-jpa-demo-inventory',
                     }
                     glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: [80, 80, 200])
                     glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
-                    glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer) {
+                    glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer, visible: bind { model.showHarga }) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Keterangan', property: 'keterangan')
-                    glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer)
-                    glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.harga)?.multiply(it.jumlah)}, columnClass: Integer) {
+                    glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showHarga })
+                    glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.harga)?.multiply(it.jumlah)},
+                            columnClass: Integer, visible: bind { model.showHarga }) {
                         templateRenderer("\${it==null?'-':currencyFormat(it)}", horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer) {
+                    glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer, visible: bind { model.showHarga }) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
                 }

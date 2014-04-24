@@ -34,6 +34,7 @@ class ItemFakturAsChildController {
         model.parent = args.'parent'
         model.editable = args.containsKey('editable')? args.'editable': !model.parent?.id
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
+        model.showHarga = args.containsKey('showHarga')? args.'showHarga': true
         model.itemFakturList.clear()
         model.itemFakturList.addAll(args.'listItemFaktur')
     }
