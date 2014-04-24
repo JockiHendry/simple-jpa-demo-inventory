@@ -82,8 +82,23 @@ class PurchaseOrderController {
     }
 
     def search = {
-        List result = purchaseOrderRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
+        List result = []
+        if (model.mode == MainGroupModel.POViewMode.ALL) {
+
+            result = purchaseOrderRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+                model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
+
+        } else if (model.mode == MainGroupModel.POViewMode.FAKTUR_BELI) {
+
+            result = purchaseOrderRepository.cariFakturBeli(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+                model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
+
+        } else if (model.mode == MainGroupModel.POViewMode.PENERIMAAN) {
+
+            result = purchaseOrderRepository.cariPenerimaan(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+                model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
+
+        }
         execInsideUISync {
             model.purchaseOrderList.clear()
             model.purchaseOrderList.addAll(result)

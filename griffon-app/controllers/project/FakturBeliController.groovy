@@ -101,8 +101,8 @@ class FakturBeliController {
     }
 
     def refreshInformasi = {
-        def jumlahItem = model.listItemFaktur.sum { it.jumlah }?: 0
-        def total = model.listItemFaktur.sum { it.total() }?: 0
+        def jumlahItem = model.listItemFaktur.toArray().sum { it.jumlah }?: 0
+        def total = model.listItemFaktur.toArray().sum { it.total() }?: 0
         model.informasi = "Qty ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
     }
 

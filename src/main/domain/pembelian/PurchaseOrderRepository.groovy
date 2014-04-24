@@ -50,6 +50,59 @@ class PurchaseOrderRepository {
         }
     }
 
+    public List<PurchaseOrder> cariPenerimaan(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
+                                              String nomorFakturSearch, String supplierSearch, def statusSearch) {
+        findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch == Container.SEMUA) {
+                and()
+                status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.FAKTUR_DITERIMA])
+            } else {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorPOSearch) {
+                and()
+                nomor like("%${nomorPOSearch}%")
+            }
+            if (nomorFakturSearch) {
+                and()
+                fakturBeli__nomor like("%${nomorFakturSearch}%")
+            }
+            if (supplierSearch) {
+                and()
+                supplier__nama like("%${supplierSearch}%")
+            }
+        }
+    }
+
+    public List<PurchaseOrder> cariFakturBeli(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
+                                              String nomorFakturSearch, String supplierSearch, def statusSearch) {
+        findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch == Container.SEMUA) {
+                and()
+                status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.BARANG_DITERIMA])
+            } else {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorPOSearch) {
+                and()
+                nomor like("%${nomorPOSearch}%")
+            }
+            if (nomorFakturSearch) {
+                and()
+                fakturBeli__nomor like("%${nomorFakturSearch}%")
+            }
+            if (supplierSearch) {
+                and()
+                supplier__nama like("%${supplierSearch}%")
+            }
+        }
+    }
+
+
     public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
            String supplierSearch, LocalDate tanggalJatuhTempo = null,
            StatusHutangSearch statusHutangSearch = StatusHutangSearch.SEMUA) {
