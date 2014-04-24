@@ -36,8 +36,11 @@ actions {
     action(id: 'pilih', name: 'Pilih', mnemonic: KeyEvent.VK_P, closure: {
         if (model.popupMode) {
             SwingUtilities.getWindowAncestor(mainPanel).visible = false
+        } else {
+            showStokProduk.actionPerformed(null)
         }
     })
+    action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
 }
 
 application(title: 'Produk',
@@ -74,7 +77,7 @@ application(title: 'Produk',
             }
             scrollPane(constraints: CENTER) {
                 glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
-                        mouseClicked: { e -> e.clickCount==2? pilih.actionPerformed(null): null}) {
+                        doubleClickAction: pilih, enterKeyAction: pilih) {
 					glazedColumn(name: 'Nama', property: 'nama')
 					glazedColumn(name: 'Harga Eceran Tertinggi (HET)', property: 'harga', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
@@ -83,8 +86,6 @@ application(title: 'Produk',
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan })
-                    keyStrokeAction(actionKey: 'pilih', condition: JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT,
-                        keyStroke: KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), action: pilih)
                 }
             }
         }
@@ -113,10 +114,7 @@ application(title: 'Produk',
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
                 button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
-                mvcPopupButton(id: 'stokProduk', text: 'Stok Produk...', mvcGroup: 'stokProduk',
-                        args: {[parent: view.table.selectionModel.selected[0]]},
-                        dialogProperties: [title: 'Stok Produk', size: new Dimension(900,420)],
-                        visible: bind{table.isRowSelected})
+                button(id: 'stokProduk', action: showStokProduk, visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
                 button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {
                     if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),

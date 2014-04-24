@@ -19,8 +19,10 @@ import domain.Container
 import domain.pembelian.PurchaseOrder
 import domain.pembelian.PurchaseOrderRepository
 import org.joda.time.LocalDate
+import simplejpa.swing.DialogUtils
 
 import javax.swing.event.ListSelectionEvent
+import java.awt.Dimension
 
 class HutangController {
 
@@ -49,6 +51,18 @@ class HutangController {
         execInsideUISync {
             model.purchaseOrderList.clear()
             model.purchaseOrderList.addAll(result)
+        }
+    }
+
+    def showPembayaran = {
+        execInsideUISync {
+            def args = [purchaseOrder: view.table.selectionModel.selected[0], listPembayaranHutang: model.listPembayaranHutang]
+            def dialogProps = [title: 'Pembayaran Hutang', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('pembayaranHutangAsChild', args, app, view, dialogProps) { m, v, c ->
+                model.listPembayaranHutang.clear()
+                model.listPembayaranHutang.addAll(m.pembayaranHutangList)
+                view.table.selectionModel.selected[0] = m.purchaseOrder
+            }
         }
     }
 

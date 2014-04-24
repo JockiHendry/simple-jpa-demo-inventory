@@ -27,6 +27,10 @@ import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.RIGHT
 import static javax.swing.SwingConstants.RIGHT
 
+actions {
+    action(id: 'showPembayaran', name: 'Klik Disini Untuk Melihat Pembayaran Yang Telah Dilakukan...', closure: controller.showPembayaran)
+}
+
 application(title: 'hutang',
         preferredSize: [320, 240],
         pack: true,
@@ -57,7 +61,8 @@ application(title: 'hutang',
         panel(constraints: CENTER) {
             borderLayout()
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.purchaseOrderList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.purchaseOrderList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                        doubleClickAction: showPembayaran, enterKeyAction: showPembayaran) {
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: {it=='Y'?'D':''})
                     }
@@ -89,16 +94,7 @@ application(title: 'hutang',
 
         panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind {table.isRowSelected}, constraints: PAGE_END, focusCycleRoot: true) {
             label('Pembayaran:')
-            mvcPopupButton(id: 'listPembayaranHutang', text: 'Klik Disini Untuk Melihat Pembayaran Yang Telah Dilakukan...',
-                    errorPath: 'listPembayaranHutang', mvcGroup: 'pembayaranHutangAsChild',
-                    args: {[purchaseOrder: view.table.selectionModel.selected[0], listPembayaranHutang: model.listPembayaranHutang]},
-                    dialogProperties: [title: 'Pembayaran Hutang', size: new Dimension(900,420)],
-                    onFinish: {m, v, c ->
-                        model.listPembayaranHutang.clear()
-                        model.listPembayaranHutang.addAll(m.pembayaranHutangList)
-                        view.table.selectionModel.selected[0] = m.purchaseOrder
-                    }
-            )
+            button(id: 'listPembayaranHutang', action: showPembayaran, errorPath: 'listPembayaranHutang')
             errorLabel(path: 'listPembayaranHutang', constraints: 'wrap')
         }
     }

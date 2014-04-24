@@ -142,6 +142,14 @@ class ProdukController {
         }
     }
 
+    def showStokProduk = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Stok Produk', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('stokProduk', args, app, view, dialogProps)
+        }
+    }
+
     @Transaction(Transaction.Policy.SKIP)
     def tableSelectionChanged = { ListSelectionEvent event ->
         execInsideUISync {

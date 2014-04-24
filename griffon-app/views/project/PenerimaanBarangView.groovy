@@ -24,6 +24,10 @@ import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
+actions {
+    action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...', closure: controller.showItemBarang)
+}
+
 application(title: 'Penerimaan Barang',
         preferredSize: [520, 340],
         pack: true,
@@ -42,7 +46,8 @@ application(title: 'Penerimaan Barang',
                 label(text: bind('searchMessage', source: model))
             }
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.penerimaanBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.penerimaanBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                        doubleClickAction: showItemBarang, enterKeyAction: showItemBarang) {
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: { it=='Y'?'D':''})
                     }
@@ -64,17 +69,7 @@ application(title: 'Penerimaan Barang',
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
             errorLabel(path: 'tanggal', constraints: 'wrap')
             label('Isi:')
-            panel {
-                mvcPopupButton(id: 'items', text: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...',
-                    errorPath: 'items', mvcGroup: 'itemBarangAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]},
-                    dialogProperties: [title: 'Daftar Barang', size: new Dimension(900,420)],
-                    onFinish: {m, v, c ->
-                        model.listItemBarang.clear()
-                        model.listItemBarang.addAll(m.itemBarangList)
-                    }
-                )
-            }
+            button(id: 'items', action: showItemBarang, errorPath: 'items')
             errorLabel(path: 'items', constraints: 'wrap')
             label('Keterangan:')
             textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')

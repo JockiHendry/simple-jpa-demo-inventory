@@ -26,6 +26,10 @@ import java.awt.FlowLayout
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.*
 
+actions {
+    action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Purchase Order...', closure: controller.showItemFaktur)
+}
+
 application(title: 'Received Not Invoiced',
   preferredSize: [320, 240],
   pack: true,
@@ -54,7 +58,8 @@ application(title: 'Received Not Invoiced',
         panel(constraints: CENTER) {
             borderLayout()
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.purchaseOrderList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.purchaseOrderList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                        doubleClickAction: showItemFaktur, enterKeyAction: showItemFaktur) {
                     glazedColumn(name: '', property: 'deleted', width: 20) {
                         templateRenderer(exp: { it == 'Y' ? 'D' : '' })
                     }
@@ -100,16 +105,7 @@ application(title: 'Received Not Invoiced',
             label('Isi:')
             panel {
                 label(text: bind { model.informasi })
-                mvcPopupButton(id: 'listItemFaktur', text: 'Klik Disini Untuk Melihat Atau Mengisi Item Purchase Order...',
-                    errorPath: 'listItemFaktur', mvcGroup: 'itemFakturAsChild',
-                    args: {[parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, editable: model.allowAddPO]},
-                    dialogProperties: [title: 'Item Faktur', size: new Dimension(900,420)],
-                    onFinish: {m, v, c ->
-                        model.listItemFaktur.clear()
-                        model.listItemFaktur.addAll(m.itemFakturList)
-                        controller.refreshInformasi()
-                    }
-                )
+                button(id: 'listItemFaktur', action: showItemFaktur, errorPath: 'listItemFaktur')
             }
             errorLabel(path: 'listItemFaktur', constraints: 'wrap')
             label('Keterangan:')

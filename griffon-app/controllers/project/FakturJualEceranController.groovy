@@ -18,6 +18,8 @@ package project
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
 import domain.penjualan.*
+import simplejpa.swing.DialogUtils
+
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -25,6 +27,7 @@ import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 import domain.Container
 
+import java.awt.Dimension
 import java.text.NumberFormat
 
 class FakturJualEceranController {
@@ -102,6 +105,18 @@ class FakturJualEceranController {
         def jumlahItem = model.listItemFaktur.sum { it.jumlah }?: 0
         def total = model.listItemFaktur.sum { it.total() }?: 0
         model.informasi = "Qty ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
+    }
+
+    def showItemFaktur = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, allowTambahProduk: false]
+            def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
+                model.listItemFaktur.clear()
+                model.listItemFaktur.addAll(m.itemFakturList)
+                refreshInformasi()
+            }
+        }
     }
 
     def clear = {

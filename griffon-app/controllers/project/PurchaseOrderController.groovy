@@ -25,8 +25,11 @@ import domain.pembelian.PurchaseOrderRepository
 import domain.penjualan.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
+import simplejpa.swing.DialogUtils
+
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
+import java.awt.Dimension
 import java.text.NumberFormat
 
 class PurchaseOrderController {
@@ -145,6 +148,18 @@ class PurchaseOrderController {
         PurchaseOrder selected = view.table.selectionModel.selected[0]
         args.'listItemBarang' = selected.sisaBelumDiterima()
         args.'editable' = false
+    }
+
+    def showItemFaktur = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, editable: model.allowAddPO]
+            def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
+                model.listItemFaktur.clear()
+                model.listItemFaktur.addAll(m.itemFakturList)
+                refreshInformasi()
+            }
+        }
     }
 
     def clear = {

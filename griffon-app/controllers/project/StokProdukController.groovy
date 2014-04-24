@@ -17,6 +17,9 @@ package project
 
 import domain.Container
 import domain.inventory.ProdukRepository
+import simplejpa.swing.DialogUtils
+
+import java.awt.Dimension
 
 class StokProdukController {
 
@@ -30,6 +33,14 @@ class StokProdukController {
         model.parent = args.'parent'
         model.stokProdukList.clear()
         model.stokProdukList.addAll(model.parent.stokSemuaGudang())
+    }
+
+    def showItemStok = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Item Stok', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('itemStok', args, app, view, dialogProps)
+        }
     }
 
 }

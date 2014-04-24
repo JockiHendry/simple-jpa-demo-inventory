@@ -20,10 +20,13 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.*
 import domain.validation.TanpaGudang
+import simplejpa.swing.DialogUtils
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import domain.exception.DataDuplikat
+
+import java.awt.Dimension
 
 class PenerimaanBarangController {
 
@@ -77,6 +80,17 @@ class PenerimaanBarangController {
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    def showItemBarang = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]
+            def dialogProps = [title: 'Daftar Barang', size: new Dimension(400, 320)]
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+                model.listItemBarang.clear()
+                model.listItemBarang.addAll(m.itemBarangList)
+            }
         }
     }
 

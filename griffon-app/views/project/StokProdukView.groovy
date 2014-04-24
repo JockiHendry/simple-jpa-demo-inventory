@@ -23,6 +23,10 @@ import java.awt.event.KeyEvent
 
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 
+actions {
+    action(id: 'showItemStok', name: 'Item Stok...', closure: controller.showItemStok)
+}
+
 application(title: 'simple-jpa-demo-inventory',
         preferredSize: [320, 240],
         pack: true,
@@ -39,7 +43,8 @@ application(title: 'simple-jpa-demo-inventory',
         panel(constraints: CENTER) {
             borderLayout()
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.stokProdukList, sortingStrategy: SINGLE_COLUMN) {
+                glazedTable(id: 'table', list: model.stokProdukList, sortingStrategy: SINGLE_COLUMN,
+                        doubleClickAction: showItemStok, enterKeyAction: showItemStok) {
                     glazedColumn(name: 'Gudang', property: 'gudang') {
                         templateRenderer('${it.nama}')
                     }
@@ -53,10 +58,7 @@ application(title: 'simple-jpa-demo-inventory',
         taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END) {
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                mvcPopupButton(id: 'itemStok', text: 'Item Stok...', mvcGroup: 'itemStok',
-                        args: {[parent: view.table.selectionModel.selected[0]]},
-                        dialogProperties: [title: 'Item Stok', size: new Dimension(900,420)],
-                        visible: bind{table.isRowSelected})
+                button(id: 'itemStok', action: showItemStok, visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
                     SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
                 }, mnemonic: KeyEvent.VK_T)
