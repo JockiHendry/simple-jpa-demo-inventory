@@ -51,8 +51,8 @@ actions {
         smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.PENERIMAAN]))
     action(id: 'pengeluaranBarang', name: 'Antar Barang', actionCommandKey: 'pengeluaranBarang', mnemonic: KeyEvent.VK_A,
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
-    action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'pengeluaranBarangEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: controller.switchPage)
+    action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
+        smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: switchPageWithArguments([mode: MainGroupModel.FakturEceranViewMode.PENGELUARAN]))
 
     action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
         smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: MainGroupModel.POViewMode.ALL]))
@@ -61,7 +61,7 @@ actions {
     action(id: 'fakturJual', name: 'Penjualan', actionCommandKey: 'penjualan', mnemonic: KeyEvent.VK_J,
         smallIcon: imageIcon('/menu_penjualan.png'), closure: popupPenjualan)
     action(id: 'fakturJualEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: switchPageWithArguments([mode: MainGroupModel.FakturEceranViewMode.FAKTUR]))
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
 

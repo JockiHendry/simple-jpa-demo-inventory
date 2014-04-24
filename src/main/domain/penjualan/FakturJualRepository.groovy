@@ -19,8 +19,11 @@ import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
+import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
+import domain.inventory.Gudang
+import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
@@ -94,6 +97,17 @@ class FakturJualRepository {
     }
 
     FakturJualEceran buatFakturJualEceran(FakturJualEceran fakturJualEceran) {
+
+        // Periksa apakah barang dalam gudang utama mencukupi
+        Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
+        fakturJualEceran.listItemFaktur.each {
+            Produk produk = merge(it.produk)
+            int jumlahTersedia = produk.stok(gudangUtama).jumlah
+            if (jumlahTersedia < it.jumlah) {
+                throw new StokTidakCukup(produk.nama, it.jumlah, jumlahTersedia)
+            }
+        }
+
         persist(fakturJualEceran)
         fakturJualEceran
     }
@@ -160,5 +174,9 @@ class FakturJualRepository {
         fakturJual
     }
 
-
+    FakturJualEceran antar(FakturJualEceran fakturJualEceran) {
+        fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
+        fakturJualEceran.antar()
+        fakturJualEceran
+    }
 }

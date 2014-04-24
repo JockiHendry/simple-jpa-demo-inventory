@@ -24,4 +24,8 @@ class MainGroupModel {
         PENERIMAAN, FAKTUR_BELI, ALL
     }
 
+    public enum FakturEceranViewMode {
+        PENGELUARAN, FAKTUR, ALL
+    }
+
 }

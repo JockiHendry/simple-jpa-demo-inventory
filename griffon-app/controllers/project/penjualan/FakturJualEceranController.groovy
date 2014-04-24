@@ -15,7 +15,9 @@
  */
 package project.penjualan
 
+import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
 import domain.penjualan.*
 import simplejpa.swing.DialogUtils
@@ -29,6 +31,7 @@ import domain.Container
 
 import java.awt.Dimension
 import java.text.NumberFormat
+import project.main.MainGroupModel.FakturEceranViewMode
 
 class FakturJualEceranController {
 
@@ -39,14 +42,38 @@ class FakturJualEceranController {
 
     void mvcGroupInit(Map args) {
         fakturJualRepository = Container.app.fakturJualRepository
-        model.showNilaiUang = true
+
+        model.mode = args.containsKey('mode')? args.'mode': FakturEceranViewMode.ALL
+        switch (model.mode) {
+            case FakturEceranViewMode.FAKTUR:
+                model.showPenerimaan = false
+                model.showFakturJual = true
+                model.showNilaiUang = true
+                model.allowAddFakturJual = true
+                model.statusSearch.selectedItem = Container.SEMUA
+                break
+            case FakturEceranViewMode.PENGELUARAN:
+                model.showPenerimaan = true
+                model.showFakturJual = false
+                model.showNilaiUang = false
+                model.allowAddFakturJual = false
+                model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
+                break
+            case FakturEceranViewMode.ALL:
+                model.showPenerimaan = true
+                model.showFakturJual = true
+                model.showNilaiUang = true
+                model.allowAddFakturJual = true
+                model.statusSearch.selectedItem = Container.SEMUA
+                break
+        }
+
         init()
         search()
     }
 
     def init = {
         model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
-        model.statusSearch.selectedItem = Container.SEMUA
     }
 
     def search = {
@@ -82,16 +109,35 @@ class FakturJualEceranController {
             }
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
+        } catch (StokTidakCukup ex) {
+            model.errors['listItemFaktur'] = ex.message
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Pembelian tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         try {
             FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
             fakturJualEceran = fakturJualRepository.hapus(fakturJualEceran)
 
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = fakturJualEceran
+                clear()
+            }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    def antar = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan melakukan pengantaran barang untuk faktur ini?', 'Konfirmasi Pengantaran', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+            return
+        }
+        try {
+            FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
+            fakturJualEceran = fakturJualRepository.antar(fakturJualEceran)
             execInsideUISync {
                 view.table.selectionModel.selected[0] = fakturJualEceran
                 clear()
@@ -109,7 +155,8 @@ class FakturJualEceranController {
 
     def showItemFaktur = {
         execInsideUISync {
-            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur, allowTambahProduk: false]
+            def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
+                        allowTambahProduk: false, showHarga: model.showFakturJual]
             def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()

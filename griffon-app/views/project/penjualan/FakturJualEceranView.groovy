@@ -15,10 +15,6 @@
  */
 package project.penjualan
 
-import javax.swing.JComponent
-import javax.swing.KeyStroke
-import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -76,36 +72,41 @@ application(title: 'Faktur Jual Eceran',
             }
         }
 
-        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
-            label('Nomor:')
-            label(id: 'nomor', text: bind('nomor', source: model), errorPath: 'nomor')
-            errorLabel(path: 'nomor', constraints: 'wrap')
-            label('Tanggal:')
-            dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
-            errorLabel(path: 'tanggal', constraints: 'wrap')
-            label('Nama Pembeli:')
-            textField(id: 'namaPembeli', columns: 30, text: bind('namaPembeli', target: model, mutual: true), errorPath: 'namaPembeli')
-            errorLabel(path: 'namaPembeli', constraints: 'wrap')
-            label('Diskon:')
-            panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
-                decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
-                label('% dan Potongan Langsung Rp')
-                decimalTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
+        panel(constraints: PAGE_END) {
+            borderLayout()
+            panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, focusCycleRoot: true, visible: bind { model.allowAddFakturJual }) {
+                label('Nomor:')
+                label(id: 'nomor', text: bind('nomor', source: model), errorPath: 'nomor')
+                errorLabel(path: 'nomor', constraints: 'wrap')
+                label('Tanggal:')
+                dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
+                errorLabel(path: 'tanggal', constraints: 'wrap')
+                label('Nama Pembeli:')
+                textField(id: 'namaPembeli', columns: 30, text: bind('namaPembeli', target: model, mutual: true), errorPath: 'namaPembeli')
+                errorLabel(path: 'namaPembeli', constraints: 'wrap')
+                label('Diskon:')
+                panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
+                    decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
+                    label('% dan Potongan Langsung Rp')
+                    decimalTextField(id: 'diskonPotonganLangsung', columns: 20, bindTo: 'diskonPotonganLangsung', errorPath: 'diskonPotonganLangsung')
+                }
+                errorLabel(path: 'diskon', constraints: 'wrap')
+                label('Isi:')
+                panel {
+                    label(text: bind { model.informasi })
+                    button(id: 'listItemFaktur', action: showItemFaktur, errorPath: 'listItemFaktur')
+                }
+                errorLabel(path: 'listItemFaktur', constraints: 'wrap')
+                label('Keterangan:')
+                textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
+                errorLabel(path: 'keterangan', constraints: 'wrap')
             }
-            errorLabel(path: 'diskon', constraints: 'wrap')
-            label('Isi:')
-            panel {
-                label(text: bind { model.informasi })
-                button(id: 'listItemFaktur', action: showItemFaktur, errorPath: 'listItemFaktur')
-            }
-            errorLabel(path: 'listItemFaktur', constraints: 'wrap')
-            label('Keterangan:')
-            textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
-            errorLabel(path: 'keterangan', constraints: 'wrap')
 
-            panel(constraints: 'span, growx, wrap') {
+            panel(constraints: PAGE_END) {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
+                button(app.getMessage("simplejpa.dialog.save.button"), visible: bind {
+                    model.allowAddFakturJual
+                }, actionPerformed: {
                     if (model.id != null) {
                         if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
                                 app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
@@ -115,12 +116,13 @@ application(title: 'Faktur Jual Eceran',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
+                button('Antar', visible: bind { model.showPenerimaan }, actionPerformed: controller.antar)
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)
-                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
-                    table.isRowSelected
-                }, actionPerformed: {
+                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {
+                    it && model.allowAddFakturJual
+                }), actionPerformed: {
                     if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
                             app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                         controller.delete()

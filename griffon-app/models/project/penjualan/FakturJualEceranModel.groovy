@@ -26,10 +26,15 @@ import org.joda.time.*
 import javax.swing.event.*
 import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
+import project.main.MainGroupModel.FakturEceranViewMode
 
 class FakturJualEceranModel {
 
+    FakturEceranViewMode mode
+    @Bindable boolean showPenerimaan
+    @Bindable boolean showFakturJual
     @Bindable boolean showNilaiUang
+    @Bindable boolean allowAddFakturJual
 
     @Bindable Long id
     @Bindable String nomor

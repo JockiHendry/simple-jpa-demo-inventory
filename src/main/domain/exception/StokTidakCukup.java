@@ -19,11 +19,20 @@ public class StokTidakCukup extends RuntimeException {
 
     private int jumlahYangDibutuhkan;
     private int jumlahTersedia;
+    private String namaProduk;
 
-    public StokTidakCukup(int jumlahYangDibutuhkan, int jumlahTersedia) {
-        super("Stok sejumlah " + jumlahYangDibutuhkan + " tidak tersedia; yang tersedia adalah " + jumlahTersedia);
+    public StokTidakCukup(String namaProduk, int jumlahYangDibutuhkan, int jumlahTersedia) {
+        super(namaProduk + " sejumlah " + jumlahYangDibutuhkan + " tidak tersedia; yang tersedia adalah " + jumlahTersedia);
         this.jumlahYangDibutuhkan = jumlahYangDibutuhkan;
         this.jumlahTersedia = jumlahTersedia;
+    }
+
+    public String getNamaProduk() {
+        return namaProduk;
+    }
+
+    public void setNamaProduk(String namaProduk) {
+        this.namaProduk = namaProduk;
     }
 
     public int getJumlahYangDibutuhkan() {
