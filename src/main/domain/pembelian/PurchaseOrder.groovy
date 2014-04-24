@@ -91,8 +91,8 @@ class PurchaseOrder extends Faktur {
             if (!fakturBeli.hutang) {
                 fakturBeli.buatHutang()
             }
-        } else {
-            status = StatusPurchaseOrder.DIPROSES
+        } else if (diterimaPenuh()) {
+            status = StatusPurchaseOrder.BARANG_DITERIMA
         }
 
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this))
@@ -103,10 +103,12 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         penerimaanBarang.deleted = 'Y'
-        if (isPenerimaanKosong() && !fakturBeli) {
-            status = StatusPurchaseOrder.DIBUAT
-        } else {
-            status = StatusPurchaseOrder.DIPROSES
+        if (isPenerimaanKosong()) {
+            if (fakturBeli) {
+                status = StatusPurchaseOrder.FAKTUR_DITERIMA
+            } else {
+                status = StatusPurchaseOrder.DIBUAT
+            }
         }
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this, true))
     }
@@ -144,7 +146,7 @@ class PurchaseOrder extends Faktur {
             status = StatusPurchaseOrder.OK
             fakturBeli.buatHutang()
         } else {
-            status = StatusPurchaseOrder.DIPROSES
+            status = StatusPurchaseOrder.FAKTUR_DITERIMA
         }
     }
 
@@ -153,10 +155,10 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         fakturBeli = null
-        if (isPenerimaanKosong() && !fakturBeli) {
-            status = StatusPurchaseOrder.DIBUAT
+        if (diterimaPenuh()) {
+            status = StatusPurchaseOrder.BARANG_DITERIMA
         } else {
-            status = StatusPurchaseOrder.DIPROSES
+            status = StatusPurchaseOrder.DIBUAT
         }
     }
 

@@ -92,12 +92,13 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         penerimaanBarang1.tambah(new ItemBarang(produk: produkA, jumlah: 10))
         penerimaanBarang1.tambah(new ItemBarang(produk: produkB, jumlah:  7))
         p.tambah(penerimaanBarang1)
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.DIBUAT, p.status)
         assertFalse(p.diterimaPenuh())
 
         PenerimaanBarang penerimaanBarang2 = new PenerimaanBarang()
         penerimaanBarang2.tambah(new ItemBarang(produk: produkC, jumlah: 15))
         p.tambah(penerimaanBarang2)
+        assertEquals(StatusPurchaseOrder.BARANG_DITERIMA, p.status)
         assertTrue(p.diterimaPenuh())
     }
 
@@ -220,7 +221,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         fakturBeli.tambah(new ItemFaktur(produkA, 5, 1000, null, new Diskon(1, 100)))
         fakturBeli.tambah(new ItemFaktur(produkB, 3, 2000, null, new Diskon(2)))
         p.tambah(fakturBeli)
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.FAKTUR_DITERIMA, p.status)
 
         // Hapus Faktur
         p.hapusFaktur()
@@ -230,15 +231,15 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         PenerimaanBarang penerimaanBarang = new PenerimaanBarang()
         penerimaanBarang.tambah(new ItemBarang(produkA, 5))
         p.tambah(penerimaanBarang)
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.DIBUAT, p.status)
 
         // Tambah Faktur
         p.tambah(fakturBeli)
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.FAKTUR_DITERIMA, p.status)
 
         // Hapus Faktur
         p.hapusFaktur()
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.DIBUAT, p.status)
 
         // Hapus Penerimaan
         p.hapus(penerimaanBarang)
@@ -249,7 +250,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         penerimaanBarang.tambah(new ItemBarang(produkA, 5))
         penerimaanBarang.tambah(new ItemBarang(produkB, 3))
         p.tambah(penerimaanBarang)
-        assertEquals(StatusPurchaseOrder.DIPROSES, p.status)
+        assertEquals(StatusPurchaseOrder.BARANG_DITERIMA, p.status)
 
         // Tambah Faktur
         p.tambah(fakturBeli)
