@@ -47,7 +47,8 @@ class PurchaseOrderModel {
 
     BasicEventList<PurchaseOrder> purchaseOrderList = new BasicEventList<>()
 
-    @Bindable String nomorSearch
+    @Bindable String nomorPOSearch
+    @Bindable String nomorFakturSearch
     @Bindable String supplierSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch

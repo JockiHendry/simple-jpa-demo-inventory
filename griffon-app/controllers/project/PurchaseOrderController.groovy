@@ -83,7 +83,7 @@ class PurchaseOrderController {
 
     def search = {
         List result = purchaseOrderRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.supplierSearch, model.statusSearch.selectedItem)
+            model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
         execInsideUISync {
             model.purchaseOrderList.clear()
             model.purchaseOrderList.addAll(result)

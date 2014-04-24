@@ -27,16 +27,21 @@ import simplejpa.transaction.Transaction
 @Transaction
 class PurchaseOrderRepository {
 
-    public List<PurchaseOrder> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, def statusSearch) {
+    public List<PurchaseOrder> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
+            String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != Container.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
-            if (nomorSearch) {
+            if (nomorPOSearch) {
                 and()
-                nomor like("%${nomorSearch}%")
+                nomor like("%${nomorPOSearch}%")
+            }
+            if (nomorFakturSearch) {
+                and()
+                fakturBeli__nomor like("%${nomorFakturSearch}%")
             }
             if (supplierSearch) {
                 and()

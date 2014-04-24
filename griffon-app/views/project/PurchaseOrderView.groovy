@@ -49,7 +49,8 @@ application(title: 'Received Not Invoiced',
             label(' s/d ')
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
             comboBox(id: 'statusSearch', model: model.statusSearch)
-            textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
+            textField(id: 'nomorPOSearch', columns: 10, text: bind('nomorPOSearch', target: model, mutual: true), actionPerformed: controller.search)
+            textField(id: 'nomorFakturSearch', columns: 10, text: bind('nomorFakturSearch', target: model, mutual: true), actionPerformed: controller.search)
             textField(id: 'supplierSearch', columns: 10, text: bind('supplierSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
@@ -166,5 +167,6 @@ application(title: 'Received Not Invoiced',
     }
 }
 
-PromptSupport.setPrompt("Cari Nomor...", nomorSearch)
-PromptSupport.setPrompt("Cari Supplier...", supplierSearch)
+PromptSupport.setPrompt("Nomor PO...", nomorPOSearch)
+PromptSupport.setPrompt("Nomor Faktur...", nomorFakturSearch)
+PromptSupport.setPrompt("Supplier...", supplierSearch)
