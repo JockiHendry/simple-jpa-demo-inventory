@@ -25,156 +25,156 @@ application {
 mvcGroups {
     // MVC Group for "fakturJualEceran"
     'fakturJualEceran' {
-        model      = 'project.FakturJualEceranModel'
-        view       = 'project.FakturJualEceranView'
-        controller = 'project.FakturJualEceranController'
+        model      = 'project.penjualan.FakturJualEceranModel'
+        view       = 'project.penjualan.FakturJualEceranView'
+        controller = 'project.penjualan.FakturJualEceranController'
     }
 
     // MVC Group for "satuan"
     'satuan' {
-        model      = 'project.SatuanModel'
-        view       = 'project.SatuanView'
-        controller = 'project.SatuanController'
+        model      = 'project.inventory.SatuanModel'
+        view       = 'project.inventory.SatuanView'
+        controller = 'project.inventory.SatuanController'
     }
 
     // MVC Group for "previewFaktur"
     'previewFaktur' {
-        model      = 'project.PreviewFakturModel'
-        view       = 'project.PreviewFakturView'
-        controller = 'project.PreviewFakturController'
+        model      = 'project.main.PreviewFakturModel'
+        view       = 'project.main.PreviewFakturView'
+        controller = 'project.main.PreviewFakturController'
     }
 
     // MVC Group for "region"
     'region' {
-        model      = 'project.RegionModel'
-        view       = 'project.RegionView'
-        controller = 'project.RegionController'
+        model      = 'project.penjualan.RegionModel'
+        view       = 'project.penjualan.RegionView'
+        controller = 'project.penjualan.RegionController'
     }
 
     // MVC Group for "sales"
     'sales' {
-        model      = 'project.SalesModel'
-        view       = 'project.SalesView'
-        controller = 'project.SalesController'
+        model      = 'project.penjualan.SalesModel'
+        view       = 'project.penjualan.SalesView'
+        controller = 'project.penjualan.SalesController'
     }
 
     // MVC Group for "supervisorPassword"
     'supervisorPassword' {
-        model      = 'project.SupervisorPasswordModel'
-        view       = 'project.SupervisorPasswordView'
-        controller = 'project.SupervisorPasswordController'
+        model      = 'project.main.SupervisorPasswordModel'
+        view       = 'project.main.SupervisorPasswordView'
+        controller = 'project.main.SupervisorPasswordController'
     }
 
     // MVC Group for "pengaturan"
     'pengaturan' {
-        model      = 'project.PengaturanModel'
-        view       = 'project.PengaturanView'
-        controller = 'project.PengaturanController'
+        model      = 'project.main.PengaturanModel'
+        view       = 'project.main.PengaturanView'
+        controller = 'project.main.PengaturanController'
     }
 
     // MVC Group for "pembayaranHutangAsChild"
     'pembayaranHutangAsChild' {
-        model      = 'project.PembayaranHutangAsChildModel'
-        view       = 'project.PembayaranHutangAsChildView'
-        controller = 'project.PembayaranHutangAsChildController'
+        model      = 'project.pembelian.PembayaranHutangAsChildModel'
+        view       = 'project.pembelian.PembayaranHutangAsChildView'
+        controller = 'project.pembelian.PembayaranHutangAsChildController'
     }
 
     // MVC Group for "hutang"
     'hutang' {
-        model      = 'project.HutangModel'
-        view       = 'project.HutangView'
-        controller = 'project.HutangController'
+        model      = 'project.pembelian.HutangModel'
+        view       = 'project.pembelian.HutangView'
+        controller = 'project.pembelian.HutangController'
     }
 
     // MVC Group for "receivedNotInvoiced"
     'purchaseOrder' {
-        model      = 'project.PurchaseOrderModel'
-        view       = 'project.PurchaseOrderView'
-        controller = 'project.PurchaseOrderController'
+        model      = 'project.pembelian.PurchaseOrderModel'
+        view       = 'project.pembelian.PurchaseOrderView'
+        controller = 'project.pembelian.PurchaseOrderController'
     }
 
     // MVC Group for "itemFakturAsChild"
     'itemFakturAsChild' {
-        model      = 'project.ItemFakturAsChildModel'
-        view       = 'project.ItemFakturAsChildView'
-        controller = 'project.ItemFakturAsChildController'
+        model      = 'project.pembelian.ItemFakturAsChildModel'
+        view       = 'project.pembelian.ItemFakturAsChildView'
+        controller = 'project.pembelian.ItemFakturAsChildController'
     }
 
     // MVC Group for "fakturBeli"
     'fakturBeli' {
-        model      = 'project.FakturBeliModel'
-        view       = 'project.FakturBeliView'
-        controller = 'project.FakturBeliController'
+        model      = 'project.pembelian.FakturBeliModel'
+        view       = 'project.pembelian.FakturBeliView'
+        controller = 'project.pembelian.FakturBeliController'
     }
 
     // MVC Group for "itemStok"
     'itemStok' {
-        model      = 'project.ItemStokModel'
-        view       = 'project.ItemStokView'
-        controller = 'project.ItemStokController'
+        model      = 'project.inventory.ItemStokModel'
+        view       = 'project.inventory.ItemStokView'
+        controller = 'project.inventory.ItemStokController'
     }
 
     // MVC Group for "stokProduk"
     'stokProduk' {
-        model      = 'project.StokProdukModel'
-        view       = 'project.StokProdukView'
-        controller = 'project.StokProdukController'
+        model      = 'project.inventory.StokProdukModel'
+        view       = 'project.inventory.StokProdukView'
+        controller = 'project.inventory.StokProdukController'
     }
 
     // MVC Group for "restore"
     'restore' {
-        model      = 'project.RestoreModel'
-        view       = 'project.RestoreView'
-        controller = 'project.RestoreController'
+        model      = 'project.main.RestoreModel'
+        view       = 'project.main.RestoreView'
+        controller = 'project.main.RestoreController'
     }
 
     // MVC Group for "backup"
     'backup' {
-        model      = 'project.BackupModel'
-        view       = 'project.BackupView'
-        controller = 'project.BackupController'
+        model      = 'project.main.BackupModel'
+        view       = 'project.main.BackupView'
+        controller = 'project.main.BackupController'
     }
 
     // MVC Group for "itemBarangAsChild"
     'itemBarangAsChild' {
-        model      = 'project.ItemBarangAsChildModel'
-        view       = 'project.ItemBarangAsChildView'
-        controller = 'project.ItemBarangAsChildController'
+        model      = 'project.pembelian.ItemBarangAsChildModel'
+        view       = 'project.pembelian.ItemBarangAsChildView'
+        controller = 'project.pembelian.ItemBarangAsChildController'
     }
 
     // MVC Group for "penerimaanBarang"
     'penerimaanBarang' {
-        model      = 'project.PenerimaanBarangModel'
-        view       = 'project.PenerimaanBarangView'
-        controller = 'project.PenerimaanBarangController'
+        model      = 'project.pembelian.PenerimaanBarangModel'
+        view       = 'project.pembelian.PenerimaanBarangView'
+        controller = 'project.pembelian.PenerimaanBarangController'
     }
 
     // MVC Group for "supplier"
     'supplier' {
-        model      = 'project.SupplierModel'
-        view       = 'project.SupplierView'
-        controller = 'project.SupplierController'
+        model      = 'project.pembelian.SupplierModel'
+        view       = 'project.pembelian.SupplierView'
+        controller = 'project.pembelian.SupplierController'
     }
 
     // MVC Group for "mainGroup"
     'mainGroup' {
-        model      = 'project.MainGroupModel'
-        view       = 'project.MainGroupView'
-        controller = 'project.MainGroupController'
+        model      = 'project.main.MainGroupModel'
+        view       = 'project.main.MainGroupView'
+        controller = 'project.main.MainGroupController'
     }
 
     // MVC Group for "gudang"
     'gudang' {
-        model      = 'project.GudangModel'
-        view       = 'project.GudangView'
-        controller = 'project.GudangController'
+        model      = 'project.inventory.GudangModel'
+        view       = 'project.inventory.GudangView'
+        controller = 'project.inventory.GudangController'
     }
 
     // MVC Group for "produk"
     'produk' {
-        model      = 'project.ProdukModel'
-        view       = 'project.ProdukView'
-        controller = 'project.ProdukController'
+        model      = 'project.inventory.ProdukModel'
+        view       = 'project.inventory.ProdukView'
+        controller = 'project.inventory.ProdukController'
     }
 
 }
