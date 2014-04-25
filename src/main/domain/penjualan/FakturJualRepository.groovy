@@ -179,4 +179,10 @@ class FakturJualRepository {
         fakturJualEceran.antar()
         fakturJualEceran
     }
+
+    FakturJualEceran bayar(FakturJualEceran fakturJualEceran) {
+        fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
+        fakturJualEceran.bayar()
+        fakturJualEceran
+    }
 }

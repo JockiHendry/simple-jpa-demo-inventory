@@ -15,6 +15,8 @@
  */
 package project.penjualan
 
+import domain.penjualan.StatusFakturJual
+
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -116,7 +118,10 @@ application(title: 'Faktur Jual Eceran',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
-                button('Antar', visible: bind { model.showPenerimaan }, actionPerformed: controller.antar)
+                button('Antar', visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }),
+                    actionPerformed: controller.antar)
+                button('Barang Diterima Dan Telah Dibayar', visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }),
+                    actionPerformed: controller.bayar)
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

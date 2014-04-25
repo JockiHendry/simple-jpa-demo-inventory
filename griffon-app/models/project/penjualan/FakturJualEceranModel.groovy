@@ -43,6 +43,7 @@ class FakturJualEceranModel {
     @Bindable BigDecimal diskonPotonganPersen
     @Bindable BigDecimal diskonPotonganLangsung
     @Bindable String keterangan
+    @Bindable StatusFakturJual status
     List<ItemFaktur> listItemFaktur = []
 
     @Bindable String nomorSearch

@@ -20,6 +20,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
 import domain.penjualan.*
+import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 
 import javax.swing.JOptionPane
@@ -74,6 +75,8 @@ class FakturJualEceranController {
 
     def init = {
         model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
+        model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+        model.tanggalSelesaiSearch = LocalDate.now()
     }
 
     def search = {
@@ -147,6 +150,22 @@ class FakturJualEceranController {
         }
     }
 
+    def bayar = {
+        FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan barang sudah diterima dan faktur sudah dibayar?', 'Konfirmasi Pembayaran', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+            return
+        }
+        try {
+            fakturJualEceran = fakturJualRepository.bayar(fakturJualEceran)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = fakturJualEceran
+                clear()
+            }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
     def refreshInformasi = {
         def jumlahItem = model.listItemFaktur.toArray().sum { it.jumlah }?: 0
         def total = model.listItemFaktur.toArray().sum { it.total() }?: 0
@@ -175,6 +194,7 @@ class FakturJualEceranController {
             model.keterangan = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
+            model.status = null
             model.listItemFaktur.clear()
 
             model.errors.clear()
@@ -197,6 +217,7 @@ class FakturJualEceranController {
                 model.keterangan = selected.keterangan
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen
+                model.status = selected.status
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(selected.listItemFaktur)
                 refreshInformasi()
