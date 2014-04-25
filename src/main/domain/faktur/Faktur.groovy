@@ -16,6 +16,7 @@
 
 package domain.faktur
 
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
 import groovy.transform.*
@@ -84,6 +85,10 @@ abstract class Faktur {
             hasil << new ItemBarang(k, v.sum {it.jumlah})
         }
         hasil
+    }
+
+    public DaftarBarangSementara toDaftarBarangSementara() {
+        new DaftarBarangSementara(normalisasi())
     }
 }
 

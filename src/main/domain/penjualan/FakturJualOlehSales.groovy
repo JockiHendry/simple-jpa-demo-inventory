@@ -20,6 +20,7 @@ import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -108,6 +109,10 @@ class FakturJualOlehSales extends FakturJual {
 
     BigDecimal sisaPiutang() {
         piutang.sisa()
+    }
+
+    void tambahBonus(DaftarBarangSementara daftarBarang) {
+        tambahBonus(daftarBarang.items)
     }
 
     void tambahBonus(List<ItemBarang> listItemBarang) {
