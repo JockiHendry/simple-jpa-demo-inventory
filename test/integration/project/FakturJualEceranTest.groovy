@@ -49,11 +49,11 @@ class FakturJualEceranTest extends DbUnitTestCase {
         Produk produkB = repo.findProdukById(-2)
         FakturJualEceran fakturJualEceran = new FakturJualEceran(tanggal: LocalDate.now(), namaPembeli: 'Mr. Wu')
         fakturJualEceran.tambah(new ItemFaktur(produkA, 10, 10000))
-        fakturJualEceran.tambah(new ItemFaktur(produkB, 20, 10000))
+        fakturJualEceran.tambah(new ItemFaktur(produkB, 5,   5000))
         fakturJualEceran = repo.buat(fakturJualEceran)
         assertNotNull(fakturJualEceran.nomor)
         assertEquals(StatusFakturJual.DIBUAT, fakturJualEceran.status)
-        assertEquals(300000, fakturJualEceran.total())
+        assertEquals(125000, fakturJualEceran.total())
     }
 
     public void testAntar() {

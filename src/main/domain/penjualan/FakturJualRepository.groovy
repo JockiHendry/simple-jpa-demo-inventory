@@ -22,7 +22,9 @@ import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
@@ -67,8 +69,29 @@ class FakturJualRepository {
         }
     }
 
+    FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
+        fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
+        bonus.each { it.produk = merge(it.produk) }
+        fakturJual.tambahBonus(bonus)
+        buatFakturJualOlehSales(fakturJual, tanpaLimit)
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false) {
         Konsumen konsumen = merge(fakturJual.konsumen)
+
+        // Periksa apakah jumlah barang yang tersedia cukup
+        DaftarBarangSementara stokYangDibutuhkan = fakturJual.toDaftarBarangSementara()
+        if (fakturJual.bonusPenjualan) {
+            stokYangDibutuhkan = new DaftarBarangSementara((stokYangDibutuhkan + fakturJual.bonusPenjualan).normalisasi())
+
+        }
+        stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
+            Produk produk = findProdukById(itemBarang.produk.id)
+            int jumlahTersedia = produk.stok(fakturJual.sales.gudang).jumlah
+            if (jumlahTersedia < itemBarang.jumlah) {
+                throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia)
+            }
+        }
 
         // Periksa limit bila perlu
         if (!tanpaLimit) {
@@ -112,14 +135,18 @@ class FakturJualRepository {
         fakturJualEceran
     }
 
-    FakturJual buat(FakturJual fakturJual, boolean tanpaLimit = false) {
+    FakturJual buat(FakturJual fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus = []) {
         fakturJual.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.FAKTUR_JUAL)
         if (findFakturJualByNomor(fakturJual.nomor)) {
             throw new DataDuplikat(fakturJual)
         }
 
         if (fakturJual instanceof FakturJualOlehSales) {
-            fakturJual = buatFakturJualOlehSales(fakturJual, tanpaLimit)
+            if (bonus && !bonus.empty) {
+                fakturJual = buatFakturJualOlehSales(fakturJual, tanpaLimit, bonus)
+            } else {
+                fakturJual = buatFakturJualOlehSales(fakturJual, tanpaLimit)
+            }
         } else {
             fakturJual = buatFakturJualEceran(fakturJual)
         }

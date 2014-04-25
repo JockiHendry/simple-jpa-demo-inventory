@@ -18,9 +18,11 @@ package project
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
+import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
@@ -207,5 +209,47 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(bg, repo.findBilyetGiroByNomorSeri('AB-111'))
         assertEquals(1, repo.findAllBilyetGiroByNomorSeri('AB-111').size())
 
+    }
+
+    public void testBonus() {
+        FakturJualRepository repo = Container.app.fakturJualRepository
+        Container.app.nomorService.refreshAll()
+        Produk produkA = repo.findProdukById(-1l)
+        Produk produkB = repo.findProdukById(-2l)
+        Sales sales = repo.findSalesById(-1l)
+        Konsumen konsumen = repo.findKonsumenById(-1l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), sales: sales, konsumen: konsumen)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        // Tambah bonus
+        fakturJualOlehSales = repo.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 1), new ItemBarang(produkB, 3)])
+
+        // Periksa bahwa total faktur tidak dipengaruhi oleh bonus
+        assertEquals(69000, fakturJualOlehSales.total())
+
+        // Periksa bahwa jumlah barang sudah berkurang
+        repo.withTransaction {
+            produkA = repo.findProdukById(-1l)
+            produkB = repo.findProdukById(-2l)
+            assertEquals(9, produkA.stok(sales.gudang).jumlah)
+            assertEquals(11, produkB.stok(sales.gudang).jumlah)
+        }
+    }
+
+    public void testBonusGagal() {
+        FakturJualRepository repo = Container.app.fakturJualRepository
+        Container.app.nomorService.refreshAll()
+        Produk produkA = repo.findProdukById(-1l)
+        Produk produkB = repo.findProdukById(-2l)
+        Sales sales = repo.findSalesById(-1l)
+        Konsumen konsumen = repo.findKonsumenById(-1l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), sales: sales, konsumen: konsumen)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        shouldFail(StokTidakCukup) {
+            repo.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 5), new ItemBarang(produkB, 3)])
+        }
     }
 }
