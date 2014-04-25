@@ -124,6 +124,10 @@ application(title: 'Faktur Jual Eceran',
                     actionPerformed: controller.batalAntar)
                 button('Barang Diterima Dan Telah Dibayar', visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }),
                     actionPerformed: controller.bayar)
+                mvcPopupButton('Cetak', mvcGroup: 'previewFaktur', args: {[
+                    dataSource: view.table.selectionModel.selected[0], fileLaporan: 'fakturJualEceran'
+                ]}, dialogProperties: [title: 'Preview Faktur Jual', size: new Dimension(820,600)],
+                    visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual } ))
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

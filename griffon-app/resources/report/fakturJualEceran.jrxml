@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fakturbeli" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cfe3ab8d-8ad9-4205-993e-333cebbd4dd5">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fakturJualEceran" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cfe3ab8d-8ad9-4205-993e-333cebbd4dd5">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -55,11 +55,11 @@
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="supplier" class="domain.pembelian.Supplier">
-		<fieldDescription><![CDATA[supplier]]></fieldDescription>
+	<field name="namaPembeli" class="java.lang.String">
+		<fieldDescription><![CDATA[namaPembeli]]></fieldDescription>
 	</field>
-	<field name="tanggal" class="org.joda.time.LocalDate">
-		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
+	<field name="nomor" class="java.lang.String">
+		<fieldDescription><![CDATA[nomor]]></fieldDescription>
 	</field>
 	<field name="listItemFaktur" class="java.util.List">
 		<fieldDescription><![CDATA[listItemFaktur]]></fieldDescription>
@@ -67,10 +67,12 @@
 	<field name="diskon" class="domain.faktur.Diskon">
 		<fieldDescription><![CDATA[diskon]]></fieldDescription>
 	</field>
-	<field name="nomor" class="java.lang.String">
-		<fieldDescription><![CDATA[nomor]]></fieldDescription>
+	<field name="tanggal" class="org.joda.time.LocalDate">
+		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
 	</field>
-	<field name="_THIS" class="java.lang.Object"/>
+	<field name="_THIS" class="domain.penjualan.FakturJualEceran">
+		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -84,7 +86,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Purchase Order]]></text>
+				<text><![CDATA[Faktur Jual]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="525" y="15" width="30" height="20" uuid="f9a0c682-494d-454a-8b62-f9edc323b3b6"/>
@@ -101,7 +103,7 @@
 				<text><![CDATA[Halaman ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="186" y="38" width="181" height="20" uuid="dab63174-a439-48b7-b59d-2fba32749d96"/>
+				<reportElement x="0" y="38" width="555" height="20" uuid="dab63174-a439-48b7-b59d-2fba32749d96"/>
 				<textElement textAlignment="Center" verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
 			</textField>
@@ -110,7 +112,7 @@
 	<detail>
 		<band height="241" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table 1" style="label" x="0" y="102" width="542" height="135" uuid="97be5254-0866-49fe-b48c-77598a02da26"/>
+				<reportElement key="table 1" style="label" x="0" y="69" width="542" height="172" uuid="97be5254-0866-49fe-b48c-77598a02da26"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="itemFakturDataset" uuid="1aab9752-c3b1-4617-90ff-418d2fce6996">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
@@ -267,41 +269,33 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 				</jr:table>
 			</componentElement>
 			<staticText>
-				<reportElement x="14" y="11" width="53" height="20" uuid="87fc2895-2037-4ff2-9f2f-f0d4e24f3ab5"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Kepada:]]></text>
-			</staticText>
-			<textField>
-				<reportElement style="isi" x="14" y="29" width="175" height="20" uuid="627d2a72-8f93-48b8-8996-57a310b8d146"/>
-				<textFieldExpression><![CDATA[$F{supplier}.nama]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement style="isi" x="14" y="47" width="175" height="20" uuid="dfa69e2c-f03c-4e3e-b4a7-2244783fbc57"/>
-				<textFieldExpression><![CDATA[$F{supplier}.alamat]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement style="isi" x="14" y="65" width="175" height="20" uuid="debe12b0-e968-4f0c-a7aa-3c2a00f8082d"/>
-				<textFieldExpression><![CDATA[$F{supplier}.nomorTelepon]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="453" y="11" width="89" height="20" uuid="223ceafa-2743-4771-86d6-504dc2a10925"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{tanggal}.toString('dd MMMM YYYY')]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="400" y="11" width="53" height="20" uuid="efa39d14-3e8e-4724-b663-22eccc101182"/>
+				<reportElement x="0" y="15" width="78" height="20" uuid="87fc2895-2037-4ff2-9f2f-f0d4e24f3ab5"/>
 				<box rightPadding="3"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tanggal:]]></text>
 			</staticText>
+			<textField>
+				<reportElement style="isi" x="78" y="15" width="175" height="20" uuid="627d2a72-8f93-48b8-8996-57a310b8d146"/>
+				<textFieldExpression><![CDATA[$F{tanggal}.toString('dd MMMM YYYY')]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="35" width="78" height="20" uuid="756286a4-a241-4aad-8864-24b742a8f0c5"/>
+				<box rightPadding="3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="isi" x="78" y="35" width="175" height="20" uuid="ce24bbc2-6f00-4dee-a108-0ca934e6f4e5"/>
+				<textFieldExpression><![CDATA[$F{namaPembeli}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="99">
+		<band height="115">
 			<staticText>
 				<reportElement style="label" x="325" y="35" width="100" height="20" uuid="762f95f4-be64-4dc9-9fdb-c945ac24332e"/>
 				<textElement textAlignment="Right">
@@ -353,9 +347,9 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 				<text><![CDATA[Hormat kami,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="14" y="75" width="127" height="20" uuid="310cc360-266f-4211-97c9-3adcc58e32d0"/>
+				<reportElement x="14" y="81" width="127" height="20" uuid="310cc360-266f-4211-97c9-3adcc58e32d0"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[(Purchasing Department)]]></text>
+				<text><![CDATA[(Sales Department)]]></text>
 			</staticText>
 			<textField pattern="¤ #,##0">
 				<reportElement style="isi" x="425" y="55" width="110" height="20" uuid="ac5a595f-6693-438a-bcad-882c369a8eea"/>

@@ -129,7 +129,7 @@ application(title: 'Received Not Invoiced',
                 })
                 mvcPopupButton('Cetak', mvcGroup: 'previewFaktur', args: {[
                         dataSource: view.table.selectionModel.selected[0], fileLaporan: 'purchaseOrder'
-                    ]}, dialogProperties: [title: 'Preview PurchaseOrder', size: new Dimension(820,600)],
+                    ]}, dialogProperties: [title: 'Preview Purchase Order', size: new Dimension(820,600)],
                     visible: bind('isRowSelected', source: table, converter: { it && model.allowAddPO } ))
                 mvcPopupButton(id: 'penerimaanBarang', text: 'Penerimaan Barang', mvcGroup: 'penerimaanBarang',
                     args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},
