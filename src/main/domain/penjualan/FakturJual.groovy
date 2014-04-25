@@ -75,7 +75,7 @@ abstract class FakturJual extends Faktur {
     @Override
     void tambah(ItemFaktur itemFaktur) {
         if (itemFaktur.produk.jumlah < itemFaktur.jumlah) {
-            throw new StokTidakCukup(itemFaktur.jumlah, itemFaktur.produk.jumlah)
+            throw new StokTidakCukup(itemFaktur.produk.nama, itemFaktur.jumlah, itemFaktur.produk.jumlah)
         }
         super.tambah(itemFaktur)
     }
