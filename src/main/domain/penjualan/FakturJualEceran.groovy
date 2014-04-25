@@ -51,6 +51,13 @@ class FakturJualEceran extends FakturJual {
         tambah(pengeluaranBarang)
     }
 
+    public void batalAntar() {
+        if (status!=StatusFakturJual.DIANTAR) {
+            throw new DataTidakBolehDiubah(this)
+        }
+        hapusPengeluaranBarang()
+    }
+
     public void bayar() {
         if (status != StatusFakturJual.DIANTAR) {
             throw new DataTidakBolehDiubah(this)

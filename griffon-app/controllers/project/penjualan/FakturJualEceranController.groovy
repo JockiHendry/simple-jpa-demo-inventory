@@ -150,6 +150,22 @@ class FakturJualEceranController {
         }
     }
 
+    def batalAntar = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan membatalkan pengantaran barang untuk faktur ini?', 'Konfirmasi Pengantaran', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+            return
+        }
+        try {
+            FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
+            fakturJualEceran = fakturJualRepository.batalAntar(fakturJualEceran)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = fakturJualEceran
+                clear()
+            }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
     def bayar = {
         FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
         if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan barang sudah diterima dan faktur sudah dibayar?', 'Konfirmasi Pembayaran', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {

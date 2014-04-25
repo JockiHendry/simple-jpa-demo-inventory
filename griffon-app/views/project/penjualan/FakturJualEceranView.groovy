@@ -120,6 +120,8 @@ application(title: 'Faktur Jual Eceran',
                 })
                 button('Antar', visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }),
                     actionPerformed: controller.antar)
+                button('Batal Antar', visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan && (model.status == StatusFakturJual.DIANTAR) }),
+                    actionPerformed: controller.batalAntar)
                 button('Barang Diterima Dan Telah Dibayar', visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }),
                     actionPerformed: controller.bayar)
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
