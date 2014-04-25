@@ -25,10 +25,10 @@ import simplejpa.transaction.Transaction
 @Transaction
 class SupplierRepository {
 
-    public List<Supplier> cari(String nama) {
+    public List<Supplier> cari(String namaSearch) {
         findAllSupplierByDsl([excludeDeleted: false]) {
-            if (nama) {
-                nama like("%${nama}%")
+            if (namaSearch) {
+                nama like("%${namaSearch}%")
             }
         }
     }

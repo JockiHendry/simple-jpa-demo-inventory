@@ -26,6 +26,7 @@ import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
 import domain.penjualan.FakturJualRepository
+import domain.penjualan.KonsumenRepository
 import domain.penjualan.NomorService
 import domain.penjualan.RegionRepository
 import domain.penjualan.SalesRepository
@@ -51,6 +52,7 @@ class Container {
     PurchaseOrderRepository purchaseOrderRepository
     SatuanRepository satuanRepository
     FakturJualRepository fakturJualRepository
+    KonsumenRepository konsumenRepository
 
     InventoryEventConsumer inventoryEventConsumer
 
@@ -72,6 +74,7 @@ class Container {
         purchaseOrderRepository = new PurchaseOrderRepository()
         satuanRepository = new SatuanRepository()
         fakturJualRepository = new FakturJualRepository()
+        konsumenRepository = new KonsumenRepository()
 
         // Create services
         passwordService = new PasswordService()

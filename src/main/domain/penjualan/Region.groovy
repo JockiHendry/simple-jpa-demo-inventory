@@ -29,5 +29,9 @@ class Region {
     @NotEmpty @Size(min=2, max=100)
     String nama
 
+    @Override
+    String toString() {
+        nama
+    }
 }
 
