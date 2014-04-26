@@ -32,7 +32,6 @@ import domain.Container
 
 import java.awt.Dimension
 import java.text.NumberFormat
-import project.main.MainGroupModel.FakturEceranViewMode
 
 class FakturJualEceranController {
 

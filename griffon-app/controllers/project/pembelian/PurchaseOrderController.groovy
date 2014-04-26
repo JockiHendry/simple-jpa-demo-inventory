@@ -43,21 +43,21 @@ class PurchaseOrderController {
     void mvcGroupInit(Map args) {
         purchaseOrderRepository = Container.app.purchaseOrderRepository
 
-        model.mode = args.containsKey('mode')? args.'mode': MainGroupModel.POViewMode.ALL
+        model.mode = args.containsKey('mode')? args.'mode': POViewMode.ALL
         switch (model.mode) {
-            case MainGroupModel.POViewMode.FAKTUR_BELI:
+            case POViewMode.FAKTUR_BELI:
                 model.showPenerimaan = false
                 model.showFakturBeli = true
                 model.allowTambahProduk = false
                 model.allowAddPO = false
                 break
-            case MainGroupModel.POViewMode.PENERIMAAN:
+            case POViewMode.PENERIMAAN:
                 model.showPenerimaan = true
                 model.showFakturBeli = false
                 model.allowTambahProduk = false
                 model.allowAddPO = false
                 break
-            case MainGroupModel.POViewMode.ALL:
+            case POViewMode.ALL:
                 model.showPenerimaan = true
                 model.showFakturBeli = true
                 model.allowTambahProduk = true
@@ -84,17 +84,17 @@ class PurchaseOrderController {
 
     def search = {
         List result = []
-        if (model.mode == MainGroupModel.POViewMode.ALL) {
+        if (model.mode == POViewMode.ALL) {
 
             result = purchaseOrderRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
 
-        } else if (model.mode == MainGroupModel.POViewMode.FAKTUR_BELI) {
+        } else if (model.mode == POViewMode.FAKTUR_BELI) {
 
             result = purchaseOrderRepository.cariFakturBeli(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
 
-        } else if (model.mode == MainGroupModel.POViewMode.PENERIMAAN) {
+        } else if (model.mode == POViewMode.PENERIMAAN) {
 
             result = purchaseOrderRepository.cariPenerimaan(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)

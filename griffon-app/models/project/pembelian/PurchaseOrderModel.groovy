@@ -25,11 +25,10 @@ import domain.pembelian.StatusPurchaseOrder
 import domain.pembelian.Supplier
 import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
-import project.main.MainGroupModel
 
 class PurchaseOrderModel {
 
-    MainGroupModel.POViewMode mode
+    POViewMode mode
     @Bindable boolean showPenerimaan
     @Bindable boolean showFakturBeli
     @Bindable boolean allowTambahProduk

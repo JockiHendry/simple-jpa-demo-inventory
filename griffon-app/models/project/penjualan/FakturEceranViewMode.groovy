@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project.penjualan
 
-package project.main
-
-import groovy.beans.Bindable
-
-class MainGroupModel {
-
+public enum FakturEceranViewMode {
+    PENGELUARAN, FAKTUR, ALL
 }

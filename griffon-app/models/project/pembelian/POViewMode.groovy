@@ -13,11 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package project.pembelian
 
-package project.main
-
-import groovy.beans.Bindable
-
-class MainGroupModel {
-
+public enum POViewMode {
+    PENERIMAAN, FAKTUR_BELI, ALL
 }

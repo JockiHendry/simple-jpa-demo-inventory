@@ -26,7 +26,6 @@ import org.joda.time.*
 import javax.swing.event.*
 import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
-import project.main.MainGroupModel.FakturEceranViewMode
 
 class FakturJualEceranModel {
 
