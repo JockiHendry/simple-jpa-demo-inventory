@@ -64,6 +64,8 @@ actions {
         smallIcon: imageIcon('/menu_penjualan.png'), closure: popupPenjualan)
     action(id: 'fakturJualEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
         smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.FAKTUR]))
+    action(id: 'fakturJualOlehSales', name: 'Sales', actionCommandKey: 'fakturJualOlehSales', mnemonic: KeyEvent.VK_S,
+        smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
 
@@ -118,6 +120,7 @@ application(id: 'mainFrame',
 
     popupMenu(id: 'penjualanPopup') {
         menuItem(action: fakturJualEceran)
+        menuItem(action: fakturJualOlehSales)
     }
 
     borderLayout()

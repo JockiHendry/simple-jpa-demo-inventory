@@ -69,6 +69,7 @@ class PurchaseOrderController {
     }
 
     def init = {
+        Container.app.nomorService.refreshAll()
         execInsideUISync {
             model.supplierList.clear()
         }

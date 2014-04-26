@@ -81,5 +81,7 @@ abstract class DaftarBarang {
         normalisasi().toSet() == faktur.normalisasi().toSet()
     }
 
-
+    DaftarBarangSementara toDaftarBarangSementara() {
+        new DaftarBarangSementara(items)
+    }
 }

@@ -50,11 +50,6 @@ abstract class FakturJual extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
 
-        // Periksa apakah pengeluaran barang sama dengan isi faktur
-        if (!pengeluaranBarang.isiSamaDengan(this)) {
-            throw new DataTidakKonsisten(pengeluaranBarang)
-        }
-
         this.pengeluaranBarang = pengeluaranBarang
         status = StatusFakturJual.DIANTAR
 

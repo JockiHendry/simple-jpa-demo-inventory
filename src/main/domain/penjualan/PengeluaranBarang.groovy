@@ -17,6 +17,7 @@ package domain.penjualan
 
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarang
+import domain.inventory.DaftarBarangSementara
 import domain.validation.PenjualanDiterima
 import domain.validation.PenjualanOlehSales
 import groovy.transform.*
@@ -61,5 +62,15 @@ class PengeluaranBarang extends DaftarBarang {
     boolean sudahDiterima() {
         this.buktiTerima != null
     }
+
+    PengeluaranBarang plus(DaftarBarangSementara daftarBarangSementara) {
+        PengeluaranBarang hasil = new PengeluaranBarang(nomor: this.nomor, tanggal: this.tanggal, keterangan: this.keterangan,
+            gudang: this.gudang, alamatTujuan: this.alamatTujuan, namaSupir: this.namaSupir, buktiTerima: this.buktiTerima)
+        (daftarBarangSementara + this).items.each {
+            hasil.tambah(it)
+        }
+        hasil
+    }
+
 }
 

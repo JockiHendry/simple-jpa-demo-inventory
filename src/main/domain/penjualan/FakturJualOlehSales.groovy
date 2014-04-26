@@ -22,6 +22,7 @@ import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
+import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -31,16 +32,23 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import griffon.util.*
 
+import javax.validation.groups.Default
+
+@NamedEntityGraph(name='FakturJualOlehSales.Complete', attributeNodes=[
+    @NamedAttributeNode('listItemFaktur'),
+    @NamedAttributeNode('piutang'),
+    @NamedAttributeNode('bonusPenjualan'),
+])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan')
 class FakturJualOlehSales extends FakturJual {
 
-    @NotNull @ManyToOne
+    @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Sales sales
 
-    @NotNull @ManyToOne
+    @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Konsumen konsumen
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @NotNull(groups=[Default]) @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate jatuhTempo
 
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
@@ -62,6 +70,11 @@ class FakturJualOlehSales extends FakturJual {
         )
         listItemFaktur.each {
             pengeluaranBarang.tambah(new ItemBarang(it.produk, it.jumlah))
+        }
+
+        // Tambahkan dengan bonus bila ada
+        if (bonusPenjualan) {
+            pengeluaranBarang += bonusPenjualan.toDaftarBarangSementara()
         }
 
         tambah(pengeluaranBarang)
@@ -125,7 +138,6 @@ class FakturJualOlehSales extends FakturJual {
         )
         listItemBarang.each { bonusPenjualan.tambah(it) }
         this.bonusPenjualan = bonusPenjualan
-        ApplicationHolder.application?.event(new PerubahanStok(bonusPenjualan, this))
     }
 
     void hapusBonus() {
@@ -135,7 +147,6 @@ class FakturJualOlehSales extends FakturJual {
         if (!bonusPenjualan) {
             throw new IllegalStateException('Bonus penjualan tidak ditemukan!')
         }
-        ApplicationHolder.application?.event(new PerubahanStok(bonusPenjualan, this, true))
         bonusPenjualan = null
     }
 

@@ -73,6 +73,7 @@ class FakturJualEceranController {
     }
 
     def init = {
+        Container.app.nomorService.refreshAll()
         model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
         model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
         model.tanggalSelesaiSearch = LocalDate.now()
@@ -114,7 +115,7 @@ class FakturJualEceranController {
         } catch (StokTidakCukup ex) {
             model.errors['listItemFaktur'] = ex.message
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Pembelian tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

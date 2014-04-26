@@ -69,6 +69,28 @@ class FakturJualRepository {
         }
     }
 
+    List<FakturJualOlehSales> cariFakturJualOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
+        findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch != Container.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (salesSearch) {
+                and()
+                sales__nama like("%${salesSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+        }
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
         fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
         bonus.each { it.produk = merge(it.produk) }
@@ -179,10 +201,19 @@ class FakturJualRepository {
             keterangan = fakturJual.keterangan
         }
         if (fakturJual instanceof FakturJualOlehSales) {
+            FakturJualOlehSales nilaiFakturBaru = (FakturJualOlehSales) fakturJual
             ((FakturJualOlehSales)mergedFakturJual).with {
-                sales = ((FakturJualOlehSales)fakturJual).sales
-                konsumen = ((FakturJualOlehSales)fakturJual).konsumen
-                jatuhTempo = ((FakturJualOlehSales)fakturJual).jatuhTempo
+                // TODO:  Apakah boleh mengubah sales?  Ini akan mempengaruhi status faktur karena proses
+                // TODO:  pengiriman berbeda antara sales dalam kota dan sales luar kota.
+                //sales = nilaiFakturBaru.sales
+
+                // Periksa limit bila mengubah konsumen
+                if (konsumen != nilaiFakturBaru.konsumen) {
+                    konsumen = findKonsumenById(nilaiFakturBaru.konsumen.id)
+                    if (!konsumen.bolehKredit(mergedFakturJual.total())) {
+                        throw new MelebihiBatasKredit(konsumen)
+                    }
+                }
             }
         } else if (fakturJual instanceof FakturJualEceran) {
             ((FakturJualEceran)mergedFakturJual).with {
