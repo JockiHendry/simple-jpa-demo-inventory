@@ -18,8 +18,8 @@ package domain.pembelian;
 public enum StatusPurchaseOrder {
 
     DIBUAT("Dibuat", true, true, true),
-    FAKTUR_DITERIMA("Hanya Terima Faktur", true, true, true),
-    BARANG_DITERIMA("Hanya Terima Barang", true, true, true),
+    FAKTUR_DITERIMA("Hanya Terima Faktur", false, true, true),
+    BARANG_DITERIMA("Hanya Terima Barang", false, true, true),
     OK("Diterima Penuh", false, false, false),
     LUNAS("Lunas", false, false, false);
 

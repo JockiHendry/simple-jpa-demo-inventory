@@ -16,7 +16,10 @@
 package domain.penjualan;
 
 public enum StatusFakturJual {
-    DIBUAT("Dibuat", true, true, true), DIANTAR("Diantar", false, true, true), DITERIMA("Diterima", false, true, false), LUNAS("Lunas", false, false, false);
+    DIBUAT("Dibuat", true, true, true),
+    DIANTAR("Diantar", false, true, true),
+    DITERIMA("Diterima", false, true, false),
+    LUNAS("Lunas", false, false, false);
 
     StatusFakturJual(String desc, boolean bolehDiubah, boolean piutangBolehDiubah, boolean pengeluaranBolehDiUbah) {
         this.desc = desc;
