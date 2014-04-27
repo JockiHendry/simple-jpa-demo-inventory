@@ -137,7 +137,7 @@ class FakturJualRepository {
         }
 
         // Tambahkan faktur jual yang baru dibuat pada konsumen yang bersangkutan
-        konsumen.listFakturBelumLunas << fakturJual
+        konsumen.tambahFakturBelumLunas(fakturJual)
         fakturJual
     }
 
@@ -248,5 +248,11 @@ class FakturJualRepository {
         fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
         fakturJualEceran.bayar()
         fakturJualEceran
+    }
+
+    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now()) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.kirim(alamatTujuan, namaSupir, tanggalKirim)
+        faktur
     }
 }

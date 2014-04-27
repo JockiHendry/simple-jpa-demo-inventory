@@ -93,7 +93,7 @@ class FakturJualOlehSales extends FakturJual {
         piutang.bayar(pembayaran)
         if (piutang.lunas) {
             status = StatusFakturJual.LUNAS
-            konsumen.listFakturBelumLunas.remove(this)
+            konsumen.hapusFakturBelumLunas(this)
         }
     }
 

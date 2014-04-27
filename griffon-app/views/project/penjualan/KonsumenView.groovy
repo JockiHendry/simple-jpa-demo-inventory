@@ -15,6 +15,8 @@
  */
 package project.penjualan
 
+import java.text.NumberFormat
+
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -47,6 +49,15 @@ application(title: 'Konsumen',
                 glazedColumn(name: 'Region', property: 'region')
                 glazedColumn(name: 'Credit Limit', property: 'creditLimit', columnClass: Integer) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
+                }
+                glazedColumn(name: 'Credit Terpakai', property: 'creditTerpakai', columnClass: Integer) {
+                    templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
+                }
+                glazedColumn(name: 'Penggunaan Credit (%)', expression: { it.creditTerpakai / it.creditLimit }, columnClass: Integer) {
+                    templateRenderer(exp: { NumberFormat.percentInstance.format(it) }, horizontalAlignment: RIGHT) {
+                        condition(if_: {it>=1}, then_property_: 'foreground', is_: Color.RED, else_is_: Color.BLACK)
+                        condition(if_: {isSelected}, then_property_: 'foreground', is_: Color.WHITE)
+                    }
                 }
             }
         }

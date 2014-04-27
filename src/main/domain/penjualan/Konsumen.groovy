@@ -55,7 +55,10 @@ class Konsumen {
     @NotNull @Digits(integer=12, fraction=2)
     BigDecimal creditLimit = BigDecimal.ZERO
 
-    @OneToMany @JoinColumn(name='KONSUMEN_BELUM_LUNAS_ID') @OrderColumn(name='KONSUMEN_BELUM_LUNAS_ORDER')
+    @NotNull @Digits(integer=12, fraction=2)
+    BigDecimal creditTerpakai = BigDecimal.ZERO
+
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
 
     @ElementCollection
@@ -81,6 +84,18 @@ class Konsumen {
 
     public setDiskon(Produk produk, BigDecimal hargaJual) {
         diskon[produk] = new Diskon(((produk.harga-hargaJual)/produk.harga)*100)
+    }
+
+    public void tambahFakturBelumLunas(FakturJualOlehSales faktur) {
+        if (!listFakturBelumLunas.contains(faktur)) {
+            listFakturBelumLunas << faktur
+            creditTerpakai += faktur.total()
+        }
+    }
+
+    public void hapusFakturBelumLunas(FakturJualOlehSales faktur) {
+        listFakturBelumLunas.remove(faktur)
+        creditTerpakai -= faktur.total()
     }
 
 }
