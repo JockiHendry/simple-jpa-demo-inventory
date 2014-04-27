@@ -57,24 +57,29 @@ class FakturJualTests extends GriffonUnitTestCase {
         assertEquals(StatusFakturJual.DIANTAR, f.status)
     }
 
-    public void testTambahPengeluaranBarangBarangTidakSama() {
-        FakturJual f = new FakturJual() {
-            public void tambah(PengeluaranBarang p) {
-                super.tambah(p)
-            }
-        }
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
-        f.tambah(new ItemFaktur(produkA, 10))
-        f.tambah(new ItemFaktur(produkB, 7))
-
-        PengeluaranBarang p = new PengeluaranBarang()
-        p.tambah(new ItemBarang(produkA, 10))
-        p.tambah(new ItemBarang(produkB, 10))
-        shouldFail(DataTidakKonsisten) {
-            f.tambah(p)
-        }
-    }
+//
+//  TODO: Tidak dapat melakukan pemeriksaan pengeluaran barang berdasarkan isi barang
+//  TODO: karena terdapat bonus (dan bonus hanya berlaku untuk faktur jual oleh sales).
+//  TODO: Cari cara untuk mengatasi ini jika perlu!
+//
+//    public void testTambahPengeluaranBarangBarangTidakSama() {
+//        FakturJual f = new FakturJual() {
+//            public void tambah(PengeluaranBarang p) {
+//                super.tambah(p)
+//            }
+//        }
+//        Produk produkA = new Produk('Produk A', 10000, 50)
+//        Produk produkB = new Produk('Produk B', 12000, 50)
+//        f.tambah(new ItemFaktur(produkA, 10))
+//        f.tambah(new ItemFaktur(produkB, 7))
+//
+//        PengeluaranBarang p = new PengeluaranBarang()
+//        p.tambah(new ItemBarang(produkA, 10))
+//        p.tambah(new ItemBarang(produkB, 10))
+//        shouldFail(DataTidakKonsisten) {
+//            f.tambah(p)
+//        }
+//    }
 
     public void testHapusPengeluaranBarang() {
         FakturJual f = new FakturJual() {

@@ -90,5 +90,21 @@ abstract class Faktur {
     public DaftarBarangSementara toDaftarBarangSementara() {
         new DaftarBarangSementara(normalisasi())
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Faktur faktur = (Faktur) o
+
+        if (nomor != faktur.nomor) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nomor.hashCode()
+    }
+
 }
 

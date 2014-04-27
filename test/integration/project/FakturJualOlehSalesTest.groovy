@@ -229,11 +229,12 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(69000, fakturJualOlehSales.total())
 
         // Periksa bahwa jumlah barang sudah berkurang
+        repo.kirim(fakturJualOlehSales, 'Alamat', 'Supir')
         repo.withTransaction {
             produkA = repo.findProdukById(-1l)
             produkB = repo.findProdukById(-2l)
-            assertEquals(9, produkA.stok(sales.gudang).jumlah)
-            assertEquals(11, produkB.stok(sales.gudang).jumlah)
+            assertEquals(1, produkA.stok(sales.gudang).jumlah)  // dari 10 berkurang sebanyak 8 item + 1 item bonus
+            assertEquals(6, produkB.stok(sales.gudang).jumlah) // dari 14 berkurang sebanyak 5 item + 3 item bonus
         }
     }
 

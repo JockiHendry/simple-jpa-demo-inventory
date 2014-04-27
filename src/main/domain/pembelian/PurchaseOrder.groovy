@@ -55,7 +55,7 @@ import java.text.NumberFormat
         ])
     ])
 ])
-@DomainClass @Entity @Canonical(excludes='fakturBeli,listPenerimaanBarang') @EqualsAndHashCode(callSuper=true)
+@DomainClass @Entity @Canonical(excludes='fakturBeli,listPenerimaanBarang')
 class PurchaseOrder extends Faktur {
 
     @NotNull(groups=[Default,InputPurchaseOrder]) @ManyToOne
@@ -221,4 +221,20 @@ class PurchaseOrder extends Faktur {
 
         daftarBarang
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Faktur faktur = (Faktur) o
+
+        if (nomor != faktur.nomor) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nomor.hashCode()
+    }
+
 }

@@ -36,7 +36,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import griffon.util.*
 
-@DomainClass @Entity @Canonical(excludes='pengeluaranBarang') @EqualsAndHashCode(callSuper=true)
+@DomainClass @Entity @Canonical(excludes='pengeluaranBarang')
 abstract class FakturJual extends Faktur {
 
     @NotNull @Enumerated
@@ -97,6 +97,22 @@ abstract class FakturJual extends Faktur {
         pengeluaranBarang.batalDiterima()
         status = StatusFakturJual.DIANTAR
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Faktur faktur = (Faktur) o
+
+        if (nomor != faktur.nomor) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nomor.hashCode()
+    }
+
 
 }
 

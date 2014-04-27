@@ -18,6 +18,7 @@ package domain.penjualan
 import domain.Container
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
+import domain.faktur.Faktur
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
@@ -153,5 +154,21 @@ class FakturJualOlehSales extends FakturJual {
     boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {
         padaTanggal.equals(jatuhTempo) || padaTanggal.isAfter(jatuhTempo)
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Faktur faktur = (Faktur) o
+
+        if (nomor != faktur.nomor) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nomor.hashCode()
+    }
+
 }
 

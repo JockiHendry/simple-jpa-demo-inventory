@@ -17,6 +17,7 @@ package domain.penjualan
 
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
+import domain.faktur.Faktur
 import domain.inventory.ItemBarang
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -64,5 +65,21 @@ class FakturJualEceran extends FakturJual {
         }
         status = StatusFakturJual.LUNAS
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (getClass() != o.class) return false
+
+        Faktur faktur = (Faktur) o
+
+        if (nomor != faktur.nomor) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return nomor.hashCode()
+    }
+
 }
 
