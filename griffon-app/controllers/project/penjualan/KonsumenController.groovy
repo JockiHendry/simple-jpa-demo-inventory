@@ -17,12 +17,15 @@ package project.penjualan
 
 import ast.NeedSupervisorPassword
 import domain.penjualan.*
+import simplejpa.swing.DialogUtils
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import domain.Container
+
+import java.awt.Dimension
 
 class KonsumenController {
 
@@ -93,6 +96,14 @@ class KonsumenController {
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Nilai credit limit bukan nilai yang valid!', 'Kesalahan Input', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    def showFakturBelumLunas = {
+        execInsideUISync {
+            def args = [konsumen: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Faktur Belum Lunas', size: new Dimension(900,420)]
+            DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
         }
     }
 

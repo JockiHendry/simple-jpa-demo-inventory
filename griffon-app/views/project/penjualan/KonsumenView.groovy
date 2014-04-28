@@ -24,6 +24,10 @@ import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
+actions {
+    action(id: 'showFakturBelumLunas', name: 'Lihat Faktur Belum Lunas...', closure: controller.showFakturBelumLunas)
+}
+
 application(title: 'Konsumen',
         preferredSize: [520, 340],
         pack: true,
@@ -43,7 +47,8 @@ application(title: 'Konsumen',
         }
 
         scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.konsumenList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+            glazedTable(id: 'table', list: model.konsumenList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                    doubleClickAction: showFakturBelumLunas, enterKeyAction: showFakturBelumLunas) {
                 glazedColumn(name: 'Nama', property: 'nama')
                 glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
                 glazedColumn(name: 'Region', property: 'region')
@@ -86,6 +91,7 @@ application(title: 'Konsumen',
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
                 button('Credit Limit', visible: bind { table.isRowSelected }, actionPerformed: controller.creditLimit)
+                button(action: showFakturBelumLunas, visible: bind { table.isRowSelected })
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)
