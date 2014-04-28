@@ -52,10 +52,10 @@ class Konsumen {
     @NotNull @ManyToOne
     Region region
 
-    @NotNull @Digits(integer=12, fraction=2)
+    @NotNull
     BigDecimal creditLimit = BigDecimal.ZERO
 
-    @NotNull @Digits(integer=12, fraction=2)
+    @NotNull
     BigDecimal creditTerpakai = BigDecimal.ZERO
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')

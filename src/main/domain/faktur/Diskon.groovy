@@ -27,10 +27,8 @@ import java.text.NumberFormat
 @Embeddable @Canonical
 class Diskon implements Comparable {
 
-    @Digits(integer=3, fraction=3)
     BigDecimal potonganPersen
 
-    @Digits(integer=12, fraction=2)
     BigDecimal potonganLangsung
 
     BigDecimal hasil(BigDecimal nilai) {

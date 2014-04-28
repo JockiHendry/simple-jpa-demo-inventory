@@ -42,7 +42,7 @@ class Produk implements Comparable {
     @NotBlank @Size(min=3, max=150)
     String nama
 
-    @NotNull @Digits(integer=12, fraction=2)
+    @NotNull
     BigDecimal harga
 
     @Min(0l)

@@ -33,7 +33,7 @@ class ItemFaktur {
     @NotNull(groups=[Default,InputPurchaseOrder]) @Min(value=1l, groups=[Default,InputPurchaseOrder])
     Integer jumlah
 
-    @NotNull(groups=[Default]) @Digits(integer=12, fraction=2, groups=[Default,InputPurchaseOrder])
+    @NotNull(groups=[Default])
     BigDecimal harga
 
     @Size(min=2, max=200, groups=[Default,InputPurchaseOrder])
