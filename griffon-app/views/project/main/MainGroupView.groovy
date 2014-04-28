@@ -57,6 +57,8 @@ actions {
         smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.PENGELUARAN]))
     action(id: 'pengiriman', name: 'Kirim Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
+    action(id: 'buktiTerima', name: 'Bukti Terima', actionCommandKey: 'buktiTerima', mnemonic: KeyEvent.VK_T,
+        smallIcon: imageIcon('/menu_bukti_terima.png'), closure: controller.switchPage)
 
     action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
         smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: POViewMode.ALL]))
@@ -135,6 +137,7 @@ application(id: 'mainFrame',
                 buttonGroup(id: 'buttons')
                 toggleButton(buttonGroup: buttons, action: penerimaanBarang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: pengeluaranBarang, id: 'pengeluaranBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                toggleButton(buttonGroup: buttons, action: buktiTerima, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: purchaseOrder, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)

@@ -113,6 +113,28 @@ class FakturJualRepository {
         }
     }
 
+    List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch, def statusSearch) {
+        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch != Container.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorFakturSearch) {
+                and()
+                nomor like("%${nomorFakturSearch}%")
+            }
+            if (nomorSuratJalanSearch) {
+                and()
+                pengeluaranBarang__nomor like("%${nomorSuratJalanSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+        }
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
         fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
         bonus.each { it.produk = merge(it.produk) }
@@ -277,6 +299,18 @@ class FakturJualRepository {
     FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.hapusPengeluaranBarang()
+        faktur
+    }
+
+    FakturJualOlehSales terima(FakturJualOlehSales faktur, BuktiTerima buktiTerima) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.tambah(buktiTerima)
+        faktur
+    }
+
+    FakturJualOlehSales hapusBuktiTerima(FakturJualOlehSales faktur) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.hapusBuktiTerima()
         faktur
     }
 }
