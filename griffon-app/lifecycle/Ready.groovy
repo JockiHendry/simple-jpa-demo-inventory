@@ -14,6 +14,11 @@
  * limitations under the License.
  */
 import domain.Container
+import domain.pengaturan.KeyPengaturan
+
+import javax.swing.UIManager
+import javax.swing.plaf.FontUIResource
+import java.awt.Font
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -32,4 +37,14 @@ import domain.Container
 execOutsideUI {
     Container.app.pengaturanRepository.refreshAll()
     Container.app.nomorService.refreshAll()
+
+    // Mengubah ukuran huruf bila diperlukan
+    execInsideUISync {
+        def ukuranHuruf = Container.app.pengaturanRepository.getValue(KeyPengaturan.UKURAN_HURUF_TABEL)
+        if (ukuranHuruf > 0) {
+            UIManager.put('Table.font', new FontUIResource(new Font('SansSerif', Font.PLAIN, ukuranHuruf)))
+            UIManager.put('Table.rowHeight', ukuranHuruf + 1)
+        }
+    }
 }
+
