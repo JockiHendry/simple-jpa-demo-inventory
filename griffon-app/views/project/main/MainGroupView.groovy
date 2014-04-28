@@ -55,6 +55,8 @@ actions {
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
     action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
         smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.PENGELUARAN]))
+    action(id: 'pengiriman', name: 'Kirim Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
+        smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
 
     action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
         smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: POViewMode.ALL]))
@@ -116,6 +118,7 @@ application(id: 'mainFrame',
 
     popupMenu(id: 'pengeluaranBarangPopup') {
         menuItem(action: pengeluaranBarangEceran)
+        menuItem(action: pengiriman)
     }
 
     popupMenu(id: 'penjualanPopup') {

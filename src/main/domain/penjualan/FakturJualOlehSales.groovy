@@ -35,10 +35,18 @@ import griffon.util.*
 
 import javax.validation.groups.Default
 
-@NamedEntityGraph(name='FakturJualOlehSales.Complete', attributeNodes=[
-    @NamedAttributeNode('listItemFaktur'),
-    @NamedAttributeNode('piutang'),
-    @NamedAttributeNode('bonusPenjualan'),
+@NamedEntityGraphs([
+    @NamedEntityGraph(name='FakturJualOlehSales.Complete', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur'),
+        @NamedAttributeNode('piutang'),
+        @NamedAttributeNode('bonusPenjualan'),
+    ]),
+    @NamedEntityGraph(name='FakturJualOlehSales.PengeluaranBarang', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur'),
+        @NamedAttributeNode('pengeluaranBarang'),
+        @NamedAttributeNode('bonusPenjualan'),
+    ]),
+
 ])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan')
 class FakturJualOlehSales extends FakturJual {
@@ -59,7 +67,7 @@ class FakturJualOlehSales extends FakturJual {
     BonusPenjualan bonusPenjualan
 
     void kirim(String alamatTujuan, String namaSupir, LocalDate tanggal = LocalDate.now()) {
-        if (!status.pengeluaranBolehDiubah) {
+        if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
 

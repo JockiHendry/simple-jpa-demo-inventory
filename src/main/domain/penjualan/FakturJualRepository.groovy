@@ -91,6 +91,28 @@ class FakturJualRepository {
         }
     }
 
+    List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
+        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (statusSearch != Container.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (salesSearch) {
+                and()
+                sales__nama like("%${salesSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+        }
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
         fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
         bonus.each { it.produk = merge(it.produk) }
@@ -249,6 +271,12 @@ class FakturJualRepository {
     FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now()) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.kirim(alamatTujuan, namaSupir, tanggalKirim)
+        faktur
+    }
+
+    FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.hapusPengeluaranBarang()
         faktur
     }
 }
