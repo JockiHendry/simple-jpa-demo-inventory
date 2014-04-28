@@ -69,15 +69,7 @@ class FakturJualOlehSales extends FakturJual {
             tanggal: LocalDate.now(), gudang: sales.gudang,
             alamatTujuan: alamatTujuan, namaSupir: namaSupir
         )
-        listItemFaktur.each {
-            pengeluaranBarang.tambah(new ItemBarang(it.produk, it.jumlah))
-        }
-
-        // Tambahkan dengan bonus bila ada
-        if (bonusPenjualan) {
-            pengeluaranBarang += bonusPenjualan.toDaftarBarangSementara()
-        }
-
+        pengeluaranBarang.items = barangYangHarusDikirim().items
         tambah(pengeluaranBarang)
     }
 
@@ -153,6 +145,15 @@ class FakturJualOlehSales extends FakturJual {
 
     boolean sudahJatuhTempo(LocalDate padaTanggal = LocalDate.now()) {
         padaTanggal.equals(jatuhTempo) || padaTanggal.isAfter(jatuhTempo)
+    }
+
+    DaftarBarangSementara barangYangHarusDikirim() {
+        DaftarBarangSementara hasil = toDaftarBarangSementara()
+        if (bonusPenjualan) {
+            hasil += bonusPenjualan
+        }
+        hasil.items = hasil.normalisasi()
+        hasil
     }
 
     boolean equals(o) {

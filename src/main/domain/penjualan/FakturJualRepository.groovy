@@ -102,11 +102,7 @@ class FakturJualRepository {
         Konsumen konsumen = merge(fakturJual.konsumen)
 
         // Periksa apakah jumlah barang yang tersedia cukup
-        DaftarBarangSementara stokYangDibutuhkan = fakturJual.toDaftarBarangSementara()
-        if (fakturJual.bonusPenjualan) {
-            stokYangDibutuhkan = new DaftarBarangSementara((stokYangDibutuhkan + fakturJual.bonusPenjualan).normalisasi())
-
-        }
+        DaftarBarangSementara stokYangDibutuhkan = fakturJual.barangYangHarusDikirim()
         stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
             Produk produk = findProdukById(itemBarang.produk.id)
             int jumlahTersedia = produk.stok(fakturJual.sales.gudang).jumlah

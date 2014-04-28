@@ -19,6 +19,7 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -175,6 +176,21 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertTrue(f.sudahJatuhTempo(Periode.format.parseLocalDate('16-01-2013')))
         assertTrue(f.sudahJatuhTempo(Periode.format.parseLocalDate('17-01-2013')))
         assertFalse(f.sudahJatuhTempo(Periode.format.parseLocalDate('15-01-2013')))
+    }
+
+    void testBarangYangHarusDikirim() {
+        Produk produkA = new Produk('Produk A', 10000, 50)
+        Produk produkB = new Produk('Produk B', 12000, 50)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        FakturJualOlehSales f = new FakturJualOlehSales(sales: showroom)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.tambahBonus([new ItemBarang(produkA, 2), new ItemBarang(produkB, 1)])
+
+        DaftarBarangSementara hasil = f.barangYangHarusDikirim()
+        assertEquals(2, hasil.items.size())
+        assertEquals(12, hasil.items.find {it.produk==produkA}.jumlah)
+        assertEquals(21, hasil.items.find {it.produk==produkB}.jumlah)
     }
 
 }
