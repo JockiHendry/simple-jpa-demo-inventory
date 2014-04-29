@@ -66,8 +66,10 @@ class BuktiTerimaController {
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
             faktur = fakturJualRepository.terima(faktur, buktiTerima)
-            model.fakturJualOlehSalesList.remove(faktur)
-            clear()
+            execInsideUIAsync {
+                model.fakturJualOlehSalesList.remove(faktur)
+                clear()
+            }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
