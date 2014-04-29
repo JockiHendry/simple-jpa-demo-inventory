@@ -19,12 +19,14 @@
 package domain
 
 import domain.event.InventoryEventConsumer
+import domain.faktur.BilyetGiro
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
 import domain.inventory.SatuanRepository
 import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
+import domain.penjualan.BilyetGiroRepository
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
 import domain.penjualan.NomorService
@@ -53,6 +55,7 @@ class Container {
     SatuanRepository satuanRepository
     FakturJualRepository fakturJualRepository
     KonsumenRepository konsumenRepository
+    BilyetGiroRepository bilyetGiroRepository
 
     InventoryEventConsumer inventoryEventConsumer
 
@@ -75,6 +78,7 @@ class Container {
         satuanRepository = new SatuanRepository()
         fakturJualRepository = new FakturJualRepository()
         konsumenRepository = new KonsumenRepository()
+        bilyetGiroRepository = new BilyetGiroRepository()
 
         // Create services
         passwordService = new PasswordService()

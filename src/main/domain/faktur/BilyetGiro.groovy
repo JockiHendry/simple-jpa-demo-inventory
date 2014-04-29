@@ -35,5 +35,23 @@ class BilyetGiro {
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalEfektif
 
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggalPencairan
+
+    boolean sudahJatuhTempo(LocalDate tanggal = LocalDate.now()) {
+        tanggalEfektif.isEqual(tanggal) || tanggalEfektif.isBefore(tanggal)
+    }
+
+    void cairkan(LocalDate tanggalPencairan) {
+        if (!sudahJatuhTempo(tanggalPencairan)) {
+            throw new IllegalStateException('Tidak boleh mencairkan bilyet giro yang belum efektif!')
+        }
+        this.tanggalPencairan = tanggalPencairan
+    }
+
+    boolean sudahDicairkan() {
+        tanggalPencairan != null
+    }
+
 }
 
