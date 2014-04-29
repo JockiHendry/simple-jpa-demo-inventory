@@ -19,9 +19,7 @@
 package domain.faktur
 
 import groovy.transform.Canonical
-
 import javax.persistence.Embeddable
-import javax.validation.constraints.Digits
 import java.text.NumberFormat
 
 @Embeddable @Canonical

@@ -15,25 +15,16 @@
  */
 package domain.penjualan
 
-import domain.Container
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
-import domain.exception.DataTidakLengkap
 import domain.exception.StokTidakCukup
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
-import domain.inventory.ItemBarang
 import groovy.transform.*
-import groovyx.net.http.Status
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 import griffon.util.*
 
 @DomainClass @Entity @Canonical(excludes='pengeluaranBarang')

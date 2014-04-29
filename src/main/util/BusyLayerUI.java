@@ -16,17 +16,10 @@
 
 package util;
 
-import griffon.core.UIThreadManager;
-
 import javax.swing.*;
 import javax.swing.plaf.LayerUI;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 
 class BusyLayerUI extends LayerUI<JPanel> {

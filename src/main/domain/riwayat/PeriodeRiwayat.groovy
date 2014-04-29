@@ -18,7 +18,6 @@ package domain.riwayat
 
 import domain.inventory.Periode
 import groovy.transform.*
-
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*

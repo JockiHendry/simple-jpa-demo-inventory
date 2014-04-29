@@ -16,9 +16,6 @@
 
 package domain.exception;
 
-/**
- * (c) 2014
- */
 public class DataDuplikat extends RuntimeException {
 
     public DataDuplikat(Object object) {

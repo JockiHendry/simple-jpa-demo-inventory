@@ -17,15 +17,12 @@
 package domain.inventory
 
 import domain.faktur.Faktur
-import domain.pembelian.PenerimaanBarang
 import groovy.transform.*
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
-
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-
 import java.text.NumberFormat
 
 @NamedEntityGraph(name='Produk.Complete', attributeNodes = [

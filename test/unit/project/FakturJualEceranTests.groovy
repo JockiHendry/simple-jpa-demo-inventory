@@ -22,7 +22,7 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
-import domain.penjualan.NomorService
+import domain.util.NomorService
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate

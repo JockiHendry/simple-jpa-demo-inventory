@@ -190,7 +190,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     public void testPembayaran() {
         FakturJualRepository repo = Container.app.fakturJualRepository
         FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-6l)
-        BilyetGiro bg = new BilyetGiro('NX-0001', LocalDate.now(), LocalDate.now().plusDays(30))
+        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 1000, tanggalPenerbitan: LocalDate.now(), tanggalEfektif: LocalDate.now().plusDays(30))
         fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
         assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar())
         assertEquals(10000, fakturJualOlehSales.piutang.sisa())

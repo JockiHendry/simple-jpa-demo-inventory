@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package domain.util
 
 import org.joda.time.LocalDate
 import org.slf4j.Logger

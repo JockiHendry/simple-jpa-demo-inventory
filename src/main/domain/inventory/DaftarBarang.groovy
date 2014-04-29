@@ -22,8 +22,6 @@ import org.hibernate.annotations.Type
 import org.hibernate.validator.constraints.NotBlank
 import org.hibernate.validator.constraints.NotEmpty
 import org.joda.time.LocalDate
-
-import javax.persistence.CollectionTable
 import javax.persistence.ElementCollection
 import javax.persistence.FetchType
 import javax.persistence.ManyToOne

@@ -16,7 +16,6 @@
 package domain.inventory
 
 import groovy.transform.Canonical
-
 import javax.persistence.Embeddable
 import javax.persistence.ManyToOne
 import javax.validation.constraints.Min

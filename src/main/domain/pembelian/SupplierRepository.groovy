@@ -18,7 +18,6 @@
 
 package domain.pembelian
 
-import domain.pembelian.Supplier
 import domain.exception.DataDuplikat
 import simplejpa.transaction.Transaction
 

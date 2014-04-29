@@ -16,11 +16,8 @@
 package domain.riwayat
 
 import domain.exception.DataDuplikat
-import domain.inventory.ItemStok
 import domain.inventory.Periode
 import org.joda.time.LocalDate
-import simplejpa.transaction.Transaction
-
 import javax.persistence.CascadeType
 import javax.persistence.JoinColumn
 import javax.persistence.MappedSuperclass

@@ -20,11 +20,8 @@ import domain.riwayat.PeriodeItemStok
 import domain.riwayat.Riwayat
 import groovy.transform.*
 import simplejpa.DomainClass
-
 import javax.persistence.*
 import javax.validation.constraints.*
-
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
 class StokProduk extends Riwayat<PeriodeItemStok, ItemStok> {

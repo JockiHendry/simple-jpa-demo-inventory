@@ -19,7 +19,6 @@
 package domain
 
 import domain.event.InventoryEventConsumer
-import domain.faktur.BilyetGiro
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
 import domain.inventory.SatuanRepository
@@ -29,7 +28,7 @@ import domain.pengaturan.PengaturanRepository
 import domain.penjualan.BilyetGiroRepository
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
-import domain.penjualan.NomorService
+import domain.util.NomorService
 import domain.penjualan.RegionRepository
 import domain.penjualan.SalesRepository
 import domain.util.PasswordService

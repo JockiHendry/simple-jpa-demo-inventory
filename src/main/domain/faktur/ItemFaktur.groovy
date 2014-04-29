@@ -19,7 +19,6 @@ package domain.faktur
 import domain.inventory.Produk
 import domain.validation.InputPurchaseOrder
 import groovy.transform.*
-import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 import javax.validation.groups.Default

@@ -19,13 +19,12 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.inventory.ItemBarang
+import domain.util.NomorService
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
     @NamedAttributeNode('listItemFaktur'),

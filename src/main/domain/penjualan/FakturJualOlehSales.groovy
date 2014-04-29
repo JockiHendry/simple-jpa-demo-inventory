@@ -16,20 +16,19 @@
 package domain.penjualan
 
 import domain.Container
-import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
+import domain.util.NomorService
 import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import griffon.util.*
 

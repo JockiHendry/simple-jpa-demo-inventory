@@ -15,7 +15,6 @@
  */
 package domain.penjualan
 
-import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.validation.PenjualanDiterima
@@ -23,9 +22,7 @@ import domain.validation.PenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 import javax.validation.groups.Default

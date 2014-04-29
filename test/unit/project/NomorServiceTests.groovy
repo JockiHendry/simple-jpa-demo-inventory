@@ -16,7 +16,7 @@
 package project
 
 import domain.Container
-import domain.penjualan.NomorService
+import domain.util.NomorService
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
 

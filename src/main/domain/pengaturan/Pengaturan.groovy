@@ -20,7 +20,6 @@ import org.hibernate.validator.constraints.NotEmpty
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 @DomainClass @Entity @Canonical
 class Pengaturan {

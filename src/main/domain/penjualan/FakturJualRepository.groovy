@@ -27,6 +27,7 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
+import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 

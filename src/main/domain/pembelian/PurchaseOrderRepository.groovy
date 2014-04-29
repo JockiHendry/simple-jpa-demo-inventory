@@ -20,7 +20,7 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakLengkap
 import domain.inventory.ItemBarang
-import domain.penjualan.NomorService
+import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 

@@ -24,7 +24,6 @@ import org.codehaus.groovy.transform.AbstractASTTransformation
 import org.codehaus.groovy.transform.GroovyASTTransformation
 import org.slf4j.LoggerFactory
 import org.codehaus.groovy.ast.stmt.*
-import simplejpa.swing.DialogUtils
 
 @GroovyASTTransformation
 class NeedSupervisorPasswordTransformation extends AbstractASTTransformation{
