@@ -72,6 +72,8 @@ actions {
         smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
+    action(id: 'piutang', name: 'Piutang', actionCommandKey: 'piutang', mnemonic: KeyEvent.VK_I,
+        smallIcon: imageIcon('/menu_piutang.png'), closure: controller.switchPage)
     action(id: 'giro', name: 'Giro', actionCommandKey: 'giro', mnemonic: KeyEvent.VK_G,
         smallIcon: imageIcon('/menu_giro.png'), closure: controller.switchPage)
 
@@ -145,6 +147,7 @@ application(id: 'mainFrame',
                 toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: fakturJual, id: 'fakturJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: hutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                toggleButton(buttonGroup: buttons, action: piutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 toggleButton(buttonGroup: buttons, action: giro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)

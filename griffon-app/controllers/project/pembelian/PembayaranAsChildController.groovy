@@ -20,38 +20,41 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Pembayaran
 import domain.pembelian.PurchaseOrderRepository
+import simplejpa.swing.DialogUtils
+
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
-class PembayaranHutangAsChildController {
+class PembayaranAsChildController {
 
-    PembayaranHutangAsChildModel model
+    PembayaranAsChildModel model
     def view
 
-    PurchaseOrderRepository purchaseOrderRepository
+    PurchaseOrderRepository repo
 
     void mvcGroupInit(Map args) {
-        purchaseOrderRepository = Container.app.purchaseOrderRepository
-        model.purchaseOrder = args.'purchaseOrder'
+        repo = Container.app.purchaseOrderRepository
+        model.faktur = args.'faktur'
         model.editable = true
         execInsideUISync {
-            model.pembayaranHutangList.clear()
-            model.pembayaranHutangList.addAll(args.'listPembayaranHutang')
+            model.pembayaranList.clear()
+            model.pembayaranList.addAll(args.'listPembayaran')
         }
     }
 
     def save = {
-        Pembayaran pembayaranHutang = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah)
-        if (!purchaseOrderRepository.validate(pembayaranHutang, Default, model)) return
+        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, bilyetGiro: model.bilyetGiro)
+        if (!repo.validate(pembayaran, Default, model)) return
 
         try {
-            purchaseOrderRepository.withTransaction {
-                model.purchaseOrder = merge(model.purchaseOrder)
-                model.purchaseOrder.bayar(pembayaranHutang)
+            repo.withTransaction {
+                model.faktur = merge(model.faktur)
+                model.faktur.bayar(pembayaran)
             }
             execInsideUISync {
-                model.pembayaranHutangList << pembayaranHutang
+                model.pembayaranList << pembayaran
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
@@ -65,12 +68,12 @@ class PembayaranHutangAsChildController {
     def delete = {
         try {
             Pembayaran pembayaranHutang = view.table.selectionModel.selected[0]
-            purchaseOrderRepository.withTransaction {
-                model.purchaseOrder = purchaseOrderRepository.merge(model.purchaseOrder)
-                model.purchaseOrder.hapus(pembayaranHutang)
+            repo.withTransaction {
+                model.faktur = repo.merge(model.faktur)
+                model.faktur.hapus(pembayaranHutang)
             }
             execInsideUISync {
-                model.pembayaranHutangList.remove(pembayaranHutang)
+                model.pembayaranList.remove(pembayaranHutang)
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
@@ -80,10 +83,23 @@ class PembayaranHutangAsChildController {
         }
     }
 
+    def showBilyetGiro = {
+        def args = [popupMode: true]
+        def dialogProps = [title: 'Cari Bilyet Giro', size: new Dimension(900, 420)]
+        DialogUtils.showMVCGroup('giro', args, app, view, dialogProps) { m, v, c ->
+            if (v.table.selectionModel.isSelectionEmpty()) {
+                JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada bilyet giro yang dipilih!', 'Cari Bilyet Giro', JOptionPane.ERROR_MESSAGE)
+            } else {
+                model.bilyetGiro = v.table.selectionModel.selected[0]
+            }
+        }
+    }
+
     def clear = {
         execInsideUISync {
             model.tanggal = null
             model.jumlah = null
+            model.bilyetGiro = null
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -98,6 +114,7 @@ class PembayaranHutangAsChildController {
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah
+                model.bilyetGiro = selected.bilyetGiro
             }
         }
     }

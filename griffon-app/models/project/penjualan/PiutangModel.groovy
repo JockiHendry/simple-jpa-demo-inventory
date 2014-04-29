@@ -16,25 +16,27 @@
 package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
-import domain.faktur.BilyetGiro
+import domain.faktur.Pembayaran
+import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.FakturJualRepository
 import groovy.beans.Bindable
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 
-class GiroModel {
+class PiutangModel {
 
     @Bindable Long id
-    @Bindable String nomorSeri
-    @Bindable BigDecimal nominal
-    @Bindable LocalDate tanggalPenerbitan
-    @Bindable LocalDate tanggalEfektif
-    @Bindable LocalDate tanggalPencairan
+    List<Pembayaran> listPembayaranPiutang = []
 
-    @Bindable String nomorSeriSearch
+    BasicEventList<FakturJualOlehSales> fakturJualList = new BasicEventList<>()
+
+    @Bindable String nomorSearch
+    @Bindable String konsumenSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
-
-    BasicEventList<BilyetGiro> bilyetGiroList = new BasicEventList<>()
-
-    @Bindable boolean popupMode
+    @Bindable boolean chkJatuhTempo
+    @Bindable LocalDate jatuhTempoSearch
+    EnumComboBoxModel statusSearch = new EnumComboBoxModel(FakturJualRepository.StatusPiutangSearch)
 
 }

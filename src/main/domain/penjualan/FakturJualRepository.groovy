@@ -135,6 +135,36 @@ class FakturJualRepository {
         }
     }
 
+    public List<FakturJualOlehSales> cariPiutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
+                                        String konsumenSearch, LocalDate tanggalJatuhTempo = null,
+                                        StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
+        findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            if (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            }
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+            if (tanggalJatuhTempo) {
+                and()
+                jatuhTempo eq(tanggalJatuhTempo)
+            }
+            List statusSearch = []
+            if (statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS || statusPiutangSearch == StatusPiutangSearch.SEMUA) {
+                statusSearch << StatusFakturJual.DITERIMA
+            } else if (statusPiutangSearch == StatusPiutangSearch.LUNAS || statusPiutangSearch == StatusPiutangSearch.SEMUA) {
+                statusSearch << StatusFakturJual.LUNAS
+            }
+            and()
+            status isIn(statusSearch)
+        }
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
         fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
         bonus.each { it.produk = merge(it.produk) }
@@ -313,4 +343,20 @@ class FakturJualRepository {
         faktur.hapusBuktiTerima()
         faktur
     }
+
+    public enum StatusPiutangSearch {
+        SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas')
+
+        String description
+
+        public StatusPiutangSearch(String description) {
+            this.description = description
+        }
+
+        @Override
+        String toString() {
+            description
+        }
+    }
+
 }

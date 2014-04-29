@@ -13,26 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.pembelian
+package project.penjualan
 
 import domain.Container
-import domain.pembelian.PurchaseOrder
 import domain.pembelian.PurchaseOrderRepository
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
-class HutangController {
+class PiutangController {
 
-    HutangModel model
+    PiutangModel model
     def view
 
-    PurchaseOrderRepository purchaseOrderRepository
+    FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        purchaseOrderRepository = Container.app.purchaseOrderRepository
+        fakturJualRepository = Container.app.fakturJualRepository
         init()
         search()
     }
@@ -46,21 +47,21 @@ class HutangController {
     }
 
     def search = {
-        List result = purchaseOrderRepository.cariHutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.supplierSearch, model.chkJatuhTempo? model.jatuhTempoSearch: null, model.statusSearch.selectedItem)
+        List result = fakturJualRepository.cariPiutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+                model.nomorSearch, model.konsumenSearch, model.chkJatuhTempo? model.jatuhTempoSearch: null, model.statusSearch.selectedItem)
         execInsideUISync {
-            model.purchaseOrderList.clear()
-            model.purchaseOrderList.addAll(result)
+            model.fakturJualList.clear()
+            model.fakturJualList.addAll(result)
         }
     }
 
     def showPembayaran = {
         execInsideUISync {
-            def args = [faktur: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranHutang]
-            def dialogProps = [title: 'Pembayaran Hutang', size: new Dimension(900, 420)]
+            def args = [faktur: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranPiutang]
+            def dialogProps = [title: 'Pembayaran Piutang', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('pembayaranAsChild', args, app, view, dialogProps) { m, v, c ->
-                model.listPembayaranHutang.clear()
-                model.listPembayaranHutang.addAll(m.pembayaranList)
+                model.listPembayaranPiutang.clear()
+                model.listPembayaranPiutang.addAll(m.pembayaranList)
                 view.table.selectionModel.selected[0] = m.faktur
             }
         }
@@ -69,7 +70,7 @@ class HutangController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.listPembayaranHutang.clear()
+            model.listPembayaranPiutang.clear()
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -81,12 +82,12 @@ class HutangController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                PurchaseOrder selected = view.table.selectionModel.selected[0]
+                FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
-                model.listPembayaranHutang.clear()
-                if (selected?.fakturBeli?.hutang) {
-                    model.listPembayaranHutang.addAll(selected.fakturBeli.hutang.listPembayaran)
+                model.listPembayaranPiutang.clear()
+                if (selected.piutang) {
+                    model.listPembayaranPiutang.addAll(selected.piutang.listPembayaran)
                 }
             }
         }

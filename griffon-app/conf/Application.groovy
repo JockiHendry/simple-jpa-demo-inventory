@@ -30,6 +30,13 @@ mvcGroups {
         controller = 'project.penjualan.GiroController'
     }
 
+    // MVC Group for "piutang"
+    'piutang' {
+        model      = 'project.penjualan.PiutangModel'
+        view       = 'project.penjualan.PiutangView'
+        controller = 'project.penjualan.PiutangController'
+    }
+
     // MVC Group for "buktiTerima"
     'buktiTerima' {
         model      = 'project.penjualan.BuktiTerimaModel'
@@ -115,10 +122,10 @@ mvcGroups {
     }
 
     // MVC Group for "pembayaranHutangAsChild"
-    'pembayaranHutangAsChild' {
-        model      = 'project.pembelian.PembayaranHutangAsChildModel'
-        view       = 'project.pembelian.PembayaranHutangAsChildView'
-        controller = 'project.pembelian.PembayaranHutangAsChildController'
+    'pembayaranAsChild' {
+        model      = 'project.pembelian.PembayaranAsChildModel'
+        view       = 'project.pembelian.PembayaranAsChildView'
+        controller = 'project.pembelian.PembayaranAsChildController'
     }
 
     // MVC Group for "hutang"

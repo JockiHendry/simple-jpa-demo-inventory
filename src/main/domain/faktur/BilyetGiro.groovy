@@ -29,6 +29,9 @@ class BilyetGiro {
     @NotEmpty @Size(min=2, max=50)
     String nomorSeri
 
+    @NotNull
+    BigDecimal nominal
+
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalPenerbitan
 

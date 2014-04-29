@@ -53,6 +53,7 @@ class BilyetGiroRepository {
             throw new DataTidakBolehDiubah(old)
         }
         old.nomorSeri = bilyetGiro.nomorSeri
+        old.nominal = bilyetGiro.nominal
         old.tanggalPenerbitan = bilyetGiro.tanggalPenerbitan
         old.tanggalEfektif = bilyetGiro.tanggalEfektif
         old

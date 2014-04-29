@@ -16,18 +16,20 @@
 package project.pembelian
 
 import ca.odell.glazedlists.BasicEventList
+import domain.faktur.BilyetGiro
+import domain.faktur.Faktur
 import domain.faktur.Pembayaran
-import domain.pembelian.PurchaseOrder
 import org.joda.time.LocalDate
 
-class PembayaranHutangAsChildModel {
+class PembayaranAsChildModel {
 
-    PurchaseOrder purchaseOrder
+    Faktur faktur
 
     @Bindable LocalDate tanggal
     @Bindable BigDecimal jumlah
+    @Bindable BilyetGiro bilyetGiro
 
-    BasicEventList<Pembayaran> pembayaranHutangList = new BasicEventList<>()
+    BasicEventList<Pembayaran> pembayaranList = new BasicEventList<>()
 
     @Bindable boolean editable
 

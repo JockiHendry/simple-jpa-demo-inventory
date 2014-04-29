@@ -35,6 +35,7 @@ class GiroController {
 
     void mvcGroupInit(Map args) {
         bilyetGiroRepository = Container.app.bilyetGiroRepository
+        model.popupMode = args.'popupMode'?: false
         init()
         search()
     }
@@ -54,7 +55,7 @@ class GiroController {
 
     def save = {
         BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri, tanggalPenerbitan: model.tanggalPenerbitan,
-                                               tanggalEfektif: model.tanggalEfektif)
+                                               nominal: model.nominal, tanggalEfektif: model.tanggalEfektif)
 
         if (!bilyetGiroRepository.validate(bilyetGiro, Default, model)) return
 
@@ -116,6 +117,7 @@ class GiroController {
             model.tanggalPenerbitan = null
             model.tanggalEfektif = null
             model.tanggalPencairan = null
+            model.nominal = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -131,6 +133,7 @@ class GiroController {
                 model.errors.clear()
                 model.id = selected.id
                 model.nomorSeri = selected.nomorSeri
+                model.nominal = selected.nominal
                 model.tanggalPenerbitan = selected.tanggalPenerbitan
                 model.tanggalEfektif = selected.tanggalEfektif
                 model.tanggalPencairan = selected.tanggalPencairan

@@ -40,12 +40,15 @@ application(title: 'simple-jpa-demo-inventory',
         panel(constraints: CENTER) {
             borderLayout()
             scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.pembayaranHutangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedTable(id: 'table', list: model.pembayaranList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                     glazedColumn(name: 'Tanggal', property: 'tanggal') {
                         templateRenderer(exp: {it.toString('dd-MM-yyyy')})
                     }
                     glazedColumn(name: 'Jumlah', property: 'jumlah', columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'Bilyet Giro', property: 'bilyetGiro') {
+                        templateRenderer(exp: {!it?'-':it.nomorSeri})
                     }
                 }
             }
@@ -58,7 +61,12 @@ application(title: 'simple-jpa-demo-inventory',
             label('Jumlah:')
             decimalTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
-
+            label('Bilyet Giro:')
+            panel {
+                label(text: bind { model.bilyetGiro?.nomorSeri?: '- kosong -' })
+                button('Cari Bilyet Giro...', id: 'cariBilyetGiro', errorPath: 'bilyetGiro', mnemonic: KeyEvent.VK_G, actionPerformed: controller.showBilyetGiro)
+            }
+            errorLabel(path: 'bilyetGiro', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button('Simpan', actionPerformed: {
