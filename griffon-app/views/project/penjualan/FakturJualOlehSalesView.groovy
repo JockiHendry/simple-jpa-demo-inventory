@@ -126,6 +126,10 @@ application(title: 'Faktur Jual Oleh Sales',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
+                mvcPopupButton('Cetak', mvcGroup: 'previewFaktur', args: {[
+                        dataSource: view.table.selectionModel.selected[0], fileLaporan: 'fakturJualOlehSales'
+                ]}, dialogProperties: [title: 'Preview Faktur Jual', size: new Dimension(820,600)],
+                        visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual } ))
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)
