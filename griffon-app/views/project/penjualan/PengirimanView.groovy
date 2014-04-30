@@ -89,6 +89,7 @@ application() {
                 button('Proses Pengiriman Barang', actionPerformed: controller.kirim, visible: bind { model.allowKirim })
                 button('Batalkan Pengiriman', actionPerformed: controller.batalKirim, visible: bind { model.allowBatalKirim})
                 button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
+                button('Cetak', actionPerformed: controller.cetak, visible: bind { table.isRowSelected })
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)
             }
         }
