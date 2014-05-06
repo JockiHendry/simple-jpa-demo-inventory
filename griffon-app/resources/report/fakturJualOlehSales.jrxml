@@ -87,8 +87,8 @@
 	<field name="konsumen" class="domain.penjualan.Konsumen">
 		<fieldDescription><![CDATA[konsumen]]></fieldDescription>
 	</field>
-	<field name="sales" class="domain.penjualan.Sales">
-		<fieldDescription><![CDATA[sales]]></fieldDescription>
+	<field name="konsumen.sales" class="domain.penjualan.Sales">
+		<fieldDescription><![CDATA[konsumen.sales]]></fieldDescription>
 	</field>
 	<field name="tanggal" class="org.joda.time.LocalDate">
 		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
@@ -339,7 +339,7 @@ JRBeanCollectionDataSource($F{listItemFaktur})]]></dataSourceExpression>
 			</staticText>
 			<textField>
 				<reportElement style="isi" x="78" y="55" width="175" height="20" uuid="34afa2a2-4b88-492f-a35e-df3dea8ef2f0"/>
-				<textFieldExpression><![CDATA[$F{sales}.nama]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{konsumen.sales}.nama]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="isi" x="438" y="15" width="117" height="20" uuid="4f750cd9-6733-4382-8c34-aad2b7846e0a"/>

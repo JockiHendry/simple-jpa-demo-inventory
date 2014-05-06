@@ -36,15 +36,15 @@ class KonsumenTests extends GriffonUnitTestCase {
     }
 
     public void testSisaPiutang() {
-        Konsumen mrNiceGuy = new Konsumen()
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
+        Konsumen mrNiceGuy = new Konsumen(sales: sales)
         Produk produkA = new Produk('Produk A', 10000, 50)
         Produk produkB = new Produk('Produk B', 20000, 50)
-        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', konsumen: mrNiceGuy, sales: sales)
+        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', konsumen: mrNiceGuy)
         f1.tambah(new ItemFaktur(produkA, 10, 10000))
         f1.tambah(new ItemFaktur(produkB, 5, 20000))
-        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'F2', konsumen: mrNiceGuy, sales: sales)
+        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'F2', konsumen: mrNiceGuy)
         f2.tambah(new ItemFaktur(produkA, 3, 10000))
         f2.tambah(new ItemFaktur(produkB, 2, 20000))
         mrNiceGuy.tambahFakturBelumLunas(f1)
@@ -59,18 +59,18 @@ class KonsumenTests extends GriffonUnitTestCase {
     }
 
     public void testAdaTagihanJatuhTempo() {
-        Konsumen mrNiceGuy = new Konsumen()
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
+        Konsumen mrNiceGuy = new Konsumen(sales: sales)
         Produk produkA = new Produk('Produk A', 10000, 50)
         Produk produkB = new Produk('Produk B', 20000, 50)
-        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'FA1', konsumen: mrNiceGuy, sales: sales, jatuhTempo: LocalDate.now().plusDays(5))
+        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'FA1', konsumen: mrNiceGuy, jatuhTempo: LocalDate.now().plusDays(5))
         f1.tambah(new ItemFaktur(produkA, 10, 10000))
         f1.tambah(new ItemFaktur(produkB, 5, 20000))
         mrNiceGuy.tambahFakturBelumLunas(f1)
         assertFalse(mrNiceGuy.adaTagihanJatuhTempo())
 
-        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'FA2', konsumen: mrNiceGuy, sales: sales, jatuhTempo: LocalDate.now().minusDays(1))
+        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'FA2', konsumen: mrNiceGuy, jatuhTempo: LocalDate.now().minusDays(1))
         f2.tambah(new ItemFaktur(produkA, 3, 10000))
         f2.tambah(new ItemFaktur(produkB, 2, 20000))
         mrNiceGuy.tambahFakturBelumLunas(f2)
@@ -78,12 +78,12 @@ class KonsumenTests extends GriffonUnitTestCase {
     }
 
     public void testBolehKredit() {
-        Konsumen mrNiceGuy = new Konsumen(creditLimit: 50000)
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
+        Konsumen mrNiceGuy = new Konsumen(creditLimit: 50000, sales: sales)
         Produk produkA = new Produk('Produk A', 1000, 50)
         Produk produkB = new Produk('Produk B', 2000, 50)
-        FakturJualOlehSales f1 = new FakturJualOlehSales(konsumen: mrNiceGuy, sales: sales, jatuhTempo: LocalDate.now().plusDays(5))
+        FakturJualOlehSales f1 = new FakturJualOlehSales(konsumen: mrNiceGuy, jatuhTempo: LocalDate.now().plusDays(5))
         f1.tambah(new ItemFaktur(produkA, 3, 1000))
         f1.tambah(new ItemFaktur(produkB, 5, 2000))
         mrNiceGuy.tambahFakturBelumLunas(f1)

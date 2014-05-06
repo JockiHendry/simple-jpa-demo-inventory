@@ -52,13 +52,14 @@ application(title: 'Konsumen',
                 glazedColumn(name: 'Nama', property: 'nama')
                 glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
                 glazedColumn(name: 'Region', property: 'region')
+                glazedColumn(name: 'Sales', expression: { it.sales.nama })
                 glazedColumn(name: 'Credit Limit', property: 'creditLimit', columnClass: Integer) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Credit Terpakai', property: 'creditTerpakai', columnClass: Integer) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Penggunaan Credit (%)', expression: { it.creditTerpakai / it.creditLimit }, columnClass: Integer) {
+                glazedColumn(name: 'Penggunaan Credit (%)', expression: { it.getRatioPenggunaanCredit() }, columnClass: Integer) {
                     templateRenderer(exp: { NumberFormat.percentInstance.format(it) }, horizontalAlignment: RIGHT) {
                         condition(if_: {it>=1}, then_property_: 'foreground', is_: Color.RED, else_is_: Color.BLACK)
                         condition(if_: {isSelected}, then_property_: 'foreground', is_: Color.WHITE)
@@ -77,6 +78,9 @@ application(title: 'Konsumen',
             label('Region:')
             comboBox(id: 'region', model: model.region, templateRenderer: '${value}', errorPath: 'region')
             errorLabel(path: 'region', constraints: 'wrap')
+            label('Sales:')
+            comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', errorPath: 'sales')
+            errorLabel(path: 'sales', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)

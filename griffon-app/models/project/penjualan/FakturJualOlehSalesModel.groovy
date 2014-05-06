@@ -44,8 +44,6 @@ class FakturJualOlehSalesModel {
     @Bindable StatusFakturJual status
     BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
-    BasicEventList<Sales> salesList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
     List<ItemFaktur> listItemFaktur = []
     List<ItemBarang> listBonus = []
 

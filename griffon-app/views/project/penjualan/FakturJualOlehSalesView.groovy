@@ -46,7 +46,7 @@ application(title: 'Faktur Jual Oleh Sales',
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
             comboBox(id: 'statusSearch', model: model.statusSearch)
             textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
-            textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
+//            textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
             textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
@@ -62,7 +62,7 @@ application(title: 'Faktur Jual Oleh Sales',
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
-                glazedColumn(name: 'Sales', expression: { it.sales.nama })
+                glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
                 glazedColumn(name: 'Status', property: 'status')
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
                 glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showNilaiUang })
@@ -87,9 +87,6 @@ application(title: 'Faktur Jual Oleh Sales',
                 label('Konsumen:')
                 comboBox(id: 'konsumen', model: model.konsumen, templateRenderer: '${value.nama} - ${value.region}', errorPath: 'konsumen')
                 errorLabel(path: 'konsumen', constraints: 'wrap')
-                label('Sales:')
-                comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', errorPath: 'sales')
-                errorLabel(path: 'sales', constraints: 'wrap')
                 label('Diskon:')
                 panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
                     decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
@@ -146,6 +143,6 @@ application(title: 'Faktur Jual Oleh Sales',
     }
 }
 
-PromptSupport.setPrompt("Sales...", salesSearch)
+//PromptSupport.setPrompt("Sales...", salesSearch)
 PromptSupport.setPrompt("Konsumen...", konsumenSearch)
 PromptSupport.setPrompt("Nomor Faktur...", nomorSearch)

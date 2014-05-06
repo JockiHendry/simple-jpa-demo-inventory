@@ -47,6 +47,7 @@ class KonsumenRepository {
             nama = konsumen.nama
             nomorTelepon = konsumen.nomorTelepon
             region = konsumen.region
+            sales = konsumen.sales
         }
         mergedKonsumen
     }

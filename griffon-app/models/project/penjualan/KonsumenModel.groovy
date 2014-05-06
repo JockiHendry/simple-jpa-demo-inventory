@@ -32,6 +32,9 @@ class KonsumenModel {
     @Bindable BigDecimal creditLimit
     BasicEventList<Region> regionList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Region> region = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(regionList)
+    BasicEventList<Sales> salesList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
+
 
     @Bindable String namaSearch
 

@@ -43,10 +43,13 @@ class KonsumenController {
     def init = {
         execInsideUISync {
             model.regionList.clear()
+            model.salesList.clear()
         }
         List region = konsumenRepository.findAllRegion()
+        List sales  = konsumenRepository.findAllSales()
         execInsideUISync {
             model.regionList.addAll(region)
+            model.salesList.addAll(sales)
         }
     }
 
@@ -60,7 +63,8 @@ class KonsumenController {
     }
 
     def save = {
-        Konsumen konsumen = new Konsumen(id: model.id, nama: model.nama, nomorTelepon: model.nomorTelepon, region: model.region.selectedItem, creditLimit: 0)
+        Konsumen konsumen = new Konsumen(id: model.id, nama: model.nama, nomorTelepon: model.nomorTelepon,
+            region: model.region.selectedItem, sales: model.sales.selectedItem, creditLimit: 0)
 
         if (!konsumenRepository.validate(konsumen, Default, model)) return
 
@@ -123,6 +127,7 @@ class KonsumenController {
             model.nomorTelepon = null
             model.region.selectedItem = null
             model.creditLimit = null
+            model.sales = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -140,6 +145,7 @@ class KonsumenController {
                 model.nama = selected.nama
                 model.nomorTelepon = selected.nomorTelepon
                 model.region.selectedItem = selected.region
+                model.sales.selectedItem = selected.sales
                 model.creditLimit = selected.creditLimit
             }
         }

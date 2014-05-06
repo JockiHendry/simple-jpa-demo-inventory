@@ -56,7 +56,7 @@ application() {
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
-                glazedColumn(name: 'Sales', expression: { it.sales.nama })
+                glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
                 glazedColumn(name: 'Status', property: 'status')
                 glazedColumn(name: 'Nama Supir', expression: { it.pengeluaranBarang?.namaSupir })
                 glazedColumn(name: 'Alamat Tujuan', expression: { it.pengeluaranBarang?.alamatTujuan })

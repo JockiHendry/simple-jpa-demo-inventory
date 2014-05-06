@@ -81,10 +81,10 @@ class FakturJualRepository {
                 and()
                 nomor like("%${nomorSearch}%")
             }
-            if (salesSearch) {
-                and()
-                sales__nama like("%${salesSearch}%")
-            }
+//            if (salesSearch) {
+//                and()
+//                konsumen__sales__nama like("%${salesSearch}%")
+//            }
             if (konsumenSearch) {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
@@ -103,10 +103,10 @@ class FakturJualRepository {
                 and()
                 nomor like("%${nomorSearch}%")
             }
-            if (salesSearch) {
-                and()
-                sales__nama like("%${salesSearch}%")
-            }
+//            if (salesSearch) {
+//                and()
+//                sales__nama like("%${salesSearch}%")
+//            }
             if (konsumenSearch) {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
@@ -180,7 +180,7 @@ class FakturJualRepository {
         DaftarBarangSementara stokYangDibutuhkan = fakturJual.barangYangHarusDikirim()
         stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
             Produk produk = findProdukById(itemBarang.produk.id)
-            int jumlahTersedia = produk.stok(fakturJual.sales.gudang).jumlah
+            int jumlahTersedia = produk.stok(fakturJual.konsumen.sales.gudang).jumlah
             if (jumlahTersedia < itemBarang.jumlah) {
                 throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia)
             }
@@ -199,11 +199,11 @@ class FakturJualRepository {
         persist(fakturJual)
 
         // Perlakuan khusus untuk faktur jual luar kota
-        if (!fakturJual.sales.dalamKota()) {
+        if (!fakturJual.konsumen.sales.dalamKota()) {
             fakturJual.listItemFaktur.each {
                 it.produk = merge(it.produk)
             }
-            fakturJual.kirim('Luar Kota', "Luar Kota (${fakturJual.sales.nama})")
+            fakturJual.kirim('Luar Kota', "Luar Kota (${fakturJual.konsumen.sales.nama})")
             fakturJual.tambah(new BuktiTerima(fakturJual.tanggal, 'Luar Kota'))
         }
 

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fakturJualEceran" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cfe3ab8d-8ad9-4205-993e-333cebbd4dd5">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="12"/>
 	<style name="label" mode="Transparent" hAlign="Right" vAlign="Middle" isBlankWhenNull="false" fontName="SansSerif" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 	<style name="isi" style="label" hAlign="Left" fontName="SansSerif" isBold="false"/>
 	<style name="table">
@@ -61,8 +61,8 @@
 	<field name="konsumen" class="domain.penjualan.Konsumen">
 		<fieldDescription><![CDATA[konsumen]]></fieldDescription>
 	</field>
-	<field name="sales" class="domain.penjualan.Sales">
-		<fieldDescription><![CDATA[sales]]></fieldDescription>
+	<field name="konsumen.sales" class="domain.penjualan.Sales">
+		<fieldDescription><![CDATA[konsumen.sales]]></fieldDescription>
 	</field>
 	<field name="tanggal" class="org.joda.time.LocalDate">
 		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
@@ -147,7 +147,7 @@
 			</staticText>
 			<textField>
 				<reportElement style="isi" x="81" y="110" width="175" height="20" uuid="34afa2a2-4b88-492f-a35e-df3dea8ef2f0"/>
-				<textFieldExpression><![CDATA[$F{sales}.nama]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{konsumen.sales}.nama]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="398" y="70" width="144" height="20" uuid="7fe166b3-6de2-4cf9-a40e-6d5dd04e38c8"/>

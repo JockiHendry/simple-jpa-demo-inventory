@@ -51,9 +51,6 @@ import javax.validation.groups.Default
 class FakturJualOlehSales extends FakturJual {
 
     @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
-    Sales sales
-
-    @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Konsumen konsumen
 
     @NotNull(groups=[Default]) @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
@@ -73,7 +70,7 @@ class FakturJualOlehSales extends FakturJual {
         // Buat PengeluaranBarang berdasarkan data yang ada di faktur
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: LocalDate.now(), gudang: sales.gudang,
+            tanggal: LocalDate.now(), gudang: konsumen.sales.gudang,
             alamatTujuan: alamatTujuan, namaSupir: namaSupir
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
@@ -105,7 +102,7 @@ class FakturJualOlehSales extends FakturJual {
 
     @Override
     void hapusPengeluaranBarang() {
-        if (!sales.dalamKota()) {
+        if (!konsumen.sales.dalamKota()) {
             throw new DataTidakBolehDiubah(this)
         }
         super.hapusPengeluaranBarang()
@@ -133,7 +130,7 @@ class FakturJualOlehSales extends FakturJual {
             throw new DataTidakBolehDiubah(bonusPenjualan)
         }
         BonusPenjualan bonusPenjualan = new BonusPenjualan(
-            tanggal: tanggal, gudang: sales.gudang,
+            tanggal: tanggal, gudang: konsumen.sales.gudang,
             nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BONUS)
         )
         listItemBarang.each { bonusPenjualan.tambah(it) }

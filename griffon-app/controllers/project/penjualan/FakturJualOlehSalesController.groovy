@@ -54,13 +54,10 @@ class FakturJualOlehSalesController {
         Container.app.nomorService.refreshAll()
         execInsideUISync {
             model.konsumenList.clear()
-            model.salesList.clear()
         }
         List konsumen = fakturJualRepository.findAllKonsumen()
-        List sales  = fakturJualRepository.findAllSales()
         execInsideUISync {
             model.konsumenList.addAll(konsumen)
-            model.salesList.addAll(sales)
             model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
@@ -80,7 +77,7 @@ class FakturJualOlehSalesController {
     def save = {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
-            sales: model.sales.selectedItem, konsumen: model.konsumen.selectedItem)
+            konsumen: model.konsumen.selectedItem)
         model.listItemFaktur.each { fakturJualOlehSales.tambah(it) }
 
         if (!fakturJualRepository.validate(fakturJualOlehSales, InputPenjualanOlehSales, model)) return
@@ -173,7 +170,6 @@ class FakturJualOlehSalesController {
             model.id = null
             model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
             model.tanggal = null
-            model.sales.selectedItem = null
             model.konsumen.selectedItem = null
             model.keterangan = null
             model.diskonPotonganLangsung = null
@@ -198,7 +194,6 @@ class FakturJualOlehSalesController {
                 model.id = selected.id
                 model.nomor = selected.nomor
                 model.tanggal = selected.tanggal
-                model.sales.selectedItem = selected.sales
                 model.konsumen.selectedItem = selected.konsumen
                 model.keterangan = selected.keterangan
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung

@@ -52,6 +52,9 @@ class Konsumen {
     @NotNull @ManyToOne
     Region region
 
+    @NotNull @ManyToOne
+    Sales sales
+
     @NotNull
     BigDecimal creditLimit = BigDecimal.ZERO
 
@@ -96,6 +99,14 @@ class Konsumen {
     public void hapusFakturBelumLunas(FakturJualOlehSales faktur) {
         listFakturBelumLunas.remove(faktur)
         creditTerpakai -= faktur.total()
+    }
+
+    public BigDecimal getRatioPenggunaanCredit() {
+        if (creditLimit==0) {
+            return 0
+        } else {
+            return creditTerpakai / creditLimit
+        }
     }
 
 }
