@@ -142,15 +142,16 @@ class PengirimanController {
                     model.alamatTujuan = selected.pengeluaranBarang.alamatTujuan
                     model.keterangan = selected.pengeluaranBarang.keterangan
                 } else {
-                    if (selected.status.pengeluaranBolehDiubah) {
-                        model.allowKirim = true
-                        model.allowBatalKirim = false
-                    }
                     model.nomorSuratJalan = null
                     model.tanggal = null
                     model.namaSupir = null
                     model.alamatTujuan = null
                     model.keterangan = null
+                    if (selected.status.pengeluaranBolehDiubah) {
+                        model.allowKirim = true
+                        model.allowBatalKirim = false
+                        model.alamatTujuan = selected.konsumen.alamat
+                    }
                 }
             }
         }

@@ -49,6 +49,9 @@ class Konsumen {
     @Size(min=2, max=50)
     String nomorTelepon
 
+    @Size(min=3, max=200)
+    String alamat
+
     @NotNull @ManyToOne
     Region region
 

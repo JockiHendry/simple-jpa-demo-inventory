@@ -30,6 +30,7 @@ class KonsumenModel {
     @Bindable String nama
     @Bindable String nomorTelepon
     @Bindable BigDecimal creditLimit
+    @Bindable String alamat
     BasicEventList<Region> regionList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Region> region = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(regionList)
     BasicEventList<Sales> salesList = new BasicEventList<>()

@@ -64,7 +64,7 @@ class KonsumenController {
 
     def save = {
         Konsumen konsumen = new Konsumen(id: model.id, nama: model.nama, nomorTelepon: model.nomorTelepon,
-            region: model.region.selectedItem, sales: model.sales.selectedItem, creditLimit: 0)
+            alamat: model.alamat, region: model.region.selectedItem, sales: model.sales.selectedItem, creditLimit: 0)
 
         if (!konsumenRepository.validate(konsumen, Default, model)) return
 
@@ -126,8 +126,9 @@ class KonsumenController {
             model.nama = null
             model.nomorTelepon = null
             model.region.selectedItem = null
+            model.alamat = null
             model.creditLimit = null
-            model.sales = null
+            model.sales.selectedItem = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -144,6 +145,7 @@ class KonsumenController {
                 model.id = selected.id
                 model.nama = selected.nama
                 model.nomorTelepon = selected.nomorTelepon
+                model.alamat = selected.alamat
                 model.region.selectedItem = selected.region
                 model.sales.selectedItem = selected.sales
                 model.creditLimit = selected.creditLimit
