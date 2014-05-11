@@ -38,6 +38,9 @@ class BilyetGiro {
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalPencairan
 
+    @Size(min=2, max=50)
+    String namaBank
+
     boolean sudahJatuhTempo(LocalDate tanggal = LocalDate.now()) {
         jatuhTempo.isEqual(tanggal) || jatuhTempo.isBefore(tanggal)
     }

@@ -27,6 +27,7 @@ class GiroModel {
     @Bindable BigDecimal nominal
     @Bindable LocalDate jatuhTempo
     @Bindable LocalDate tanggalPencairan
+    @Bindable String namaBank
 
     @Bindable String nomorSeriSearch
 

@@ -52,6 +52,7 @@ class BilyetGiroRepository {
         old.nomorSeri = bilyetGiro.nomorSeri
         old.nominal = bilyetGiro.nominal
         old.jatuhTempo = bilyetGiro.jatuhTempo
+        old.namaBank = bilyetGiro.namaBank
         old
     }
 

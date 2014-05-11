@@ -46,7 +46,7 @@ class GiroController {
     }
 
     def save = {
-        BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri,
+        BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri, namaBank: model.namaBank,
                                                nominal: model.nominal, jatuhTempo: model.jatuhTempo)
 
         if (!bilyetGiroRepository.validate(bilyetGiro, Default, model)) return
@@ -109,6 +109,7 @@ class GiroController {
             model.jatuhTempo = null
             model.tanggalPencairan = null
             model.nominal = null
+            model.namaBank = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -125,6 +126,7 @@ class GiroController {
                 model.id = selected.id
                 model.nomorSeri = selected.nomorSeri
                 model.nominal = selected.nominal
+                model.namaBank = selected.namaBank
                 model.jatuhTempo = selected.jatuhTempo
                 model.tanggalPencairan = selected.tanggalPencairan
             }

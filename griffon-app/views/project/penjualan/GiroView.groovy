@@ -58,6 +58,7 @@ application() {
                 glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo') {
                     templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                 }
+                glazedColumn(name: 'Nama Bank', property: 'namaBank')
                 glazedColumn(name: 'Tanggal Pencairan', property: 'tanggalPencairan') {
                     templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                 }
@@ -74,6 +75,9 @@ application() {
             label('Jatuh Tempo:')
             dateTimePicker(id: 'jatuhTempo', localDate: bind('jatuhTempo', target: model, mutual: true), errorPath: 'jatuhTempo', timeVisible: false)
             errorLabel(path: 'jatuhTempo', constraints: 'wrap')
+            label('Nama Bank:')
+            textField(id: 'namaBank', columns: 50, text: bind('namaBank', target: model, mutual: true), errorPath: 'namaBank')
+            errorLabel(path: 'namaBank', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
