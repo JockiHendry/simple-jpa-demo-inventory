@@ -27,6 +27,7 @@ import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
 import domain.faktur.BilyetGiroRepository
+import domain.penjualan.BilyetGiroClearingService
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
 import domain.util.NomorService
@@ -62,6 +63,7 @@ class Container {
 
     PasswordService passwordService
     NomorService nomorService
+    BilyetGiroClearingService bilyetGiroClearingService
 
     private Container() {
         setup()
@@ -84,6 +86,7 @@ class Container {
         // Create services
         passwordService = new PasswordService()
         nomorService = new NomorService()
+        bilyetGiroClearingService = new BilyetGiroClearingService()
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()

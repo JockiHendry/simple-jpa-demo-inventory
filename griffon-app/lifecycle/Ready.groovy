@@ -46,5 +46,8 @@ execOutsideUI {
             UIManager.put('Table.rowHeight', ukuranHuruf + 1)
         }
     }
+
+    // Clearing bilyet giro yang jatuh tempo
+    Container.app.bilyetGiroClearingService.periksaJatuhTempo()
 }
 

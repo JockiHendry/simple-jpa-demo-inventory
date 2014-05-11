@@ -50,4 +50,22 @@ class BilyetGiroTest extends DbUnitTestCase {
         assertEquals(StatusFakturJual.LUNAS, f.status)
     }
 
+    public void testClearingService() {
+        BilyetGiroRepository repo = Container.app.bilyetGiroRepository
+        BilyetGiro bg1 = new BilyetGiro(nomorSeri: 'BS-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
+        BilyetGiro bg2 = new BilyetGiro(nomorSeri: 'BS-0002', nominal: 10000, jatuhTempo: LocalDate.now().plusMonths(1))
+        repo.buat(bg1)
+        repo.buat(bg2)
+
+        Container.app.bilyetGiroClearingService.periksaJatuhTempo()
+
+        bg1 = repo.findBilyetGiroByNomorSeri('BS-0001')
+        assertEquals(LocalDate.now(), bg1.tanggalPencairan)
+        assertTrue(bg1.sudahDicairkan())
+
+        bg2 = repo.findBilyetGiroByNomorSeri('BS-0002')
+        assertNull(bg2.tanggalPencairan)
+        assertFalse(bg2.sudahDicairkan())
+    }
+
 }
