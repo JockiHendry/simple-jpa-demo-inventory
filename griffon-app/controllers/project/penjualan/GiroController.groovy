@@ -19,7 +19,7 @@ import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
-import domain.penjualan.BilyetGiroRepository
+import domain.faktur.BilyetGiroRepository
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent

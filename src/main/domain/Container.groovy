@@ -26,7 +26,7 @@ import domain.inventory.SatuanRepository
 import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
-import domain.penjualan.BilyetGiroRepository
+import domain.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
 import domain.util.NomorService

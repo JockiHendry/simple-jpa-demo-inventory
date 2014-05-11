@@ -17,7 +17,7 @@ package project
 
 import domain.Container
 import domain.faktur.BilyetGiro
-import domain.penjualan.BilyetGiroRepository
+import domain.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
