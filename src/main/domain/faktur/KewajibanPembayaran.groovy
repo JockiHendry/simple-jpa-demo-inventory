@@ -42,8 +42,11 @@ class KewajibanPembayaran {
     }
 
     void bayar(Pembayaran pembayaran) {
-        if (pembayaran.jumlah > sisa()) {
-            throw new IllegalArgumentException("Pembayaran ${pembayaran.jumlah} melebihi sisa sebesar ${sisa()}")
+        // Sisa pembayaran termasuk giro yang belum jatuh tempo
+        def sisa = jumlah - (listPembayaran.sum { it.jumlah }?: 0)
+
+        if (pembayaran.jumlah > sisa) {
+            throw new IllegalArgumentException("Pembayaran ${pembayaran.jumlah} melebihi sisa sebesar ${sisa}")
         }
         listPembayaran << pembayaran
     }

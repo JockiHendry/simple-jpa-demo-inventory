@@ -46,6 +46,9 @@ class Pembayaran {
     }
 
     public BigDecimal nominal() {
+        if (bilyetGiro && !bilyetGiro.sudahDicairkan()) {
+            return 0
+        }
         jumlah
     }
 
