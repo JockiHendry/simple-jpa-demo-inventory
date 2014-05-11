@@ -24,12 +24,9 @@ import simplejpa.transaction.Transaction
 @Transaction
 class BilyetGiroRepository {
 
-    List<BilyetGiro> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSeriSearch,
-                          Boolean sudahDicairkanSearch = null) {
+    List<BilyetGiro> cari(String nomorSeriSearch, Boolean sudahDicairkanSearch = null) {
         findAllBilyetGiroByDsl([excludeDeleted: false]) {
-            tanggalPenerbitan between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSeriSearch) {
-                and()
                 nomorSeri like("%${nomorSeriSearch}%")
             }
             if (sudahDicairkanSearch) {
@@ -54,7 +51,6 @@ class BilyetGiroRepository {
         }
         old.nomorSeri = bilyetGiro.nomorSeri
         old.nominal = bilyetGiro.nominal
-        old.tanggalPenerbitan = bilyetGiro.tanggalPenerbitan
         old.tanggalEfektif = bilyetGiro.tanggalEfektif
         old
     }

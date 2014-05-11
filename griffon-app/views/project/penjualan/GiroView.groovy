@@ -41,9 +41,6 @@ application() {
 
         panel(constraints: PAGE_START) {
             flowLayout(alignment: FlowLayout.LEADING)
-            dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
-            label(' s/d ')
-            dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
             textField(id: 'nomorSeriSearch', columns: 20, text: bind('nomorSeriSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
@@ -57,9 +54,6 @@ application() {
                 glazedColumn(name: 'Nomor Seri', property: 'nomorSeri')
                 glazedColumn(name: 'Nominal', property: 'nominal', columnClass: Integer) {
                     templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
-                }
-                glazedColumn(name: 'Tanggal Penerbitan', property: 'tanggalPenerbitan') {
-                    templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                 }
                 glazedColumn(name: 'Tanggal Efektif', property: 'tanggalEfektif') {
                     templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
@@ -77,9 +71,6 @@ application() {
             label('Nominal:')
             decimalTextField(id: 'nominal', columns: 20, bindTo: 'nominal', errorPath: 'nominal')
             errorLabel(path: 'nominal', constraints: 'wrap')
-            label('Tanggal Penerbitan:')
-            dateTimePicker(id: 'tanggalPenerbitan', localDate: bind('tanggalPenerbitan', target: model, mutual: true), errorPath: 'tanggalPenerbitan', timeVisible: false)
-            errorLabel(path: 'tanggalPenerbitan', constraints: 'wrap')
             label('Tanggal Efektif:')
             dateTimePicker(id: 'tanggalEfektif', localDate: bind('tanggalEfektif', target: model, mutual: true), errorPath: 'tanggalEfektif', timeVisible: false)
             errorLabel(path: 'tanggalEfektif', constraints: 'wrap')

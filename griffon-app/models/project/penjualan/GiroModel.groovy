@@ -25,13 +25,10 @@ class GiroModel {
     @Bindable Long id
     @Bindable String nomorSeri
     @Bindable BigDecimal nominal
-    @Bindable LocalDate tanggalPenerbitan
     @Bindable LocalDate tanggalEfektif
     @Bindable LocalDate tanggalPencairan
 
     @Bindable String nomorSeriSearch
-    @Bindable LocalDate tanggalMulaiSearch
-    @Bindable LocalDate tanggalSelesaiSearch
 
     BasicEventList<BilyetGiro> bilyetGiroList = new BasicEventList<>()
 

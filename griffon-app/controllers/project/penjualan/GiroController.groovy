@@ -36,17 +36,10 @@ class GiroController {
     void mvcGroupInit(Map args) {
         bilyetGiroRepository = Container.app.bilyetGiroRepository
         model.popupMode = args.'popupMode'?: false
-        init()
-        search()
-    }
-
-    def init = {
-        model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
-        model.tanggalSelesaiSearch = LocalDate.now()
     }
 
     def search = {
-        List bilyetGiro = bilyetGiroRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSeriSearch)
+        List bilyetGiro = bilyetGiroRepository.cari(model.nomorSeriSearch)
         execInsideUISync {
             model.bilyetGiroList.clear()
             model.bilyetGiroList.addAll(bilyetGiro)
@@ -54,7 +47,7 @@ class GiroController {
     }
 
     def save = {
-        BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri, tanggalPenerbitan: model.tanggalPenerbitan,
+        BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri,
                                                nominal: model.nominal, tanggalEfektif: model.tanggalEfektif)
 
         if (!bilyetGiroRepository.validate(bilyetGiro, Default, model)) return
@@ -114,7 +107,6 @@ class GiroController {
         execInsideUISync {
             model.id = null
             model.nomorSeri = null
-            model.tanggalPenerbitan = null
             model.tanggalEfektif = null
             model.tanggalPencairan = null
             model.nominal = null
@@ -134,7 +126,6 @@ class GiroController {
                 model.id = selected.id
                 model.nomorSeri = selected.nomorSeri
                 model.nominal = selected.nominal
-                model.tanggalPenerbitan = selected.tanggalPenerbitan
                 model.tanggalEfektif = selected.tanggalEfektif
                 model.tanggalPencairan = selected.tanggalPencairan
             }

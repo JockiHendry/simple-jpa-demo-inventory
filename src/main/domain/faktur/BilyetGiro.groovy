@@ -33,9 +33,6 @@ class BilyetGiro {
     BigDecimal nominal
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggalPenerbitan
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalEfektif
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
