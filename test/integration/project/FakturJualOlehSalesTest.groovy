@@ -189,26 +189,34 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     public void testPembayaran() {
         FakturJualRepository repo = Container.app.fakturJualRepository
-        FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-6l)
-        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 1000, jatuhTempo: LocalDate.now().plusDays(30))
+        FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-7l)
+        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
         fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
-        assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar())
-        assertEquals(10000, fakturJualOlehSales.piutang.sisa())
+        assertEquals(0, fakturJualOlehSales.piutang.jumlahDibayar())
+        assertEquals(20000, fakturJualOlehSales.piutang.sisa())
         assertEquals(bg, repo.findBilyetGiroByNomorSeri('NX-0001'))
 
-        bg = repo.findBilyetGiroByNomorSeri('AB-111')
-        fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
-        assertEquals(20000, fakturJualOlehSales.piutang.jumlahDibayar())
-        assertEquals(0, fakturJualOlehSales.piutang.sisa())
-        assertTrue(fakturJualOlehSales.piutang.lunas)
+        fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000))
+        assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar())
+        assertEquals(10000, fakturJualOlehSales.piutang.sisa())
+        assertFalse(fakturJualOlehSales.piutang.lunas)
+
+        shouldFail(IllegalArgumentException) {
+            repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 100000))
+        }
+
         repo.withTransaction {
-            Konsumen konsumen = repo.findKonsumenById(-1l)
+
+            bg = findBilyetGiroByNomorSeri('NX-0001')
+            fakturJualOlehSales = findFakturJualOlehSalesById(-7l)
+
+            bg.cairkan(LocalDate.now())
+            assertTrue(fakturJualOlehSales.piutang.lunas)
+
+            Konsumen konsumen = findKonsumenById(-1l)
             assertFalse(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
         }
         assertEquals(StatusFakturJual.LUNAS, fakturJualOlehSales.status)
-        assertEquals(bg, repo.findBilyetGiroByNomorSeri('AB-111'))
-        assertEquals(1, repo.findAllBilyetGiroByNomorSeri('AB-111').size())
-
     }
 
     public void testBonus() {

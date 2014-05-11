@@ -18,6 +18,7 @@
 
 package domain
 
+import domain.event.BilyetGiroEventConsumer
 import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
@@ -57,6 +58,7 @@ class Container {
     BilyetGiroRepository bilyetGiroRepository
 
     InventoryEventConsumer inventoryEventConsumer
+    BilyetGiroEventConsumer bilyetGiroEventConsumer
 
     PasswordService passwordService
     NomorService nomorService
@@ -85,8 +87,11 @@ class Container {
 
         // Create event consumers
         inventoryEventConsumer = new InventoryEventConsumer()
+        bilyetGiroEventConsumer = new BilyetGiroEventConsumer()
+
         if (ApplicationHolder.application) {
             ApplicationHolder.application.addApplicationEventListener(inventoryEventConsumer)
+            ApplicationHolder.application.addApplicationEventListener(bilyetGiroEventConsumer)
         } else {
             log.warn 'Can not find Griffon application. Is this launched by Griffon? Event listener will not working!'
         }

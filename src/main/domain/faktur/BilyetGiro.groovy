@@ -15,6 +15,7 @@
  */
 package domain.faktur
 
+import domain.event.BilyetGiroCleared
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -22,6 +23,7 @@ import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
+import griffon.util.ApplicationHolder
 
 @DomainClass @Entity @Canonical
 class BilyetGiro {
@@ -50,6 +52,7 @@ class BilyetGiro {
             throw new IllegalStateException('Tidak boleh mencairkan bilyet giro yang belum efektif!')
         }
         this.tanggalPencairan = tanggalPencairan
+        ApplicationHolder.application?.event(new BilyetGiroCleared(this))
     }
 
     boolean sudahDicairkan() {
