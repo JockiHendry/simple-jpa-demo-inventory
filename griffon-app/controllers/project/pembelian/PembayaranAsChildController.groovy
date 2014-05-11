@@ -45,7 +45,7 @@ class PembayaranAsChildController {
     }
 
     def save = {
-        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, bilyetGiro: model.bilyetGiro)
+        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan, bilyetGiro: model.bilyetGiro)
         if (!repo.validate(pembayaran, Default, model)) return
 
         try {
@@ -100,6 +100,7 @@ class PembayaranAsChildController {
             model.tanggal = null
             model.jumlah = null
             model.bilyetGiro = null
+            model.potongan = false
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -114,6 +115,7 @@ class PembayaranAsChildController {
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah
+                model.potongan = selected.potongan
                 model.bilyetGiro = selected.bilyetGiro
             }
         }

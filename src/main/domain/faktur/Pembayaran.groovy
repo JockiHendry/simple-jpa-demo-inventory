@@ -32,6 +32,9 @@ class Pembayaran {
     @NotNull @Min(0l)
     BigDecimal jumlah
 
+    @NotNull
+    Boolean potongan = Boolean.FALSE
+
     @ManyToOne
     BilyetGiro bilyetGiro
 
@@ -42,6 +45,9 @@ class Pembayaran {
         bilyetGiro = new BilyetGiro(nomorSeri, tanggalPenerbitan, tanggalEfektif)
     }
 
+    public BigDecimal nominal() {
+        jumlah
+    }
 
 }
 

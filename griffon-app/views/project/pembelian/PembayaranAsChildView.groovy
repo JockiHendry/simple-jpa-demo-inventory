@@ -47,8 +47,11 @@ application(title: 'simple-jpa-demo-inventory',
                     glazedColumn(name: 'Jumlah', property: 'jumlah', columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
+                    glazedColumn(name: 'Potongan', property: 'potongan') {
+                        templateRenderer(exp: {it? 'Y': ''})
+                    }
                     glazedColumn(name: 'Bilyet Giro', property: 'bilyetGiro') {
-                        templateRenderer(exp: {!it?'-':it.nomorSeri})
+                        templateRenderer(exp: {!it?'':it.nomorSeri})
                     }
                 }
             }
@@ -61,6 +64,9 @@ application(title: 'simple-jpa-demo-inventory',
             label('Jumlah:')
             decimalTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
             errorLabel(path: 'jumlah', constraints: 'wrap')
+            label('Potongan:')
+            checkBox(id: 'potongan', selected: bind('potongan', target: model, mutual: true), errorPath: 'potongan')
+            errorLabel(path: 'potongan', constraints: 'wrap')
             label('Bilyet Giro:')
             panel {
                 label(text: bind { model.bilyetGiro?.nomorSeri?: '- kosong -' })

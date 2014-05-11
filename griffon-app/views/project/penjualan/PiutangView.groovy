@@ -81,8 +81,7 @@ application() {
 
         panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind {table.isRowSelected}, constraints: PAGE_END, focusCycleRoot: true) {
             label('Pembayaran:')
-            button(id: 'listPembayaranHutang', action: showPembayaran, errorPath: 'listPembayaranHutang')
-            errorLabel(path: 'listPembayaranHutang', constraints: 'wrap')
+            button(id: 'listPembayaranHutang', action: showPembayaran, constraints: 'wrap')
         }
     }
 }

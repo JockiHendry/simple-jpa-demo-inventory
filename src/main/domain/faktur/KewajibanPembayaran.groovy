@@ -34,7 +34,7 @@ class KewajibanPembayaran {
     }
 
     BigDecimal jumlahDibayar() {
-        listPembayaran.sum { it.jumlah }?: 0
+        listPembayaran.sum { it.nominal() }?: 0
     }
 
     boolean isLunas() {

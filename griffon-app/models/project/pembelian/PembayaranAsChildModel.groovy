@@ -28,6 +28,7 @@ class PembayaranAsChildModel {
     @Bindable LocalDate tanggal
     @Bindable BigDecimal jumlah
     @Bindable BilyetGiro bilyetGiro
+    @Bindable Boolean potongan
 
     BasicEventList<Pembayaran> pembayaranList = new BasicEventList<>()
 
