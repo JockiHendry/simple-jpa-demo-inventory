@@ -20,7 +20,6 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
 import domain.penjualan.BilyetGiroRepository
-import org.joda.time.LocalDate
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -48,7 +47,7 @@ class GiroController {
 
     def save = {
         BilyetGiro bilyetGiro = new BilyetGiro(id: model.id, nomorSeri: model.nomorSeri,
-                                               nominal: model.nominal, tanggalEfektif: model.tanggalEfektif)
+                                               nominal: model.nominal, jatuhTempo: model.jatuhTempo)
 
         if (!bilyetGiroRepository.validate(bilyetGiro, Default, model)) return
 
@@ -107,7 +106,7 @@ class GiroController {
         execInsideUISync {
             model.id = null
             model.nomorSeri = null
-            model.tanggalEfektif = null
+            model.jatuhTempo = null
             model.tanggalPencairan = null
             model.nominal = null
 
@@ -126,7 +125,7 @@ class GiroController {
                 model.id = selected.id
                 model.nomorSeri = selected.nomorSeri
                 model.nominal = selected.nominal
-                model.tanggalEfektif = selected.tanggalEfektif
+                model.jatuhTempo = selected.jatuhTempo
                 model.tanggalPencairan = selected.tanggalPencairan
             }
         }

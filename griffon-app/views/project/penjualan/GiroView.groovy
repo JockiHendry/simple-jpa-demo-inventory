@@ -55,7 +55,7 @@ application() {
                 glazedColumn(name: 'Nominal', property: 'nominal', columnClass: Integer) {
                     templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Tanggal Efektif', property: 'tanggalEfektif') {
+                glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo') {
                     templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                 }
                 glazedColumn(name: 'Tanggal Pencairan', property: 'tanggalPencairan') {
@@ -71,9 +71,9 @@ application() {
             label('Nominal:')
             decimalTextField(id: 'nominal', columns: 20, bindTo: 'nominal', errorPath: 'nominal')
             errorLabel(path: 'nominal', constraints: 'wrap')
-            label('Tanggal Efektif:')
-            dateTimePicker(id: 'tanggalEfektif', localDate: bind('tanggalEfektif', target: model, mutual: true), errorPath: 'tanggalEfektif', timeVisible: false)
-            errorLabel(path: 'tanggalEfektif', constraints: 'wrap')
+            label('Jatuh Tempo:')
+            dateTimePicker(id: 'jatuhTempo', localDate: bind('jatuhTempo', target: model, mutual: true), errorPath: 'jatuhTempo', timeVisible: false)
+            errorLabel(path: 'jatuhTempo', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)

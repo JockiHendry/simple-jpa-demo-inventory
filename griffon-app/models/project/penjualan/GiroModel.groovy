@@ -25,7 +25,7 @@ class GiroModel {
     @Bindable Long id
     @Bindable String nomorSeri
     @Bindable BigDecimal nominal
-    @Bindable LocalDate tanggalEfektif
+    @Bindable LocalDate jatuhTempo
     @Bindable LocalDate tanggalPencairan
 
     @Bindable String nomorSeriSearch

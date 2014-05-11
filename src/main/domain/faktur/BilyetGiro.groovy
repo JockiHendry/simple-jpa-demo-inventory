@@ -33,13 +33,13 @@ class BilyetGiro {
     BigDecimal nominal
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggalEfektif
+    LocalDate jatuhTempo
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalPencairan
 
     boolean sudahJatuhTempo(LocalDate tanggal = LocalDate.now()) {
-        tanggalEfektif.isEqual(tanggal) || tanggalEfektif.isBefore(tanggal)
+        jatuhTempo.isEqual(tanggal) || jatuhTempo.isBefore(tanggal)
     }
 
     void cairkan(LocalDate tanggalPencairan) {
