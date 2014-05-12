@@ -42,8 +42,8 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
 
     public void testAntar() {
         FakturJualEceran f = new FakturJualEceran(tanggal: LocalDate.now())
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B',  9000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 11000, 50)
+        Produk produkB = new Produk('Produk B',  9000, 91000, 50)
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
 
@@ -65,8 +65,8 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
 
     public void testBayar() {
         FakturJualEceran f = new FakturJualEceran(tanggal: LocalDate.now())
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B',  9000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 11000, 50)
+        Produk produkB = new Produk('Produk B',  9000, 9100, 50)
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
         shouldFail(DataTidakBolehDiubah) {

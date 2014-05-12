@@ -46,8 +46,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testKirim() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen konsumen = new Konsumen(nama: 'Konsumen', sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen:  konsumen)
@@ -63,8 +63,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testTambahBuktiTerima() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen konsumen = new Konsumen(nama: 'Konsumen', sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
@@ -81,8 +81,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testBayar() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen k = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
@@ -102,8 +102,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testHapusPembayaranGagal() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen k = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
@@ -124,8 +124,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testSisaPiutang() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen k = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
@@ -143,8 +143,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testTambahBonus() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen konsumen = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
@@ -161,8 +161,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     public void testHapusBonus() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen konsumen = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
@@ -183,8 +183,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     }
 
     void testBarangYangHarusDikirim() {
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
         Konsumen konsumen = new Konsumen(sales: showroom)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)

@@ -39,8 +39,8 @@ class KonsumenTests extends GriffonUnitTestCase {
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
         Konsumen mrNiceGuy = new Konsumen(sales: sales)
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 20000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 20000, 20100, 50)
         FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', konsumen: mrNiceGuy)
         f1.tambah(new ItemFaktur(produkA, 10, 10000))
         f1.tambah(new ItemFaktur(produkB, 5, 20000))
@@ -62,8 +62,8 @@ class KonsumenTests extends GriffonUnitTestCase {
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
         Konsumen mrNiceGuy = new Konsumen(sales: sales)
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 20000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 20000, 20100, 50)
         FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'FA1', konsumen: mrNiceGuy, jatuhTempo: LocalDate.now().plusDays(5))
         f1.tambah(new ItemFaktur(produkA, 10, 10000))
         f1.tambah(new ItemFaktur(produkB, 5, 20000))
@@ -81,8 +81,8 @@ class KonsumenTests extends GriffonUnitTestCase {
         Gudang gudang = new Gudang()
         Sales sales = new Sales(gudang: gudang)
         Konsumen mrNiceGuy = new Konsumen(creditLimit: 50000, sales: sales)
-        Produk produkA = new Produk('Produk A', 1000, 50)
-        Produk produkB = new Produk('Produk B', 2000, 50)
+        Produk produkA = new Produk('Produk A', 1000, 1010, 50)
+        Produk produkB = new Produk('Produk B', 2000, 2010, 50)
         FakturJualOlehSales f1 = new FakturJualOlehSales(konsumen: mrNiceGuy, jatuhTempo: LocalDate.now().plusDays(5))
         f1.tambah(new ItemFaktur(produkA, 3, 1000))
         f1.tambah(new ItemFaktur(produkB, 5, 2000))
@@ -94,15 +94,17 @@ class KonsumenTests extends GriffonUnitTestCase {
     }
 
     public void testGetHargaDiskon() {
-        Konsumen konsumen = new Konsumen()
-        Produk produk = new Produk('Produk A', 1000, 10)
+        Sales sales = new Sales(gudang: new Gudang(utama: true))
+        Konsumen konsumen = new Konsumen(sales: sales)
+        Produk produk = new Produk('Produk A', 1000, 1100, 10)
         konsumen.diskon[produk] = new Diskon(2)
         assertEquals(980, konsumen.getHargaDiskon(produk))
     }
 
     public void testSetHargaDiskon() {
-        Konsumen konsumen = new Konsumen()
-        Produk produk = new Produk('Produk A', 1000, 10)
+        Sales sales = new Sales(gudang: new Gudang(utama: true))
+        Konsumen konsumen = new Konsumen(sales: sales)
+        Produk produk = new Produk('Produk A', 1000, 1100, 10)
         konsumen.setDiskon(produk, 980)
         assertEquals(2, konsumen.diskon[produk].potonganPersen)
 

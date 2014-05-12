@@ -20,7 +20,6 @@ import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
 import domain.inventory.ProdukRepository
-import project.inventory.ProdukModel
 import simplejpa.swing.DialogUtils
 import simplejpa.transaction.Transaction
 
@@ -41,30 +40,16 @@ class ProdukController {
     ProdukRepository produkRepository
 
     public static Produk displayProdukPopup(view, boolean allowTambahProduk = true) {
-        MVCGroup produkPopupMVC = ApplicationHolder.application.mvcGroupManager.buildMVCGroup('produk',
-            'produkPopupDiItemBarang', [popup: true, allowTambahProduk: allowTambahProduk])
-        def v = produkPopupMVC.view
-        Window thisWindow = SwingUtilities.getWindowAncestor(view.mainPanel)
-        JDialog dialog = new JDialog(thisWindow, Dialog.ModalityType.APPLICATION_MODAL)
-        if (DialogUtils.defaultContentDecorator) {
-            dialog.contentPane = DialogUtils.defaultContentDecorator(v.mainPanel)
-        } else {
-            dialog.contentPane = v.mainPanel
+        def args = [popup: true, allowTambahProduk: allowTambahProduk]
+        def dialogProps = [title: 'Cari Produk', size: new Dimension(900,420)]
+        Produk result = null
+        DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
+            if (v.table.selectionModel.isSelectionEmpty()) {
+                JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+            } else {
+                result = v.view.table.selectionModel.selected[0]
+            }
         }
-        dialog.pack()
-        dialog.title = "Cari Produk"
-        dialog.size = new Dimension(900, 420)
-        dialog.setLocationRelativeTo(thisWindow)
-        dialog.setVisible(true)
-
-        // Setelah dialog selesai ditampilkan
-        Produk result
-        if (v.table.selectionModel.isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
-        } else {
-            result = v.view.table.selectionModel.selected[0]
-        }
-        ApplicationHolder.application.mvcGroupManager.destroyMVCGroup('produkPopupDiItemBarang')
         result
     }
 
@@ -96,7 +81,8 @@ class ProdukController {
     }
 
     def save = {
-        Produk produk = new Produk(id: model.id, nama: model.nama, harga: model.harga, satuan: model.satuan.selectedItem)
+        Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota,
+            hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem)
         if (!produkRepository.validate(produk, Default, model)) return
 
         try {
@@ -132,7 +118,8 @@ class ProdukController {
         execInsideUISync {
             model.id = null
 			model.nama = null
-			model.harga = null
+			model.hargaDalamKota = null
+            model.hargaLuarKota = null
             model.satuan.selectedItem = null
 			model.daftarStok.clear()
 
@@ -159,7 +146,8 @@ class ProdukController {
                 model.errors.clear()
                 model.id = selected.id
 				model.nama = selected.nama
-				model.harga = selected.harga
+				model.hargaDalamKota = selected.hargaDalamKota
+                model.hargaLuarKota = selected.hargaLuarKota
                 model.satuan.selectedItem = selected.satuan
 				model.daftarStok.clear()
 				model.daftarStok.addAll(selected.daftarStok)

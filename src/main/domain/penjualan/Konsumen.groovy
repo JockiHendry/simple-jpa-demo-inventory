@@ -85,11 +85,11 @@ class Konsumen {
     }
 
     public BigDecimal getHargaDiskon(Produk produk) {
-        diskon[produk].hasil(produk.harga)
+        diskon[produk].hasil(produk.hargaUntuk(sales))
     }
 
     public setDiskon(Produk produk, BigDecimal hargaJual) {
-        diskon[produk] = new Diskon(((produk.harga-hargaJual)/produk.harga)*100)
+        diskon[produk] = new Diskon(((produk.hargaUntuk(sales)-hargaJual)/produk.hargaUntuk(sales))*100)
     }
 
     public void tambahFakturBelumLunas(FakturJualOlehSales faktur) {

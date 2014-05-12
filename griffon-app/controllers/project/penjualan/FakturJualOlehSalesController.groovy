@@ -144,9 +144,13 @@ class FakturJualOlehSalesController {
     }
 
     def showItemFaktur = {
+        if (!model.konsumen.selectedItem) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            return
+        }
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
-                        allowTambahProduk: false, showHarga: model.showFakturJual]
+                        sales: model.konsumen.selectedItem.sales, allowTambahProduk: false, showHarga: model.showFakturJual]
             def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()

@@ -15,8 +15,6 @@
  */
 package project
 
-import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.ItemFaktur
 import domain.inventory.ItemBarang
@@ -44,8 +42,8 @@ class FakturJualTests extends GriffonUnitTestCase {
                 super.tambah(p)
             }
         }
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
         f.tambah(new ItemFaktur(produkB, 7))
 
@@ -87,8 +85,8 @@ class FakturJualTests extends GriffonUnitTestCase {
                 super.tambah(p)
             }
         }
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
         f.tambah(new ItemFaktur(produkB, 7))
 
@@ -110,8 +108,8 @@ class FakturJualTests extends GriffonUnitTestCase {
                 super.tambah(p)
             }
         }
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
         f.tambah(new ItemFaktur(produkB, 7))
 
@@ -132,8 +130,8 @@ class FakturJualTests extends GriffonUnitTestCase {
                 super.tambah(p)
             }
         }
-        Produk produkA = new Produk('Produk A', 10000, 50)
-        Produk produkB = new Produk('Produk B', 12000, 50)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 7, 12000))
 
@@ -151,8 +149,8 @@ class FakturJualTests extends GriffonUnitTestCase {
 
     public void testStokTidakCukup() {
         FakturJual f = new FakturJual() {}
-        Produk produkA = new Produk(nama: 'Produk A', harga: 10000, jumlah: 50)
-        Produk produkB = new Produk(nama: 'Produk B', harga: 12000, jumlah: 30)
+        Produk produkA = new Produk(nama: 'Produk A', hargaDalamKota: 10000, jumlah: 50)
+        Produk produkB = new Produk(nama: 'Produk B', hargaDalamKota: 12000, jumlah: 30)
         f.tambah(new ItemFaktur(produkB, 20))
         shouldFail(StokTidakCukup) {
             f.tambah(new ItemFaktur(produkA, 70))

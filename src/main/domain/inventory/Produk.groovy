@@ -17,6 +17,7 @@
 package domain.inventory
 
 import domain.faktur.Faktur
+import domain.penjualan.Sales
 import groovy.transform.*
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
@@ -40,7 +41,10 @@ class Produk implements Comparable {
     String nama
 
     @NotNull
-    BigDecimal harga
+    BigDecimal hargaDalamKota
+
+    @NotNull
+    BigDecimal hargaLuarKota
 
     @Min(0l)
     Integer jumlah = 0
@@ -80,6 +84,10 @@ class Produk implements Comparable {
         true
     }
 
+    public BigDecimal hargaUntuk(Sales sales) {
+        sales.dalamKota()? hargaDalamKota: hargaLuarKota
+    }
+
     boolean equals(o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
@@ -96,7 +104,7 @@ class Produk implements Comparable {
     }
 
     String toString() {
-        "$nama - ${NumberFormat.currencyInstance.format(harga)}"
+        "$nama"
     }
 
     @Override

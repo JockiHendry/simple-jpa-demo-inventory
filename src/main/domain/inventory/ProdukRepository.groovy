@@ -65,7 +65,8 @@ class ProdukRepository {
     public Produk update(Produk produk) {
         Produk p = findProdukById(produk.id)
         p.nama = produk.nama
-        p.harga = produk.harga
+        p.hargaDalamKota = produk.hargaDalamKota
+        p.hargaLuarKota = produk.hargaLuarKota
         p.satuan = produk.satuan
         p
     }

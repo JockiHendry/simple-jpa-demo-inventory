@@ -79,7 +79,10 @@ application(title: 'Produk',
                 glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                         doubleClickAction: pilih, enterKeyAction: pilih) {
 					glazedColumn(name: 'Nama', property: 'nama')
-					glazedColumn(name: 'Harga Eceran Tertinggi (HET)', property: 'harga', columnClass: Integer) {
+					glazedColumn(name: 'HET Dalam Kota', property: 'hargaDalamKota', columnClass: Integer) {
+                        templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer) {
@@ -95,9 +98,12 @@ application(title: 'Produk',
 			label('Nama:')
 			textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
 			errorLabel(path: 'nama', constraints: 'wrap')
-			label('Harga:')
-			decimalTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
-			errorLabel(path: 'harga', constraints: 'wrap')
+			label('HET Dalam Kota:')
+			decimalTextField(id: 'hargaDalamKota', columns: 20, bindTo: 'hargaDalamKota', errorPath: 'hargaDalamKota')
+			errorLabel(path: 'hargaDalamKota', constraints: 'wrap')
+            label('HET Luar Kota:')
+            decimalTextField(id: 'hargaLuarKota', columns: 20, bindTo: 'hargaLuarKota', errorPath: 'hargaLuarKota')
+            errorLabel(path: 'hargaLuarKota', constraints: 'wrap')
             label('Satuan:')
             comboBox(id: 'satuan', model: model.satuan, templateRenderer: '${value}', errorPath: 'satuan')
             errorLabel(path: 'satuan', constraints: 'wrap')

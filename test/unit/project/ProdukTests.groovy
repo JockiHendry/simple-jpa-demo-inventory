@@ -29,7 +29,7 @@ class ProdukTests extends GriffonUnitTestCase {
     }
 
     public void testTersediaUntuk() {
-        Produk p = new Produk(nama: 'Produk A', harga: 10000, jumlah: 100, jumlahAkanDikirim: 30)
+        Produk p = new Produk(nama: 'Produk A', hargaDalamKota: 10000, jumlah: 100, jumlahAkanDikirim: 30)
         assertTrue(p.tersediaUntuk(50))
         assertTrue(p.tersediaUntuk(65))
         assertTrue(p.tersediaUntuk(70))
