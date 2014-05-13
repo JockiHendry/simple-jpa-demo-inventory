@@ -229,7 +229,7 @@ class FakturJualRepository {
     }
 
     FakturJual buat(FakturJual fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus = []) {
-        fakturJual.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.FAKTUR_JUAL)
+        fakturJual.nomor = Container.app.nomorService.buatNomorFakturJual(fakturJual)
         if (findFakturJualByNomor(fakturJual.nomor)) {
             throw new DataDuplikat(fakturJual)
         }

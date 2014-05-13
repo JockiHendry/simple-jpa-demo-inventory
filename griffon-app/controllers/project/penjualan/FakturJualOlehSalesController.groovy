@@ -51,14 +51,12 @@ class FakturJualOlehSalesController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
         execInsideUISync {
             model.konsumenList.clear()
         }
         List konsumen = fakturJualRepository.findAllKonsumen()
         execInsideUISync {
             model.konsumenList.addAll(konsumen)
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = Container.SEMUA
@@ -75,7 +73,7 @@ class FakturJualOlehSalesController {
     }
 
     def save = {
-        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
             konsumen: model.konsumen.selectedItem)
         model.listItemFaktur.each { fakturJualOlehSales.tambah(it) }
@@ -172,7 +170,7 @@ class FakturJualOlehSalesController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
+            model.nomor = null
             model.tanggal = null
             model.konsumen.selectedItem = null
             model.keterangan = null

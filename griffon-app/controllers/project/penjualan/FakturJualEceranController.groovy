@@ -74,8 +74,7 @@ class FakturJualEceranController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
-        model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
+        model.nomor = Container.app.nomorService.getCalonNomorFakturJual()
         model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
         model.tanggalSelesaiSearch = LocalDate.now()
     }
@@ -205,7 +204,7 @@ class FakturJualEceranController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.FAKTUR_JUAL)
+            model.nomor = Container.app.nomorService.getCalonNomorFakturJual()
             model.tanggal = null
             model.namaPembeli = null
             model.keterangan = null

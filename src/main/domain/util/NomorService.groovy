@@ -15,6 +15,9 @@
  */
 package domain.util
 
+import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.Sales
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -26,7 +29,7 @@ class NomorService {
     private final Logger log = LoggerFactory.getLogger(NomorService)
 
     public enum TIPE {
-        FAKTUR_JUAL('FakturJual', '%06d-FJ-KB-%s'),
+        FAKTUR_JUAL('FakturJual', '%06d/%s/%s'),
         PENGELUARAN_BARANG('PengeluaranBarang', '%06d-SJ-KB-%s'),
         PENGELUARAN_BONUS('BonusPenjualan', '%06d-BONUS-%s'),
         PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s')
@@ -65,9 +68,26 @@ class NomorService {
         hasil
     }
 
+    public String buatNomorFakturJual(Sales sales = null) {
+        getCalonNomorFakturJual(sales)
+    }
+
+    public String buatNomorFakturJual(FakturJual fakturJual) {
+        if (fakturJual instanceof FakturJualOlehSales) {
+            return buatNomorFakturJual(fakturJual.konsumen.sales)
+        } else {
+            return buatNomorFakturJual()
+        }
+    }
+
     @Transaction(Transaction.Policy.SKIP)
     public String getCalonNomor(TIPE tipe) {
         String.format(tipe.format, getNomorTerakhir(tipe)+1, LocalDate.now().toString('MMyyyy'))
+    }
+
+    public String getCalonNomorFakturJual(Sales sales = null) {
+        String.format(TIPE.FAKTUR_JUAL.format, getNomorFakturJualTerakhir(sales)+1, LocalDate.now().toString('MMyyyy'),
+            sales? sales.kode: 'ECERAN')
     }
 
     @Transaction(Transaction.Policy.SKIP)
@@ -76,5 +96,28 @@ class NomorService {
             nomorUrutTerakhir[tipe] = 0
         }
         nomorUrutTerakhir[tipe]
+    }
+
+    public long getNomorFakturJualTerakhir(Sales salesSearch = null) {
+        List result
+        if (salesSearch) {
+            result = findAllFakturJualOlehSalesByDsl([pageSize: 1, orderBy: 'nomor', orderDirection: 'desc']) {
+                konsumen__sales eq(salesSearch)
+                and()
+                tanggal gt(LocalDate.now().withDayOfYear(1).minusDays(1))
+            }
+        } else {
+            result = findAllFakturJualEceranByDsl([pageSize: 1, orderBy: 'nomor', orderDirection: 'desc']) {
+                tanggal gt(LocalDate.now().withDayOfYear(1).minusDays(1))
+            }
+        }
+        if (!result?.empty) {
+            try {
+                return Integer.valueOf(result[0].nomor.substring(0, 6))
+            } catch (NumberFormatException nfe) {
+                return 0
+            }
+        }
+        0
     }
 }

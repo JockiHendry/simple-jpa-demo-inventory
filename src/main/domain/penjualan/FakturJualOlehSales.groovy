@@ -172,7 +172,11 @@ class FakturJualOlehSales extends FakturJual {
     }
 
     int hashCode() {
-        return nomor.hashCode()
+        if (nomor) {
+            return nomor.hashCode()
+        } else {
+            return 1
+        }
     }
 
 }
