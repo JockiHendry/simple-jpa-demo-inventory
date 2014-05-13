@@ -54,7 +54,8 @@ class SalesController {
     }
 
     def save = {
-        Sales sales = new Sales(id: model.id, 'nama': model.nama, 'nomorTelepon': model.nomorTelepon, 'gudang': model.gudang.selectedItem)
+        Sales sales = new Sales(id: model.id, 'nama': model.nama, 'nomorTelepon': model.nomorTelepon,
+            'gudang': model.gudang.selectedItem, kode: model.kode)
 
         if (!salesRepository.validate(sales, Default, model)) return
 
@@ -94,6 +95,7 @@ class SalesController {
             model.nama = null
             model.nomorTelepon = null
             model.gudang.selectedItem = null
+            model.kode = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -111,6 +113,7 @@ class SalesController {
                 model.nama = selected.nama
                 model.nomorTelepon = selected.nomorTelepon
                 model.gudang.selectedItem = selected.gudang
+                model.kode = selected.kode
             }
         }
     }

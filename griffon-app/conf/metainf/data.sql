@@ -132,9 +132,9 @@ INSERT INTO `region` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`) VA
 INSERT INTO `region` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`) VALUES (-3,'2014-02-22 07:00:00','N',NULL,'Region C');
 INSERT INTO `region` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`) VALUES (-2,'2014-02-22 07:00:00','N',NULL,'Region B');
 INSERT INTO `region` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`) VALUES (-1,'2014-02-22 07:00:00','N',NULL,'Region A');
-INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-3,'2014-02-22 07:00:00','N',NULL,'Sales C',NULL,-3);
-INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-2,'2014-02-22 07:00:00','N',NULL,'Sales B',NULL,-2);
-INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`) VALUES (-1,'2014-02-22 07:00:00','N',NULL,'Sales A',NULL,-1);
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`, `kode`) VALUES (-3,'2014-02-22 07:00:00','N',NULL,'Sales C',NULL,-3, 'SC');
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`, `kode`) VALUES (-2,'2014-02-22 07:00:00','N',NULL,'Sales B',NULL,-2, 'SB');
+INSERT INTO `sales` (`id`, `createdDate`, `deleted`, `modifiedDate`, `nama`, `nomorTelepon`, `gudang_id`, `kode`) VALUES (-1,'2014-02-22 07:00:00','N',NULL,'Sales A',NULL,-1, 'SA');
 INSERT INTO `purchaseorder` (`id`, `potonganLangsung`, `potonganPersen`, `keterangan`, `nomor`, `tanggal`, `createdDate`, `deleted`, `modifiedDate`, `status`, `fakturBeli_id`, `supplier_id`) VALUES (-7,NULL,NULL,NULL,'000007-PO-KB-032014','2014-03-05','2014-02-22 07:00:00','N',NULL,3,-5,-2);
 INSERT INTO `purchaseorder` (`id`, `potonganLangsung`, `potonganPersen`, `keterangan`, `nomor`, `tanggal`, `createdDate`, `deleted`, `modifiedDate`, `status`, `fakturBeli_id`, `supplier_id`) VALUES (-6,NULL,NULL,NULL,'000006-PO-KB-032014','2014-03-05','2014-02-22 07:00:00','N',NULL,0,NULL,-2);
 INSERT INTO `purchaseorder` (`id`, `potonganLangsung`, `potonganPersen`, `keterangan`, `nomor`, `tanggal`, `createdDate`, `deleted`, `modifiedDate`, `status`, `fakturBeli_id`, `supplier_id`) VALUES (-5,NULL,NULL,NULL,'000005-PO-KB-032014','2014-03-04','2014-02-22 07:00:00','N',NULL,3,-1,-3);

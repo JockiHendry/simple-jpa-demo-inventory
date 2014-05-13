@@ -34,6 +34,9 @@ class Sales {
     @NotNull @ManyToOne
     Gudang gudang
 
+    @NotEmpty @Size(min=2, max=10)
+    String kode
+
     public boolean dalamKota() {
         gudang.utama
     }

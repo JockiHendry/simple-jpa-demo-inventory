@@ -45,6 +45,7 @@ application(title: 'Sales',
                 glazedColumn(name: 'Nama', property: 'nama')
                 glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
                 glazedColumn(name: 'Gudang', property: 'gudang')
+                glazedColumn(name: 'Kode', property: 'kode')
             }
         }
 
@@ -58,6 +59,9 @@ application(title: 'Sales',
             label('Gudang:')
             comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
             errorLabel(path: 'gudang', constraints: 'wrap')
+            label('Kode:')
+            textField(id: 'kode', columns: 15, text: bind('kode', target: model, mutual: true), errorPath: 'kode')
+            errorLabel(path: 'kode', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)

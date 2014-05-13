@@ -30,6 +30,7 @@ class SalesModel {
     @Bindable Long id
     @Bindable String nama
     @Bindable String nomorTelepon
+    @Bindable String kode
     BasicEventList<Gudang> gudangList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
 
