@@ -93,21 +93,4 @@ class KonsumenTests extends GriffonUnitTestCase {
         assertFalse(mrNiceGuy.bolehKredit(40000))
     }
 
-    public void testGetHargaDiskon() {
-        Sales sales = new Sales(gudang: new Gudang(utama: true))
-        Konsumen konsumen = new Konsumen(sales: sales)
-        Produk produk = new Produk('Produk A', 1000, 1100, 10)
-        konsumen.diskon[produk] = new Diskon(2)
-        assertEquals(980, konsumen.getHargaDiskon(produk))
-    }
-
-    public void testSetHargaDiskon() {
-        Sales sales = new Sales(gudang: new Gudang(utama: true))
-        Konsumen konsumen = new Konsumen(sales: sales)
-        Produk produk = new Produk('Produk A', 1000, 1100, 10)
-        konsumen.setDiskon(produk, 980)
-        assertEquals(2, konsumen.diskon[produk].potonganPersen)
-
-    }
-
 }

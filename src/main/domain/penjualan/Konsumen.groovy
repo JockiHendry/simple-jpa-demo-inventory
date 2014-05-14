@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.*
 @NamedEntityGraphs([
     @NamedEntityGraph(name='Konsumen.Complete', attributeNodes = [
         @NamedAttributeNode('listFakturBelumLunas'),
-        @NamedAttributeNode('diskon')
+        @NamedAttributeNode('hargaTerakhir')
     ], subgraphs = [
         @NamedSubgraph(name='faktur', attributeNodes = [
                 @NamedAttributeNode('listItemFaktur')
@@ -40,7 +40,7 @@ import org.hibernate.validator.constraints.*
         ])
     ]),
 ])
-@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,diskon')
+@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir')
 class Konsumen {
 
     @NotEmpty @Size(min=2, max=100)
@@ -68,7 +68,7 @@ class Konsumen {
     List<FakturJualOlehSales> listFakturBelumLunas = []
 
     @ElementCollection
-    Map<Produk, Diskon> diskon = [:]
+    Map<Produk, BigDecimal> hargaTerakhir = [:]
 
     public BigDecimal jumlahPiutang() {
         listFakturBelumLunas.sum { it.total() }?: 0
@@ -82,14 +82,6 @@ class Konsumen {
         if (adaTagihanJatuhTempo()) return false
         if ((jumlahPiutang() + pengajuan) > creditLimit) return false
         true
-    }
-
-    public BigDecimal getHargaDiskon(Produk produk) {
-        diskon[produk].hasil(produk.hargaUntuk(sales))
-    }
-
-    public setDiskon(Produk produk, BigDecimal hargaJual) {
-        diskon[produk] = new Diskon(((produk.hargaUntuk(sales)-hargaJual)/produk.hargaUntuk(sales))*100)
     }
 
     public void tambahFakturBelumLunas(FakturJualOlehSales faktur) {
