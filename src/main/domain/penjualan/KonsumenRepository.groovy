@@ -17,6 +17,7 @@ package domain.penjualan
 
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.Produk
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -58,4 +59,10 @@ class KonsumenRepository {
         konsumen.creditLimit = creditLimit
         konsumen
     }
+
+    public BigDecimal hargaTerakhir(Konsumen konsumen, Produk produk) {
+        konsumen = findKonsumenById(konsumen.id)
+        konsumen.hargaTerakhir(produk)
+    }
+
 }

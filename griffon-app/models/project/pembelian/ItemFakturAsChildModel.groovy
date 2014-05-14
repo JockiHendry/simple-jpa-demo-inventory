@@ -19,7 +19,7 @@ import ca.odell.glazedlists.BasicEventList
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.inventory.Produk
-import domain.penjualan.Sales
+import domain.penjualan.Konsumen
 import groovy.beans.Bindable
 
 class ItemFakturAsChildModel {
@@ -28,7 +28,7 @@ class ItemFakturAsChildModel {
     @Bindable boolean showHarga
 
     Faktur parent
-    Sales sales
+    Konsumen konsumen
 
     @Bindable Produk produk
     @Bindable Integer jumlah

@@ -104,5 +104,13 @@ class Konsumen {
         }
     }
 
+    public BigDecimal hargaTerakhir(Produk produk) {
+        if (hargaTerakhir.containsKey(produk)) {
+            return hargaTerakhir[produk]
+        } else {
+            return produk.hargaUntuk(sales)
+        }
+    }
+
 }
 

@@ -28,6 +28,7 @@ import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.Konsumen
+import domain.penjualan.KonsumenRepository
 import domain.penjualan.Sales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
@@ -51,7 +52,9 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     public void testBuatFakturJualOlehSalesDalamKota() {
         FakturJualRepository repo = Container.app.fakturJualRepository
+        KonsumenRepository konsumenRepo = Container.app.konsumenRepository
         Container.app.nomorService.refreshAll()
+
         Produk produkA = repo.findProdukById(-1l)
         Produk produkB = repo.findProdukById(-2l)
         Sales sales = repo.findSalesById(-1l)
@@ -59,6 +62,11 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        // Periksa harga terakhir sebelum faktur dibuat
+        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkA))
+        assertEquals(1500, konsumenRepo.hargaTerakhir(konsumen, produkB))
+
         fakturJualOlehSales = repo.buat(fakturJualOlehSales, true)
 
         assertEquals(StatusFakturJual.DIBUAT, fakturJualOlehSales.status)
@@ -67,6 +75,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         // Periksa apakah faktur ada di konsumen
         konsumen = repo.findKonsumenByIdFetchFakturBelumLunas(-1l)
         assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
+
+        // Periksa apakah harga terakhir terubah
+        assertEquals(8000, konsumenRepo.hargaTerakhir(konsumen, produkA))
+        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkB))
     }
 
     public void testLimitDalamKota() {
@@ -86,6 +98,8 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     public void testBuatFakturJualOlehSalesLuarKota() {
         FakturJualRepository repo = Container.app.fakturJualRepository
+        KonsumenRepository konsumenRepo = Container.app.konsumenRepository
+
         Produk produkA = repo.findProdukById(-1l)
         Produk produkB = repo.findProdukById(-2l)
         Sales sales = repo.findSalesById(-2l)
@@ -93,6 +107,11 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 3, 1000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1500))
+
+        // Periksa harga terakhir sebelum faktur dibuat
+        assertEquals(1100, konsumenRepo.hargaTerakhir(konsumen, produkA))
+        assertEquals(1600, konsumenRepo.hargaTerakhir(konsumen, produkB))
+
         fakturJualOlehSales = repo.buat(fakturJualOlehSales, true)
 
 
@@ -122,6 +141,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         konsumen = repo.findKonsumenByIdFetchFakturBelumLunas(-2l)
         assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
         assertEquals(fakturJualOlehSales.total(), konsumen.jumlahPiutang())
+
+        // Periksa apakah harga terakhir terubah
+        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkA))
+        assertEquals(1500, konsumenRepo.hargaTerakhir(konsumen, produkB))
     }
 
     public void testBatalkanPengeluaranBarangUntukSalesLuarKota() {

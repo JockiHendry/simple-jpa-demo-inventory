@@ -209,6 +209,12 @@ class FakturJualRepository {
 
         // Tambahkan faktur jual yang baru dibuat pada konsumen yang bersangkutan
         konsumen.tambahFakturBelumLunas(fakturJual)
+
+        // Ubah nilai harga jual terakhir untuk konsumen ini
+        fakturJual.listItemFaktur.each {
+            konsumen.hargaTerakhir[it.produk] = it.harga
+        }
+
         fakturJual
     }
 

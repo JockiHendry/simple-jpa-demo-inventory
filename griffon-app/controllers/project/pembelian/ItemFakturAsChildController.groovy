@@ -33,7 +33,7 @@ class ItemFakturAsChildController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
-        model.sales = args.'sales'
+        model.konsumen = args.'konsumen'
         model.editable = args.containsKey('editable')? args.'editable': !model.parent?.id
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         model.showHarga = args.containsKey('showHarga')? args.'showHarga': true
@@ -66,8 +66,8 @@ class ItemFakturAsChildController {
         if (produk) {
             model.produk = produk
             if ((model.parent==null) || (model.parent instanceof PurchaseOrder) || (model.parent instanceof FakturBeli)) {
-                if (model.sales) {
-                    model.harga = produk.hargaUntuk(model.sales)
+                if (model.konsumen) {
+                    model.harga = Container.app.konsumenRepository.hargaTerakhir(model.konsumen, model.produk)
                 } else {
                     model.harga = produk.hargaDalamKota
                 }
