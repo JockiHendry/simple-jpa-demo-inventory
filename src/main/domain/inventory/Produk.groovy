@@ -26,13 +26,18 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import java.text.NumberFormat
 
-@NamedEntityGraph(name='Produk.Complete', attributeNodes = [
-    @NamedAttributeNode(value='daftarStok', subgraph='stokProduk')
-], subgraphs = [
-    @NamedSubgraph(
-        name = 'stokProduk',
-        attributeNodes=[@NamedAttributeNode(value='listPeriodeRiwayat')]
-    )
+@NamedEntityGraphs([
+    @NamedEntityGraph(name='Produk.Complete', attributeNodes = [
+        @NamedAttributeNode(value='daftarStok', subgraph='stokProduk')
+    ], subgraphs = [
+        @NamedSubgraph(
+            name = 'stokProduk',
+            attributeNodes=[@NamedAttributeNode(value='listPeriodeRiwayat')]
+        )
+    ]),
+    @NamedEntityGraph(name='Produk.StokProduk', attributeNodes = [
+        @NamedAttributeNode(value='daftarStok', subgraph='stokProduk')
+    ])
 ])
 @DomainClass @Entity @Canonical(excludes='daftarStok')
 class Produk implements Comparable {
