@@ -27,6 +27,7 @@ class LaporanModel {
 public enum JenisLaporan {
 
     LAPORAN_PENJUALAN_SALES('Laporan Penjualan Per Sales', 'laporan_penjualan_sales', 'laporanPenjualanPerSales'),
+    LAPORAN_PENJUALAN_REGION('Laporan Penjualan Per Region', 'laporan_penjualan_region', 'laporanPenjualanPerRegion'),
     LAPORAN_PENJUALAN_KONSUMEN('Laporan Penjualan Per Konsumen', 'laporan_penjualan_konsumen', 'laporanPenjualanPerKonsumen'),
     LAPORAN_STOK('Laporan Stok', 'laporan_stok', 'laporanStok')
 
