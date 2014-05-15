@@ -45,7 +45,9 @@ import javax.validation.groups.Default
         @NamedAttributeNode('pengeluaranBarang'),
         @NamedAttributeNode('bonusPenjualan'),
     ]),
-
+    @NamedEntityGraph(name='FakturJualOlehSales.Items', attributeNodes = [
+        @NamedAttributeNode('listItemFaktur')
+    ])
 ])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan')
 class FakturJualOlehSales extends FakturJual {

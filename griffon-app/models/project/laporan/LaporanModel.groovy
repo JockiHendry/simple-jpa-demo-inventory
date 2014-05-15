@@ -26,6 +26,7 @@ class LaporanModel {
 
 public enum JenisLaporan {
 
+    LAPORAN_PENJUALAN_SALES('Laporan Penjualan Per Sales', 'laporan_penjualan_sales', 'laporanPenjualanPerSales'),
     LAPORAN_STOK('Laporan Stok', 'laporan_stok', 'laporanStok')
 
     String nama
