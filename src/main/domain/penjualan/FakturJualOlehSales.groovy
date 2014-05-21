@@ -119,8 +119,8 @@ class FakturJualOlehSales extends FakturJual {
         piutang = null
     }
 
-    BigDecimal sisaPiutang() {
-        piutang.sisa()
+    BigDecimal sisaPiutang(boolean byNominal = true) {
+        piutang.sisa(byNominal)
     }
 
     void tambahBonus(DaftarBarangSementara daftarBarang) {

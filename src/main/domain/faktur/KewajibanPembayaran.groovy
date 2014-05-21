@@ -29,12 +29,16 @@ class KewajibanPembayaran {
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @CollectionTable(name='kewajibanpembayaran_items')
     List<Pembayaran> listPembayaran = []
 
-    BigDecimal sisa() {
-        jumlah - jumlahDibayar()
+    BigDecimal sisa(boolean byNominal = true) {
+        jumlah - jumlahDibayar(byNominal)
     }
 
-    BigDecimal jumlahDibayar() {
-        listPembayaran.sum { it.nominal() }?: 0
+    BigDecimal jumlahDibayar(boolean byNominal = true) {
+        if (byNominal) {
+            return listPembayaran.sum { it.nominal() } ?: 0
+        } else {
+            return listPembayaran.sum { it.jumlah } ?: 0
+        }
     }
 
     boolean isLunas() {
@@ -43,7 +47,7 @@ class KewajibanPembayaran {
 
     void bayar(Pembayaran pembayaran) {
         // Sisa pembayaran termasuk giro yang belum jatuh tempo
-        def sisa = jumlah - (listPembayaran.sum { it.jumlah }?: 0)
+        def sisa = sisa(false)
 
         if (pembayaran.jumlah > sisa) {
             throw new IllegalArgumentException("Pembayaran ${pembayaran.jumlah} melebihi sisa sebesar ${sisa}")
