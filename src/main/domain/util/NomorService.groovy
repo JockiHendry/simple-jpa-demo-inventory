@@ -32,7 +32,8 @@ class NomorService {
         FAKTUR_JUAL('FakturJual', '%06d/%s/%s'),
         PENGELUARAN_BARANG('PengeluaranBarang', '%06d-SJ-KB-%s'),
         PENGELUARAN_BONUS('BonusPenjualan', '%06d-BONUS-%s'),
-        PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s')
+        PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s'),
+        TRANSFER('Transfer', '%06d-TR-KB-%s')
 
         String format;
         String desc;

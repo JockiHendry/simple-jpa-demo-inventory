@@ -23,6 +23,7 @@ import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
 import domain.inventory.ProdukRepository
 import domain.inventory.SatuanRepository
+import domain.inventory.TransferRepository
 import domain.pembelian.PurchaseOrderRepository
 import domain.pembelian.SupplierRepository
 import domain.pengaturan.PengaturanRepository
@@ -57,6 +58,7 @@ class Container {
     FakturJualRepository fakturJualRepository
     KonsumenRepository konsumenRepository
     BilyetGiroRepository bilyetGiroRepository
+    TransferRepository transferRepository
 
     InventoryEventConsumer inventoryEventConsumer
     BilyetGiroEventConsumer bilyetGiroEventConsumer
@@ -82,6 +84,7 @@ class Container {
         fakturJualRepository = new FakturJualRepository()
         konsumenRepository = new KonsumenRepository()
         bilyetGiroRepository = new BilyetGiroRepository()
+        transferRepository = new TransferRepository()
 
         // Create services
         passwordService = new PasswordService()

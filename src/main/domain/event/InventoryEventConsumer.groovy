@@ -15,11 +15,10 @@
  */
 package domain.event
 
-import domain.Container
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
-import domain.inventory.ProdukRepository
+import domain.inventory.Transfer
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
@@ -30,7 +29,6 @@ class InventoryEventConsumer {
     void onPerubahanStok(PerubahanStok perubahanStok) {
         log.info "Event onPerubahanStok mulai dikerjakan..."
 
-        ProdukRepository produkRepository = Container.app.produkRepository
         DaftarBarang daftarBarang = perubahanStok.source
         Faktur faktur = perubahanStok.faktur
 
@@ -51,6 +49,25 @@ class InventoryEventConsumer {
         }
 
         log.info "Event onPerubahanStok selesai dikerjakan!"
+    }
+
+    void onTransferStok(TransferStok transferStok) {
+        log.info "Event onTransferStok mulai dikerjakan..."
+
+        Transfer transfer = transferStok.source
+        transfer.normalisasi().each { ItemBarang i ->
+            log.info "Memproses item $i..."
+
+            // Mengurangi gudang asal
+            i.produk.perubahanStok(-i.jumlah, transfer, transfer.gudang, transfer.keterangan)
+
+            // Menambah gudang tujuan
+            i.produk.perubahanStok(i.jumlah, transfer, transfer.tujuan, transfer.keterangan)
+
+            log.info "Selesai memproses item $i!"
+        }
+
+        log.info "Event onTransferStok selesai dikerjakan!"
     }
 
 }
