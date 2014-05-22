@@ -58,11 +58,13 @@ class InventoryEventConsumer {
         transfer.normalisasi().each { ItemBarang i ->
             log.info "Memproses item $i..."
 
+            int pengali = transferStok.invers? 1: -1
+
             // Mengurangi gudang asal
-            i.produk.perubahanStok(-i.jumlah, transfer, transfer.gudang, transfer.keterangan)
+            i.produk.perubahanStok(pengali * i.jumlah, transfer, transfer.gudang, transfer.keterangan)
 
             // Menambah gudang tujuan
-            i.produk.perubahanStok(i.jumlah, transfer, transfer.tujuan, transfer.keterangan)
+            i.produk.perubahanStok(-pengali * i.jumlah, transfer, transfer.tujuan, transfer.keterangan)
 
             log.info "Selesai memproses item $i!"
         }

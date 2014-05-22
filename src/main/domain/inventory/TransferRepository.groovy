@@ -28,7 +28,7 @@ import griffon.util.ApplicationHolder
 class TransferRepository {
 
     List<Transfer> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
-                               Gudang asalSearch, Gudang tujuanSearch) {
+                               String asalSearch, String tujuanSearch) {
         findAllTransferByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
@@ -37,11 +37,11 @@ class TransferRepository {
             }
             if (asalSearch) {
                 and()
-                gudang eq(asalSearch)
+                gudang__nama eq("%${asalSearch}%")
             }
             if (tujuanSearch) {
                 and()
-                tujuan eq(tujuanSearch)
+                tujuan__nama like("%${tujuanSearch}%")
             }
         }
     }
@@ -72,6 +72,17 @@ class TransferRepository {
         }
         mergedTransfer
     }
+
+    Transfer hapus(Transfer transfer) {
+        transfer = findTransferById(transfer.id)
+        if (!transfer) {
+            throw new DataTidakBolehDiubah(transfer)
+        }
+        transfer.deleted = 'Y'
+        ApplicationHolder.application?.event(new TransferStok(transfer, true))
+        transfer
+    }
+
 
 }
 

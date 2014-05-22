@@ -20,8 +20,15 @@ import griffon.core.Event
 
 class TransferStok extends Event {
 
+    boolean invers
+
     TransferStok(Transfer transfer) {
+        this(transfer, false)
+    }
+
+    TransferStok(Transfer transfer, boolean invers) {
         super(transfer)
+        this.invers = invers
     }
 
 }

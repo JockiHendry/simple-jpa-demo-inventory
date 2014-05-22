@@ -36,7 +36,7 @@ class TransferTest extends DbUnitTestCase {
         super.deleteAll()
     }
 
-    public void testBuat() {
+    public void testBuatDanHapus() {
         TransferRepository repo = Container.app.transferRepository
         Gudang gudangAsal = repo.findGudangById(-1l)
         Gudang gudangTujuan = repo.findGudangById(-2l)
@@ -64,6 +64,23 @@ class TransferTest extends DbUnitTestCase {
             assertEquals(10, repo.findProdukById(-1l).stok(gudangTujuan).jumlah)
             assertEquals(13, repo.findProdukById(-2l).stok(gudangTujuan).jumlah)
             assertEquals(10, repo.findProdukById(-3l).stok(gudangTujuan).jumlah)
+        }
+
+        transfer = repo.hapus(transfer)
+        assertEquals('Y', transfer.deleted)
+
+        // Cek stok gudang asal
+        repo.withTransaction {
+            assertEquals(10, repo.findProdukById(-1l).stok(gudangAsal).jumlah)
+            assertEquals(14, repo.findProdukById(-2l).stok(gudangAsal).jumlah)
+            assertEquals(15, repo.findProdukById(-3l).stok(gudangAsal).jumlah)
+        }
+
+        // Cek stok gudang tujuan
+        repo.withTransaction {
+            assertEquals(4, repo.findProdukById(-1l).stok(gudangTujuan).jumlah)
+            assertEquals(6, repo.findProdukById(-2l).stok(gudangTujuan).jumlah)
+            assertEquals(0, repo.findProdukById(-3l).stok(gudangTujuan).jumlah)
         }
 
     }
