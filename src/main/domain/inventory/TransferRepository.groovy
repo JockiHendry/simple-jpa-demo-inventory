@@ -37,7 +37,7 @@ class TransferRepository {
             }
             if (asalSearch) {
                 and()
-                gudang__nama eq("%${asalSearch}%")
+                gudang__nama like("%${asalSearch}%")
             }
             if (tujuanSearch) {
                 and()

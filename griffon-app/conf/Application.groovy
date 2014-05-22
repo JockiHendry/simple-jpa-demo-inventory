@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "transfer"
+    'transfer' {
+        model      = 'project.inventory.TransferModel'
+        view       = 'project.inventory.TransferView'
+        controller = 'project.inventory.TransferController'
+    }
+
     // MVC Group for "laporanSisaPiutang"
     'laporanSisaPiutang' {
         model      = 'project.laporan.LaporanSisaPiutangModel'

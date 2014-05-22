@@ -79,6 +79,8 @@ actions {
 
     action(id: 'produk', name: 'Produk', actionCommandKey: 'produk', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_produk.png'), closure: controller.switchPage)
+    action(id: 'transfer', name: 'Transfer', actionCommandKey: 'transfer', mnemonic: KeyEvent.VK_F,
+        smallIcon: imageIcon('/menu_transfer.png'), closure: controller.switchPage)
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
@@ -154,6 +156,7 @@ application(id: 'mainFrame',
                 toggleButton(buttonGroup: buttons, action: giro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
+                toggleButton(buttonGroup: buttons, action: transfer, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER)
                 separator()
