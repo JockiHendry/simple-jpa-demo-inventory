@@ -183,7 +183,7 @@ griffon.project.dependency.resolution = {
     dependencies {
         runtime 'mysql:mysql-connector-java:5.1.20'
         runtime 'org.hibernate:hibernate-entitymanager:4.3.4.Final'
-        runtime 'org.hibernate:hibernate-validator:4.3.0.Final'
+        compile 'org.hibernate:hibernate-validator:4.3.0.Final'
         compile('net.sf.jasperreports:jasperreports:5.5.1') {
             exclude 'commons-collections'
         }
