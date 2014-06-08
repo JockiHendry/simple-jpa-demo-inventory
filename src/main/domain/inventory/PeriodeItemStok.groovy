@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.inventory
 
-package domain.riwayat
-
-import domain.inventory.Periode
 import groovy.transform.*
-import javax.persistence.*
 import org.hibernate.annotations.Type
-import javax.validation.constraints.*
+import org.joda.time.Interval
+import org.joda.time.LocalDate
+import simplejpa.DomainClass
+import javax.persistence.*
+import javax.validation.constraints.NotNull
 
-import org.joda.time.*
-
-@MappedSuperclass @Canonical
-abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
+@DomainClass @Entity @Canonical(excludes="listItem")
+class PeriodeItemStok {
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalMulai
@@ -38,7 +37,8 @@ abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
     @NotNull
     Boolean arsip = Boolean.FALSE
 
-    public abstract List<V> getListItem();
+    @ElementCollection @OrderColumn
+    List<ItemStok> listItem = []
 
     public boolean termasuk(LocalDate tanggal) {
         (tanggal.isEqual(tanggalMulai) || tanggal.isAfter(tanggalMulai)) &&
@@ -51,7 +51,7 @@ abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
         i1.overlaps(i2)
     }
 
-    public void tambah(V item) {
+    public void tambah(ItemStok item) {
         getListItem().add(item)
         this.jumlah += item.jumlah
     }
@@ -60,7 +60,7 @@ abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
 
-        PeriodeRiwayat that = (PeriodeRiwayat) o
+        PeriodeItemStok that = (PeriodeItemStok) o
 
         if (tanggalMulai != that.tanggalMulai) return false
         if (tanggalSelesai != that.tanggalSelesai) return false
@@ -74,5 +74,6 @@ abstract class PeriodeRiwayat<V extends DapatDibuatRiwayat> {
         result = 31 * result + tanggalSelesai.hashCode()
         return result
     }
+
 }
 

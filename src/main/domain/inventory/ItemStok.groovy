@@ -16,19 +16,14 @@
 
 package domain.inventory
 
-import domain.faktur.Faktur
-import domain.riwayat.DapatDibuatRiwayat
 import groovy.transform.*
-import org.w3c.dom.Attr
-import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-
 import org.joda.time.*
 
 @Embeddable @Canonical
-class ItemStok implements DapatDibuatRiwayat {
+class ItemStok {
 
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     @Column(name='tanggalItemStok')
@@ -44,7 +39,6 @@ class ItemStok implements DapatDibuatRiwayat {
     @Size(min=3, max=100)
     String keterangan
 
-    @Override
     LocalDate tanggalRiwayat() {
         tanggal
     }

@@ -24,7 +24,6 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-import java.text.NumberFormat
 
 @NamedEntityGraphs([
     @NamedEntityGraph(name='Produk.Complete', attributeNodes = [
@@ -39,8 +38,26 @@ import java.text.NumberFormat
         @NamedAttributeNode(value='daftarStok', subgraph='stokProduk')
     ])
 ])
-@DomainClass @Entity @Canonical(excludes='daftarStok')
+@DomainClass @Entity
 class Produk implements Comparable {
+
+    Produk() {}
+
+    Produk(String nama) {
+        this.nama = nama
+    }
+
+    Produk(String nama, Integer jumlah) {
+        this.nama = nama
+        this.jumlah = jumlah
+    }
+
+    Produk(String nama, Integer jumlah, BigDecimal hargaDalamKota, BigDecimal hargaLuarKota) {
+        this.nama = nama
+        this.jumlah = jumlah
+        this.hargaDalamKota = hargaDalamKota
+        this.hargaLuarKota = hargaLuarKota
+    }
 
     @NotBlank @Size(min=3, max=150)
     String nama

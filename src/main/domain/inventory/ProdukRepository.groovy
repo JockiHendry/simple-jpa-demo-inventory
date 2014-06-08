@@ -17,7 +17,6 @@
 package domain.inventory
 
 import domain.exception.DataDuplikat
-import domain.riwayat.PeriodeRiwayat
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -46,7 +45,7 @@ class ProdukRepository {
         List daftarProduk = findAllProduk()
         for (Produk p: daftarProduk) {
             p.daftarStok.each { Gudang g, StokProduk s ->
-                for (PeriodeRiwayat pi: s.periodeUntukArsip(deltaTahun)) {
+                for (PeriodeItemStok pi: s.periodeUntukArsip(deltaTahun)) {
                     pi.arsip = true
                     pi.listItem.clear()
                 }

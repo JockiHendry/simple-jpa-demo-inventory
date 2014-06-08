@@ -16,9 +16,8 @@
 package project.inventory
 
 import domain.Container
-import domain.riwayat.PeriodeRiwayat
+import domain.inventory.PeriodeItemStok
 import domain.inventory.ProdukRepository
-import project.inventory.ItemStokModel
 
 class ItemStokController {
 
@@ -49,7 +48,7 @@ class ItemStokController {
             execInsideUISync { model.itemStokList.clear()}
             List data = []
             produkRepository.withTransaction {
-                PeriodeRiwayat p = produkRepository.merge(model.periodeItemStok.selectedItem)
+                PeriodeItemStok p = produkRepository.merge(model.periodeItemStok.selectedItem)
                 data.addAll(p.listItem)
             }
             execInsideUISync { model.itemStokList.addAll(data) }

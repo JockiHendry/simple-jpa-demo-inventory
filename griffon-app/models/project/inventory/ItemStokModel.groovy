@@ -19,7 +19,7 @@ import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.ItemStok
-import domain.riwayat.PeriodeItemStok
+import domain.inventory.PeriodeItemStok
 import domain.inventory.StokProduk
 
 class ItemStokModel {

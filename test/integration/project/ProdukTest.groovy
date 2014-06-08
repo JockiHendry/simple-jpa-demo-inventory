@@ -18,10 +18,10 @@ package project
 
 import domain.Container
 import domain.inventory.Gudang
-import domain.riwayat.PeriodeRiwayat
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.inventory.ProdukRepository
+import domain.inventory.PeriodeItemStok
 import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -95,7 +95,7 @@ class ProdukTest extends DbUnitTestCase {
         assertTrue(stok.periodeUntukArsip(3).isEmpty())
 
         LocalDate lampau = Periode.format.parseLocalDate('15-01-2010')
-        PeriodeRiwayat periodeLampau = stok.buatPeriode(lampau)
+        PeriodeItemStok periodeLampau = stok.buatPeriode(lampau)
         assertEquals(Periode.format.parseLocalDate('01-01-2010'), periodeLampau.tanggalMulai)
         assertEquals(Periode.format.parseLocalDate('31-01-2010'), periodeLampau.tanggalSelesai)
 
@@ -121,7 +121,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Stok ditemukan."
 
         log.debug "Mencari periode item stok untuk tahun 2010..."
-        PeriodeRiwayat periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
+        PeriodeItemStok periodeLampau = stok.periode(Periode.format.parseLocalDate('01-01-2010'))
         log.debug "Periode item stok ditemukan."
 
         assertNotNull(periodeLampau)
