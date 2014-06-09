@@ -15,10 +15,14 @@
  */
 package domain.exception;
 
-public class FakturTidakDitemukan extends RuntimeException {
+class DataTidakLengkap extends RuntimeException {
 
-    public FakturTidakDitemukan(String nomorFaktur) {
-        super("Faktur dengan nomor " + nomorFaktur + " tidak ditemukan!");
+    DataTidakLengkap(Object object) {
+        super("Data tidak lengkap untuk " + object)
+    }
+
+    DataTidakLengkap(String pesan) {
+        super(pesan)
     }
 
 }

@@ -15,25 +15,18 @@
  */
 package domain.exception;
 
-public class DataTidakBolehDiubah extends RuntimeException {
+class DataTidakKonsisten extends RuntimeException {
 
-    private Object target;
+    Object target
 
-    public DataTidakBolehDiubah(Object object) {
-        super("Data tidak boleh diubah untuk " + object);
-        setTarget(object);
+    DataTidakKonsisten(Object object) {
+        super("Data tidak konsisten untuk " + object)
+        this.target = object;
     }
 
-    public DataTidakBolehDiubah(String pesan, Object object) {
-        super(pesan);
-        setTarget(object);
+    DataTidakKonsisten(String pesan, Object object) {
+        super(pesan)
+        this.target = object
     }
 
-    public Object getTarget() {
-        return target;
-    }
-
-    public void setTarget(Object target) {
-        this.target = target;
-    }
 }

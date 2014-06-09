@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package domain.exception;
 
-public class DataTidakLengkap extends RuntimeException {
+class GudangUtamaTidakKonsisten extends RuntimeException {
 
-    public DataTidakLengkap(Object object) {
-        super("Data tidak lengkap untuk " + object);
+    GudangUtamaTidakKonsisten() {
+        super("Nilai gudang utama tidak konsisten!")
     }
 
-    public DataTidakLengkap(String pesan) {
-        super(pesan);
+    GudangUtamaTidakKonsisten(String pesan) {
+        super(pesan)
     }
 
 }

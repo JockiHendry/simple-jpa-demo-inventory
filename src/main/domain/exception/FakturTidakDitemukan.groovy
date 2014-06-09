@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package domain.exception;
 
-public class GudangUtamaTidakKonsisten extends RuntimeException {
+class FakturTidakDitemukan extends RuntimeException {
 
-    public GudangUtamaTidakKonsisten() {
-        super("Nilai gudang utama tidak konsisten!");
-    }
-
-    public GudangUtamaTidakKonsisten(String pesan) {
-        super(pesan);
+    FakturTidakDitemukan(String nomorFaktur) {
+        super("Faktur dengan nomor " + nomorFaktur + " tidak ditemukan!")
     }
 
 }

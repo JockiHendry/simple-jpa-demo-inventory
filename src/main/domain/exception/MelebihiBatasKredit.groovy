@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package domain.exception;
 
-public class DataDuplikat extends RuntimeException {
+import domain.penjualan.Konsumen;
 
-    public DataDuplikat(Object object) {
-        super("Terdapat data duplikat " + object);
+class MelebihiBatasKredit extends RuntimeException {
+
+    Konsumen konsumen
+
+    MelebihiBatasKredit(Konsumen konsumen) {
+        super("Konsumen " + konsumen.getNama() + " tidak boleh melakukan kredit lagi!")
+        this.konsumen = konsumen
     }
+
 }
