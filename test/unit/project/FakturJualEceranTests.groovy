@@ -19,6 +19,7 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
@@ -29,15 +30,18 @@ import org.joda.time.LocalDate
 
 class FakturJualEceranTests extends GriffonUnitTestCase {
 
-    private static final Gudang gudangUtama = new Gudang()
+    private Gudang gudangUtama = new Gudang(utama: true)
 
     protected void setUp() {
-        Container.app.gudangRepository.metaClass.cariGudangUtama = { gudangUtama }
         super.setUp()
+        super.registerMetaClass(GudangRepository)
+        GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        Container.app.gudangRepository = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
+        Container.app.gudangRepository = new GudangRepository()
     }
 
     public void testAntar() {

@@ -20,6 +20,7 @@ import domain.exception.DataTidakKonsisten
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
 import domain.inventory.Produk
@@ -33,13 +34,18 @@ import org.joda.time.LocalDate
 
 class PurchaseOrderTests extends GriffonUnitTestCase {
 
+    private Gudang gudangUtama = new Gudang(utama: true)
+
     protected void setUp() {
-        Container.app.gudangRepository.metaClass.cariGudangUtama = { new Gudang() }
         super.setUp()
+        super.registerMetaClass(GudangRepository)
+        GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        Container.app.gudangRepository = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
+        Container.app.gudangRepository = new GudangRepository()
     }
 
     public void testSisaBelumDiterima() {

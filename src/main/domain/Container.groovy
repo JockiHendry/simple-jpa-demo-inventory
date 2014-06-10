@@ -70,7 +70,7 @@ class Container {
         setup()
     }
 
-    private void setup() {
+    public void setup() {
         // Create repositories
         gudangRepository = new GudangRepository()
         produkRepository = new ProdukRepository()
@@ -91,7 +91,12 @@ class Container {
         bilyetGiroClearingService = new BilyetGiroClearingService()
 
         // Create event consumers
+        GriffonApplication app = ApplicationHolder.application
+
+        if (inventoryEventConsumer) app.removeApplicationEventListener(inventoryEventConsumer)
         inventoryEventConsumer = new InventoryEventConsumer()
+
+        if (bilyetGiroEventConsumer) app.removeApplicationEventListener(bilyetGiroEventConsumer)
         bilyetGiroEventConsumer = new BilyetGiroEventConsumer()
 
         // Setup listener
