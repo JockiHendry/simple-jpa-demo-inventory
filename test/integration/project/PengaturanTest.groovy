@@ -15,6 +15,7 @@
  */
 package project
 
+import domain.Container
 import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
@@ -32,6 +33,7 @@ class PengaturanTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
+        Container.app.setupListener()
         setUpDatabase("produk", "/project/data_inventory.xls")
     }
 

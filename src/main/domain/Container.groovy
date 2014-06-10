@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 package domain
 
 import domain.event.BilyetGiroEventConsumer
@@ -38,6 +36,7 @@ import domain.util.PasswordService
 import griffon.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import griffon.core.*
 
 class Container {
 
@@ -95,9 +94,17 @@ class Container {
         inventoryEventConsumer = new InventoryEventConsumer()
         bilyetGiroEventConsumer = new BilyetGiroEventConsumer()
 
-        if (ApplicationHolder.application) {
-            ApplicationHolder.application.addApplicationEventListener(inventoryEventConsumer)
-            ApplicationHolder.application.addApplicationEventListener(bilyetGiroEventConsumer)
+        // Setup listener
+        setupListener()
+    }
+
+    public void setupListener() {
+        GriffonApplication app = ApplicationHolder.application
+        if (app) {
+            app.removeApplicationEventListener(inventoryEventConsumer)
+            app.addApplicationEventListener(inventoryEventConsumer)
+            app.removeApplicationEventListener(bilyetGiroEventConsumer)
+            app.addApplicationEventListener(bilyetGiroEventConsumer)
         } else {
             log.warn 'Can not find Griffon application. Is this launched by Griffon? Event listener will not working!'
         }
