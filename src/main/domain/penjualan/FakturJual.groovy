@@ -48,7 +48,7 @@ abstract class FakturJual extends Faktur {
     }
 
     public void tambah(BuktiTerima buktiTerima) {
-        if (!status.isPengeluaranBolehDiubah()) {
+        if (!status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
         if (pengeluaranBarang == null) {
@@ -67,7 +67,7 @@ abstract class FakturJual extends Faktur {
     }
 
     public void hapusPengeluaranBarang() {
-        if (!status.isPengeluaranBolehDiubah()) {
+        if (!status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
         if (pengeluaranBarang == null) {

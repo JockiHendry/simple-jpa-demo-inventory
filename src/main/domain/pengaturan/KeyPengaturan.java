@@ -22,26 +22,14 @@ public enum KeyPengaturan {
     UKURAN_HURUF_TABEL("Ukuran Huruf Tabel", JenisNilai.INTEGER, 0)
     ;
 
-    private String description;
-    private JenisNilai jenisNilai;
-    private Object defaultValue;
+    public String description;
+    public JenisNilai jenisNilai;
+    public Object defaultValue;
 
     KeyPengaturan(String description, JenisNilai jenisNilai, Object defaultValue) {
         this.description = description;
         this.jenisNilai = jenisNilai;
         this.defaultValue = defaultValue;
-    }
-
-    public JenisNilai getJenisNilai() {
-        return jenisNilai;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Object getDefaultValue() {
-        return defaultValue;
     }
 
     @Override

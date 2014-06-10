@@ -23,47 +23,15 @@ public enum StatusPurchaseOrder {
     OK("Diterima Penuh", false, false, false),
     LUNAS("Lunas", false, false, false);
 
-    private String desc;
-    private boolean bolehDiubah;
-    private boolean fakturBolehDiubah;
-    private boolean penerimaanBolehDiubah;
+    public String desc;
+    public boolean bolehDiubah;
+    public boolean fakturBolehDiubah;
+    public boolean penerimaanBolehDiubah;
 
     StatusPurchaseOrder(String desc, boolean bolehDiubah, boolean fakturBolehDiubah, boolean penerimaanBolehDiubah) {
         this.desc = desc;
         this.bolehDiubah = bolehDiubah;
         this.fakturBolehDiubah = fakturBolehDiubah;
-        this.penerimaanBolehDiubah = penerimaanBolehDiubah;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public boolean isBolehDiubah() {
-        return bolehDiubah;
-    }
-
-    public void setBolehDiubah(boolean bolehDiubah) {
-        this.bolehDiubah = bolehDiubah;
-    }
-
-    public boolean isFakturBolehDiubah() {
-        return fakturBolehDiubah;
-    }
-
-    public void setFakturBolehDiubah(boolean fakturBolehDiubah) {
-        this.fakturBolehDiubah = fakturBolehDiubah;
-    }
-
-    public boolean isPenerimaanBolehDiubah() {
-        return penerimaanBolehDiubah;
-    }
-
-    public void setPenerimaanBolehDiubah(boolean penerimaanBolehDiubah) {
         this.penerimaanBolehDiubah = penerimaanBolehDiubah;
     }
 

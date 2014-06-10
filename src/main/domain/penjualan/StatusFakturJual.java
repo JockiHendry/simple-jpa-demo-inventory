@@ -28,57 +28,14 @@ public enum StatusFakturJual {
         this.pengeluaranBolehDiubah = pengeluaranBolehDiUbah;
     }
 
+    public String desc;
+    public boolean bolehDiubah;
+    public boolean piutangBolehDiubah;
+    public boolean pengeluaranBolehDiubah;
+
     @Override
     public String toString() {
         return desc;
     }
 
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public boolean getBolehDiubah() {
-        return bolehDiubah;
-    }
-
-    public boolean isBolehDiubah() {
-        return bolehDiubah;
-    }
-
-    public void setBolehDiubah(boolean bolehDiubah) {
-        this.bolehDiubah = bolehDiubah;
-    }
-
-    public boolean getPiutangBolehDiubah() {
-        return piutangBolehDiubah;
-    }
-
-    public boolean isPiutangBolehDiubah() {
-        return piutangBolehDiubah;
-    }
-
-    public void setPiutangBolehDiubah(boolean piutangBolehDiubah) {
-        this.piutangBolehDiubah = piutangBolehDiubah;
-    }
-
-    public boolean getPengeluaranBolehDiubah() {
-        return pengeluaranBolehDiubah;
-    }
-
-    public boolean isPengeluaranBolehDiubah() {
-        return pengeluaranBolehDiubah;
-    }
-
-    public void setPengeluaranBolehDiubah(boolean pengeluaranBolehDiubah) {
-        this.pengeluaranBolehDiubah = pengeluaranBolehDiubah;
-    }
-
-    private String desc;
-    private boolean bolehDiubah;
-    private boolean piutangBolehDiubah;
-    private boolean pengeluaranBolehDiubah;
 }
