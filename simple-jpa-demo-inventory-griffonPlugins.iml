@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/jxlayer-1.0.0" />
     <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/miglayout-1.0.0" />
-    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.6" />
+    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.7" />
     <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swing-1.4.0" />
     <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swingx-builder-0.7" />
     <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />

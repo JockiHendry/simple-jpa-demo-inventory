@@ -137,7 +137,7 @@ def proses = {String vBoxImage, def config  ->
     // mengerjakan test-app
     println "Mengerjakan test-app"
     try {
-        def envs = "\"GRIFFON_HOME=${config.griffonHome} JAVA_HOME=${config.javaHome}\"".toString()
+        def envs = "\"GRIFFON_HOME=${config.griffonHome} JAVA_HOME=${config.javaHome} DISPLAY=:0.0\"".toString()
         execute(vBoxImage, config.griffonExec, config, ['--environment', envs, '--',
                                                         '-Dbase.dir=' + targetExtractZip, 'test-app'])
     } catch (RuntimeException ex) {
@@ -181,8 +181,8 @@ target(name: 'vboxtest', description: "Run test in VirtualBox", prehook: null, p
     println '-'*40
     printf "%-30s %5s\n", 'VM Image', 'Gagal'
     println '-'*40
-    hasil.each { k,v ->
-        printf "%-30s %5d\n", k, v
+    buildConfig.vbox.images.each { k, v ->
+        printf "%-30s %5d\n", k, hasil[k]?:0
     }
     println '-'*40
     println "\nSelesai.\n"

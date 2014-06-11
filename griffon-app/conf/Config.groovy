@@ -87,3 +87,23 @@ griffon.simplejpa.finders.injectInto = []
 griffon.simplejpa.validation.convertEmptyStringToNull = true
 griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
 //griffon.simplejpa.model.package = 'domain.pembelian'
+
+griffon {
+    simplejpa {
+        entityManager {
+            properties {
+                environments {
+                    development {
+                        if (System.getProperty('simplejpa.cleandb') == 'true') {
+                            javax.persistence.'schema-generation'.database.action = 'drop-and-create'
+                            javax.persistence.'sql-load-script-source' = 'META-INF/data.sql'
+                        }
+                    }
+                    test {
+                        javax.persistence.'schema-generation'.database.action = 'drop-and-create'
+                    }
+                }
+            }
+        }
+    }
+}
