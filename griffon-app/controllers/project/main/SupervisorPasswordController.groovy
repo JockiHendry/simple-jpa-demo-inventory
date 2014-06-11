@@ -25,6 +25,7 @@ class SupervisorPasswordController {
 
     def model
     def view
+    def container = Container.app
 
     def proses = {
 
@@ -41,9 +42,9 @@ class SupervisorPasswordController {
             return
         }
 
-        if (!Arrays.equals(
-                Container.app.passwordService.plainTextToEncrypted(view.password.getPassword()),
-                Container.app.pengaturanRepository.getValue(KeyPengaturan.SUPERVISOR_PASSWORD))) {
+        if (!container.passwordService.periksaPassword(
+                container.pengaturanRepository.getValue(KeyPengaturan.SUPERVISOR_PASSWORD),
+                view.password.getPassword())) {
             model.errors['password'] = 'Password Anda salah!'
             return
         }

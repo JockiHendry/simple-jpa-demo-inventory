@@ -29,4 +29,12 @@ class PasswordService {
         plainTextToEncrypted((char[])plain.getBytes())
     }
 
+    public boolean periksaPassword(byte[] diharapkan, String inputPassword) {
+        Arrays.equals(diharapkan, plainTextToEncrypted(inputPassword))
+    }
+
+    public boolean periksaPassword(byte[] diharapkan, char[] inputPassword) {
+        Arrays.equals(diharapkan, plainTextToEncrypted(inputPassword))
+    }
+
 }
