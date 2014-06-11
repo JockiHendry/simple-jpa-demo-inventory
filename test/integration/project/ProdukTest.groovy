@@ -133,7 +133,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Proses pengarsipan selesai."
 
         ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
-                "SELECT * FROM periodeitemstok_listitem WHERE periodeItemStok_Id <> -18")
+                "SELECT * FROM PeriodeItemStok_listItem WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 
         repo.withTransaction {
