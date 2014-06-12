@@ -16,17 +16,30 @@
 package domain.user;
 
 public enum Menu {
-    PENERIMAAN_BARANG,
-    PENGELUARAN_BARANG,
-    BUKTI_TERIMA,
-    PURCHASE_ORDER,
-    FAKTUR_BELI,
-    FAKTUR_JUAL,
-    HUTANG,
-    PIUTANG,
-    GIRO,
-    PRODUK,
-    TRANSFER,
-    LAPORAN,
-    MAINTENANCE
+    PENERIMAAN_BARANG("Penerimaan Barang"),
+    PENGELUARAN_BARANG("Pengeluaran Barang"),
+    BUKTI_TERIMA("Bukti Terima"),
+    PURCHASE_ORDER("Purchase Order"),
+    FAKTUR_BELI("Faktur Beli"),
+    FAKTUR_JUAL("Faktur Jual"),
+    HUTANG("Hutang"),
+    PIUTANG("Piutang"),
+    GIRO("Giro"),
+    PRODUK("Produk"),
+    TRANSFER("Transfer"),
+    LAPORAN("Laporan"),
+    MAINTENANCE("Maintenance");
+
+    public String naturalName;
+
+    Menu(String naturalName) {
+        this.naturalName = naturalName;
+    }
+
+    @Override
+    public String toString() {
+        return naturalName;
+    }
+
+
 }

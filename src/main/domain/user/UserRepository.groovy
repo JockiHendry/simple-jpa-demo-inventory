@@ -65,4 +65,20 @@ class UserRepository {
         }
         null
     }
+
+    User update(User user, String passwordBaru = null) {
+        User mergedUser = findUserById(user.id)
+        if (!mergedUser) {
+            throw DataTidakBolehDiubah(this)
+        }
+        mergedUser.with {
+            nama = user.nama
+            hakAkses.clear()
+            hakAkses.addAll(user.hakAkses)
+            if (passwordBaru && passwordBaru.length() > 0) {
+                setPassword(mergedUser, passwordBaru)
+            }
+        }
+        mergedUser
+    }
 }

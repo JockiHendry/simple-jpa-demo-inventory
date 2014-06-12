@@ -105,6 +105,8 @@ actions {
         smallIcon: imageIcon('/menu_maintenance_backup.png'), closure: controller.switchPage)
     action(id: 'restore', name: 'Restore', actionCommandKey: 'restore', mnemonic: KeyEvent.VK_R,
         smallIcon: imageIcon('/menu_maintenance_restore.png'), closure: controller.switchPage)
+    action(id: 'user', name: 'User', actionCommandKey: 'user', mnemonic: KeyEvent.VK_U,
+        smallIcon: imageIcon('/menu_maintenance_user.png'), closure: controller.switchPage)
 }
 
 application(id: 'mainFrame',
@@ -125,6 +127,7 @@ application(id: 'mainFrame',
         menuItem(action: pengaturan)
         menuItem(action: backup)
         menuItem(action: restore)
+        menuItem(action: user)
     }
 
     popupMenu(id: 'pengeluaranBarangPopup') {

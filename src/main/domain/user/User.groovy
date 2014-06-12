@@ -31,12 +31,12 @@ class User {
     String nama
 
     @NotNull
-    byte[] password
+    byte[] password = []
 
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
     LocalDateTime loginTerakhir
 
-    @NotEmpty @ElementCollection @Enumerated
+    @NotEmpty @ElementCollection(fetch=FetchType.EAGER) @Enumerated
     List<Menu> hakAkses = []
 
     public boolean bolehAkses(Menu menu) {
