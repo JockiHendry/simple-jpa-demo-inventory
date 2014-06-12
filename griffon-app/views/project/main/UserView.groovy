@@ -38,7 +38,7 @@ application() {
             glazedTable(id: 'table', list: model.userList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                 glazedColumn(name: 'Nama', property: 'nama')
                 glazedColumn(name: 'Login Terakhir', property: 'loginTerakhir') {
-                    templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
+                    templateRenderer(exp: { it?.toString('dd-MM-yyyy HH:mm') })
                 }
             }
         }

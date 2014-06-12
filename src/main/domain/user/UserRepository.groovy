@@ -59,6 +59,11 @@ class UserRepository {
 
     User login(String namaUser, String inputPassword) {
         User user = findUserByNama(namaUser)
+        if (user==null && namaUser.equals('admin')) {
+            user = new User(nama: 'admin')
+            Menu.values().each { user.hakAkses << it }
+            buat(user)
+        }
         if (user && Container.app.passwordService.periksaPassword(user.password, inputPassword)) {
             user.loginTerakhir = LocalDateTime.now()
             return user

@@ -29,6 +29,8 @@ import domain.faktur.BilyetGiroRepository
 import domain.penjualan.BilyetGiroClearingService
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
+import domain.user.User
+import domain.user.UserLoginService
 import domain.user.UserRepository
 import domain.util.NomorService
 import domain.penjualan.RegionRepository
@@ -46,6 +48,8 @@ class Container {
     public static Container app = new Container()
 
     public static final String SEMUA = "Semua"
+
+    User currentUser
 
     GudangRepository gudangRepository
     ProdukRepository produkRepository
@@ -67,6 +71,7 @@ class Container {
     PasswordService passwordService
     NomorService nomorService
     BilyetGiroClearingService bilyetGiroClearingService
+    UserLoginService userLoginService
 
     private Container() {
         setup()
@@ -92,6 +97,7 @@ class Container {
         passwordService = new PasswordService()
         nomorService = new NomorService()
         bilyetGiroClearingService = new BilyetGiroClearingService()
+        userLoginService = new UserLoginService()
 
         // Create event consumers
         GriffonApplication app = ApplicationHolder.application

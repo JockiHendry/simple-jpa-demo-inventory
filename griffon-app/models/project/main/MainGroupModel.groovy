@@ -20,4 +20,20 @@ import groovy.beans.Bindable
 
 class MainGroupModel {
 
+    @Bindable String status
+
+    @Bindable boolean penerimaanBarangVisible = true
+    @Bindable boolean pengeluaranBarangVisible = true
+    @Bindable boolean buktiTerimaVisible = true
+    @Bindable boolean purchaseOrderVisible = true
+    @Bindable boolean fakturBeliVisible = true
+    @Bindable boolean fakturJualVisible = true
+    @Bindable boolean hutangVisible = true
+    @Bindable boolean piutangVisible = true
+    @Bindable boolean giroVisible = true
+    @Bindable boolean produkVisible = true
+    @Bindable boolean transferVisible = true
+    @Bindable boolean laporanVisible = true
+    @Bindable boolean maintenanceVisible = true
+
 }
