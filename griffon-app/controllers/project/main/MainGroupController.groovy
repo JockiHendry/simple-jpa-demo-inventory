@@ -33,27 +33,29 @@ class MainGroupController {
 
     void mvcGroupInit(Map args) {
         execInsideUISync {
-            JXLoginPane panel = new JXLoginPane(Container.app.userLoginService)
-            JXLoginPane.Status status = JXLoginPane.showLoginDialog(app.windowManager.getStartingWindow(), panel)
-            if (status!=JXLoginPane.Status.SUCCEEDED) {
-                app.shutdown()
-            }
+            if (Environment.current != Environment.TEST) {
+                JXLoginPane panel = new JXLoginPane(Container.app.userLoginService)
+                JXLoginPane.Status status = JXLoginPane.showLoginDialog(app.windowManager.getStartingWindow(), panel)
+                if (status != JXLoginPane.Status.SUCCEEDED) {
+                    app.shutdown()
+                }
 
-            User currentUser = Container.app.currentUser
-            model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
-            model.penerimaanBarangVisible = currentUser.bolehAkses(Menu.PENERIMAAN_BARANG)
-            model.pengeluaranBarangVisible = currentUser.bolehAkses(Menu.PENGELUARAN_BARANG)
-            model.buktiTerimaVisible = currentUser.bolehAkses(Menu.BUKTI_TERIMA)
-            model.purchaseOrderVisible = currentUser.bolehAkses(Menu.PURCHASE_ORDER)
-            model.fakturBeliVisible = currentUser.bolehAkses(Menu.FAKTUR_BELI)
-            model.fakturJualVisible = currentUser.bolehAkses(Menu.FAKTUR_JUAL)
-            model.hutangVisible = currentUser.bolehAkses(Menu.HUTANG)
-            model.piutangVisible = currentUser.bolehAkses(Menu.PIUTANG)
-            model.giroVisible = currentUser.bolehAkses(Menu.GIRO)
-            model.produkVisible = currentUser.bolehAkses(Menu.PRODUK)
-            model.transferVisible = currentUser.bolehAkses(Menu.TRANSFER)
-            model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
-            model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
+                User currentUser = Container.app.currentUser
+                model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
+                model.penerimaanBarangVisible = currentUser.bolehAkses(Menu.PENERIMAAN_BARANG)
+                model.pengeluaranBarangVisible = currentUser.bolehAkses(Menu.PENGELUARAN_BARANG)
+                model.buktiTerimaVisible = currentUser.bolehAkses(Menu.BUKTI_TERIMA)
+                model.purchaseOrderVisible = currentUser.bolehAkses(Menu.PURCHASE_ORDER)
+                model.fakturBeliVisible = currentUser.bolehAkses(Menu.FAKTUR_BELI)
+                model.fakturJualVisible = currentUser.bolehAkses(Menu.FAKTUR_JUAL)
+                model.hutangVisible = currentUser.bolehAkses(Menu.HUTANG)
+                model.piutangVisible = currentUser.bolehAkses(Menu.PIUTANG)
+                model.giroVisible = currentUser.bolehAkses(Menu.GIRO)
+                model.produkVisible = currentUser.bolehAkses(Menu.PRODUK)
+                model.transferVisible = currentUser.bolehAkses(Menu.TRANSFER)
+                model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
+                model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
+            }
         }
     }
 
