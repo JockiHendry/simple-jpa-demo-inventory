@@ -26,9 +26,13 @@ import org.joda.time.*
 @DomainClass @Entity
 class PenyesuaianStok extends DaftarBarang {
 
+    @NotNull
+    Boolean bertambah = true
+
     @Override
     int faktor() {
-        1
+        bertambah? 1: -1
     }
+
 }
 
