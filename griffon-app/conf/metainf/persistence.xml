@@ -29,6 +29,7 @@
     <class>domain.inventory.StokProduk</class>
     <class>domain.inventory.ItemStok</class>
     <class>domain.inventory.Gudang</class>
+    <class>domain.inventory.PenyesuaianStok</class>
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/inventory"/>

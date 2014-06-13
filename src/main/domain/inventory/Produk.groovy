@@ -94,7 +94,7 @@ class Produk implements Comparable {
     }
 
     public void perubahanStok(int jumlah, Faktur faktur, Gudang gudang, String keterangan) {
-        ItemStok itemStok = new ItemStok(LocalDate.now(), faktur.nomor, faktur.class.simpleName, jumlah, keterangan)
+        ItemStok itemStok = new ItemStok(LocalDate.now(), faktur?.nomor?:'-', faktur?.class?.simpleName?:'-', jumlah, keterangan)
         perubahanStok(gudang, itemStok)
     }
 

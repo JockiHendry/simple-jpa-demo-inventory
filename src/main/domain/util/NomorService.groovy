@@ -33,7 +33,8 @@ class NomorService {
         PENGELUARAN_BARANG('PengeluaranBarang', '%06d-SJ-KB-%s'),
         PENGELUARAN_BONUS('BonusPenjualan', '%06d-BONUS-%s'),
         PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s'),
-        TRANSFER('Transfer', '%06d-TR-KB-%s')
+        TRANSFER('Transfer', '%06d-TR-KB-%s'),
+        PENYESUAIAN_STOK('PenyesuaianStok', '%06d-PS-KB-%s')
 
         String format;
         String desc;

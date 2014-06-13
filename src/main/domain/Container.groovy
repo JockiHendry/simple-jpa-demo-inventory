@@ -19,6 +19,7 @@ package domain
 import domain.event.BilyetGiroEventConsumer
 import domain.event.InventoryEventConsumer
 import domain.inventory.GudangRepository
+import domain.inventory.PenyesuaianStokRepository
 import domain.inventory.ProdukRepository
 import domain.inventory.SatuanRepository
 import domain.inventory.TransferRepository
@@ -64,6 +65,7 @@ class Container {
     BilyetGiroRepository bilyetGiroRepository
     TransferRepository transferRepository
     UserRepository userRepository
+    PenyesuaianStokRepository penyesuaianStokRepository
 
     InventoryEventConsumer inventoryEventConsumer
     BilyetGiroEventConsumer bilyetGiroEventConsumer
@@ -92,6 +94,7 @@ class Container {
         bilyetGiroRepository = new BilyetGiroRepository()
         transferRepository = new TransferRepository()
         userRepository = new UserRepository()
+        penyesuaianStokRepository = new PenyesuaianStokRepository()
 
         // Create services
         passwordService = new PasswordService()
