@@ -27,6 +27,7 @@ public enum Menu {
     GIRO("Giro"),
     PRODUK("Produk"),
     TRANSFER("Transfer"),
+    PENYESUAIAN_STOK("Penyesuaian"),
     LAPORAN("Laporan"),
     MAINTENANCE("Maintenance");
 

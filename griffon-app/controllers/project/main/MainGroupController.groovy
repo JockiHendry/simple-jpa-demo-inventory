@@ -53,6 +53,7 @@ class MainGroupController {
                 model.giroVisible = currentUser.bolehAkses(Menu.GIRO)
                 model.produkVisible = currentUser.bolehAkses(Menu.PRODUK)
                 model.transferVisible = currentUser.bolehAkses(Menu.TRANSFER)
+                model.penyesuaianStokVisible = currentUser.bolehAkses(Menu.PENYESUAIAN_STOK)
                 model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
                 model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
             }

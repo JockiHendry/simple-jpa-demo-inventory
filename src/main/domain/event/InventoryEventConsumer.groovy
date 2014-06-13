@@ -42,7 +42,9 @@ class InventoryEventConsumer {
                 log.info "Item ini adalah item negasi dengan pengali [${pengali}]"
             }
 
-            if (keterangan==null) keterangan = faktur?.keterangan
+            if (keterangan==null) {
+                keterangan = faktur?.keterangan?: daftarBarang.keterangan
+            }
             i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
 
             log.info "Selesai memproses item $i!"
