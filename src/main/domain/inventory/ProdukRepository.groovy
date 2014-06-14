@@ -67,6 +67,7 @@ class ProdukRepository {
         p.hargaDalamKota = produk.hargaDalamKota
         p.hargaLuarKota = produk.hargaLuarKota
         p.satuan = produk.satuan
+        p.poin = produk.poin
         p
     }
 

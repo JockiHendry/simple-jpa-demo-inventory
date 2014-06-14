@@ -77,6 +77,9 @@ class Produk implements Comparable {
     @NotNull @ManyToOne
     Satuan satuan
 
+    @NotNull
+    Integer poin = 0
+
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
     Map<Gudang, StokProduk> daftarStok = [:]
 

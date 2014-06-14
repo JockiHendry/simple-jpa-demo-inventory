@@ -89,6 +89,9 @@ application(title: 'Produk',
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan })
+                    glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer) {
+                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    }
                 }
             }
         }
@@ -107,6 +110,9 @@ application(title: 'Produk',
             label('Satuan:')
             comboBox(id: 'satuan', model: model.satuan, templateRenderer: '${value}', errorPath: 'satuan')
             errorLabel(path: 'satuan', constraints: 'wrap')
+            label('Poin:')
+            numberTextField(id: 'poin', columns: 20, bindTo: 'poin', errorPath: 'poin')
+            errorLabel(path: 'poin', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {

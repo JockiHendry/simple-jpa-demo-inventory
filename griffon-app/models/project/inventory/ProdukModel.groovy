@@ -32,6 +32,7 @@ class ProdukModel {
 	@Bindable BigDecimal hargaDalamKota
     @Bindable BigDecimal hargaLuarKota
     BasicEventList<Satuan> satuanList = new BasicEventList<>()
+    @Bindable Integer poin
     @Bindable DefaultEventComboBoxModel<Satuan> satuan = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(satuanList)
 
     @Bindable String namaSearch
