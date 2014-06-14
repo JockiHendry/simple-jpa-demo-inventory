@@ -293,4 +293,24 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             repo.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 5), new ItemBarang(produkB, 3)])
         }
     }
+
+    public void testPotongPiutang() {
+        FakturJualRepository repo = Container.app.fakturJualRepository
+        Container.app.nomorService.refreshAll()
+
+        repo.withTransaction {
+            Konsumen konsumen = findKonsumenById(-3l)
+            assertEquals(50000, konsumen.jumlahPiutang())
+            konsumen.potongPiutang(30000)
+
+            FakturJualOlehSales f = findFakturJualOlehSalesById(-3l)
+            assertEquals(30000, f.piutang.jumlahDibayar())
+            assertEquals(20000, f.sisaPiutang())
+            assertEquals(20000, konsumen.jumlahPiutang())
+
+            konsumen.potongPiutang(20000)
+            assertEquals(0, konsumen.listFakturBelumLunas.size())
+            assertEquals(0, konsumen.jumlahPiutang())
+        }
+    }
 }

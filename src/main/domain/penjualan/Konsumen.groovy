@@ -16,9 +16,11 @@
 package domain.penjualan
 
 import domain.faktur.Diskon
+import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarang
 import domain.inventory.Produk
 import groovy.transform.*
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -75,7 +77,9 @@ class Konsumen {
     Map<Produk, BigDecimal> hargaTerakhir = [:]
 
     public BigDecimal jumlahPiutang() {
-        listFakturBelumLunas.sum { it.total() }?: 0
+        listFakturBelumLunas.sum {
+            it.piutang? it.sisaPiutang(): it.total()
+        }?: 0
     }
 
     public boolean adaTagihanJatuhTempo() {
@@ -113,6 +117,27 @@ class Konsumen {
             return hargaTerakhir[produk]
         } else {
             return produk.hargaUntuk(sales)
+        }
+    }
+
+    public void potongPiutang(BigDecimal jumlah) {
+        if (jumlah > jumlahPiutang()) {
+            throw new IllegalStateException('Jumlah piutang yang akan dipotong melebihi jumlah piutang yang ada!')
+        }
+
+        for (FakturJualOlehSales faktur: listFakturBelumLunas.toArray()) {
+            BigDecimal sisaPiutang = faktur.sisaPiutang(false)
+            if (jumlah >= sisaPiutang) {
+                // Lunasi seluruh piutang untuk faktur ini
+                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: sisaPiutang, potongan: true))
+                jumlah -= sisaPiutang
+            } else {
+                // Lunasi hanya sebesar jumlah
+                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true))
+                jumlah = 0
+            }
+
+            if (jumlah==0) break
         }
     }
 

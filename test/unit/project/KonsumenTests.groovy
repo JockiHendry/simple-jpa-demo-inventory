@@ -17,6 +17,7 @@ package project
 
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
+import domain.faktur.KewajibanPembayaran
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -24,6 +25,7 @@ import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.penjualan.Sales
+import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
 
@@ -133,4 +135,46 @@ class KonsumenTests extends GriffonUnitTestCase {
         mrNiceGuy.hapusPoin(daftarBarang)
         assertEquals(0, mrNiceGuy.poinTerkumpul)
     }
+
+    public void testPotongPiutang() {
+        Gudang gudang = new Gudang()
+        Sales sales = new Sales(gudang: gudang)
+        Konsumen mrNiceGuy = new Konsumen(sales: sales)
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 20000, 20100, 50)
+        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang: 200.000
+        f1.tambah(new ItemFaktur(produkA, 10, 10000))
+        f1.tambah(new ItemFaktur(produkB, 5, 20000))
+        f1.piutang = new KewajibanPembayaran(jumlah: f1.total())
+        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'F2', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  70.000
+        f2.tambah(new ItemFaktur(produkA, 3, 10000))
+        f2.tambah(new ItemFaktur(produkB, 2, 20000))
+        f2.piutang = new KewajibanPembayaran(jumlah: f2.total())
+        FakturJualOlehSales f3 = new FakturJualOlehSales(nomor: 'F3', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  30.000
+        f3.tambah(new ItemFaktur(produkA, 3, 10000))
+        f3.piutang = new KewajibanPembayaran(jumlah: f3.total())
+        mrNiceGuy.tambahFakturBelumLunas(f1)
+        mrNiceGuy.tambahFakturBelumLunas(f2)
+        mrNiceGuy.tambahFakturBelumLunas(f3)
+        assertEquals(300000, mrNiceGuy.jumlahPiutang())
+        assertEquals(300000, mrNiceGuy.creditTerpakai)
+
+        mrNiceGuy.potongPiutang(150000)
+        assertEquals(150000, mrNiceGuy.jumlahPiutang())
+        assertEquals(300000, mrNiceGuy.creditTerpakai)
+        assertEquals(3, mrNiceGuy.listFakturBelumLunas.size())
+
+        mrNiceGuy.potongPiutang(50000)
+        assertEquals(100000, mrNiceGuy.jumlahPiutang())
+        assertEquals(100000, mrNiceGuy.creditTerpakai)
+        assertEquals(2, mrNiceGuy.listFakturBelumLunas.size())
+
+        mrNiceGuy.potongPiutang(80000)
+        assertEquals(20000, mrNiceGuy.jumlahPiutang())
+        assertEquals(30000, mrNiceGuy.creditTerpakai)
+        assertEquals(1, mrNiceGuy.listFakturBelumLunas.size())
+
+        shouldFail { mrNiceGuy.potongPiutang(500000)}
+    }
+
 }
