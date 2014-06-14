@@ -98,4 +98,24 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(30, hasil.find { it.produk == produkC}.jumlah)
     }
 
+    void testToPoin() {
+        Produk produkA = new Produk(nama: 'Produk A', poin: 10)
+        Produk produkB = new Produk(nama: 'Produk B', poin: 0)
+        Produk produkC = new Produk(nama: 'Produk C', poin: 5)
+
+        DaftarBarang daftarBarang = new DaftarBarang() {
+            @Override
+            int faktor() {
+                1
+            }
+        }
+        daftarBarang.tambah(new ItemBarang(produkA, 10))  // Poin: 10 * 10 = 100
+        daftarBarang.tambah(new ItemBarang(produkB, 20))  // Poin:  0 * 20 =   0
+        daftarBarang.tambah(new ItemBarang(produkC, 30))  // Poin: 30 * 5  = 150
+        daftarBarang.tambah(new ItemBarang(produkA, 3))   // Poin: 10 * 3  =  30
+        daftarBarang.tambah(new ItemBarang(produkB, 5))   // Poin:  0 * 5  =   0
+
+        assertEquals(280, daftarBarang.toPoin())
+    }
+
 }

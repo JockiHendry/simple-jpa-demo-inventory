@@ -18,9 +18,11 @@ package project
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
+import domain.penjualan.PengeluaranBarang
 import domain.penjualan.Sales
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
@@ -91,6 +93,27 @@ class KonsumenTests extends GriffonUnitTestCase {
         assertTrue(mrNiceGuy.bolehKredit(20000))
         assertTrue(mrNiceGuy.bolehKredit(37000))
         assertFalse(mrNiceGuy.bolehKredit(40000))
+    }
+
+    public void testTambahPoin() {
+        Konsumen mrNiceGuy = new Konsumen()
+
+        mrNiceGuy.tambahPoin(50)
+        assertEquals(50, mrNiceGuy.poinTerkumpul)
+
+        mrNiceGuy.tambahPoin(20)
+        assertEquals(70, mrNiceGuy.poinTerkumpul)
+
+        Produk produkA = new Produk(nama: 'Produk A', poin: 10)
+        Produk produkB = new Produk(nama: 'Produk B', poin: 0)
+        Produk produkC = new Produk(nama: 'Produk C', poin: 5)
+        PengeluaranBarang daftarBarang = new PengeluaranBarang()
+        daftarBarang.tambah(new ItemBarang(produkA, 10))
+        daftarBarang.tambah(new ItemBarang(produkB, 20))
+        daftarBarang.tambah(new ItemBarang(produkC, 30))
+
+        mrNiceGuy.tambahPoin(daftarBarang)
+        assertEquals(320, mrNiceGuy.poinTerkumpul)
     }
 
 }

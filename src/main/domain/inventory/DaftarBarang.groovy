@@ -82,4 +82,8 @@ abstract class DaftarBarang {
     DaftarBarangSementara toDaftarBarangSementara() {
         new DaftarBarangSementara(items)
     }
+
+    Integer toPoin() {
+        items.sum { it.jumlah * (it.produk.poin?:0) }?: 0
+    }
 }

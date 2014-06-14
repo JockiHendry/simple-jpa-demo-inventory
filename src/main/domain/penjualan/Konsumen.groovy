@@ -16,6 +16,7 @@
 package domain.penjualan
 
 import domain.faktur.Diskon
+import domain.inventory.DaftarBarang
 import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -64,6 +65,9 @@ class Konsumen {
     @NotNull
     BigDecimal creditTerpakai = BigDecimal.ZERO
 
+    @NotNull
+    Integer poinTerkumpul = 0
+
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
 
@@ -110,6 +114,14 @@ class Konsumen {
         } else {
             return produk.hargaUntuk(sales)
         }
+    }
+
+    public void tambahPoin(Integer poin) {
+        this.poinTerkumpul += poin
+    }
+
+    public void tambahPoin(DaftarBarang daftarBarang) {
+        this.poinTerkumpul += daftarBarang.toPoin()
     }
 
 }
