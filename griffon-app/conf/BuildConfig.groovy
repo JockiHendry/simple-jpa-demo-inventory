@@ -44,7 +44,7 @@ environments {
                 // no value means we will prompt //keypass   = 'BadKeyPassword'
                 storepass = 'inventory:)'
                 keypass = 'inventory:)'
-                lazy = false // sign, regardless of existing signatures
+                lazy = true // sign, regardless of existing signatures
             }
         }
 
