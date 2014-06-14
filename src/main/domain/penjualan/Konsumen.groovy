@@ -121,7 +121,16 @@ class Konsumen {
     }
 
     public void tambahPoin(DaftarBarang daftarBarang) {
-        this.poinTerkumpul += daftarBarang.toPoin()
+        tambahPoin(daftarBarang.toPoin())
+    }
+
+    public void hapusPoin(Integer poin) {
+        this.poinTerkumpul -= poin
+        if (this.poinTerkumpul < 0) this.poinTerkumpul = 0
+    }
+
+    public void hapusPoin(DaftarBarang daftarBarang) {
+        hapusPoin(daftarBarang.toPoin())
     }
 
 }

@@ -116,4 +116,21 @@ class KonsumenTests extends GriffonUnitTestCase {
         assertEquals(320, mrNiceGuy.poinTerkumpul)
     }
 
+    public void testHapusPoin() {
+        Konsumen mrNiceGuy = new Konsumen(poinTerkumpul: 100)
+
+        mrNiceGuy.hapusPoin(20)
+        assertEquals(80, mrNiceGuy.poinTerkumpul)
+
+        Produk produkA = new Produk(nama: 'Produk A', poin: 10)
+        Produk produkB = new Produk(nama: 'Produk B', poin: 0)
+        Produk produkC = new Produk(nama: 'Produk C', poin: 5)
+        PengeluaranBarang daftarBarang = new PengeluaranBarang()
+        daftarBarang.tambah(new ItemBarang(produkA, 10))
+        daftarBarang.tambah(new ItemBarang(produkB, 20))
+        daftarBarang.tambah(new ItemBarang(produkC, 30))
+
+        mrNiceGuy.hapusPoin(daftarBarang)
+        assertEquals(0, mrNiceGuy.poinTerkumpul)
+    }
 }

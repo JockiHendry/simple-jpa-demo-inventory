@@ -69,8 +69,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
     public void testTambahBuktiTerima() {
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
+        produkA.poin = 10
+        produkB.poin = 0
         Sales showroom = new Sales('Showroom', null, gudangUtama)
-        Konsumen konsumen = new Konsumen(nama: 'Konsumen', sales: showroom)
+        Konsumen konsumen = new Konsumen(nama: 'Konsumen', sales: showroom, poinTerkumpul: 50)
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
@@ -82,6 +84,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(StatusFakturJual.DITERIMA, f.status)
         assertNotNull(f.piutang)
         assertEquals(0, f.total().compareTo(f.piutang.jumlah))
+        assertEquals(150, konsumen.poinTerkumpul)
     }
 
     public void testBayar() {

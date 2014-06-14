@@ -197,10 +197,18 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertNotNull(fakturJualOlehSales.piutang)
             assertEquals(fakturJualOlehSales.total(), fakturJualOlehSales.piutang.jumlah)
 
+            // Memeriksa poin konsumen
+            Konsumen mrNiceGuy = repo.findKonsumenById(-1l)
+            assertEquals(52, mrNiceGuy.poinTerkumpul)
+
             // Menghapus penerimaan
             fakturJualOlehSales.hapusBuktiTerima()
             assertEquals(StatusFakturJual.DIANTAR, fakturJualOlehSales.status)
             assertNull(fakturJualOlehSales.piutang)
+
+            // Memeriksa poin konsumen setelah penghapusan
+            mrNiceGuy = repo.findKonsumenById(-1l)
+            assertEquals(50, mrNiceGuy.poinTerkumpul)
 
             // Menambah penerimaan, melakukan pembayaran, sehingga penerimaan tidak boleh dihapus
             fakturJualOlehSales.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))

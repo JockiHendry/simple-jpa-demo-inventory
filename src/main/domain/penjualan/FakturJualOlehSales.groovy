@@ -82,6 +82,9 @@ class FakturJualOlehSales extends FakturJual {
     void tambah(BuktiTerima buktiTerima) {
         super.tambah(buktiTerima)
         piutang = new KewajibanPembayaran(jumlah: total())
+
+        // Menambahkan poin pada konsumen
+        konsumen.tambahPoin(pengeluaranBarang)
     }
 
     void bayar(Pembayaran pembayaran) {
@@ -117,6 +120,9 @@ class FakturJualOlehSales extends FakturJual {
         }
         super.hapusBuktiTerima()
         piutang = null
+
+        // Menghapus poin pada konsumen
+        konsumen.hapusPoin(pengeluaranBarang.toPoin())
     }
 
     BigDecimal sisaPiutang(boolean byNominal = true) {
