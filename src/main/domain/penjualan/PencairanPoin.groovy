@@ -37,6 +37,8 @@ abstract class PencairanPoin {
 
     String keterangan
 
+    public PencairanPoin() {}
+
     public PencairanPoin(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate) {
         this.tanggal = tanggal
         this.jumlahPoin = jumlahPoin

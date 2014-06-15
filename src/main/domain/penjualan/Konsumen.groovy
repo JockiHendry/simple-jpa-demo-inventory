@@ -44,6 +44,15 @@ import java.text.NumberFormat
             @NamedAttributeNode('piutang'),
         ])
     ]),
+    @NamedEntityGraph(name='Konsumen.PencairanPoin', attributeNodes = [
+        @NamedAttributeNode(value='listFakturBelumLunas', subgraph='faktur'),
+        @NamedAttributeNode(value='listPencairanPoin'),
+    ], subgraphs = [
+        @NamedSubgraph(name='faktur', attributeNodes = [
+                @NamedAttributeNode('listItemFaktur'),
+                @NamedAttributeNode('piutang'),
+        ])
+    ]),
 ])
 @DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir,listPencairanPoin')
 class Konsumen {

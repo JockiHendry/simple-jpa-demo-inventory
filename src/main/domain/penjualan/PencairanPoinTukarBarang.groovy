@@ -40,6 +40,8 @@ class PencairanPoinTukarBarang extends PencairanPoin {
     @NotNull @ManyToOne
     Gudang gudang
 
+    public PencairanPoinTukarBarang() {}
+
     public PencairanPoinTukarBarang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate, Integer poinKonsumen, Gudang gudang, List<ItemBarang> listItemBarang) {
         super(tanggal, jumlahPoin, rate)
         this.poinKonsumen = poinKonsumen
@@ -57,6 +59,7 @@ class PencairanPoinTukarBarang extends PencairanPoin {
     void proses() {
         DaftarBarangSementara s = new DaftarBarangSementara(listItemBarang, -1)
         s.gudang = gudang
+        s.keterangan = 'Penukaran Poin'
         ApplicationHolder.application?.event(new PerubahanStok(s, null))
     }
 

@@ -26,6 +26,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'showFakturBelumLunas', name: 'Lihat Faktur Belum Lunas...', closure: controller.showFakturBelumLunas)
+    action(id: 'showPencairanPoin', name: 'Pencairan Poin...', closure: controller.showPencairanPoin)
 }
 
 application(title: 'Konsumen',
@@ -100,6 +101,7 @@ application(title: 'Konsumen',
                 })
                 button('Credit Limit', visible: bind { table.isRowSelected }, actionPerformed: controller.creditLimit)
                 button(action: showFakturBelumLunas, visible: bind { table.isRowSelected })
+                button(action: showPencairanPoin, visible: bind { table.isRowSelected })
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

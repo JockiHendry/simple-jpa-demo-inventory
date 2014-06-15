@@ -26,6 +26,8 @@ import org.joda.time.*
 @DomainClass @Entity
 class PencairanPoinTukarUang extends PencairanPoin {
 
+    public PencairanPoinTukarUang() {}
+
     public PencairanPoinTukarUang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate) {
         super(tanggal, jumlahPoin, rate)
     }

@@ -29,6 +29,8 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
     @NotNull @ManyToOne
     Konsumen konsumen
 
+    public PencairanPoinPotongPiutang() {}
+
     public PencairanPoinPotongPiutang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate, Konsumen konsumen) {
         super(tanggal, jumlahPoin, rate)
         this.konsumen = konsumen

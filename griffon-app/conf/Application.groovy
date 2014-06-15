@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "penukaranPoinAsChild"
+    'pencairanPoinAsChild' {
+        model      = 'project.penjualan.PencairanPoinAsChildModel'
+        view       = 'project.penjualan.PencairanPoinAsChildView'
+        controller = 'project.penjualan.PencairanPoinAsChildController'
+    }
+
     // MVC Group for "penyesuaianStok"
     'penyesuaianStok' {
         model      = 'project.inventory.PenyesuaianStokModel'

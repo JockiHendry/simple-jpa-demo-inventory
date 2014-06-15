@@ -72,18 +72,26 @@ class KonsumenRepository {
     public PencairanPoin cairkanPoinTukarUang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin) {
         konsumen = findKonsumenById(konsumen.id)
         BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
-        konsumen.tambah(new PencairanPoinTukarUang(tanggal, jumlahPoin, rate))
+        PencairanPoin pencairanPoin = new PencairanPoinTukarUang(tanggal, jumlahPoin, rate)
+        konsumen.tambah(pencairanPoin)
+        pencairanPoin
+
     }
 
     public PencairanPoin cairkanPoinTukarBarang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin, List<ItemBarang> listItemBarang) {
         konsumen = findKonsumenById(konsumen.id)
+        listItemBarang.each { it.produk = merge(it.produk) }
         BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
-        konsumen.tambah(new PencairanPoinTukarBarang(tanggal, jumlahPoin, rate, konsumen.poinTerkumpul, konsumen.sales.gudang, listItemBarang))
+        PencairanPoin pencairanPoin = new PencairanPoinTukarBarang(tanggal, jumlahPoin, rate, konsumen.poinTerkumpul, konsumen.sales.gudang, listItemBarang)
+        konsumen.tambah(pencairanPoin)
+        pencairanPoin
     }
 
     public PencairanPoin cairkanPoinPotongPiutang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin) {
         konsumen = findKonsumenById(konsumen.id)
         BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
-        konsumen.tambah(new PencairanPoinPotongPiutang(tanggal, jumlahPoin, rate, konsumen))
+        PencairanPoin pencairanPoin = new PencairanPoinPotongPiutang(tanggal, jumlahPoin, rate, konsumen)
+        konsumen.tambah(pencairanPoin)
+        pencairanPoin
     }
 }
