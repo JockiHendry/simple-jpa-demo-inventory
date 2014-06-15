@@ -174,7 +174,8 @@ class FakturJualRepository {
     }
 
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false) {
-        Konsumen konsumen = merge(fakturJual.konsumen)
+        fakturJual.konsumen = merge(fakturJual.konsumen)
+        Konsumen konsumen = fakturJual.konsumen
 
         // Periksa apakah jumlah barang yang tersedia cukup
         DaftarBarangSementara stokYangDibutuhkan = fakturJual.barangYangHarusDikirim()
