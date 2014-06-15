@@ -139,13 +139,15 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
 
         // Periksa apakah faktur diterima oleh konsumen
-        konsumen = repo.findKonsumenByIdFetchFakturBelumLunas(-2l)
-        assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
-        assertEquals(fakturJualOlehSales.total(), konsumen.jumlahPiutang())
-
+        repo.withTransaction {
+            konsumen = findKonsumenByIdFetchFakturBelumLunas(-2l)
+            assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
+            assertEquals(fakturJualOlehSales.total(), konsumen.jumlahPiutang())
+        }
         // Periksa apakah harga terakhir terubah
         assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkA))
         assertEquals(1500, konsumenRepo.hargaTerakhir(konsumen, produkB))
+
     }
 
     public void testBatalkanPengeluaranBarangUntukSalesLuarKota() {
@@ -294,23 +296,4 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
     }
 
-    public void testPotongPiutang() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        Container.app.nomorService.refreshAll()
-
-        repo.withTransaction {
-            Konsumen konsumen = findKonsumenById(-3l)
-            assertEquals(50000, konsumen.jumlahPiutang())
-            konsumen.potongPiutang(30000)
-
-            FakturJualOlehSales f = findFakturJualOlehSalesById(-3l)
-            assertEquals(30000, f.piutang.jumlahDibayar())
-            assertEquals(20000, f.sisaPiutang())
-            assertEquals(20000, konsumen.jumlahPiutang())
-
-            konsumen.potongPiutang(20000)
-            assertEquals(0, konsumen.listFakturBelumLunas.size())
-            assertEquals(0, konsumen.jumlahPiutang())
-        }
-    }
 }

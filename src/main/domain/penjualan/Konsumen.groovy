@@ -15,7 +15,7 @@
  */
 package domain.penjualan
 
-import domain.faktur.Diskon
+import domain.exception.PencairanPoinTidakValid
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarang
 import domain.inventory.Produk
@@ -25,6 +25,7 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
+import java.text.NumberFormat
 
 @NamedEntityGraphs([
     @NamedEntityGraph(name='Konsumen.Complete', attributeNodes = [
@@ -39,11 +40,12 @@ import org.hibernate.validator.constraints.*
         @NamedAttributeNode(value='listFakturBelumLunas', subgraph='faktur'),
     ], subgraphs = [
         @NamedSubgraph(name='faktur', attributeNodes = [
-            @NamedAttributeNode('listItemFaktur')
+            @NamedAttributeNode('listItemFaktur'),
+            @NamedAttributeNode('piutang'),
         ])
     ]),
 ])
-@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir')
+@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir,listPencairanPoin')
 class Konsumen {
 
     @NotEmpty @Size(min=2, max=100)
@@ -69,6 +71,9 @@ class Konsumen {
 
     @NotNull
     Integer poinTerkumpul = 0
+
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinColumn(name='konsumen_id') @OrderColumn
+    List<PencairanPoin> listPencairanPoin = []
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
@@ -121,11 +126,13 @@ class Konsumen {
     }
 
     public void potongPiutang(BigDecimal jumlah) {
-        if (jumlah > jumlahPiutang()) {
-            throw new IllegalStateException('Jumlah piutang yang akan dipotong melebihi jumlah piutang yang ada!')
+        BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(false): 0}
+        if (jumlah > jumlahPiutangYangDapatDibayar) {
+            throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
         }
 
         for (FakturJualOlehSales faktur: listFakturBelumLunas.toArray()) {
+            if (!faktur.piutang) continue
             BigDecimal sisaPiutang = faktur.sisaPiutang(false)
             if (jumlah >= sisaPiutang) {
                 // Lunasi seluruh piutang untuk faktur ini
@@ -156,6 +163,15 @@ class Konsumen {
 
     public void hapusPoin(DaftarBarang daftarBarang) {
         hapusPoin(daftarBarang.toPoin())
+    }
+
+    public void tambah(PencairanPoin pencairanPoin) {
+        if (!pencairanPoin.valid()) {
+            throw new PencairanPoinTidakValid(pencairanPoin)
+        }
+        pencairanPoin.proses()
+        listPencairanPoin << pencairanPoin
+        hapusPoin(pencairanPoin.jumlahPoin)
     }
 
 }

@@ -15,9 +15,13 @@
  */
 package domain.penjualan
 
+import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import domain.pengaturan.KeyPengaturan
+import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -65,4 +69,21 @@ class KonsumenRepository {
         konsumen.hargaTerakhir(produk)
     }
 
+    public PencairanPoin cairkanPoinTukarUang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin) {
+        konsumen = findKonsumenById(konsumen.id)
+        BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
+        konsumen.tambah(new PencairanPoinTukarUang(tanggal, jumlahPoin, rate))
+    }
+
+    public PencairanPoin cairkanPoinTukarBarang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin, List<ItemBarang> listItemBarang) {
+        konsumen = findKonsumenById(konsumen.id)
+        BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
+        konsumen.tambah(new PencairanPoinTukarBarang(tanggal, jumlahPoin, rate, konsumen.poinTerkumpul, konsumen.sales.gudang, listItemBarang))
+    }
+
+    public PencairanPoin cairkanPoinPotongPiutang(Konsumen konsumen, LocalDate tanggal, Integer jumlahPoin) {
+        konsumen = findKonsumenById(konsumen.id)
+        BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
+        konsumen.tambah(new PencairanPoinPotongPiutang(tanggal, jumlahPoin, rate, konsumen))
+    }
 }

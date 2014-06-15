@@ -13,31 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.inventory
+package domain.exception
 
-import groovy.transform.Canonical
+import domain.penjualan.PencairanPoin
 
-@Canonical
-class DaftarBarangSementara extends DaftarBarang {
+class PencairanPoinTidakValid extends RuntimeException {
 
-    int nilaiFaktor
+    PencairanPoin pencairanPoin
 
-    public DaftarBarangSementara(List<ItemBarang> items, int nilaiFaktor = 1) {
-        this.items = items
-        this.nilaiFaktor = nilaiFaktor
-    }
-
-    DaftarBarangSementara plus(DaftarBarang daftarBarangLain) {
-        plus(daftarBarangLain.items)
-    }
-
-    DaftarBarangSementara plus(List<ItemBarang> daftarLain) {
-        new DaftarBarangSementara(this.items + daftarLain).normalisasi()
-    }
-
-    @Override
-    int faktor() {
-        nilaiFaktor
+    public PencairanPoinTidakValid(PencairanPoin pencairanPoin) {
+        super("Pencairan poin tidak valid!")
+        this.pencairanPoin = pencairanPoin
     }
 
 }

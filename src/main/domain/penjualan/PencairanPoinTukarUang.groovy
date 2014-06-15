@@ -13,31 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.inventory
+package domain.penjualan
 
-import groovy.transform.Canonical
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
+import org.hibernate.annotations.Type
+import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
+import org.joda.time.*
 
-@Canonical
-class DaftarBarangSementara extends DaftarBarang {
+@DomainClass @Entity
+class PencairanPoinTukarUang extends PencairanPoin {
 
-    int nilaiFaktor
-
-    public DaftarBarangSementara(List<ItemBarang> items, int nilaiFaktor = 1) {
-        this.items = items
-        this.nilaiFaktor = nilaiFaktor
-    }
-
-    DaftarBarangSementara plus(DaftarBarang daftarBarangLain) {
-        plus(daftarBarangLain.items)
-    }
-
-    DaftarBarangSementara plus(List<ItemBarang> daftarLain) {
-        new DaftarBarangSementara(this.items + daftarLain).normalisasi()
+    public PencairanPoinTukarUang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate) {
+        super(tanggal, jumlahPoin, rate)
     }
 
     @Override
-    int faktor() {
-        nilaiFaktor
+    boolean valid() {
+        true
+    }
+
+    @Override
+    void proses() {
+        // Saat ini tidak melakukan apa-apa (belum ada fitur laba rugi)
     }
 
 }
+
