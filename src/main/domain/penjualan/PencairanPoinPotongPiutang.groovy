@@ -36,5 +36,9 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
         konsumen.potongPiutang(getNominal())
     }
 
+    @Override
+    void hapus() {
+        throw new RuntimeException('Untuk saat ini, pencairan poin untuk potong piutang belum di-implementasi-kan!')
+    }
 }
 

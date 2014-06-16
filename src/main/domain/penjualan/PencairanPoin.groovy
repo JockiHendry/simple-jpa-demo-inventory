@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.validation.InputPencairanPoin
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -23,22 +24,24 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
+import javax.validation.groups.Default
+
 @DomainClass @Entity @Canonical
 abstract class PencairanPoin {
 
-    @NotEmpty @Size(min=2, max=100)
+    @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])
     String nomor
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    @NotNull(groups=[InputPencairanPoin,Default]) @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggal
 
-    @NotNull @ManyToOne
+    @NotNull(groups=[InputPencairanPoin,Default]) @ManyToOne
     Konsumen konsumen
 
-    @NotNull @Min(1l)
+    @NotNull(groups=[InputPencairanPoin,Default]) @Min(value=1l, groups=[InputPencairanPoin,Default])
     Integer jumlahPoin
 
-    @NotNull @Min(1l)
+    @NotNull(groups=[Default]) @Min(value=1l, groups=[Default])
     BigDecimal rate
 
     String keterangan
@@ -58,6 +61,8 @@ abstract class PencairanPoin {
     abstract boolean valid()
 
     abstract void proses()
+
+    abstract void hapus()
 
 }
 

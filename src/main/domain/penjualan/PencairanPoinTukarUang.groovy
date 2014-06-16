@@ -42,5 +42,9 @@ class PencairanPoinTukarUang extends PencairanPoin {
         // Saat ini tidak melakukan apa-apa (belum ada fitur laba rugi)
     }
 
+    @Override
+    void hapus() {
+        // Saat ini tidak melakukan apa-apa (belum ada fitur laba rugi)
+    }
 }
 

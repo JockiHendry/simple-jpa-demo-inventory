@@ -24,10 +24,10 @@ application {
 }
 mvcGroups {
     // MVC Group for "penukaranPoinAsChild"
-    'pencairanPoinAsChild' {
-        model      = 'project.penjualan.PencairanPoinAsChildModel'
-        view       = 'project.penjualan.PencairanPoinAsChildView'
-        controller = 'project.penjualan.PencairanPoinAsChildController'
+    'pencairanPoin' {
+        model      = 'project.penjualan.PencairanPoinModel'
+        view       = 'project.penjualan.PencairanPoinView'
+        controller = 'project.penjualan.PencairanPoinController'
     }
 
     // MVC Group for "penyesuaianStok"

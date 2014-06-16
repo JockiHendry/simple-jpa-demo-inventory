@@ -62,6 +62,10 @@ class PencairanPoinRepository {
         if (!pencairanPoin) {
             throw new DataTidakBolehDiubah(pencairanPoin)
         }
+        if (pencairanPoin instanceof PencairanPoinTukarBarang) {
+            pencairanPoin.listItemBarang.each { it.produk = merge(it.produk) }
+        }
+        pencairanPoin.hapus()
         pencairanPoin.deleted = 'Y'
         pencairanPoin.konsumen.tambahPoin(pencairanPoin.jumlahPoin)
         pencairanPoin

@@ -19,6 +19,7 @@ import domain.event.PerubahanStok
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.validation.InputPencairanPoin
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -28,10 +29,13 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import griffon.util.ApplicationHolder
 
+import javax.validation.groups.Default
+
 @DomainClass @Entity @Canonical
 class PencairanPoinTukarBarang extends PencairanPoin {
 
-    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty @CollectionTable(name='PencairanPoin_Items')
+    @NotEmpty(groups=[InputPencairanPoin,Default])
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @CollectionTable(name='PencairanPoin_Items')
     List<ItemBarang> listItemBarang = []
 
     @Override
@@ -45,6 +49,14 @@ class PencairanPoinTukarBarang extends PencairanPoin {
         daftarBarangSementara.gudang = konsumen.sales.gudang
         daftarBarangSementara.keterangan = 'Penukaran Poin'
         ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, null))
+    }
+
+    @Override
+    void hapus() {
+        DaftarBarangSementara daftarBarangSementara = new DaftarBarangSementara(listItemBarang, -1)
+        daftarBarangSementara.gudang = konsumen.sales.gudang
+        daftarBarangSementara.keterangan = 'Pembatalan Penukaran Poin'
+        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, null, true))
     }
 
     Integer getJumlahPoin() {

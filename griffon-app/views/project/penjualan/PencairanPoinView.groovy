@@ -16,6 +16,7 @@
 package project.penjualan
 
 import net.miginfocom.swing.MigLayout
+import org.jdesktop.swingx.prompt.PromptSupport
 import org.joda.time.LocalDate
 import java.awt.Color
 import java.awt.FlowLayout
@@ -31,11 +32,26 @@ application() {
     panel(id: 'mainPanel') {
         borderLayout()
 
+        panel(constraints: PAGE_START) {
+            flowLayout(alignment: FlowLayout.LEADING)
+            dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
+            label(' s/d ')
+            dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
+            textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
+            textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
+            button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+        }
+
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.pencairanPoinList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedColumn(name: '', property: 'deleted', width: 20) {
+                    templateRenderer(exp: { it == 'Y'? 'D': ''})
+                }
+                glazedColumn(name: 'Nomor', property: 'nomor', width: 140)
                 glazedColumn(name: 'Tanggal', property: 'tanggal') {
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
+                glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
                 glazedColumn(name: 'Jenis Penukaran', expression: {it?.class?.simpleName})
                 glazedColumn(name: 'Jumlah Poin', property: 'jumlahPoin', columnClass: Integer)
                 glazedColumn(name: 'Rate Per Poin', property: 'rate', columnClass: Integer) {
@@ -49,6 +65,9 @@ application() {
             label('Tanggal:')
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
             errorLabel(path: 'tanggal', constraints: 'wrap')
+            label('Konsumen:')
+            comboBox(id: 'konsumen', model: model.konsumen, templateRenderer: '${value.nama} - ${value.region}', errorPath: 'konsumen')
+            errorLabel(path: 'konsumen', constraints: 'wrap')
             label('Jumlah Poin:')
             numberTextField(id: 'jumlahPoin', columns: 20, bindTo: 'jumlahPoin', errorPath: 'jumlahPoin')
             errorLabel(path: 'jumlahPoin', constraints: 'wrap')
@@ -70,9 +89,20 @@ application() {
                 }, visible: bind {table.isNotRowSelected})
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {table.isRowSelected},
                     actionPerformed: controller.clear)
+                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {table.isRowSelected},
+                    actionPerformed: {
+                        if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
+                                app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                            controller.delete()
+                        }
+                })
+
             }
         }
 
     }
 
 }
+
+PromptSupport.setPrompt("Nomor...", nomorSearch)
+PromptSupport.setPrompt("Konsumen...", konsumenSearch)

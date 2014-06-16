@@ -30,13 +30,16 @@ import org.joda.time.LocalDate
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
 
-class PencairanPoinAsChildModel {
+class PencairanPoinModel {
 
     @Bindable Long id
-    @Bindable @NotNull LocalDate tanggal
-    @Bindable @NotNull @Min(1l) Integer jumlahPoin
+    @Bindable String nomor
+    @Bindable LocalDate tanggal
+    @Bindable Integer jumlahPoin
     @Bindable String keterangan
     @Bindable BigDecimal rate
+    BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
     List<ItemBarang> items = []
     EnumComboBoxModel<JenisPencairanPoin> jenisPencairanPoin = new EnumComboBoxModel<JenisPencairanPoin>(JenisPencairanPoin)
 
@@ -44,7 +47,10 @@ class PencairanPoinAsChildModel {
 
     @Bindable boolean daftarBarangVisible
 
-    Konsumen konsumen
+    @Bindable String nomorSearch
+    @Bindable String konsumenSearch
+    @Bindable LocalDate tanggalMulaiSearch
+    @Bindable LocalDate tanggalSelesaiSearch
 
 }
 

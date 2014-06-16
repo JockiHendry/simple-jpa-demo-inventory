@@ -76,6 +76,8 @@ actions {
         smallIcon: imageIcon('/menu_piutang.png'), closure: controller.switchPage)
     action(id: 'giro', name: 'Giro', actionCommandKey: 'giro', mnemonic: KeyEvent.VK_G,
         smallIcon: imageIcon('/menu_giro.png'), closure: controller.switchPage)
+    action(id: 'pencairanPoin', name: 'Poin', actionCommandKey: 'pencairanPoin', mnemonic: KeyEvent.VK_O,
+        smallIcon: imageIcon('/menu_pencairan_poin.png'), closure: controller.switchPage)
 
     action(id: 'produk', name: 'Produk', actionCommandKey: 'produk', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_produk.png'), closure: controller.switchPage)
@@ -168,6 +170,8 @@ application(id: 'mainFrame',
                     visible: bind {model.piutangVisible})
                 toggleButton(buttonGroup: buttons, action: giro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.giroVisible})
+                toggleButton(buttonGroup: buttons, action: pencairanPoin, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    visible: bind {model.pencairanPoinVisible})
                 separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.produkVisible})
@@ -178,7 +182,6 @@ application(id: 'mainFrame',
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.laporanVisible})
-                separator()
                 toggleButton(buttonGroup: buttons, action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.maintenanceVisible})
             }

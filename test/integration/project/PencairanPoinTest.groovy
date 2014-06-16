@@ -142,5 +142,34 @@ class PencairanPoinTest extends DbUnitTestCase {
         }
     }
 
+    public void testHapusTukarBarang() {
+        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
+        repo.withTransaction {
+            Konsumen konsumen = findKonsumenById(-1l)
+            Produk produkA = findProdukById(-1l)
+            Produk produkB = findProdukById(-2l)
+            assertEquals(50, konsumen.poinTerkumpul)
+
+            PencairanPoinTukarBarang p = new PencairanPoinTukarBarang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen,
+                    listItemBarang: [new ItemBarang(produkA, 10), new ItemBarang(produkB, 5)])
+            p = repo.buat(p)
+
+            konsumen = findKonsumenById(-1l)
+            assertEquals(30, konsumen.poinTerkumpul)
+
+            p = repo.hapus(p)
+            assertEquals(50, konsumen.poinTerkumpul)
+
+            // Periksa jumlah barang apakah bertambah kembali
+            produkA = findProdukById(-1l)
+            produkB = findProdukById(-2l)
+            Gudang gudang = konsumen.sales.gudang
+            assertEquals(37, produkA.jumlah)
+            assertEquals(10, produkA.stok(gudang).jumlah)
+            assertEquals(27, produkB.jumlah)
+            assertEquals(14, produkB.stok(gudang).jumlah)
+        }
+    }
+
 
 }
