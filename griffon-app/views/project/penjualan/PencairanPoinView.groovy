@@ -54,7 +54,7 @@ application() {
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
                 glazedColumn(name: 'Jenis Penukaran', expression: {it?.class?.simpleName})
                 glazedColumn(name: 'Jumlah Poin', property: 'jumlahPoin', columnClass: Integer)
-                glazedColumn(name: 'Rate Per Poin', property: 'rate', columnClass: Integer) {
+                glazedColumn(name: 'Nominal', property: 'nominal', columnClass: Integer) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
@@ -87,6 +87,7 @@ application() {
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 }, visible: bind {table.isNotRowSelected})
+                button('Cetak', actionPerformed: controller.cetak, visible: bind {table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {table.isRowSelected},
                     actionPerformed: controller.clear)
                 button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {table.isRowSelected},

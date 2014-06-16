@@ -119,6 +119,14 @@ class PencairanPoinController {
         }
     }
 
+    def cetak = {
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], fileLaporan: model.jenisPencairanPoin.selectedItem.fileLaporan]
+            def dialogProps = [title: 'Preview Bukti Pencairan Poin', size: new Dimension(820,600)]
+            DialogUtils.showMVCGroup('previewFaktur', args, app, view, dialogProps)
+        }
+    }
+
     def showDaftarBarang = {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.items, editable: true, allowTambahProduk: false]
