@@ -34,7 +34,8 @@ class NomorService {
         PENGELUARAN_BONUS('BonusPenjualan', '%06d-BONUS-%s'),
         PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s'),
         TRANSFER('Transfer', '%06d-TR-KB-%s'),
-        PENYESUAIAN_STOK('PenyesuaianStok', '%06d-PS-KB-%s')
+        PENYESUAIAN_STOK('PenyesuaianStok', '%06d-PS-KB-%s'),
+        PENCAIRAN_POIN('PencairanPoin', '%06d-PP-KB-%s')
 
         String format;
         String desc;

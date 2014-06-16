@@ -43,18 +43,9 @@ import java.text.NumberFormat
             @NamedAttributeNode('listItemFaktur'),
             @NamedAttributeNode('piutang'),
         ])
-    ]),
-    @NamedEntityGraph(name='Konsumen.PencairanPoin', attributeNodes = [
-        @NamedAttributeNode(value='listFakturBelumLunas', subgraph='faktur'),
-        @NamedAttributeNode(value='listPencairanPoin'),
-    ], subgraphs = [
-        @NamedSubgraph(name='faktur', attributeNodes = [
-                @NamedAttributeNode('listItemFaktur'),
-                @NamedAttributeNode('piutang'),
-        ])
-    ]),
+    ])
 ])
-@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir,listPencairanPoin')
+@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir')
 class Konsumen {
 
     @NotEmpty @Size(min=2, max=100)
@@ -80,9 +71,6 @@ class Konsumen {
 
     @NotNull
     Integer poinTerkumpul = 0
-
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinColumn(name='konsumen_id') @OrderColumn
-    List<PencairanPoin> listPencairanPoin = []
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
@@ -172,15 +160,6 @@ class Konsumen {
 
     public void hapusPoin(DaftarBarang daftarBarang) {
         hapusPoin(daftarBarang.toPoin())
-    }
-
-    public void tambah(PencairanPoin pencairanPoin) {
-        if (!pencairanPoin.valid()) {
-            throw new PencairanPoinTidakValid(pencairanPoin)
-        }
-        pencairanPoin.proses()
-        listPencairanPoin << pencairanPoin
-        hapusPoin(pencairanPoin.jumlahPoin)
     }
 
 }

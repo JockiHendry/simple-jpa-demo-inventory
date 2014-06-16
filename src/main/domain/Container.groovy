@@ -30,6 +30,7 @@ import domain.faktur.BilyetGiroRepository
 import domain.penjualan.BilyetGiroClearingService
 import domain.penjualan.FakturJualRepository
 import domain.penjualan.KonsumenRepository
+import domain.penjualan.PencairanPoinRepository
 import domain.user.User
 import domain.user.UserLoginService
 import domain.user.UserRepository
@@ -66,6 +67,7 @@ class Container {
     TransferRepository transferRepository
     UserRepository userRepository
     PenyesuaianStokRepository penyesuaianStokRepository
+    PencairanPoinRepository pencairanPoinRepository
 
     InventoryEventConsumer inventoryEventConsumer
     BilyetGiroEventConsumer bilyetGiroEventConsumer
@@ -95,6 +97,7 @@ class Container {
         transferRepository = new TransferRepository()
         userRepository = new UserRepository()
         penyesuaianStokRepository = new PenyesuaianStokRepository()
+        pencairanPoinRepository = new PencairanPoinRepository()
 
         // Create services
         passwordService = new PasswordService()

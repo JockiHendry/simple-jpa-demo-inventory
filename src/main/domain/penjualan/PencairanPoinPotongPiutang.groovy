@@ -23,18 +23,8 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity
+@DomainClass @Entity @Canonical
 class PencairanPoinPotongPiutang extends PencairanPoin {
-
-    @NotNull @ManyToOne
-    Konsumen konsumen
-
-    public PencairanPoinPotongPiutang() {}
-
-    public PencairanPoinPotongPiutang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate, Konsumen konsumen) {
-        super(tanggal, jumlahPoin, rate)
-        this.konsumen = konsumen
-    }
 
     @Override
     boolean valid() {

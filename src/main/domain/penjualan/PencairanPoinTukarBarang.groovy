@@ -31,36 +31,20 @@ import griffon.util.ApplicationHolder
 @DomainClass @Entity @Canonical
 class PencairanPoinTukarBarang extends PencairanPoin {
 
-    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty @CollectionTable(name='TukarBarang_Items')
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty @CollectionTable(name='PencairanPoin_Items')
     List<ItemBarang> listItemBarang = []
-
-    @NotNull
-    Integer poinKonsumen = 0
-
-    @NotNull @ManyToOne
-    Gudang gudang
-
-    public PencairanPoinTukarBarang() {}
-
-    public PencairanPoinTukarBarang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate, Integer poinKonsumen, Gudang gudang, List<ItemBarang> listItemBarang) {
-        super(tanggal, jumlahPoin, rate)
-        this.poinKonsumen = poinKonsumen
-        this.gudang = gudang
-        this.listItemBarang.clear()
-        this.listItemBarang.addAll(listItemBarang)
-    }
 
     @Override
     boolean valid() {
-        poinKonsumen >= getJumlahPoin()
+        konsumen.poinTerkumpul >= getJumlahPoin()
     }
 
     @Override
     void proses() {
-        DaftarBarangSementara s = new DaftarBarangSementara(listItemBarang, -1)
-        s.gudang = gudang
-        s.keterangan = 'Penukaran Poin'
-        ApplicationHolder.application?.event(new PerubahanStok(s, null))
+        DaftarBarangSementara daftarBarangSementara = new DaftarBarangSementara(listItemBarang, -1)
+        daftarBarangSementara.gudang = konsumen.sales.gudang
+        daftarBarangSementara.keterangan = 'Penukaran Poin'
+        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, null))
     }
 
     Integer getJumlahPoin() {

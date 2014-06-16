@@ -26,8 +26,14 @@ import org.joda.time.*
 @DomainClass @Entity @Canonical
 abstract class PencairanPoin {
 
+    @NotEmpty @Size(min=2, max=100)
+    String nomor
+
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggal
+
+    @NotNull @ManyToOne
+    Konsumen konsumen
 
     @NotNull @Min(1l)
     Integer jumlahPoin
