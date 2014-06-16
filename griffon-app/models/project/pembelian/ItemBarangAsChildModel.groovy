@@ -25,7 +25,7 @@ class ItemBarangAsChildModel {
 
     @Bindable boolean allowTambahProduk
 
-    DaftarBarang parent
+    def parent
 
     @Bindable Produk produk
     @Bindable Integer jumlah
