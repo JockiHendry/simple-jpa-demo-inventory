@@ -132,7 +132,7 @@ class Produk implements Comparable {
     }
 
     public boolean periksaLevel() {
-        jumlah > levelMinimum
+        jumlah > getLevelMinimum()
     }
 
     boolean equals(o) {

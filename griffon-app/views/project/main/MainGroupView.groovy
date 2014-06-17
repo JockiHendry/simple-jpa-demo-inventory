@@ -88,6 +88,8 @@ actions {
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
+    action(id: 'pesan', name: 'Notifikasi', actionCommandKey: 'pesan', mnemonic: KeyEvent.VK_N,
+        smallIcon: imageIcon('/menu_notifikasi.png'), closure: controller.switchPage)
 
     action(id: 'maintenance', name: 'Maintenance', actionCommandKey: 'maintenance', mnemonic: KeyEvent.VK_M,
         smallIcon: imageIcon('/menu_maintenance.png'), closure: popupMaintenance)
@@ -182,6 +184,8 @@ application(id: 'mainFrame',
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.laporanVisible})
+                toggleButton(buttonGroup: buttons, action: pesan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    visible: bind {model.pesanVisible})
                 toggleButton(buttonGroup: buttons, action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.maintenanceVisible})
             }
