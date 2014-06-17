@@ -85,11 +85,14 @@ application(title: 'Produk',
                     glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer) {
-                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
-                    }
                     glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan })
                     glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer) {
+                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'Stok Level Minimum', property: 'levelMinimum', columnClass: Integer) {
+                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer) {
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
                 }
@@ -113,6 +116,9 @@ application(title: 'Produk',
             label('Poin:')
             numberTextField(id: 'poin', columns: 20, bindTo: 'poin', errorPath: 'poin')
             errorLabel(path: 'poin', constraints: 'wrap')
+            label('Stok Level Minimum:')
+            numberTextField(id: 'levelMinimum', columns: 20, bindTo: 'levelMinimum', errorPath: 'levelMinimum')
+            errorLabel(path: 'levelMinimum', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {

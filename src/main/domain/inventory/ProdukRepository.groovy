@@ -68,6 +68,7 @@ class ProdukRepository {
         p.hargaLuarKota = produk.hargaLuarKota
         p.satuan = produk.satuan
         p.poin = produk.poin
+        p.levelMinimum = produk.levelMinimum
         p
     }
 

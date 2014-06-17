@@ -79,9 +79,10 @@ class Produk implements Comparable {
     @NotNull @ManyToOne
     Satuan satuan
 
-    @NotNull
+    @NotNull @Min(0l)
     Integer poin = 0
 
+    @Min(0l)
     Integer levelMinimum
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
