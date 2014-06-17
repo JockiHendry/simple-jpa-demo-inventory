@@ -18,10 +18,16 @@ package project
 
 import domain.Container
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
+import domain.inventory.PenyesuaianStok
+import domain.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.inventory.ProdukRepository
 import domain.inventory.PeriodeItemStok
+import domain.util.Pesan
+import domain.util.PesanLevelMinimum
+import domain.util.PesanRepository
 import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -160,4 +166,36 @@ class ProdukTest extends DbUnitTestCase {
         }
     }
 
+    public void testLevelMinimum() {
+        PenyesuaianStokRepository repo = Container.app.penyesuaianStokRepository
+        PesanRepository pesanRepo = Container.app.pesanRepository
+
+        Produk produk = repo.findProdukById(-1l)
+        Gudang gudang = repo.findGudangById(-1l)
+
+        assertTrue(pesanRepo.refresh().isEmpty())
+
+        PenyesuaianStok p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
+        p.tambah(new ItemBarang(produk, 1))
+        repo.buat(p)
+
+        assertTrue(pesanRepo.refresh().isEmpty())
+
+        p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
+        p.tambah(new ItemBarang(produk, 2))
+        repo.buat(p)
+
+        List<Pesan> listPesan = pesanRepo.refresh()
+        assertEquals(1, listPesan.size())
+        assertTrue(listPesan[0] instanceof PesanLevelMinimum)
+        assertEquals(produk, listPesan[0].produk)
+
+        // Menaikkan jumlah stok kembali
+        p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: true)
+        p.tambah(new ItemBarang(produk, 3))
+        repo.buat(p)
+
+        // Pesan harus hilang
+        assertTrue(pesanRepo.refresh().isEmpty())
+    }
 }

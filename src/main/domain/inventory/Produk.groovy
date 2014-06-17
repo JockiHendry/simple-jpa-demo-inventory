@@ -16,7 +16,9 @@
 
 package domain.inventory
 
+import domain.Container
 import domain.faktur.Faktur
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Sales
 import groovy.transform.*
 import org.joda.time.LocalDate
@@ -80,6 +82,8 @@ class Produk implements Comparable {
     @NotNull
     Integer poin = 0
 
+    Integer levelMinimum
+
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
     Map<Gudang, StokProduk> daftarStok = [:]
 
@@ -120,6 +124,14 @@ class Produk implements Comparable {
 
     public BigDecimal hargaUntuk(Sales sales) {
         sales.dalamKota()? hargaDalamKota: hargaLuarKota
+    }
+
+    public Integer getLevelMinimum() {
+        levelMinimum?: Container.app.pengaturanRepository.getValue(KeyPengaturan.LEVEL_MINIMUM_STOK)
+    }
+
+    public boolean periksaLevel() {
+        jumlah > levelMinimum
     }
 
     boolean equals(o) {

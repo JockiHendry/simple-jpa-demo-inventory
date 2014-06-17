@@ -15,10 +15,13 @@
  */
 package domain.event
 
+import domain.Container
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
+import domain.inventory.Produk
 import domain.inventory.Transfer
+import domain.util.PesanLevelMinimum
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
 
@@ -47,6 +50,8 @@ class InventoryEventConsumer {
             }
             i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
 
+            periksaLevelMinimum(i.produk)
+
             log.info "Selesai memproses item $i!"
         }
 
@@ -74,4 +79,10 @@ class InventoryEventConsumer {
         log.info "Event onTransferStok selesai dikerjakan!"
     }
 
+    void periksaLevelMinimum(Produk produk) {
+        if (!produk.periksaLevel()) {
+            PesanLevelMinimum pesan = new PesanLevelMinimum(produk, produk.jumlah, produk.levelMinimum)
+            Container.app.pesanRepository.buat(pesan)
+        }
+    }
 }

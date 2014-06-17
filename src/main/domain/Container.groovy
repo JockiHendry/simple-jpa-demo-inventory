@@ -38,6 +38,7 @@ import domain.util.NomorService
 import domain.penjualan.RegionRepository
 import domain.penjualan.SalesRepository
 import domain.util.PasswordService
+import domain.util.PesanRepository
 import griffon.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -68,6 +69,7 @@ class Container {
     UserRepository userRepository
     PenyesuaianStokRepository penyesuaianStokRepository
     PencairanPoinRepository pencairanPoinRepository
+    PesanRepository pesanRepository
 
     InventoryEventConsumer inventoryEventConsumer
     BilyetGiroEventConsumer bilyetGiroEventConsumer
@@ -98,6 +100,7 @@ class Container {
         userRepository = new UserRepository()
         penyesuaianStokRepository = new PenyesuaianStokRepository()
         pencairanPoinRepository = new PencairanPoinRepository()
+        pesanRepository = new PesanRepository()
 
         // Create services
         passwordService = new PasswordService()

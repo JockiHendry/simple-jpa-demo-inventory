@@ -15,7 +15,9 @@
  */
 package project
 
+import domain.Container
 import domain.inventory.Produk
+import domain.pengaturan.KeyPengaturan
 import griffon.test.GriffonUnitTestCase
 
 class ProdukTests extends GriffonUnitTestCase {
@@ -36,6 +38,16 @@ class ProdukTests extends GriffonUnitTestCase {
         assertFalse(p.tersediaUntuk(80))
         assertFalse(p.tersediaUntuk(90))
         assertFalse(p.tersediaUntuk(110))
+    }
+
+    public void testLevelMinimum() {
+        Container.app.pengaturanRepository.cache[KeyPengaturan.LEVEL_MINIMUM_STOK] = 5
+
+        Produk p1 = new Produk(nama: 'Produk A', levelMinimum: 10)
+        assertEquals(10, p1.levelMinimum)
+
+        Produk p2 = new Produk(nama: 'Produk B')
+        assertEquals(5, p2.levelMinimum)
     }
 
 }
