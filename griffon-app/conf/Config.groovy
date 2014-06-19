@@ -20,7 +20,7 @@ log4j = {
         development {
             appenders {
                 console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
-                rollingFile name: 'sqlLog', file: "${System.getProperty('user.home')}/Desktop/sql.log",
+                rollingFile name: 'sqlLog', file: "${System.getProperty('user.home')}/inventory/sql.log",
                     layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n'),
                     maxFileSize: 10485760, maxBackupIndex: 20
             }
@@ -72,11 +72,11 @@ log4j = {
 
         production {
             appenders {
-                rollingFile name: 'log', file: 'log/log.txt', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n'),
+                rollingFile name: 'errorLog', file: "${System.getProperty('user.home')}/inventory/error.log", layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n'),
                     maxFileSize: 10485760, maxBackupIndex: 20
             }
             root {
-                error 'log'
+                error 'errorLog'
             }
         }
     }
@@ -86,6 +86,7 @@ i18n.basenames = ['messages','ValidationMessages']
 griffon.simplejpa.finders.injectInto = []
 griffon.simplejpa.validation.convertEmptyStringToNull = true
 griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
+griffon.simplejpa.entityManager.propertiesFile = "${System.getProperty('user.home')}/inventory/simplejpa.properties"
 //griffon.simplejpa.model.package = 'domain.pembelian'
 
 griffon {
