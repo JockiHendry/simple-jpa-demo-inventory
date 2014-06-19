@@ -29,6 +29,11 @@
  */
 
 import groovy.swing.SwingBuilder
+import util.SplashScreen
+
 import static griffon.util.GriffonApplicationUtils.isMacOSX
 
 SwingBuilder.lookAndFeel((isMacOSX ? 'system' : 'nimbus'), 'gtk', ['metal', [boldFonts: false]])
+
+SplashScreen splashScreen = SplashScreen.instance
+splashScreen.show()

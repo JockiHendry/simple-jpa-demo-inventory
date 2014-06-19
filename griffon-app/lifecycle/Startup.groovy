@@ -13,6 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import domain.Container
+import domain.pengaturan.KeyPengaturan
+import domain.user.Menu
+import domain.user.User
+import org.jdesktop.swingx.JXLoginPane
+import util.SplashScreen
+import javax.swing.UIManager
+import javax.swing.plaf.FontUIResource
+import java.awt.Font
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -27,3 +36,49 @@
  * - execInsideUIAsync { // your code }
  * - execInsideUISync { // your code }
  */
+
+execOutsideUI {
+    Container.app.pengaturanRepository.refreshAll()
+    Container.app.nomorService.refreshAll()
+
+    // Mengubah ukuran huruf bila diperlukan
+    execInsideUISync {
+        def ukuranHuruf = Container.app.pengaturanRepository.getValue(KeyPengaturan.UKURAN_HURUF_TABEL)
+        if (ukuranHuruf > 0) {
+            UIManager.put('Table.font', new FontUIResource(new Font('SansSerif', Font.PLAIN, ukuranHuruf)))
+            UIManager.put('Table.rowHeight', ukuranHuruf + 1)
+        }
+    }
+
+    // Clearing bilyet giro yang jatuh tempo
+    Container.app.bilyetGiroClearingService.periksaJatuhTempo()
+}
+
+SplashScreen.instance.dispose()
+
+if (Environment.current != Environment.TEST) {
+    JXLoginPane panel = new JXLoginPane(Container.app.userLoginService)
+    JXLoginPane.Status status = JXLoginPane.showLoginDialog(app.windowManager.getStartingWindow(), panel)
+    if (status != JXLoginPane.Status.SUCCEEDED) {
+        app.shutdown()
+    }
+    MVCGroup mainGroup = app.mvcGroupManager.findGroup('mainGroup')
+
+    User currentUser = Container.app.currentUser
+    mainGroup.model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
+    mainGroup.model.penerimaanBarangVisible = currentUser.bolehAkses(Menu.PENERIMAAN_BARANG)
+    mainGroup.model.pengeluaranBarangVisible = currentUser.bolehAkses(Menu.PENGELUARAN_BARANG)
+    mainGroup.model.buktiTerimaVisible = currentUser.bolehAkses(Menu.BUKTI_TERIMA)
+    mainGroup.model.purchaseOrderVisible = currentUser.bolehAkses(Menu.PURCHASE_ORDER)
+    mainGroup.model.fakturBeliVisible = currentUser.bolehAkses(Menu.FAKTUR_BELI)
+    mainGroup.model.fakturJualVisible = currentUser.bolehAkses(Menu.FAKTUR_JUAL)
+    mainGroup.model.hutangVisible = currentUser.bolehAkses(Menu.HUTANG)
+    mainGroup.model.piutangVisible = currentUser.bolehAkses(Menu.PIUTANG)
+    mainGroup.model.giroVisible = currentUser.bolehAkses(Menu.GIRO)
+    mainGroup.model.produkVisible = currentUser.bolehAkses(Menu.PRODUK)
+    mainGroup.model.transferVisible = currentUser.bolehAkses(Menu.TRANSFER)
+    mainGroup.model.penyesuaianStokVisible = currentUser.bolehAkses(Menu.PENYESUAIAN_STOK)
+    mainGroup.model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
+    mainGroup.model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
+
+}
