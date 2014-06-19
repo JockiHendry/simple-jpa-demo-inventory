@@ -119,6 +119,7 @@ application(id: 'mainFrame',
         title: "${app.config.application.title} ${app.metadata.getApplicationVersion()}",
         extendedState: JFrame.MAXIMIZED_BOTH,
         pack: true,
+        iconImage: imageIcon('/icon.png').image,
         locationByPlatform: true) {
 
     popupMenu(id: "maintenancePopup") {

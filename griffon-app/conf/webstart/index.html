@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Inventory</title>
+<style type="text/css">
+body {
+	font: 100%/1.4 Verdana, Arial, Helvetica, sans-serif;
+	background: #42413C;
+	margin: 0;
+	padding: 0;
+	color: #000;
+}
+ul, ol, dl {
+	padding: 0;
+	margin: 0;
+}
+h1, h2, h3, h4, h5, h6, p {
+	margin-top: 0;	 
+	padding-right: 15px;
+	padding-left: 15px;
+}
+a img {
+	border: none;
+}
+a:link {
+	color: #42413C;
+	text-decoration: underline; 
+}
+a:visited {
+	color: #6E6C64;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: none;
+}
+.container {
+	width: 960px;
+	background: #FFFFFF;
+	margin: 0 auto; 
+}
+footer {
+	padding: 10px 0;
+	background: #CCC49F;
+	position: relative;
+	clear: both; 	
+	text-align: right;
+}
+#logo {
+	float: left;	
+	margin-right: 10px;
+}
+
+</style>
+<script src="deployJava.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Instalasi Melalui Java Web Start</h1>    
+	<img src="splashscreen.png" id='logo'/>
+        <p>
+	<script>
+		var jnlpFile = "application.jnlp";
+		deployJava.createWebStartLaunchButtonEx(jnlpFile);    
+    </script>
+    </p>
+
+    <p>Invento adalah demo aplikasi yang dibuat dengan menggunakan Groovy, Griffon dan simple-jpa untuk mengelola inventory dan transaksi finansial Anda.</p>
+    <p>Aplikasi ini bersifat <em>open-source</em> dimana kode programnya dapat dibaca di <a href='https://github.com/JockiHendry/simple-jpa-demo-inventory'>GitHub simple-jpa-demo-inventory</a>.</p>
+    </p>
+    <p>Karena ini adalah proyek <em>open-source</em>, Anda akan memperoleh garansi seumur hidup. Kode program akan terus kami perbaharui mengikuti perkembangan zaman dan kebutuhan.
+    </p>
+    <p>Kami menghargai privasi Anda, oleh sebab itu kami tidak menyimpan data sensitif seperti isi database Anda.</p>
+  <footer>
+    <p>&copy; 2014 by Jocki Hendry</p>
+  </footer>
+  <!-- end .container --></div>
+</body>
+</html>

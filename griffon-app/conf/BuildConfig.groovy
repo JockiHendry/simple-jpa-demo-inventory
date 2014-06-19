@@ -53,6 +53,10 @@ environments {
                 sign = true
                 pack = true
                 destDir = "${basedir}/staging"
+                manifest = [
+                    'Permissions': 'all-permissions',
+                    'Codebase': '*'
+                ]
             }
             webstart {
                 codebase = 'CHANGE ME'
@@ -127,7 +131,7 @@ deploy {
     application {
         title = "${appName} ${appVersion}"
         vendor = 'Jocki Hendry'
-        homepage = "http://localhost/${appName}"
+        homepage = "https://github.com/JockiHendry/simple-jpa-demo-inventory"
         description {
             complete = "${appName} ${appVersion}"
             oneline  = "${appName} ${appVersion}"
@@ -136,34 +140,34 @@ deploy {
         }
         icon {
             'default' {
-                name   = 'griffon-icon-64x64.png'
+                name   = 'icon.png'
                 width  = '64'
                 height = '64'
             }
             splash {
-                name   = 'griffon.png'
-                width  = '391'
-                height = '123'
+                name   = 'splashscreen.png'
+                width  = '400'
+                height = '300'
             }
             selected {
-                name   = 'griffon-icon-64x64.png'
+                name   = 'icon.png'
                 width  = '64'
                 height = '64'
             }
             disabled {
-                name   = 'griffon-icon-64x64.png'
+                name   = 'icon.png'
                 width  = '64'
                 height = '64'
             }
             rollover {
-                name   = 'griffon-icon-64x64.png'
+                name   = 'icon.png'
                 width  = '64'
                 height = '64'
             }
             shortcut {
-                name   = 'griffon-icon-64x64.png'
-                width  = '64'
-                height = '64'
+                name   = 'icon.ico'
+                width  = '48'
+                height = '48'
             }
         }
     }
