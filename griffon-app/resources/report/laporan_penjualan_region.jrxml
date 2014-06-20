@@ -87,7 +87,7 @@
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement x="154" y="0" width="108" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<reportElement x="154" y="0" width="183" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -95,16 +95,6 @@
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Konsumen]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="262" y="0" width="75" height="20" uuid="96ea8c66-2432-4a6a-b5b0-0c659c895a04"/>
-				<box>
-					<bottomPen lineWidth="1.25"/>
-				</box>
-				<textElement verticalAlignment="Bottom">
-					<font fontName="SansSerif" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="56" height="20" uuid="cb057a70-b1e5-43b7-a709-460ae5227a9c"/>
@@ -161,18 +151,11 @@
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField>
-				<reportElement x="154" y="0" width="108" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<reportElement x="154" y="0" width="183" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{konsumen}.nama]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="262" y="1" width="75" height="16" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="56" height="17" uuid="59dc4e70-2839-472d-86c5-0e858fce3d54"/>
