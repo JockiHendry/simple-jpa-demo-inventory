@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_sisa_piutang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c98f1cd3-55bc-4fc2-8765-c7fb1bd2a89e">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -54,6 +54,9 @@
 	</field>
 	<field name="sales" class="domain.penjualan.Sales"/>
 	<field name="region" class="domain.penjualan.Region"/>
+	<field name="_THIS" class="java.lang.Object">
+		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -122,9 +125,9 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="178" splitType="Stretch">
+		<band height="224" splitType="Stretch">
 			<componentElement>
-				<reportElement x="0" y="65" width="555" height="110" isRemoveLineWhenBlank="true" uuid="575ca51d-8a95-4bae-8628-744ec8e29e16"/>
+				<reportElement x="0" y="63" width="555" height="110" isRemoveLineWhenBlank="true" uuid="575ca51d-8a95-4bae-8628-744ec8e29e16"/>
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
 					<datasetRun subDataset="dsPiutang" uuid="6c28328c-642d-42e8-8000-0d668e201322">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
@@ -132,7 +135,7 @@ JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:listContents height="110" width="555">
 						<textField>
-							<reportElement x="0" y="1" width="138" height="20" uuid="eeac942a-77a4-49a3-91a9-24824874104d"/>
+							<reportElement x="0" y="2" width="138" height="20" uuid="eeac942a-77a4-49a3-91a9-24824874104d"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<bottomPen lineWidth="1.0"/>
@@ -141,7 +144,7 @@ JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
 							<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
 						</textField>
 						<textField>
-							<reportElement x="138" y="1" width="100" height="20" uuid="86f79bce-4bb3-43ab-b39c-9be59329a36a"/>
+							<reportElement x="138" y="2" width="100" height="20" uuid="86f79bce-4bb3-43ab-b39c-9be59329a36a"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<bottomPen lineWidth="1.0"/>
@@ -150,7 +153,7 @@ JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
 							<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
 						</textField>
 						<textField pattern="#,##0">
-							<reportElement x="238" y="1" width="153" height="20" uuid="4faf7aba-b8f6-4a57-b5c3-b78b92e89e9d"/>
+							<reportElement x="238" y="2" width="153" height="20" uuid="4faf7aba-b8f6-4a57-b5c3-b78b92e89e9d"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<bottomPen lineWidth="1.0"/>
@@ -159,7 +162,7 @@ JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
 							<textFieldExpression><![CDATA[$F{piutang}.jumlah]]></textFieldExpression>
 						</textField>
 						<textField pattern="#,##0">
-							<reportElement x="391" y="1" width="164" height="20" uuid="e745140d-720e-4c82-bd5b-6ce9e4c63bfa"/>
+							<reportElement x="391" y="2" width="164" height="20" uuid="e745140d-720e-4c82-bd5b-6ce9e4c63bfa"/>
 							<box>
 								<topPen lineWidth="1.0"/>
 								<bottomPen lineWidth="1.0"/>
@@ -192,6 +195,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</staticText>
 									</jr:tableFooter>
 									<jr:columnHeader height="23" rowSpan="1">
+										<box rightPadding="0">
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<staticText>
 											<reportElement x="0" y="0" width="91" height="23" uuid="4207a2cb-17cb-4c46-ba72-7444bc5c2f8f"/>
 											<box leftPadding="3">
@@ -206,6 +212,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</staticText>
 									</jr:columnHeader>
 									<jr:detailCell height="23" rowSpan="1">
+										<box>
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<textField>
 											<reportElement x="0" y="0" width="91" height="23" uuid="562a5b9d-e47f-4d06-ab9c-a4ab108d4b21"/>
 											<box leftPadding="3">
@@ -231,6 +240,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</textField>
 									</jr:tableFooter>
 									<jr:columnHeader height="23" rowSpan="1">
+										<box rightPadding="0">
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<staticText>
 											<reportElement x="0" y="0" width="124" height="23" uuid="dec62d3a-1948-4d92-91c2-8d67f70c681d"/>
 											<box>
@@ -240,10 +252,13 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 											<textElement textAlignment="Right" verticalAlignment="Middle">
 												<font isBold="true"/>
 											</textElement>
-											<text><![CDATA[Jumlah Pembayaran]]></text>
+											<text><![CDATA[Jumlah Pembayaran ]]></text>
 										</staticText>
 									</jr:columnHeader>
 									<jr:detailCell height="23" rowSpan="1">
+										<box rightPadding="0">
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<textField pattern="#,##0">
 											<reportElement x="0" y="0" width="124" height="23" uuid="655f825f-6ae1-433a-9767-212969d81e94"/>
 											<textElement textAlignment="Right" verticalAlignment="Middle"/>
@@ -263,6 +278,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</staticText>
 									</jr:tableFooter>
 									<jr:columnHeader height="23" rowSpan="1">
+										<box rightPadding="0">
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<staticText>
 											<reportElement x="0" y="0" width="90" height="23" uuid="ff6a3f31-b08c-4362-bc86-35cb2a974f36"/>
 											<box>
@@ -276,6 +294,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</staticText>
 									</jr:columnHeader>
 									<jr:detailCell height="23" rowSpan="1">
+										<box>
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<textField>
 											<reportElement x="0" y="0" width="90" height="23" uuid="1b3c72f7-e756-4542-8bc9-d36885feac6d"/>
 											<textElement textAlignment="Center" verticalAlignment="Middle"/>
@@ -295,6 +316,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</staticText>
 									</jr:tableFooter>
 									<jr:columnHeader height="23" rowSpan="1">
+										<box rightPadding="0">
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<staticText>
 											<reportElement x="0" y="0" width="90" height="23" uuid="0aa71cc2-19fe-47a7-a106-ebdd73594158"/>
 											<box>
@@ -304,10 +328,13 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 											<textElement verticalAlignment="Middle">
 												<font isBold="true"/>
 											</textElement>
-											<text><![CDATA[Nomor Giro]]></text>
+											<text><![CDATA[ Nomor Giro]]></text>
 										</staticText>
 									</jr:columnHeader>
 									<jr:detailCell height="23" rowSpan="1">
+										<box>
+											<rightPen lineWidth="1.0"/>
+										</box>
 										<textField>
 											<reportElement x="0" y="0" width="90" height="23" uuid="2a93024a-42d1-4036-8bc4-fcb04acd1517"/>
 											<textElement verticalAlignment="Middle"/>
@@ -338,7 +365,7 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 											<textElement verticalAlignment="Middle">
 												<font isBold="true"/>
 											</textElement>
-											<text><![CDATA[Jatuh Tempo Giro]]></text>
+											<text><![CDATA[ Jatuh Tempo Giro]]></text>
 										</staticText>
 									</jr:columnHeader>
 									<jr:detailCell height="23" rowSpan="1">
@@ -362,7 +389,7 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nama} + " " + ($F{nomorTelepon}?:'') + " (" + $F{region}.nama + ")"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nama} + " " + ($F{nomorTelepon}?:'') + " (" + $F{region}.nama + ")    Jumlah Piutang: " + java.text.NumberFormat.currencyInstance.format($F{_THIS}.jumlahPiutang())]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="35" width="555" height="20" uuid="af2c279b-58b5-417e-b990-09396258303c"/>
