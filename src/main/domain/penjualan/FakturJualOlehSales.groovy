@@ -18,6 +18,7 @@ package domain.penjualan
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
+import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
@@ -125,8 +126,20 @@ class FakturJualOlehSales extends FakturJual {
         konsumen.hapusPoin(pengeluaranBarang.toPoin())
     }
 
-    BigDecimal sisaPiutang(boolean byNominal = true) {
-        piutang.sisa(byNominal)
+    BigDecimal sisaPiutang() {
+        piutang.sisa()
+    }
+
+    BigDecimal jumlahPiutang() {
+        piutang.jumlah
+    }
+
+    BigDecimal jumlahDibayar() {
+        piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN)
+    }
+
+    BigDecimal potonganPiutang() {
+        piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
     }
 
     void tambahBonus(DaftarBarangSementara daftarBarang) {

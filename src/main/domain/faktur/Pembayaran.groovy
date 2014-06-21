@@ -45,11 +45,17 @@ class Pembayaran {
         bilyetGiro = new BilyetGiro(nomorSeri, tanggalPenerbitan, tanggalEfektif)
     }
 
-    public BigDecimal nominal() {
-        if (bilyetGiro && !bilyetGiro.sudahDicairkan()) {
-            return 0
+    public boolean matches(KRITERIA_PEMBAYARAN kriteria) {
+        if (kriteria == KRITERIA_PEMBAYARAN.SEMUA) {
+            return true
+        } else if (kriteria == KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR) {
+            return !bilyetGiro || bilyetGiro.sudahDicairkan()
+        } else if (kriteria == KRITERIA_PEMBAYARAN.TANPA_POTONGAN) {
+            return !potongan
+        } else if (kriteria == KRITERIA_PEMBAYARAN.HANYA_POTONGAN) {
+            return potongan
         }
-        jumlah
+        throw new IllegalArgumentException("Kriteria tidak dikenali: $kriteria")
     }
 
 }

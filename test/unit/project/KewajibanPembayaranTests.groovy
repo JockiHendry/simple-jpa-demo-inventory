@@ -15,10 +15,13 @@
  */
 package project
 
+import domain.faktur.BilyetGiro
+import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.inventory.Periode
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import griffon.test.*
+import org.joda.time.LocalDate
 
 class KewajibanPembayaranTests extends GriffonUnitTestCase {
 
@@ -47,4 +50,28 @@ class KewajibanPembayaranTests extends GriffonUnitTestCase {
 
         assertEquals(910000, hutang.sisa())
     }
+
+    void testJumlahPotongan() {
+        KewajibanPembayaran hutang = new KewajibanPembayaran(jumlah: 3500000)
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 450000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 200000, true))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 300000, true))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 200000, false, new BilyetGiro('BG-001', 200000, LocalDate.now().plusMonths(1))))
+
+        assertEquals(1150000, hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.SEMUA))
+        assertEquals(500000, hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+        assertEquals(650000, hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN))
+    }
+
+    void testJumlahTanpaGiroBelumCair() {
+        KewajibanPembayaran hutang = new KewajibanPembayaran(jumlah: 3500000)
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 450000))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 200000, false, new BilyetGiro('BG-001', 200000, LocalDate.now().plusMonths(1))))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 300000, true , new BilyetGiro('BG-002', 300000, LocalDate.now().plusMonths(1))))
+        hutang.bayar(new Pembayaran(Periode.format.parseLocalDate('01-01-2013'), 200000, true))
+
+        assertEquals(1150000, hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.SEMUA))
+        assertEquals(650000, hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
+    }
+
 }

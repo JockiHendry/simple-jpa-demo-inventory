@@ -20,6 +20,7 @@ import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
+import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
@@ -176,7 +177,15 @@ class PurchaseOrder extends Faktur {
     }
 
     BigDecimal sisaHutang() {
-        fakturBeli.hutang.sisa()
+        fakturBeli?.hutang?.sisa()?: 0
+    }
+
+    BigDecimal jumlahHutang() {
+        fakturBeli?.hutang?.jumlah?: 0
+    }
+
+    BigDecimal jumlahDibayar() {
+        fakturBeli?.hutang?.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN)?: 0
     }
 
     boolean diterimaPenuh() {

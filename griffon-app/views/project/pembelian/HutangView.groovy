@@ -79,13 +79,13 @@ application(title: 'hutang',
                     glazedColumn(name: 'Jatuh Tempo', expression: {it.fakturBeli?.jatuhTempo}) {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Jumlah Hutang', expression: {it.fakturBeli?.hutang?.jumlah}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Hutang', expression: {it.jumlahHutang()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.fakturBeli?.hutang?.jumlahDibayar()}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.jumlahDibayar()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Sisa Hutang', expression: {it.fakturBeli?.hutang?.sisa()}, columnClass: Integer) {
+                    glazedColumn(name: 'Sisa Hutang', expression: {it.sisaHutang()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
                 }

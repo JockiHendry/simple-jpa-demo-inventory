@@ -21,6 +21,7 @@ import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
+import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -226,13 +227,13 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-7l)
         BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
         fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
-        assertEquals(0, fakturJualOlehSales.piutang.jumlahDibayar())
-        assertEquals(20000, fakturJualOlehSales.piutang.sisa())
+        assertEquals(0, fakturJualOlehSales.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
+        assertEquals(20000, fakturJualOlehSales.piutang.sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertEquals(bg, repo.findBilyetGiroByNomorSeri('NX-0001'))
 
         fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000))
-        assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar())
-        assertEquals(10000, fakturJualOlehSales.piutang.sisa())
+        assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
+        assertEquals(10000, fakturJualOlehSales.piutang.sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertFalse(fakturJualOlehSales.piutang.lunas)
 
         shouldFail(IllegalArgumentException) {

@@ -66,10 +66,13 @@ application() {
                     glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo') {
                         templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
                     }
-                    glazedColumn(name: 'Jumlah Piutang', expression: {it.piutang?.jumlah}, columnClass: Integer) {
+                    glazedColumn(name: 'Jumlah Piutang', expression: {it.jumlahPiutang()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.piutang?.jumlahDibayar()}, columnClass: Integer) {
+                    glazedColumn(name: 'Potongan', expression: {it.potonganPiutang()}, columnClass: Integer) {
+                        templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
+                    }
+                    glazedColumn(name: 'Jumlah Dibayar', expression: {it.jumlahDibayar()}, columnClass: Integer) {
                         templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                     }
                     glazedColumn(name: 'Sisa Piutang', expression: {it.sisaPiutang()}, columnClass: Integer) {

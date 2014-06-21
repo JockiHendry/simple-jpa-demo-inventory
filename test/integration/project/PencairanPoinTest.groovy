@@ -116,7 +116,7 @@ class PencairanPoinTest extends DbUnitTestCase {
             konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
             assertEquals(70000, konsumen.jumlahPiutang())
-            assertEquals(50000, konsumen.listFakturBelumLunas[0].sisaPiutang(true))
+            assertEquals(50000, konsumen.listFakturBelumLunas[0].sisaPiutang())
         }
     }
 

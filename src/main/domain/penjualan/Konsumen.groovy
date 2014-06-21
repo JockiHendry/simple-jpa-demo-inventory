@@ -123,14 +123,14 @@ class Konsumen {
     }
 
     public void potongPiutang(BigDecimal jumlah) {
-        BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(false): 0}
+        BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(): 0}
         if (jumlah > jumlahPiutangYangDapatDibayar) {
             throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
         }
 
         for (FakturJualOlehSales faktur: listFakturBelumLunas.toArray()) {
             if (!faktur.piutang) continue
-            BigDecimal sisaPiutang = faktur.sisaPiutang(false)
+            BigDecimal sisaPiutang = faktur.sisaPiutang()
             if (jumlah >= sisaPiutang) {
                 // Lunasi seluruh piutang untuk faktur ini
                 faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: sisaPiutang, potongan: true))
