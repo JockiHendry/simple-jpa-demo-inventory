@@ -26,6 +26,7 @@ class LaporanPenjualanPerKonsumenModel {
     @Bindable String konsumenSearch
 
     List result
+    Map params = [:]
 
     boolean batal = false
 

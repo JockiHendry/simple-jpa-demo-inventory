@@ -25,6 +25,7 @@ class LaporanPenjualanPerRegionModel {
     @Bindable String regionSearch
 
     List result
+    Map params = [:]
 
     boolean batal = false
 

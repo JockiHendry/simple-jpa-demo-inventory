@@ -23,6 +23,7 @@ class LaporanSisaPiutangModel {
     @Bindable String konsumenSearch
 
     List result
+    Map params = [:]
 
     boolean batal = false
 

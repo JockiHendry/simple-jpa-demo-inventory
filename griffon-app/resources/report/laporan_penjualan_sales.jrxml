@@ -3,6 +3,12 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="tanggalMulaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tanggalSelesaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -69,7 +75,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="52" splitType="Stretch">
+		<band height="75" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="17" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
 				<textElement textAlignment="Center">
@@ -81,6 +87,13 @@
 				<reportElement x="455" y="0" width="100" height="20" uuid="d3cde47f-fe72-4ab3-86fa-129f5c12af99"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="37" width="555" height="20" uuid="75f4bde8-70cd-439d-b0e4-914ddeba75cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["${$P{tanggalMulaiCari}.toString('dd-MM-yyyy')} s/d ${$P{tanggalSelesaiCari}.toString('dd-MM-yyyy')}"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

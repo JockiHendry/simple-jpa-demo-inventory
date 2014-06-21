@@ -39,6 +39,8 @@ class LaporanPenjualanPerRegionController {
                 konsumen__region__nama like("%${model.regionSearch}%")
             }
         }
+        model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
+        model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
     }
 

@@ -23,6 +23,7 @@ class LaporanStokModel {
     @Bindable String gudangSearch
 
     List result
+    Map params = [:]
 
     boolean batal = false
 }

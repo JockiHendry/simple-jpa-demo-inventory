@@ -38,11 +38,11 @@ class LaporanController {
                     "Pesan Kesalahan", JOptionPane.ERROR_MESSAGE)
             return
         }
-        def result, batal
-        def tanggalMulaiCari, tanggalSelesaiCari
+        def result, batal, params
         execInsideUISync {
             DialogUtils.showMVCGroup(jenisLaporan.namaMVC, [:], app, view, [title: 'Pilih Kriteria'], { m, v, c ->
                 result = m.result
+                params = m.params
                 batal = m.batal
             }, {v -> v})
             BusyLayerUI.instance.hide()
@@ -52,7 +52,7 @@ class LaporanController {
             JRDataSource dataSource = new JRBeanCollectionDataSource(result)
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(
-                    getResourceAsStream("report/${jenisLaporan.namaLaporan}.jasper"), [:], dataSource)
+                    getResourceAsStream("report/${jenisLaporan.namaLaporan}.jasper"), params, dataSource)
 
             execInsideUISync {
                 view.content.clear()

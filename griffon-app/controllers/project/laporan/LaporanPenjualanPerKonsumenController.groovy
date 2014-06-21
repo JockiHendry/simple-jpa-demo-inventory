@@ -43,6 +43,8 @@ class LaporanPenjualanPerKonsumenController {
                 konsumen__nama like("%${model.konsumenSearch}%")
             }
         }
+        model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
+        model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
     }
 
