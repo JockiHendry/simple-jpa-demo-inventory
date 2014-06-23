@@ -39,6 +39,7 @@ class KonsumenRepository {
         if (findKonsumenByNama(konsumen.nama)) {
             throw new DataDuplikat(konsumen)
         }
+        konsumen.creditLimit = Container.app.pengaturanRepository.getValue(KeyPengaturan.CREDIT_LIMIT_DEFAULT)
         persist(konsumen)
         konsumen
     }
