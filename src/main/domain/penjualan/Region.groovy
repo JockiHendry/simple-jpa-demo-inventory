@@ -27,6 +27,9 @@ class Region {
     @NotEmpty @Size(min=2, max=100)
     String nama
 
+    @ManyToOne
+    Region bagianDari
+
     @Override
     String toString() {
         nama

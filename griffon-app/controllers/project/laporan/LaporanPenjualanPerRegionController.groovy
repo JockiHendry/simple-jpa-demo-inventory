@@ -37,6 +37,8 @@ class LaporanPenjualanPerRegionController {
             if (model.regionSearch) {
                 and()
                 konsumen__region__nama like("%${model.regionSearch}%")
+                or()
+                konsumen__region__bagianDari__nama like("%${model.regionSearch}%")
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari

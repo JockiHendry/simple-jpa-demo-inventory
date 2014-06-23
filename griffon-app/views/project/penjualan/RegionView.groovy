@@ -43,6 +43,7 @@ application(title: 'Region',
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.regionList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                 glazedColumn(name: 'Nama', property: 'nama')
+                glazedColumn(name: 'Bagian Dari', property: 'bagianDari')
             }
         }
 
@@ -50,7 +51,9 @@ application(title: 'Region',
             label('Nama:')
             textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
             errorLabel(path: 'nama', constraints: 'wrap')
-
+            label('Bagian Dari:')
+            comboBox(id: 'bagianDari', model: model.bagianDari, templateRenderer: '${value}', errorPath: 'bagianDari')
+            errorLabel(path: 'bagianDari', constraints: 'wrap')
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)

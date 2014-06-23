@@ -25,6 +25,8 @@ class RegionRepository {
         findAllRegionByDsl([orderBy: 'nama']) {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
+                or()
+                bagianDari__nama like("%${namaSearch}%")
             }
         }
     }

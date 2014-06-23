@@ -28,6 +28,8 @@ class RegionModel {
 
     @Bindable Long id
     @Bindable String nama
+    BasicEventList<Region> bagianDariList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Region> bagianDari = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(bagianDariList)
 
     @Bindable String namaSearch
 

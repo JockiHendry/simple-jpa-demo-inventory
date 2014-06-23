@@ -31,7 +31,18 @@ class RegionController {
 
     void mvcGroupInit(Map args) {
         regionRepository = Container.app.regionRepository
+        init()
         search()
+    }
+
+    def init = {
+        execInsideUISync {
+            model.bagianDariList.clear()
+        }
+        List region = regionRepository.findAllRegion()
+        execInsideUISync {
+            model.bagianDariList.addAll(region)
+        }
     }
 
     def search = {
@@ -44,7 +55,7 @@ class RegionController {
     }
 
     def save = {
-        Region region = new Region(id: model.id, nama: model.nama)
+        Region region = new Region(id: model.id, nama: model.nama, bagianDari: model.bagianDari.selectedItem)
 
         if (!regionRepository.validate(region, Default, model)) return
 
@@ -82,6 +93,7 @@ class RegionController {
         execInsideUISync {
             model.id = null
             model.nama = null
+            model.bagianDari.selectedItem = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -97,6 +109,7 @@ class RegionController {
                 model.errors.clear()
                 model.id = selected.id
                 model.nama = selected.nama
+                model.bagianDari.selectedItem = selected.bagianDari
             }
         }
     }
