@@ -21,6 +21,14 @@ import simplejpa.transaction.Transaction
 @Transaction
 class SatuanRepository {
 
+    public List<Satuan> cari(String namaSearch) {
+        findAllSatuanByDsl {
+            if (namaSearch) {
+                nama like("%${namaSearch}%")
+            }
+        }
+    }
+
     public Satuan buat(Satuan satuan) {
         if (findSatuanByNama(satuan.nama)) {
             throw new DataDuplikat(satuan)

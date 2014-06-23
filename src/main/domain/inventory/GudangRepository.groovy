@@ -31,6 +31,14 @@ class GudangRepository {
         gudangUtama
     }
 
+    public List<Gudang> cari(String namaSearch) {
+        findAllGudangByDsl {
+            if (namaSearch) {
+                nama like("%${namaSearch}%")
+            }
+        }
+    }
+
     public Gudang buat(Gudang gudang) {
         if (findGudangByNama(gudang.nama)) {
             throw new DataDuplikat(gudang)

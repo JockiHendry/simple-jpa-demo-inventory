@@ -20,7 +20,6 @@ import project.inventory.SatuanModel
 
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 import domain.Container
 
@@ -37,12 +36,7 @@ class SatuanController {
     }
 
     def search = {
-        List result
-        if (Strings.isNullOrEmpty(model.namaSearch)) {
-            result = satuanRepository.findAllSatuan()
-        } else {
-            result = satuanRepository.findAllSatuanByNamaLike("%${model.namaSearch}%")
-        }
+        List result = satuanRepository.cari(model.namaSearch)
         execInsideUISync {
             model.satuanList.clear()
             model.satuanList.addAll(result)

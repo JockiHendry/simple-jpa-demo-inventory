@@ -5,7 +5,6 @@ import ${domainPackage}.exception.*
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 import domain.Container
 
@@ -22,12 +21,7 @@ class $className {
     }
 
     def search = {
-        List result
-        if (Strings.isNullOrEmpty(model.${firstField}Search)) {
-            result = ${domainClassAsProp}Repository.findAll${domainClass}()
-        } else {
-            result = ${domainClassAsProp}Repository.findAll${domainClass}By${cls(firstField)}Like("%\${model.${firstField}Search}%")
-        }
+        List result = ${domainClassAsProp}Repository.cari(model.${firstField}Search)
         execInsideUISync {
             model.${domainClassAsProp}List.clear()
             model.${domainClassAsProp}List.addAll(result)

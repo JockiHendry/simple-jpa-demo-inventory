@@ -26,14 +26,11 @@ import domain.validation.InputPenjualanOlehSales
 import org.joda.time.LocalDate
 import project.penjualan.FakturJualOlehSalesModel
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import com.google.common.base.Strings
 import domain.exception.DataDuplikat
 import domain.Container
-
 import java.awt.Dimension
 import java.text.NumberFormat
 

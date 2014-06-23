@@ -16,7 +16,6 @@
 
 package project.inventory
 
-import com.google.common.base.Strings
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
@@ -39,12 +38,7 @@ class GudangController {
     }
 
     def search = {
-        List gudangResult
-        if (Strings.isNullOrEmpty(model.namaSearch)) {
-            gudangResult = gudangRepository.findAllGudang()
-        } else {
-            gudangResult = gudangRepository.findAllGudangByNamaLike("%${model.namaSearch}%")
-        }
+        List gudangResult = gudangRepository.cari(model.namaSearch)
         execInsideUISync {
             model.gudangList.clear()
             model.gudangList.addAll(gudangResult)
