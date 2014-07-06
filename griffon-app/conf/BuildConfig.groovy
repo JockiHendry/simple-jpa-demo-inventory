@@ -183,6 +183,7 @@ griffon.project.dependency.resolution = {
         mavenLocal()
         mavenCentral()
         mavenRepo "http://jasperreports.sourceforge.net/maven2"
+        mavenRepo "http://dl.bintray.com/jockihendry/maven"
     }
     dependencies {
         runtime 'mysql:mysql-connector-java:5.1.20'
@@ -191,6 +192,7 @@ griffon.project.dependency.resolution = {
         compile('net.sf.jasperreports:jasperreports:5.5.1') {
             exclude 'commons-collections'
         }
+        compile 'jockihendry:simple-escp:0.3'
     }
 }
 
