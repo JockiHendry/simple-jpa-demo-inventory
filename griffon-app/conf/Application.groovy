@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "previewEscp"
+    'previewEscp' {
+        model      = 'project.main.PreviewEscpModel'
+        view       = 'project.main.PreviewEscpView'
+        controller = 'project.main.PreviewEscpController'
+    }
+
     // MVC Group for "pesan"
     'pesan' {
         model      = 'project.main.PesanModel'
@@ -161,13 +168,6 @@ mvcGroups {
         model      = 'project.inventory.SatuanModel'
         view       = 'project.inventory.SatuanView'
         controller = 'project.inventory.SatuanController'
-    }
-
-    // MVC Group for "previewFaktur"
-    'previewFaktur' {
-        model      = 'project.main.PreviewFakturModel'
-        view       = 'project.main.PreviewFakturView'
-        controller = 'project.main.PreviewFakturController'
     }
 
     // MVC Group for "region"

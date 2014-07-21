@@ -56,9 +56,9 @@ class PencairanPoinModel {
 
 enum JenisPencairanPoin {
 
-    TUKAR_UANG('Tukar Uang', 'bukti_pencairan_poin_tukar_uang'),
-    TUKAR_BARANG('Tukar Barang', 'bukti_pencairan_poin_tukar_barang'),
-    POTONG_PIUTANG('Potong Piutang', 'bukti_pencairan_poin_potong_piutang')
+    TUKAR_UANG('Tukar Uang', 'bukti_pencairan_poin_tukar_uang.json'),
+    TUKAR_BARANG('Tukar Barang', 'bukti_pencairan_poin_tukar_barang.json'),
+    POTONG_PIUTANG('Potong Piutang', 'bukti_pencairan_poin_potong_piutang.json')
 
     String desc
     String fileLaporan

@@ -22,7 +22,8 @@ public enum KeyPengaturan {
     UKURAN_HURUF_TABEL("Ukuran Huruf Tabel", JenisNilai.INTEGER, 0),
     BONUS_POINT_RATE("Bonus Point Rate", JenisNilai.INTEGER, 2000),
     LEVEL_MINIMUM_STOK("Level Minimum Untuk Stok", JenisNilai.INTEGER, 0),
-    CREDIT_LIMIT_DEFAULT("Credit Limit Default", JenisNilai.INTEGER, 10000000)
+    CREDIT_LIMIT_DEFAULT("Credit Limit Default", JenisNilai.INTEGER, 10000000),
+    NAMA_PERUSAHAAN("Nama Perusahaan", JenisNilai.STRING, "[Company Name]")
     ;
 
     public String description;

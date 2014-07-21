@@ -1,0 +1,42 @@
+{
+    "pageFormat": {
+        "characterPitch": "12 cpi",
+        "pageWidth": 96,
+        "pageLength": 31,
+        "usePageLengthFromPrinter": true
+    },
+    "template": {
+        "header": [
+           "      %{176 R2}      Faktur Jual ${companyName:62} Hal: %{PAGE_NO}",
+           "    %{176 R6}    Nomor     : ${nomor:25}",
+           "   %{176 R8}   Tanggal   : {{tanggal.toString('dd-MM-YYYY')::10}}                     Jatuh Tempo : {{jatuhTempo.toString('dd-MM-YYYY')::10}}",
+           "     %{176 R4}     Nama      : ${konsumen.nama:20 }               Sales   : ${konsumen.sales.nama:20}",
+           "      %{176 R2}      Credit    : ${konsumen.creditTerpakai:number:15}             Credit Limit   : ${konsumen.creditLimit:number:15}"
+        ],
+        "detail": [
+            {
+                "table": "listItemFaktur",
+                "border": true,
+                "columns": [
+                    {"source": "row::right", "width": 3, "caption": "No"},
+                    {"source": "produk.nama", "width": 41, "caption": "Nama Produk", "wrap": true},
+                    {"source": "jumlah::right", "width": 4, "caption": "Qty"},
+                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"},
+                    {"source": "harga::number::right", "width": 15, "caption": "Harga Beli"},
+                    {"source": "diskon", "width": 10, "caption": "Diskon", "wrap": true},
+                    {"source": "bean.total()::number::right", "width": 15, "caption": "Total"}
+                ]
+            },
+            {
+                "list": "bonusPenjualan?.items",
+                "header": [" Bonus:"],
+                "line": " ${produk.nama:41} x ${jumlah:3:right} ${produk.satuan.singkatan:5}"
+            },
+            "",
+            "        Hormat kami,                                       Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
+            "                                                              Sub Total : ${@subtotal:currency:20:right}",
+            "                                                        Diskon Tambahan : ${@jumlahDiskonTanpaDiskonItem:currency:20:right}",
+            "  (${username:21:center})                                   Total Order : ${@total:currency:20:right}"
+        ]
+    }
+}

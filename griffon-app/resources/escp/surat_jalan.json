@@ -1,0 +1,34 @@
+{
+    "pageFormat": {
+        "characterPitch": "12 cpi",
+        "pageWidth": 96,
+        "pageLength": 31,
+        "usePageLengthFromPrinter": true
+    },
+    "template": {
+        "header": [
+           "      %{176 R2}      Surat Jalan ${companyName:62} Hal: %{PAGE_NO}",
+           "    %{176 R6}    Nomor     : ${nomor:25}                    Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
+           "   %{176 R8}   Sales     : ${konsumen.sales.nama:25}             Tanggal Terima : ........",
+           "     %{176 R4}     Kepada    : ${konsumen.nama:30}              Penerima : ........",
+           "      %{176 R2}      Alamat    : ${pengeluaranBarang.alamatTujuan:68}"
+        ],
+        "detail": [
+            {
+                "table": "pengeluaranBarang.items",
+                "border": true,
+                "columns": [
+                    {"source": "row::right", "width": 3, "caption": "No"},
+                    {"source": "produk.nama", "width": 79, "caption": "Nama Produk", "wrap": true},
+                    {"source": "jumlah::right", "width": 5, "caption": "Qty"},
+                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
+                ]
+            },
+            "",
+            "        Hormat kami,                          Supir,                          Penerima,         ",
+            "                                                                                ",
+            "",
+            "  (${username:21:center})            (${pengeluaranBarang.namaSupir:21:center})               ( ........... )      "
+        ]
+    }
+}

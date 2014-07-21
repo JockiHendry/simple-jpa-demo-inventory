@@ -127,9 +127,9 @@ application(title: 'Received Not Invoiced',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
-                mvcPopupButton('Cetak', mvcGroup: 'previewFaktur', args: {[
-                        dataSource: view.table.selectionModel.selected[0], fileLaporan: 'purchaseOrder'
-                    ]}, dialogProperties: [title: 'Preview Purchase Order', size: new Dimension(820,600)],
+                mvcPopupButton('Cetak', mvcGroup: 'previewEscp', args: {[
+                        dataSource: view.table.selectionModel.selected[0], template: 'purchase_order.json'
+                    ]}, dialogProperties: [title: 'Preview Purchase Order', preferredSize: new Dimension(920,400)],
                     visible: bind('isRowSelected', source: table, converter: { it && model.allowAddPO } ))
                 mvcPopupButton(id: 'penerimaanBarang', text: 'Penerimaan Barang', mvcGroup: 'penerimaanBarang',
                     args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},

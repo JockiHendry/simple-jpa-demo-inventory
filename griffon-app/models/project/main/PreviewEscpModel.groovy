@@ -17,6 +17,6 @@ package project.main
 
 import groovy.beans.Bindable
 
-class PreviewFakturModel {
+class PreviewEscpModel {
     // @Bindable String propName
 }

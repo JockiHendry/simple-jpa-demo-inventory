@@ -26,7 +26,7 @@
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-core/jars/jackson-core-2.1.4.jar!/" />
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-databind/jars/jackson-databind-2.1.4.jar!/" />
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-annotations/jars/jackson-annotations-2.1.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/jockihendry/simple-escp/jars/simple-escp-0.3.jar!/" />
+          <root url="jar://$IVY_CACHE$/jockihendry/simple-escp/jars/simple-escp-0.5.1.jar!/" />
           <root url="jar://$IVY_CACHE$/org.glassfish/javax.json/bundles/javax.json-1.0.4.jar!/" />
           <root url="jar://$IVY_CACHE$/javax.json/javax.json-api/bundles/javax.json-api-1.0.jar!/" />
           <root url="jar://$IVY_CACHE$/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.20.jar!/" />

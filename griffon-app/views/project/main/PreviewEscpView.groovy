@@ -15,9 +15,12 @@
  */
 package project.main
 
+import simple.escp.swing.PrintPreviewPane
+import java.awt.BorderLayout
+
 application() {
-    borderLayout()
-    panel(id: 'mainPanel', constraints: CENTER) {
+    panel(id: 'mainPanel') {
         borderLayout()
+        widget(new PrintPreviewPane(), constraints: BorderLayout.CENTER, id: 'printPreviewPane')
     }
 }
