@@ -31,7 +31,7 @@
             "        Hormat kami,                                       Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
             "                                                              Sub Total : ${@subtotal:currency:20:right}",
             "                                                        Diskon Tambahan : ${@jumlahDiskonTanpaDiskonItem:currency:20:right}",
-            "  (${username:21:center})                                   Total Order : ${@total:currency:20:right}"
+            "  (${createdBy:21:center})                                   Total Order : ${@total:currency:20:right}"
         ]
     }
 }

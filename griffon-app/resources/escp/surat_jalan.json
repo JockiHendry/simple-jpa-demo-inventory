@@ -28,7 +28,7 @@
             "        Hormat kami,                          Supir,                          Penerima,         ",
             "                                                                                ",
             "",
-            "  (${username:21:center})            (${pengeluaranBarang.namaSupir:21:center})               ( ........... )      "
+            "  ({{pengeluaranBarang.createdBy::21::center}})            (${pengeluaranBarang.namaSupir:21:center})               ( ........... )      "
         ]
     }
 }

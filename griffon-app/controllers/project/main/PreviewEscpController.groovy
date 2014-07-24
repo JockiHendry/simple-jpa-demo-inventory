@@ -30,9 +30,12 @@ class PreviewEscpController {
 
     void mvcGroupInit(Map args) {
         JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
-        Map options = ['username': Container.app.currentUser.nama, 'companyName': Container.app.pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)]
+        def source = args.'dataSource'
+        Map options = [:]
+        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null) ?: Container.app.currentUser.nama
+        options['companyName'] = Container.app.pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         PrintPreviewPane printPreviewPane = view.printPreviewPane
-        printPreviewPane.display(template, DataSources.from(args.'dataSource', options))
+        printPreviewPane.display(template, DataSources.from(source, options))
     }
 
 }

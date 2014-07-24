@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import ast.Auditable
 import domain.validation.InputPencairanPoin
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -23,10 +24,9 @@ import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
-
 import javax.validation.groups.Default
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical @Auditable
 abstract class PencairanPoin {
 
     @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])
