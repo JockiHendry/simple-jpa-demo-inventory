@@ -32,6 +32,7 @@ import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
+import java.text.DateFormat
 
 class PencairanPoinController {
 
@@ -156,6 +157,8 @@ class PencairanPoinController {
             model.rate = null
             model.konsumen.selectedItem = null
             model.items.clear()
+            model.createdBy = null
+            model.modifiedBy = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -185,6 +188,10 @@ class PencairanPoinController {
                 } else if (selected instanceof PencairanPoinPotongPiutang) {
                     model.jenisPencairanPoin.selectedItem = JenisPencairanPoin.POTONG_PIUTANG
                 }
+                model.createdBy = (selected.createdBy && selected.createdDate)?
+                    "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
+                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
+                    "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
             }
         }
     }

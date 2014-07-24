@@ -42,6 +42,8 @@ class PencairanPoinModel {
     @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
     List<ItemBarang> items = []
     EnumComboBoxModel<JenisPencairanPoin> jenisPencairanPoin = new EnumComboBoxModel<JenisPencairanPoin>(JenisPencairanPoin)
+    @Bindable String createdBy
+    @Bindable String modifiedBy
 
     BasicEventList pencairanPoinList = new BasicEventList()
 

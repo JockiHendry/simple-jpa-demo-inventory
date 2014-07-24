@@ -33,7 +33,7 @@ class AuditableTransformation extends AbstractASTTransformation{
         ClassNode classNode = astNodes[1]
         log.debug "Performing @Auditable transformation for ${classNode}..."
         classNode.addField("createdBy", ACC_PUBLIC, ClassHelper.make(String.class), null)
-        classNode.addField("updatedBy", ACC_PUBLIC, ClassHelper.make(String.class), null)
+        classNode.addField("modifiedBy", ACC_PUBLIC, ClassHelper.make(String.class), null)
     }
 
 }

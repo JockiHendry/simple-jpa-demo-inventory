@@ -32,6 +32,7 @@ import domain.exception.DataDuplikat
 import domain.Container
 
 import java.awt.Dimension
+import java.text.DateFormat
 import java.text.NumberFormat
 
 class FakturJualEceranController {
@@ -212,6 +213,8 @@ class FakturJualEceranController {
             model.diskonPotonganPersen = null
             model.status = null
             model.listItemFaktur.clear()
+            model.createdBy = null
+            model.modifiedBy = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -236,6 +239,10 @@ class FakturJualEceranController {
                 model.status = selected.status
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(selected.listItemFaktur)
+                model.createdBy = (selected.createdBy && selected.createdDate)?
+                        "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
+                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
+                        "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
                 refreshInformasi()
             }
         }

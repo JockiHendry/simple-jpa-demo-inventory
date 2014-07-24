@@ -103,6 +103,14 @@ application(title: 'Faktur Jual Eceran',
                 label('Keterangan:')
                 textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
                 errorLabel(path: 'keterangan', constraints: 'wrap')
+
+                panel(constraints: 'span, growx, wrap') {
+                    flowLayout(alignment: FlowLayout.LEADING)
+                    label('Dibuat Oleh: ')
+                    label(text: bind {model.createdBy})
+                    label('               Dimodifikasi Oleh: ')
+                    label(text: bind {model.modifiedBy})
+                }
             }
 
             panel(constraints: PAGE_END) {

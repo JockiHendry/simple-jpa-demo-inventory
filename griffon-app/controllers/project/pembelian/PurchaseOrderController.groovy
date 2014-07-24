@@ -25,12 +25,12 @@ import domain.pembelian.PurchaseOrderRepository
 import domain.util.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
-import project.main.MainGroupModel
 import simplejpa.swing.DialogUtils
 
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
+import java.text.DateFormat
 import java.text.NumberFormat
 
 class PurchaseOrderController {
@@ -189,6 +189,8 @@ class PurchaseOrderController {
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
             model.supplier.selectedItem = null
+            model.createdBy = null
+            model.modifiedBy = null
             model.listItemFaktur.clear()
 
             model.errors.clear()
@@ -213,6 +215,10 @@ class PurchaseOrderController {
                 model.supplier.selectedItem = selected.supplier
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(selected.listItemFaktur)
+                model.createdBy = (selected.createdBy && selected.createdDate)?
+                    "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
+                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
+                    "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
                 refreshInformasi()
             }
         }

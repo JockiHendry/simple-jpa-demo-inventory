@@ -32,8 +32,8 @@ class UserAuditEntityListener {
     @PreUpdate
     void update(Object target) {
         target.modifiedDate = Calendar.instance.time
-        if (target.hasProperty('updatedBy')) {
-            target.updatedBy = Container.app.currentUser.nama
+        if (target.hasProperty('modifiedBy')) {
+            target.modifiedBy = Container.app.currentUser.nama
         }
     }
 

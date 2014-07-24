@@ -32,6 +32,7 @@ import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import domain.Container
 import java.awt.Dimension
+import java.text.DateFormat
 import java.text.NumberFormat
 
 class FakturJualOlehSalesController {
@@ -176,6 +177,8 @@ class FakturJualOlehSalesController {
             model.status = null
             model.listItemFaktur.clear()
             model.listBonus.clear()
+            model.createdBy = null
+            model.modifiedBy = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -204,6 +207,10 @@ class FakturJualOlehSalesController {
                 if (selected.bonusPenjualan) {
                     model.listBonus.addAll(selected.bonusPenjualan.items)
                 }
+                model.createdBy = (selected.createdBy && selected.createdDate)?
+                    "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
+                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
+                    "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
                 refreshInformasi()
             }
         }

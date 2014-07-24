@@ -83,6 +83,14 @@ application() {
 
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
+                label('Dibuat Oleh: ')
+                label(text: bind {model.createdBy})
+                label('               Dimodifikasi Oleh: ')
+                label(text: bind {model.modifiedBy})
+            }
+
+            panel(constraints: 'span, growx, wrap') {
+                flowLayout(alignment: FlowLayout.LEADING)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
