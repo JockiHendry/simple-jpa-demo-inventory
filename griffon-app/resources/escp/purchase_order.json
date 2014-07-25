@@ -10,7 +10,7 @@
            "      %{176 R2}      Purchase Order ${companyName:59} Hal: %{PAGE_NO}",
            "    %{176 R6}    Nomor     : ${nomor:25}",
            "   %{176 R8}   Tanggal   : {{ tanggal.toString('dd-MM-YYYY') }}",
-           "     %{176 R4}     Kepada    : ${supplier.nama:50}                               ",
+           "     %{176 R4}     Kepada    : ${supplier.nama:50}",
            "      %{176 R2}      Alamat    : ${supplier.alamat:53} ${supplier.nomorTelepon:15}"
         ],
         "detail": [
