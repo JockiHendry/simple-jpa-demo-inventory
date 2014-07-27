@@ -18,6 +18,7 @@ import domain.pengaturan.KeyPengaturan
 import domain.user.Menu
 import domain.user.User
 import org.jdesktop.swingx.JXLoginPane
+import util.HttpUtil
 import util.SplashScreen
 import javax.swing.UIManager
 import javax.swing.plaf.FontUIResource
@@ -81,4 +82,8 @@ if (Environment.current != Environment.TEST) {
     mainGroup.model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
     mainGroup.model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
 
+}
+
+execOutsideUI {
+    HttpUtil.instance.sendNotification(Container.app.currentUser.nama, "Startup...")
 }

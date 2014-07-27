@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+
+import domain.Container
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
 import griffon.util.*
+import util.HttpUtil
+import util.SplashScreen
 import javax.validation.ConstraintViolationException
 
 onUncaughtExceptionThrown = { Exception e ->
@@ -40,6 +44,13 @@ onUncaughtExceptionThrown = { Exception e ->
         javax.swing.JOptionPane.showMessageDialog(null, pesan.toString(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
     } else {
         javax.swing.JOptionPane.showMessageDialog(null, e.message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
+
+    def stringWriter = new StringWriter()
+    e.printStackTrace(new PrintWriter(stringWriter))
+    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, stringWriter.toString())
+    if (SplashScreen.instance.window.visible) {
+        System.exit(-1)
     }
 }
 

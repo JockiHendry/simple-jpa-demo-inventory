@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import domain.Container
+import util.HttpUtil
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -27,3 +29,6 @@
  * - execInsideUIAsync { // your code }
  * - execInsideUISync { // your code }
  */
+execOutsideUI {
+    HttpUtil.instance.sendNotification(Container.app.currentUser.nama, "Shutdown...")
+}
