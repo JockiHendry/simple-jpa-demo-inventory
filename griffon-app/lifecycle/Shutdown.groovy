@@ -30,5 +30,5 @@ import util.HttpUtil
  * - execInsideUISync { // your code }
  */
 execOutsideUI {
-    HttpUtil.instance.sendNotification(Container.app.currentUser.nama, "Shutdown...")
+    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, "Shutdown...")
 }

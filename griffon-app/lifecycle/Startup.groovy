@@ -85,5 +85,5 @@ if (Environment.current != Environment.TEST) {
 }
 
 execOutsideUI {
-    HttpUtil.instance.sendNotification(Container.app.currentUser.nama, "Startup...")
+    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, "Startup...")
 }

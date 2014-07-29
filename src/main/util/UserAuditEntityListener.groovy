@@ -25,7 +25,7 @@ class UserAuditEntityListener {
     void create(Object target) {
         target.createdDate = Calendar.instance.time
         if (target.hasProperty('createdBy')) {
-            target.createdBy = Container.app.currentUser.nama
+            target.createdBy = Container.app.currentUser?.nama
         }
     }
 
@@ -33,7 +33,7 @@ class UserAuditEntityListener {
     void update(Object target) {
         target.modifiedDate = Calendar.instance.time
         if (target.hasProperty('modifiedBy')) {
-            target.modifiedBy = Container.app.currentUser.nama
+            target.modifiedBy = Container.app.currentUser?.nama
         }
     }
 
