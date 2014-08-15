@@ -49,7 +49,6 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
     }
 

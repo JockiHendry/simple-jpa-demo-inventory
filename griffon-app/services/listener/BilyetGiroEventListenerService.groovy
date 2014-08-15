@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.event
+package listener
 
-import domain.Container
-import domain.faktur.BilyetGiro
+import domain.event.BilyetGiroCleared
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
 import simplejpa.transaction.Transaction
 
 @Transaction
-class BilyetGiroEventConsumer {
-
-    private final Log log = LogFactory.getLog(BilyetGiroEventConsumer)
+class BilyetGiroEventListenerService {
 
     void onBilyetGiroCleared(BilyetGiroCleared bilyetGiroCleared) {
         log.info "Event onBilyetGiroCleared mulai dikerjakan..."
@@ -35,9 +30,9 @@ class BilyetGiroEventConsumer {
         // menjadi lunas bila perlu.
 
         List<FakturJualOlehSales> fakturBelumLunas = executeQuery('SELECT DISTINCT f FROM FakturJualOlehSales f, ' +
-            'IN(f.piutang.listPembayaran) p WHERE f.status <> domain.penjualan.StatusFakturJual.LUNAS ' +
-            'AND p.bilyetGiro = :bilyetGiro ',
-            [:], [bilyetGiro: bilyetGiroCleared.source])
+                'IN(f.piutang.listPembayaran) p WHERE f.status <> domain.penjualan.StatusFakturJual.LUNAS ' +
+                'AND p.bilyetGiro = :bilyetGiro ',
+                [:], [bilyetGiro: bilyetGiroCleared.source])
         fakturBelumLunas.each {
             if (it.piutang.lunas) {
                 it.status = StatusFakturJual.LUNAS

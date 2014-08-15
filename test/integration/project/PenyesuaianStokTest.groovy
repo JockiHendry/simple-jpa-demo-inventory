@@ -31,7 +31,6 @@ class PenyesuaianStokTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("gudang", "/project/data_inventory.xls")
     }
 

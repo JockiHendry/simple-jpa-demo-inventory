@@ -16,29 +16,11 @@
 
 package domain
 
-import domain.event.BilyetGiroEventConsumer
-import domain.event.InventoryEventConsumer
-import domain.inventory.GudangRepository
-import domain.inventory.PenyesuaianStokRepository
-import domain.inventory.ProdukRepository
-import domain.inventory.SatuanRepository
-import domain.inventory.TransferRepository
-import domain.pembelian.PurchaseOrderRepository
-import domain.pembelian.SupplierRepository
-import domain.pengaturan.PengaturanRepository
-import domain.faktur.BilyetGiroRepository
 import domain.penjualan.BilyetGiroClearingService
-import domain.penjualan.FakturJualRepository
-import domain.penjualan.KonsumenRepository
-import domain.penjualan.PencairanPoinRepository
 import domain.user.User
 import domain.user.UserLoginService
-import domain.user.UserRepository
 import domain.util.NomorService
-import domain.penjualan.RegionRepository
-import domain.penjualan.SalesRepository
 import domain.util.PasswordService
-import domain.util.PesanRepository
 import griffon.util.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -53,9 +35,6 @@ class Container {
     public static final String SEMUA = "Semua"
 
     User currentUser
-
-    InventoryEventConsumer inventoryEventConsumer
-    BilyetGiroEventConsumer bilyetGiroEventConsumer
 
     PasswordService passwordService
     NomorService nomorService
@@ -72,30 +51,6 @@ class Container {
         nomorService = new NomorService()
         bilyetGiroClearingService = new BilyetGiroClearingService()
         userLoginService = new UserLoginService()
-
-        // Create event consumers
-        GriffonApplication app = ApplicationHolder.application
-
-        if (inventoryEventConsumer) app.removeApplicationEventListener(inventoryEventConsumer)
-        inventoryEventConsumer = new InventoryEventConsumer()
-
-        if (bilyetGiroEventConsumer) app.removeApplicationEventListener(bilyetGiroEventConsumer)
-        bilyetGiroEventConsumer = new BilyetGiroEventConsumer()
-
-        // Setup listener
-        setupListener()
-    }
-
-    public void setupListener() {
-        GriffonApplication app = ApplicationHolder.application
-        if (app) {
-            app.removeApplicationEventListener(inventoryEventConsumer)
-            app.addApplicationEventListener(inventoryEventConsumer)
-            app.removeApplicationEventListener(bilyetGiroEventConsumer)
-            app.addApplicationEventListener(bilyetGiroEventConsumer)
-        } else {
-            log.warn 'Can not find Griffon application. Is this launched by Griffon? Event listener will not working!'
-        }
     }
 
     public List searchEnum(Class enumeration) {

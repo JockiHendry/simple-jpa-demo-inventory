@@ -46,7 +46,6 @@ class ProdukTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("produk", "/project/data_inventory.xls")
     }
 

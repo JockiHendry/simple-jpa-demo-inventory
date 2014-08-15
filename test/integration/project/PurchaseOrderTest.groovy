@@ -36,7 +36,6 @@ class PurchaseOrderTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("penerimaanBarang", "/project/data_pembelian.xls")
     }
 

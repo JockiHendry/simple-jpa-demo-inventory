@@ -30,7 +30,6 @@ class NomorServiceTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("penjualan", "/project/data_penjualan.xls")
     }
 

@@ -34,7 +34,6 @@ class PencairanPoinTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        Container.app.setupListener()
         setUpDatabase("konsumen", "/project/data_penjualan.xls")
     }
 

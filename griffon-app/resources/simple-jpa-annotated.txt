@@ -1,4 +1,3 @@
-domain.event.BilyetGiroEventConsumer
 domain.faktur.BilyetGiroRepository
 domain.inventory.GudangRepository
 domain.inventory.PenyesuaianStokRepository

@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.event
+package listener
 
-import domain.Container
+import domain.event.PerubahanStok
+import domain.event.TransferStok
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
@@ -23,13 +24,9 @@ import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.util.PesanLevelMinimum
 import domain.util.PesanRepository
-import org.apache.commons.logging.Log
-import org.apache.commons.logging.LogFactory
 import simplejpa.SimpleJpaUtil
 
-class InventoryEventConsumer {
-
-    private final Log log = LogFactory.getLog(InventoryEventConsumer)
+class InventoryEventListenerService {
 
     void onPerubahanStok(PerubahanStok perubahanStok) {
         log.info "Event onPerubahanStok mulai dikerjakan..."
@@ -87,4 +84,5 @@ class InventoryEventConsumer {
             (SimpleJpaUtil.container.pesanRepository as PesanRepository).buat(pesan)
         }
     }
+
 }
