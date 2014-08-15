@@ -22,9 +22,12 @@ import domain.inventory.PenyesuaianStok
 import domain.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PenyesuaianStokTest extends DbUnitTestCase {
+
+    PenyesuaianStokRepository penyesuaianStokRepository = SimpleJpaUtil.container.penyesuaianStokRepository
 
     protected void setUp() {
         super.setUp()
@@ -38,70 +41,68 @@ class PenyesuaianStokTest extends DbUnitTestCase {
     }
 
     public void testBuatBertambahDanHapus() {
-        PenyesuaianStokRepository repo = Container.app.penyesuaianStokRepository
-        Gudang gudang = repo.findGudangById(-1l)
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Produk produkC = repo.findProdukById(-3l)
+        Gudang gudang = penyesuaianStokRepository.findGudangById(-1l)
+        Produk produkA = penyesuaianStokRepository.findProdukById(-1l)
+        Produk produkB = penyesuaianStokRepository.findProdukById(-2l)
+        Produk produkC = penyesuaianStokRepository.findProdukById(-3l)
 
         PenyesuaianStok penyesuaianStok = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang,
             bertambah: true, keterangan: 'Hasil Stock Opname Akhir Tahun 2013')
         penyesuaianStok.tambah(new ItemBarang(produk: produkA, jumlah: 6))
         penyesuaianStok.tambah(new ItemBarang(produk: produkB, jumlah: 7))
         penyesuaianStok.tambah(new ItemBarang(produk: produkC, jumlah: 3))
-        penyesuaianStok = repo.buat(penyesuaianStok)
+        penyesuaianStok = penyesuaianStokRepository.buat(penyesuaianStok)
 
         assertNotNull(penyesuaianStok.nomor)
 
         // Cek stok
-        repo.withTransaction {
-            assertEquals(16, repo.findProdukById(-1l).stok(gudang).jumlah)
-            assertEquals(21, repo.findProdukById(-2l).stok(gudang).jumlah)
-            assertEquals(18, repo.findProdukById(-3l).stok(gudang).jumlah)
+        penyesuaianStokRepository.withTransaction {
+            assertEquals(16, penyesuaianStokRepository.findProdukById(-1l).stok(gudang).jumlah)
+            assertEquals(21, penyesuaianStokRepository.findProdukById(-2l).stok(gudang).jumlah)
+            assertEquals(18, penyesuaianStokRepository.findProdukById(-3l).stok(gudang).jumlah)
         }
 
-        penyesuaianStok = repo.hapus(penyesuaianStok)
+        penyesuaianStok = penyesuaianStokRepository.hapus(penyesuaianStok)
         assertEquals('Y', penyesuaianStok.deleted)
 
         // Cek stok
-        repo.withTransaction {
-            assertEquals(10, repo.findProdukById(-1l).stok(gudang).jumlah)
-            assertEquals(14, repo.findProdukById(-2l).stok(gudang).jumlah)
-            assertEquals(15, repo.findProdukById(-3l).stok(gudang).jumlah)
+        penyesuaianStokRepository.withTransaction {
+            assertEquals(10, penyesuaianStokRepository.findProdukById(-1l).stok(gudang).jumlah)
+            assertEquals(14, penyesuaianStokRepository.findProdukById(-2l).stok(gudang).jumlah)
+            assertEquals(15, penyesuaianStokRepository.findProdukById(-3l).stok(gudang).jumlah)
         }
     }
 
     public void testBuatBerkurangDanHapus() {
-        PenyesuaianStokRepository repo = Container.app.penyesuaianStokRepository
-        Gudang gudang = repo.findGudangById(-1l)
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Produk produkC = repo.findProdukById(-3l)
+        Gudang gudang = penyesuaianStokRepository.findGudangById(-1l)
+        Produk produkA = penyesuaianStokRepository.findProdukById(-1l)
+        Produk produkB = penyesuaianStokRepository.findProdukById(-2l)
+        Produk produkC = penyesuaianStokRepository.findProdukById(-3l)
 
         PenyesuaianStok penyesuaianStok = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang,
             bertambah: false, keterangan: 'Hasil Stock Opname Akhir Tahun 2013')
         penyesuaianStok.tambah(new ItemBarang(produk: produkA, jumlah: 6))
         penyesuaianStok.tambah(new ItemBarang(produk: produkB, jumlah: 7))
         penyesuaianStok.tambah(new ItemBarang(produk: produkC, jumlah: 3))
-        penyesuaianStok = repo.buat(penyesuaianStok)
+        penyesuaianStok = penyesuaianStokRepository.buat(penyesuaianStok)
 
         assertNotNull(penyesuaianStok.nomor)
 
         // Cek stok
-        repo.withTransaction {
-            assertEquals(4, repo.findProdukById(-1l).stok(gudang).jumlah)
-            assertEquals(7, repo.findProdukById(-2l).stok(gudang).jumlah)
-            assertEquals(12, repo.findProdukById(-3l).stok(gudang).jumlah)
+        penyesuaianStokRepository.withTransaction {
+            assertEquals(4, penyesuaianStokRepository.findProdukById(-1l).stok(gudang).jumlah)
+            assertEquals(7, penyesuaianStokRepository.findProdukById(-2l).stok(gudang).jumlah)
+            assertEquals(12, penyesuaianStokRepository.findProdukById(-3l).stok(gudang).jumlah)
         }
 
-        penyesuaianStok = repo.hapus(penyesuaianStok)
+        penyesuaianStok = penyesuaianStokRepository.hapus(penyesuaianStok)
         assertEquals('Y', penyesuaianStok.deleted)
 
         // Cek stok
-        repo.withTransaction {
-            assertEquals(10, repo.findProdukById(-1l).stok(gudang).jumlah)
-            assertEquals(14, repo.findProdukById(-2l).stok(gudang).jumlah)
-            assertEquals(15, repo.findProdukById(-3l).stok(gudang).jumlah)
+        penyesuaianStokRepository.withTransaction {
+            assertEquals(10, penyesuaianStokRepository.findProdukById(-1l).stok(gudang).jumlah)
+            assertEquals(14, penyesuaianStokRepository.findProdukById(-2l).stok(gudang).jumlah)
+            assertEquals(15, penyesuaianStokRepository.findProdukById(-3l).stok(gudang).jumlah)
         }
     }
 

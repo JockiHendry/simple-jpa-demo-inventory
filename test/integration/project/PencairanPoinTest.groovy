@@ -20,11 +20,17 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
+import domain.pengaturan.PengaturanRepository
 import domain.penjualan.*
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PencairanPoinTest extends DbUnitTestCase {
+
+    FakturJualRepository fakturJualRepository = SimpleJpaUtil.container.fakturJualRepository
+    PencairanPoinRepository pencairanPoinRepository = SimpleJpaUtil.container.pencairanPoinRepository
+    PengaturanRepository pengaturanRepository = SimpleJpaUtil.container.pengaturanRepository
 
     protected void setUp() {
         super.setUp()
@@ -38,14 +44,13 @@ class PencairanPoinTest extends DbUnitTestCase {
     }
 
     public void testCairkanPoinTukarUang() {
-        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
-        repo.withTransaction {
+        pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
-            assertEquals(2000, Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
+            assertEquals(2000, pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
 
             PencairanPoinTukarUang p = new PencairanPoinTukarUang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen)
-            p = repo.buat(p)
+            p = pencairanPoinRepository.buat(p)
 
             assertNotNull(p.nomor)
             assertEquals(2000, p.rate)
@@ -59,17 +64,16 @@ class PencairanPoinTest extends DbUnitTestCase {
     }
 
     public void testCairkanPoinTukarBarang() {
-        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
-        repo.withTransaction {
+        pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             Produk produkA = findProdukById(-1l)
             Produk produkB = findProdukById(-2l)
             assertEquals(50, konsumen.poinTerkumpul)
-            assertEquals(2000, Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
+            assertEquals(2000, pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
 
             PencairanPoinTukarBarang p = new PencairanPoinTukarBarang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen,
                 listItemBarang: [new ItemBarang(produkA, 10), new ItemBarang(produkB, 5)])
-            p = repo.buat(p)
+            p = pencairanPoinRepository.buat(p)
 
             assertNotNull(p.nomor)
             assertEquals(2000, p.rate)
@@ -91,22 +95,21 @@ class PencairanPoinTest extends DbUnitTestCase {
     }
 
     public void testCairkanPoinPotongPiutang() {
-        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
-        repo.withTransaction {
+        pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
             assertEquals(90000, konsumen.jumlahPiutang())
-            assertEquals(2000, Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
+            assertEquals(2000, pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
 
             // Melakukan penerimaan untuk salah satu faktur sehingga piutangnya bisa dibayar
             FakturJualOlehSales f = konsumen.listFakturBelumLunas[0]
-            Container.app.fakturJualRepository.kirim(f, 'test', 'test')
-            Container.app.fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'test'))
+            fakturJualRepository.kirim(f, 'test', 'test')
+            fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'test'))
             // Poin bertambah akibat penerimaan
             assertEquals(60, konsumen.poinTerkumpul)
 
             PencairanPoinPotongPiutang p = new PencairanPoinPotongPiutang(tanggal: LocalDate.now(), konsumen: konsumen, jumlahPoin: 10)
-            p = repo.buat(p)
+            p = pencairanPoinRepository.buat(p)
 
             assertNotNull(p.nomor)
             assertEquals(2000, p.rate)
@@ -121,19 +124,18 @@ class PencairanPoinTest extends DbUnitTestCase {
     }
 
     public void testHapus() {
-        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
-        repo.withTransaction {
+        pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
             PencairanPoinTukarUang p = new PencairanPoinTukarUang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen)
-            p = repo.buat(p)
+            p = pencairanPoinRepository.buat(p)
 
             // Sebelum dihapus
             konsumen = findKonsumenById(-1l)
             assertEquals(20, konsumen.poinTerkumpul)
 
             // Hapus
-            p = repo.hapus(p)
+            p = pencairanPoinRepository.hapus(p)
             assertEquals('Y', p.deleted)
 
             // Setelah dihapus
@@ -143,8 +145,7 @@ class PencairanPoinTest extends DbUnitTestCase {
     }
 
     public void testHapusTukarBarang() {
-        PencairanPoinRepository repo = Container.app.pencairanPoinRepository
-        repo.withTransaction {
+        pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             Produk produkA = findProdukById(-1l)
             Produk produkB = findProdukById(-2l)
@@ -152,12 +153,12 @@ class PencairanPoinTest extends DbUnitTestCase {
 
             PencairanPoinTukarBarang p = new PencairanPoinTukarBarang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen,
                     listItemBarang: [new ItemBarang(produkA, 10), new ItemBarang(produkB, 5)])
-            p = repo.buat(p)
+            p = pencairanPoinRepository.buat(p)
 
             konsumen = findKonsumenById(-1l)
             assertEquals(30, konsumen.poinTerkumpul)
 
-            p = repo.hapus(p)
+            p = pencairanPoinRepository.hapus(p)
             assertEquals(50, konsumen.poinTerkumpul)
 
             // Periksa jumlah barang apakah bertambah kembali

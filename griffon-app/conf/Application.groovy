@@ -23,6 +23,7 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+
     // MVC Group for "previewEscp"
     'previewEscp' {
         model      = 'project.main.PreviewEscpModel'
@@ -108,10 +109,10 @@ mvcGroups {
     }
 
     // MVC Group for "giro"
-    'giro' {
-        model      = 'project.penjualan.GiroModel'
-        view       = 'project.penjualan.GiroView'
-        controller = 'project.penjualan.GiroController'
+    'bilyetGiro' {
+        model      = 'project.faktur.BilyetGiroModel'
+        view       = 'project.faktur.BilyetGiroView'
+        controller = 'project.faktur.BilyetGiroController'
     }
 
     // MVC Group for "piutang"
@@ -221,9 +222,9 @@ mvcGroups {
 
     // MVC Group for "itemFakturAsChild"
     'itemFakturAsChild' {
-        model      = 'project.pembelian.ItemFakturAsChildModel'
-        view       = 'project.pembelian.ItemFakturAsChildView'
-        controller = 'project.pembelian.ItemFakturAsChildController'
+        model      = 'project.faktur.ItemFakturAsChildModel'
+        view       = 'project.faktur.ItemFakturAsChildView'
+        controller = 'project.faktur.ItemFakturAsChildController'
     }
 
     // MVC Group for "fakturBeli"
@@ -263,9 +264,9 @@ mvcGroups {
 
     // MVC Group for "itemBarangAsChild"
     'itemBarangAsChild' {
-        model      = 'project.pembelian.ItemBarangAsChildModel'
-        view       = 'project.pembelian.ItemBarangAsChildView'
-        controller = 'project.pembelian.ItemBarangAsChildController'
+        model      = 'project.inventory.ItemBarangAsChildModel'
+        view       = 'project.inventory.ItemBarangAsChildView'
+        controller = 'project.inventory.ItemBarangAsChildController'
     }
 
     // MVC Group for "penerimaanBarang"

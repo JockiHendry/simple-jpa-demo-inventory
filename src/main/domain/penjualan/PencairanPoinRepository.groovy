@@ -21,6 +21,7 @@ import domain.exception.PencairanPoinTidakValid
 import domain.pengaturan.KeyPengaturan
 import domain.util.NomorService
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -46,7 +47,7 @@ class PencairanPoinRepository {
             pencairanPoin.listItemBarang.each { it.produk = merge(it.produk) }
         }
         pencairanPoin.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.PENCAIRAN_POIN)
-        BigDecimal rate = Container.app.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
+        BigDecimal rate = SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
         pencairanPoin.rate = rate
         if (!pencairanPoin.valid()) {
             throw new PencairanPoinTidakValid(pencairanPoin)

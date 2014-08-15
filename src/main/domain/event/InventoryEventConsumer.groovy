@@ -22,8 +22,10 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.util.PesanLevelMinimum
+import domain.util.PesanRepository
 import org.apache.commons.logging.Log
 import org.apache.commons.logging.LogFactory
+import simplejpa.SimpleJpaUtil
 
 class InventoryEventConsumer {
 
@@ -82,7 +84,7 @@ class InventoryEventConsumer {
     void periksaLevelMinimum(Produk produk) {
         if (!produk.periksaLevel()) {
             PesanLevelMinimum pesan = new PesanLevelMinimum(produk, produk.jumlah, produk.levelMinimum)
-            Container.app.pesanRepository.buat(pesan)
+            (SimpleJpaUtil.container.pesanRepository as PesanRepository).buat(pesan)
         }
     }
 }

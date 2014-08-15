@@ -37,12 +37,9 @@ class PurchaseOrderController {
 
     PurchaseOrderModel model
     def view
-
     PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        purchaseOrderRepository = Container.app.purchaseOrderRepository
-
         model.mode = args.containsKey('mode')? args.'mode': POViewMode.ALL
         switch (model.mode) {
             case POViewMode.FAKTUR_BELI:

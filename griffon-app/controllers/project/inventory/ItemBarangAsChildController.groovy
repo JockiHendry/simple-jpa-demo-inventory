@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.pembelian
+package project.inventory
 
-import domain.Container
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
-import project.inventory.ProdukController
-
+import domain.pembelian.PurchaseOrderRepository
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
@@ -27,6 +25,7 @@ class ItemBarangAsChildController {
 
     ItemBarangAsChildModel model
     def view
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
@@ -41,7 +40,7 @@ class ItemBarangAsChildController {
     def save = {
         ItemBarang itemBarang = new ItemBarang(produk: model.produk, jumlah: model.jumlah)
 
-        if (!Container.app.purchaseOrderRepository.validate(itemBarang, Default, model)) return
+        if (!purchaseOrderRepository.validate(itemBarang, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             execInsideUISync {

@@ -18,13 +18,17 @@ package project
 
 import domain.Container
 import domain.inventory.Gudang
+import domain.inventory.GudangRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class GudangTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(GudangTest)
+
+    GudangRepository gudangRepository = SimpleJpaUtil.container.gudangRepository
 
     protected void setUp() {
         super.setUp()
@@ -38,7 +42,7 @@ class GudangTest extends DbUnitTestCase {
     }
 
     public void testCariGudangUtama() {
-        Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
+        Gudang gudangUtama = gudangRepository.cariGudangUtama()
         assertEquals('Gudang', gudangUtama.nama)
         assertTrue(gudangUtama.utama)
     }

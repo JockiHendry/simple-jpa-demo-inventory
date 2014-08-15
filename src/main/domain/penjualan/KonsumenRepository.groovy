@@ -22,6 +22,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -39,7 +40,7 @@ class KonsumenRepository {
         if (findKonsumenByNama(konsumen.nama)) {
             throw new DataDuplikat(konsumen)
         }
-        konsumen.creditLimit = Container.app.pengaturanRepository.getValue(KeyPengaturan.CREDIT_LIMIT_DEFAULT)
+        konsumen.creditLimit = SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.CREDIT_LIMIT_DEFAULT)
         persist(konsumen)
         konsumen
     }
@@ -47,7 +48,7 @@ class KonsumenRepository {
     public Konsumen update(Konsumen konsumen) {
         Konsumen mergedKonsumen = findKonsumenById(konsumen.id)
         if (!mergedKonsumen) {
-            throw DataTidakBolehDiubah(this)
+            throw new DataTidakBolehDiubah(konsumen)
         }
         mergedKonsumen.with {
             nama = konsumen.nama

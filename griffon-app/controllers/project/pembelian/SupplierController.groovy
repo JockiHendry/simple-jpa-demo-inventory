@@ -16,10 +16,8 @@
 
 package project.pembelian
 
-import domain.Container
 import domain.pembelian.Supplier
 import domain.pembelian.SupplierRepository
-
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
@@ -29,11 +27,9 @@ class SupplierController {
 
     SupplierModel model
     def view
-
     SupplierRepository supplierRepository
 
     void mvcGroupInit(Map args) {
-        supplierRepository = Container.app.supplierRepository
         search()
     }
 

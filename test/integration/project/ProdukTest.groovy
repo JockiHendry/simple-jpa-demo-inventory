@@ -32,12 +32,17 @@ import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 import domain.inventory.Periode
 
 class ProdukTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(ProdukTest)
+
+    ProdukRepository produkRepository = SimpleJpaUtil.container.produkRepository
+    PesanRepository pesanRepository = SimpleJpaUtil.container.pesanRepository
+    PenyesuaianStokRepository penyesuaianStokRepository = SimpleJpaUtil.container.penyesuaianStokRepository
 
     protected void setUp() {
         super.setUp()
@@ -51,17 +56,15 @@ class ProdukTest extends DbUnitTestCase {
     }
 
     public void testStokProduk() {
-        ProdukRepository repo = Container.app.produkRepository
+        Gudang gudang = produkRepository.findGudangByNama("Gudang")
+        Gudang warehouseA = produkRepository.findGudangByNama("Warehouse A")
+        Gudang warehouseB = produkRepository.findGudangByNama("Warehouse B")
+        Gudang warehouseC = produkRepository.findGudangByNama("Warehouse C")
+        Gudang warehouseD = produkRepository.findGudangByNama("Warehouse D")
+        Gudang warehouseE = produkRepository.findGudangByNama("Warehouse E")
+        Gudang warehouseF = produkRepository.findGudangByNama("Warehouse F")
 
-        Gudang gudang = repo.findGudangByNama("Gudang")
-        Gudang warehouseA = repo.findGudangByNama("Warehouse A")
-        Gudang warehouseB = repo.findGudangByNama("Warehouse B")
-        Gudang warehouseC = repo.findGudangByNama("Warehouse C")
-        Gudang warehouseD = repo.findGudangByNama("Warehouse D")
-        Gudang warehouseE = repo.findGudangByNama("Warehouse E")
-        Gudang warehouseF = repo.findGudangByNama("Warehouse F")
-
-        Produk produk = repo.findProdukByNamaFetchComplete("Produk A")
+        Produk produk = produkRepository.findProdukByNamaFetchComplete("Produk A")
         assertEquals(7, produk.daftarStok.size())
         assertEquals(10, produk.stok(gudang).jumlah)
         assertEquals(4, produk.stok(warehouseA).jumlah)
@@ -71,7 +74,7 @@ class ProdukTest extends DbUnitTestCase {
         assertEquals(2, produk.stok(warehouseE).jumlah)
         assertEquals(3, produk.stok(warehouseF).jumlah)
 
-        produk = repo.findProdukByNamaFetchComplete("Produk B")
+        produk = produkRepository.findProdukByNamaFetchComplete("Produk B")
         assertEquals(3, produk.daftarStok.size())
         assertEquals(14, produk.stok(gudang).jumlah)
         assertEquals(6, produk.stok(warehouseA).jumlah)
@@ -79,12 +82,10 @@ class ProdukTest extends DbUnitTestCase {
     }
 
     public void testPeriodeItemStok() {
-        ProdukRepository repo = Container.app.produkRepository
+        Gudang gudang = produkRepository.findGudangByNama("Gudang")
+        Gudang warehouseC = produkRepository.findGudangByNama("Warehouse C")
 
-        Gudang gudang = repo.findGudangByNama("Gudang")
-        Gudang warehouseC = repo.findGudangByNama("Warehouse C")
-
-        Produk produk = repo.findProdukByNamaFetchComplete("Produk A")
+        Produk produk = produkRepository.findProdukByNamaFetchComplete("Produk A")
         StokProduk stok = produk.stok(gudang)
         assertEquals(3, stok.listPeriodeRiwayat.size())
         assertEquals(3, stok.periode(Periode.format.parseLocalDate('15-12-2013')).jumlah)
@@ -112,15 +113,12 @@ class ProdukTest extends DbUnitTestCase {
 
     public void testArsipItemStok() {
         log.debug "Mulai dari testArsipItemStok..."
-
-        ProdukRepository repo = Container.app.produkRepository
-
         log.debug "Mencari produk Z..."
-        Produk produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
+        Produk produk = produkRepository.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
         log.debug "Produk ditemukan."
 
         log.debug "Mencari gudang Gudang"
-        Gudang gudang = repo.findGudangByNama("Gudang")
+        Gudang gudang = produkRepository.findGudangByNama("Gudang")
         log.debug "Gudang ditemukan."
 
         log.debug "Mencari StokProduk untuk produk Z dan Gudang..."
@@ -135,20 +133,20 @@ class ProdukTest extends DbUnitTestCase {
         assertEquals(10, periodeLampau.jumlah)
 
         log.debug "Memulai proses pengarsipan..."
-        repo.arsipItemStok(3)
+        produkRepository.arsipItemStok(3)
         log.debug "Proses pengarsipan selesai."
 
         ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
                 "SELECT * FROM PeriodeItemStok_listItem WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 
-        repo.withTransaction {
+        produkRepository.withTransaction {
             log.debug "Mencari produk Z..."
-            produk = repo.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
+            produk = produkRepository.findProdukByNama("Produk Z", [fetchGraph: 'Produk.Complete'])
             log.debug "Produk ditemukan."
 
             log.debug "Mencari gudang Gudang..."
-            gudang = repo.findGudangByNama("Gudang")
+            gudang = produkRepository.findGudangByNama("Gudang")
             log.debug "Gudang ditemukan."
 
             log.debug "Mencari StokProduk untuk produk Z dan Gudang..."
@@ -167,25 +165,22 @@ class ProdukTest extends DbUnitTestCase {
     }
 
     public void testLevelMinimum() {
-        PenyesuaianStokRepository repo = Container.app.penyesuaianStokRepository
-        PesanRepository pesanRepo = Container.app.pesanRepository
+        Produk produk = produkRepository.findProdukById(-1l)
+        Gudang gudang = produkRepository.findGudangById(-1l)
 
-        Produk produk = repo.findProdukById(-1l)
-        Gudang gudang = repo.findGudangById(-1l)
-
-        assertTrue(pesanRepo.refresh().isEmpty())
+        assertTrue(pesanRepository.refresh().isEmpty())
 
         PenyesuaianStok p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
         p.tambah(new ItemBarang(produk, 1))
-        repo.buat(p)
+        penyesuaianStokRepository.buat(p)
 
-        assertTrue(pesanRepo.refresh().isEmpty())
+        assertTrue(pesanRepository.refresh().isEmpty())
 
         p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
         p.tambah(new ItemBarang(produk, 2))
-        repo.buat(p)
+        penyesuaianStokRepository.buat(p)
 
-        List<Pesan> listPesan = pesanRepo.refresh()
+        List<Pesan> listPesan = pesanRepository.refresh()
         assertEquals(1, listPesan.size())
         assertTrue(listPesan[0] instanceof PesanLevelMinimum)
         assertEquals(produk, listPesan[0].produk)
@@ -193,9 +188,9 @@ class ProdukTest extends DbUnitTestCase {
         // Menaikkan jumlah stok kembali
         p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: true)
         p.tambah(new ItemBarang(produk, 3))
-        repo.buat(p)
+        penyesuaianStokRepository.buat(p)
 
         // Pesan harus hilang
-        assertTrue(pesanRepo.refresh().isEmpty())
+        assertTrue(pesanRepository.refresh().isEmpty())
     }
 }

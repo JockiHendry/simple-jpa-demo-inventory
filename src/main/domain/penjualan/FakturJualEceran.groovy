@@ -18,10 +18,13 @@ package domain.penjualan
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
+import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.util.NomorService
 import groovy.transform.*
 import simplejpa.DomainClass
+import simplejpa.SimpleJpaUtil
+
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
@@ -43,7 +46,7 @@ class FakturJualEceran extends FakturJual {
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: this.tanggal,
-            gudang: Container.app.gudangRepository.cariGudangUtama()
+            gudang: (SimpleJpaUtil.container['gudangRepository'] as GudangRepository).cariGudangUtama()
         )
         listItemFaktur.each {
             pengeluaranBarang.tambah(new ItemBarang(produk: it.produk, jumlah: it.jumlah))

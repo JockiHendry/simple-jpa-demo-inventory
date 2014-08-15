@@ -23,14 +23,11 @@ import domain.penjualan.*
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-
 import domain.exception.DataDuplikat
 import domain.Container
-
 import java.awt.Dimension
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -39,12 +36,9 @@ class FakturJualEceranController {
 
     FakturJualEceranModel model
     def view
-
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        fakturJualRepository = Container.app.fakturJualRepository
-
         model.mode = args.containsKey('mode')? args.'mode': FakturEceranViewMode.ALL
         switch (model.mode) {
             case FakturEceranViewMode.FAKTUR:

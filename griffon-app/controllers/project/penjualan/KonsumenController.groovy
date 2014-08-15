@@ -18,24 +18,19 @@ package project.penjualan
 import ast.NeedSupervisorPassword
 import domain.penjualan.*
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
-
 import java.awt.Dimension
 
 class KonsumenController {
 
     KonsumenModel model
     def view
-
     KonsumenRepository konsumenRepository
 
     void mvcGroupInit(Map args) {
-        konsumenRepository = Container.app.konsumenRepository
         init()
         search()
     }

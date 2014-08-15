@@ -16,21 +16,15 @@
 
 package project.inventory
 
-import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
 import domain.inventory.ProdukRepository
 import simplejpa.swing.DialogUtils
 import simplejpa.transaction.Transaction
-
-import javax.swing.JDialog
 import javax.swing.JOptionPane
-import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import java.awt.Dialog
 import java.awt.Dimension
-import java.awt.Window
 
 class ProdukController {
 
@@ -56,7 +50,6 @@ class ProdukController {
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popup'?: false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
-        produkRepository = Container.app.produkRepository
         init()
         search()
     }

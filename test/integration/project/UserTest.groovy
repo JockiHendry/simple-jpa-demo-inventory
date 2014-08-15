@@ -19,9 +19,12 @@ import domain.Container
 import domain.user.Menu
 import domain.user.User
 import domain.user.UserRepository
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class UserTest extends DbUnitTestCase {
+
+    UserRepository userRepository = SimpleJpaUtil.container.userRepository
 
     protected void setUp() {
         super.setUp()
@@ -35,46 +38,40 @@ class UserTest extends DbUnitTestCase {
     }
 
     public void testBuat() {
-        UserRepository repo = Container.app.userRepository
-
         User userA = new User(nama: 'userA', hakAkses: [Menu.MAINTENANCE])
-        userA = repo.buat(userA)
+        userA = userRepository.buat(userA)
         assertEquals('userA', userA.nama)
         assertTrue(userA.password.length > 0)
-        assertEquals(userA, repo.login('userA', repo.DEFAULT_PASSWORD))
+        assertEquals(userA, userRepository.login('userA', userRepository.DEFAULT_PASSWORD))
 
         User userB = new User(nama: 'userB', hakAkses: [Menu.MAINTENANCE])
-        userB = repo.buat(userB, 'mysolidpassword')
+        userB = userRepository.buat(userB, 'mysolidpassword')
         assertEquals('userB', userB.nama)
         assertTrue(userB.password.length > 0)
-        assertEquals(userB, repo.login('userB', 'mysolidpassword'))
+        assertEquals(userB, userRepository.login('userB', 'mysolidpassword'))
 
-        repo.remove(userA)
-        repo.remove(userB)
+        userRepository.remove(userA)
+        userRepository.remove(userB)
     }
 
     public void testLogin() {
-        UserRepository repo = Container.app.userRepository
-
         User user = new User(nama: 'theUser', hakAkses: [Menu.MAINTENANCE])
-        user = repo.buat(user, 'mysolidpassword')
+        user = userRepository.buat(user, 'mysolidpassword')
 
-        assertEquals(user, repo.login('theUser', 'mysolidpassword'))
-        assertNull(repo.login('theUser', 'passwordSembarangan'))
+        assertEquals(user, userRepository.login('theUser', 'mysolidpassword'))
+        assertNull(userRepository.login('theUser', 'passwordSembarangan'))
 
-        repo.remove(user)
+        userRepository.remove(user)
     }
 
     public void testSetPassword() {
-        UserRepository repo = Container.app.userRepository
-
         User user = new User(nama: 'theUser', hakAkses: [Menu.MAINTENANCE])
-        user = repo.buat(user)
-        assertEquals(user, repo.login('theUser', repo.DEFAULT_PASSWORD))
-        user = repo.setPassword(user, 'passwordBaru')
-        assertEquals(user, repo.login('theUser', 'passwordBaru'))
+        user = userRepository.buat(user)
+        assertEquals(user, userRepository.login('theUser', userRepository.DEFAULT_PASSWORD))
+        user = userRepository.setPassword(user, 'passwordBaru')
+        assertEquals(user, userRepository.login('theUser', 'passwordBaru'))
 
-        repo.remove(user)
+        userRepository.remove(user)
     }
 
 }

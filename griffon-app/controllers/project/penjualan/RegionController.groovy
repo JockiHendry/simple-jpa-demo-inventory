@@ -18,9 +18,7 @@ package project.penjualan
 import domain.penjualan.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-
 import domain.exception.DataDuplikat
-import domain.Container
 
 class RegionController {
 
@@ -30,7 +28,6 @@ class RegionController {
     RegionRepository regionRepository
 
     void mvcGroupInit(Map args) {
-        regionRepository = Container.app.regionRepository
         init()
         search()
     }

@@ -19,7 +19,6 @@ import domain.penjualan.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
 
 class SalesController {
 
@@ -29,7 +28,6 @@ class SalesController {
     SalesRepository salesRepository
 
     void mvcGroupInit(Map args) {
-        salesRepository = Container.app.salesRepository
         init()
         search()
     }

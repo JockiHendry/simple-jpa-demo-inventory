@@ -39,11 +39,9 @@ class FakturJualOlehSalesController {
 
     FakturJualOlehSalesModel model
     def view
-
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        fakturJualRepository = Container.app.fakturJualRepository
         init()
         search()
     }

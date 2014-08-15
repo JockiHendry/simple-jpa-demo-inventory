@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.penjualan
+package project.faktur
 
 import domain.Container
 import domain.exception.DataDuplikat
@@ -25,15 +25,13 @@ import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
-class GiroController {
+class BilyetGiroController {
 
-    GiroModel model
+    BilyetGiroModel model
     def view
-
     BilyetGiroRepository bilyetGiroRepository
 
     void mvcGroupInit(Map args) {
-        bilyetGiroRepository = Container.app.bilyetGiroRepository
         model.popupMode = args.'popupMode'?: false
     }
 

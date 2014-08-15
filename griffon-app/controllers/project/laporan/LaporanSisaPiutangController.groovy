@@ -15,16 +15,14 @@
  */
 package project.laporan
 
-import domain.Container
 import domain.penjualan.KonsumenRepository
-
 import javax.swing.SwingUtilities
 
 class LaporanSisaPiutangController {
 
     LaporanSisaPiutangModel model
     def view
-    KonsumenRepository konsumenRepository = Container.app.konsumenRepository
+    KonsumenRepository konsumenRepository
 
     def tampilkanLaporan = {
         String jpql = 'SELECT DISTINCT k FROM Konsumen k JOIN FETCH k.listFakturBelumLunas f JOIN FETCH f.piutang WHERE k.listFakturBelumLunas IS NOT EMPTY '

@@ -15,10 +15,9 @@
  */
 package project.main
 
-import domain.Container
+import domain.inventory.ProdukRepository
 import org.joda.time.DateTime
 import simplejpa.SimpleJpaUtil
-
 import javax.swing.JTextArea
 import java.nio.file.Files
 import java.nio.file.Path
@@ -29,13 +28,14 @@ class BackupController {
 
     BackupModel model
     def view
+    ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
         init()
     }
 
     def init = {
-        model.basedir = Container.app.produkRepository.executeNativeQuery("SHOW VARIABLES LIKE 'basedir'")[0][1]
+        model.basedir = produkRepository.executeNativeQuery("SHOW VARIABLES LIKE 'basedir'")[0][1]
         model.lokasiTujuan = File.listRoots().last()
         model.arguments = "--complete-insert --skip-extended-insert --compact --no-create-info"
     }

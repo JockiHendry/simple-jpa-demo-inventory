@@ -15,13 +15,11 @@
  */
 package project.penjualan
 
-import domain.Container
 import domain.pembelian.PurchaseOrderRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
@@ -29,11 +27,9 @@ class PiutangController {
 
     PiutangModel model
     def view
-
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        fakturJualRepository = Container.app.fakturJualRepository
         init()
         search()
     }

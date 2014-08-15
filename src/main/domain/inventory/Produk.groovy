@@ -23,6 +23,7 @@ import domain.penjualan.Sales
 import groovy.transform.*
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
+import simplejpa.SimpleJpaUtil
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
@@ -128,7 +129,7 @@ class Produk implements Comparable {
     }
 
     public Integer getLevelMinimum() {
-        levelMinimum?: Container.app.pengaturanRepository.getValue(KeyPengaturan.LEVEL_MINIMUM_STOK)
+        levelMinimum?: SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.LEVEL_MINIMUM_STOK)
     }
 
     public boolean periksaLevel() {

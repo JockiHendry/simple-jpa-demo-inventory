@@ -31,6 +31,7 @@ import domain.pembelian.PurchaseOrder
 import domain.pembelian.StatusPurchaseOrder
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 
 class PurchaseOrderTests extends GriffonUnitTestCase {
 
@@ -40,12 +41,12 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
-        Container.app.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
-        Container.app.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     public void testSisaBelumDiterima() {

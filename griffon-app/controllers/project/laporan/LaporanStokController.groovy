@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 package project.laporan
-
-import domain.Container
 import domain.inventory.ProdukRepository
-
 import javax.swing.SwingUtilities
 
 class LaporanStokController {
 
     LaporanStokModel model
     def view
-    ProdukRepository repo = Container.app.produkRepository
+    ProdukRepository produkRepository
 
     def tampilkanLaporan = {
-        model.result = repo.findAllStokProdukByDsl([orderBy: 'gudang__nama,produk__nama']) {
+        model.result = produkRepository.findAllStokProdukByDsl([orderBy: 'gudang__nama,produk__nama']) {
             if (model.produkSearch) {
                 produk__nama like("%${model.produkSearch}%")
             }

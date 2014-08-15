@@ -17,8 +17,6 @@ package project.penjualan
 
 import ast.NeedSupervisorPassword
 import domain.Container
-import domain.exception.DataTidakBolehDiubah
-import domain.penjualan.KonsumenRepository
 import domain.penjualan.PencairanPoin
 import domain.penjualan.PencairanPoinPotongPiutang
 import domain.penjualan.PencairanPoinRepository
@@ -27,10 +25,8 @@ import domain.penjualan.PencairanPoinTukarUang
 import domain.validation.InputPencairanPoin
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
-import javax.validation.groups.Default
 import java.awt.Dimension
 import java.text.DateFormat
 
@@ -38,11 +34,9 @@ class PencairanPoinController {
 
     PencairanPoinModel model
     def view
-
-    PencairanPoinRepository repo
+    PencairanPoinRepository pencairanPoinRepository
 
     void mvcGroupInit(Map args) {
-        repo = Container.app.pencairanPoinRepository
         init()
         search()
     }
@@ -52,7 +46,7 @@ class PencairanPoinController {
         execInsideUISync {
             model.konsumenList.clear()
         }
-        List konsumen = repo.findAllKonsumen()
+        List konsumen = pencairanPoinRepository.findAllKonsumen()
         execInsideUISync {
             model.konsumenList.addAll(konsumen)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
@@ -61,7 +55,7 @@ class PencairanPoinController {
     }
 
     def search = {
-        List result = repo.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch)
+        List result = pencairanPoinRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch)
         execInsideUISync {
             model.pencairanPoinList.clear()
             model.pencairanPoinList.addAll(result)
@@ -87,13 +81,13 @@ class PencairanPoinController {
             return
         }
 
-        if (!repo.validate(pencairanPoin, InputPencairanPoin, model)) {
+        if (!pencairanPoinRepository.validate(pencairanPoin, InputPencairanPoin, model)) {
             JOptionPane.showMessageDialog(null, "Errosr = " + model.errors)
             return
         }
 
         try {
-            pencairanPoin = repo.buat(pencairanPoin)
+            pencairanPoin = pencairanPoinRepository.buat(pencairanPoin)
             execInsideUISync {
                 model.pencairanPoinList << pencairanPoin
                 view.table.changeSelection(model.pencairanPoinList.size() - 1, 0, false, false)
@@ -109,7 +103,7 @@ class PencairanPoinController {
     def delete = {
         try {
             PencairanPoin pencairanPoin = view.table.selectionModel.selected[0]
-            pencairanPoin = repo.hapus(pencairanPoin)
+            pencairanPoin = pencairanPoinRepository.hapus(pencairanPoin)
 
             execInsideUISync {
                 view.table.selectionModel.selected[0] = pencairanPoin

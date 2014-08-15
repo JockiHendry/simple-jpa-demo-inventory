@@ -23,11 +23,14 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class BilyetGiroTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(BilyetGiroTest)
+
+    BilyetGiroRepository bilyetGiroRepository = SimpleJpaUtil.container.bilyetGiroRepository
 
     protected void setUp() {
         super.setUp()
@@ -41,30 +44,28 @@ class BilyetGiroTest extends DbUnitTestCase {
     }
 
     public void testPencairan() {
-        BilyetGiroRepository repo = Container.app.bilyetGiroRepository
-        repo.withTransaction {
-            BilyetGiro bilyetGiro = repo.cari('AB-111')[0]
+        bilyetGiroRepository.withTransaction {
+            BilyetGiro bilyetGiro = bilyetGiroRepository.cari('AB-111')[0]
             bilyetGiro.cairkan(LocalDate.now())
             assertTrue(bilyetGiro.sudahDicairkan())
         }
-        FakturJualOlehSales f = repo.findFakturJualOlehSalesById(-6l)
+        FakturJualOlehSales f = bilyetGiroRepository.findFakturJualOlehSalesById(-6l)
         assertEquals(StatusFakturJual.LUNAS, f.status)
     }
 
     public void testClearingService() {
-        BilyetGiroRepository repo = Container.app.bilyetGiroRepository
         BilyetGiro bg1 = new BilyetGiro(nomorSeri: 'BS-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
         BilyetGiro bg2 = new BilyetGiro(nomorSeri: 'BS-0002', nominal: 10000, jatuhTempo: LocalDate.now().plusMonths(1))
-        repo.buat(bg1)
-        repo.buat(bg2)
+        bilyetGiroRepository.buat(bg1)
+        bilyetGiroRepository.buat(bg2)
 
         Container.app.bilyetGiroClearingService.periksaJatuhTempo()
 
-        bg1 = repo.findBilyetGiroByNomorSeri('BS-0001')
+        bg1 = bilyetGiroRepository.findBilyetGiroByNomorSeri('BS-0001')
         assertEquals(LocalDate.now(), bg1.tanggalPencairan)
         assertTrue(bg1.sudahDicairkan())
 
-        bg2 = repo.findBilyetGiroByNomorSeri('BS-0002')
+        bg2 = bilyetGiroRepository.findBilyetGiroByNomorSeri('BS-0002')
         assertNull(bg2.tanggalPencairan)
         assertFalse(bg2.sudahDicairkan())
     }

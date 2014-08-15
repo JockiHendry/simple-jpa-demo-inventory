@@ -16,27 +16,22 @@
 package project.pembelian
 
 import ast.NeedSupervisorPassword
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.*
 import domain.validation.TanpaGudang
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import domain.exception.DataDuplikat
-
 import java.awt.Dimension
 
 class PenerimaanBarangController {
 
     PenerimaanBarangModel model
     def view
-
     PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        purchaseOrderRepository = Container.app.purchaseOrderRepository
         model.purchaseOrder = args.'purchaseOrder'
         model.editable = args.containsKey('editable')? args.'editable': false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true

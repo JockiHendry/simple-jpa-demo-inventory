@@ -15,7 +15,6 @@
  */
 package project.inventory
 
-import domain.Container
 import domain.inventory.PeriodeItemStok
 import domain.inventory.ProdukRepository
 
@@ -27,7 +26,6 @@ class ItemStokController {
     ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
-        produkRepository = Container.app.produkRepository
         model.parent = args.'parent'
         init()
     }

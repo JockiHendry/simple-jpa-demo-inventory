@@ -16,22 +16,17 @@
 package project.inventory
 
 import domain.inventory.*
-import project.inventory.SatuanModel
-
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
 
 class SatuanController {
 
     SatuanModel model
     def view
-
     SatuanRepository satuanRepository
 
     void mvcGroupInit(Map args) {
-        satuanRepository = Container.app.satuanRepository
         search()
     }
 

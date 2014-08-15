@@ -24,11 +24,13 @@ import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
+import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import domain.util.NomorService
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -195,7 +197,7 @@ class FakturJualRepository {
         }
 
         // Hitung tanggal jatuh tempo
-        fakturJual.jatuhTempo = fakturJual.tanggal.plusDays(Container.app.pengaturanRepository.getValue(KeyPengaturan.MASA_JATUH_TEMPO))
+        fakturJual.jatuhTempo = fakturJual.tanggal.plusDays(SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.MASA_JATUH_TEMPO))
 
         persist(fakturJual)
 
@@ -222,7 +224,7 @@ class FakturJualRepository {
     FakturJualEceran buatFakturJualEceran(FakturJualEceran fakturJualEceran) {
 
         // Periksa apakah barang dalam gudang utama mencukupi
-        Gudang gudangUtama = Container.app.gudangRepository.cariGudangUtama()
+        Gudang gudangUtama = (SimpleJpaUtil.container['gudangRepository'] as GudangRepository).cariGudangUtama()
         fakturJualEceran.listItemFaktur.each {
             Produk produk = merge(it.produk)
             int jumlahTersedia = produk.stok(gudangUtama).jumlah

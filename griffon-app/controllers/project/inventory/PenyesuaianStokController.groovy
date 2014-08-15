@@ -23,7 +23,6 @@ import domain.inventory.PenyesuaianStokRepository
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
@@ -32,11 +31,9 @@ class PenyesuaianStokController {
 
     PenyesuaianStokModel model
     def view
-
-    PenyesuaianStokRepository repo
+    PenyesuaianStokRepository penyesuaianStokRepository
 
     void mvcGroupInit(Map args) {
-        repo = Container.app.penyesuaianStokRepository
         init()
         search()
     }
@@ -46,7 +43,7 @@ class PenyesuaianStokController {
         execInsideUISync {
             model.gudangList.clear()
         }
-        List gudang = repo.findAllGudang()
+        List gudang = penyesuaianStokRepository.findAllGudang()
         execInsideUISync {
             model.gudangList.addAll(gudang)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
@@ -58,7 +55,7 @@ class PenyesuaianStokController {
     }
 
     def search = {
-        List result = repo.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.gudangSearch)
+        List result = penyesuaianStokRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.gudangSearch)
         execInsideUISync {
             model.penyesuaianStokList.clear()
             model.penyesuaianStokList.addAll(result)
@@ -77,18 +74,18 @@ class PenyesuaianStokController {
             return
         }
 
-        if (!repo.validate(penyesuaianStok, Default, model)) return
+        if (!penyesuaianStokRepository.validate(penyesuaianStok, Default, model)) return
 
         try {
             if (penyesuaianStok.id == null) {
-                repo.buat(penyesuaianStok)
+                penyesuaianStokRepository.buat(penyesuaianStok)
                 execInsideUISync {
                     model.penyesuaianStokList << penyesuaianStok
                     view.table.changeSelection(model.penyesuaianStokList.size() - 1, 0, false, false)
                     clear()
                 }
             } else {
-                repo.update(penyesuaianStok)
+                penyesuaianStokRepository.update(penyesuaianStok)
                 execInsideUISync {
                     view.table.selectionModel.selected[0] = penyesuaianStok
                     clear()
@@ -102,7 +99,7 @@ class PenyesuaianStokController {
     @NeedSupervisorPassword
     def delete = {
         PenyesuaianStok penyesuaianStok = view.table.selectionModel.selected[0]
-        penyesuaianStok = repo.hapus(penyesuaianStok)
+        penyesuaianStok = penyesuaianStokRepository.hapus(penyesuaianStok)
         execInsideUISync {
             view.table.selectionModel.selected[0] = penyesuaianStok
             clear()

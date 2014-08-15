@@ -17,7 +17,7 @@ package project.main
 
 import domain.Container
 import domain.pengaturan.KeyPengaturan
-
+import domain.pengaturan.PengaturanRepository
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
@@ -26,6 +26,7 @@ class SupervisorPasswordController {
     def model
     def view
     def container = Container.app
+    PengaturanRepository pengaturanRepository
 
     def proses = {
 
@@ -43,7 +44,7 @@ class SupervisorPasswordController {
         }
 
         if (!container.passwordService.periksaPassword(
-                container.pengaturanRepository.getValue(KeyPengaturan.SUPERVISOR_PASSWORD),
+                pengaturanRepository.getValue(KeyPengaturan.SUPERVISOR_PASSWORD),
                 view.password.getPassword())) {
             model.errors['password'] = 'Password Anda salah!'
             return

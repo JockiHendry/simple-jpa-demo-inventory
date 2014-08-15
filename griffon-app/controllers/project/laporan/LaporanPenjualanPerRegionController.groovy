@@ -15,7 +15,6 @@
  */
 package project.laporan
 
-import domain.Container
 import domain.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import javax.swing.SwingUtilities
@@ -24,7 +23,7 @@ class LaporanPenjualanPerRegionController {
 
     LaporanPenjualanPerRegionModel model
     def view
-    FakturJualRepository repo = Container.app.fakturJualRepository
+    FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
@@ -32,7 +31,7 @@ class LaporanPenjualanPerRegionController {
     }
 
     def tampilkanLaporan = {
-        model.result = repo.findAllFakturJualOlehSalesByDslFetchItems([orderBy: 'konsumen__region__nama,tanggal,nomor']) {
+        model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchItems([orderBy: 'konsumen__region__nama,tanggal,nomor']) {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
             if (model.regionSearch) {
                 and()

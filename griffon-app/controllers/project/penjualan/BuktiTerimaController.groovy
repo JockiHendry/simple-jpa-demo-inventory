@@ -23,7 +23,6 @@ import domain.penjualan.FakturJualRepository
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -33,11 +32,9 @@ class BuktiTerimaController {
 
     BuktiTerimaModel model
     def view
-
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        fakturJualRepository = Container.app.fakturJualRepository
         init()
         search()
     }

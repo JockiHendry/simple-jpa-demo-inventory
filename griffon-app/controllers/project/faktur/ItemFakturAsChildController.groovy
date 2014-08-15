@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.pembelian
+package project.faktur
 
 import domain.Container
 import domain.faktur.Diskon
@@ -21,6 +21,8 @@ import domain.faktur.ItemFaktur
 import domain.inventory.Produk
 import domain.pembelian.FakturBeli
 import domain.pembelian.PurchaseOrder
+import domain.pembelian.PurchaseOrderRepository
+import domain.penjualan.KonsumenRepository
 import project.inventory.ProdukController
 
 import javax.swing.event.ListSelectionEvent
@@ -30,6 +32,8 @@ class ItemFakturAsChildController {
 
     ItemFakturAsChildModel model
     def view
+    PurchaseOrderRepository purchaseOrderRepository
+    KonsumenRepository konsumenRepository
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
@@ -45,7 +49,7 @@ class ItemFakturAsChildController {
         ItemFaktur itemFaktur = new ItemFaktur(produk: model.produk, jumlah: model.jumlah, harga: model.harga, keterangan: model.keterangan)
         itemFaktur.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
 
-        if (!Container.app.purchaseOrderRepository.validate(itemFaktur, Default, model)) return
+        if (!purchaseOrderRepository.validate(itemFaktur, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             execInsideUISync {
@@ -67,7 +71,7 @@ class ItemFakturAsChildController {
             model.produk = produk
             if ((model.parent==null) || (model.parent instanceof PurchaseOrder) || (model.parent instanceof FakturBeli)) {
                 if (model.konsumen) {
-                    model.harga = Container.app.konsumenRepository.hargaTerakhir(model.konsumen, model.produk)
+                    model.harga = konsumenRepository.hargaTerakhir(model.konsumen, model.produk)
                 } else {
                     model.harga = produk.hargaDalamKota
                 }

@@ -25,11 +25,14 @@ import domain.pembelian.StatusPurchaseOrder
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PurchaseOrderTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(PurchaseOrderTest)
+
+    PurchaseOrderRepository purchaseOrderRepository = SimpleJpaUtil.container.purchaseOrderRepository
 
     protected void setUp() {
         super.setUp()
@@ -43,53 +46,49 @@ class PurchaseOrderTest extends DbUnitTestCase {
     }
 
     public void testTidakBolehDiUpdate() {
-        PurchaseOrderRepository repo = Container.app.purchaseOrderRepository
-        PurchaseOrder p = repo.findPurchaseOrderById(-5l)
+        PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
         GroovyAssert.shouldFail(DataTidakBolehDiubah) {
-            repo.update(p)
+            purchaseOrderRepository.update(p)
         }
     }
 
     public void testTidakBolehDiHapus() {
-        PurchaseOrderRepository repo = Container.app.purchaseOrderRepository
-        PurchaseOrder p = repo.findPurchaseOrderById(-5l)
+        PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
         GroovyAssert.shouldFail(DataTidakBolehDiubah) {
-            repo.hapus(p)
+            purchaseOrderRepository.hapus(p)
         }
     }
 
     public void testPerubahanStokPadaTambahPenerimaanBarang() {
-        PurchaseOrderRepository repo = Container.app.purchaseOrderRepository
-        repo.withTransaction {
-            PurchaseOrder p = repo.findPurchaseOrderById(-1l)
+        purchaseOrderRepository.withTransaction {
+            PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-1l)
             assertEquals(37, p.listItemFaktur[0].produk.jumlah)
             assertEquals(27, p.listItemFaktur[1].produk.jumlah)
             assertEquals(28, p.listItemFaktur[2].produk.jumlah)
 
-            PenerimaanBarang penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING!!', tanggal: LocalDate.now(), gudang: repo.findGudangById(-1l))
-            penerimaanBarang.tambah(new ItemBarang(repo.findProdukById(-1), 5))
-            penerimaanBarang.tambah(new ItemBarang(repo.findProdukById(-2), 3))
+            PenerimaanBarang penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
+            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-1), 5))
+            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-2), 3))
             p.tambah(penerimaanBarang)
-            assertEquals(42, repo.findProdukById(-1).jumlah)
-            assertEquals(30, repo.findProdukById(-2).jumlah)
-            penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING 2!!', tanggal: LocalDate.now(), gudang: repo.findGudangById(-1l))
-            penerimaanBarang.tambah(new ItemBarang(repo.findProdukById(-3), 4))
+            assertEquals(42, purchaseOrderRepository.findProdukById(-1).jumlah)
+            assertEquals(30, purchaseOrderRepository.findProdukById(-2).jumlah)
+            penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING 2!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
+            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-3), 4))
             p.tambah(penerimaanBarang)
-            assertEquals(32, repo.findProdukById(-3).jumlah)
+            assertEquals(32, purchaseOrderRepository.findProdukById(-3).jumlah)
             assertTrue(p.diterimaPenuh())
         }
 
     }
 
     public void testPerubahanStokPadaHapusPenerimaanBarang() {
-        PurchaseOrderRepository repo = Container.app.purchaseOrderRepository
-        repo.withTransaction {
-            PurchaseOrder p = repo.findPurchaseOrderById(-3l)
+        purchaseOrderRepository.withTransaction {
+            PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-3l)
             assertEquals(1, p.listPenerimaanBarang.size())
             assertEquals(27, p.listItemFaktur[0].produk.jumlah)
 
             p.hapus(p.listPenerimaanBarang[0])
-            assertEquals(25, repo.findProdukById(-2l).jumlah)
+            assertEquals(25, purchaseOrderRepository.findProdukById(-2l).jumlah)
             assertEquals(StatusPurchaseOrder.DIBUAT, p.status)
         }
     }

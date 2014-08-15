@@ -15,20 +15,16 @@
  */
 package project.penjualan
 
-import domain.Container
 import domain.penjualan.FakturJualRepository
-
 import java.text.NumberFormat
 
 class FakturJualOlehSalesAsChildController {
 
     FakturJualOlehSalesAsChildModel model
     def view
-
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        fakturJualRepository = Container.app.fakturJualRepository
         model.konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(args.'konsumen'.id)
         init()
     }

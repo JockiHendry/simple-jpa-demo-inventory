@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.pembelian
+package project.faktur
 
 import ca.odell.glazedlists.BasicEventList
-import domain.inventory.DaftarBarang
-import domain.inventory.ItemBarang
-import domain.inventory.Produk
+import domain.faktur.BilyetGiro
 import groovy.beans.Bindable
+import org.joda.time.LocalDate
 
-class ItemBarangAsChildModel {
+class BilyetGiroModel {
 
-    @Bindable boolean allowTambahProduk
+    @Bindable Long id
+    @Bindable String nomorSeri
+    @Bindable BigDecimal nominal
+    @Bindable LocalDate jatuhTempo
+    @Bindable LocalDate tanggalPencairan
+    @Bindable String namaBank
 
-    def parent
+    @Bindable String nomorSeriSearch
 
-    @Bindable Produk produk
-    @Bindable Integer jumlah
+    BasicEventList<BilyetGiro> bilyetGiroList = new BasicEventList<>()
 
-    BasicEventList<ItemBarang> itemBarangList = new BasicEventList<>()
-
-    @Bindable boolean editable
+    @Bindable boolean popupMode
 
 }

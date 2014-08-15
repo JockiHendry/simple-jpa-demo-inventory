@@ -23,6 +23,7 @@ import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
@@ -35,11 +36,16 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(FakturJualOlehSalesTest)
+
+    GudangRepository gudangRepository = SimpleJpaUtil.container.gudangRepository
+    FakturJualRepository fakturJualRepository = SimpleJpaUtil.container.fakturJualRepository
+    KonsumenRepository konsumenRepository = SimpleJpaUtil.container.konsumenRepository
 
     protected void setUp() {
         super.setUp()
@@ -53,68 +59,62 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testBuatFakturJualOlehSalesDalamKota() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        KonsumenRepository konsumenRepo = Container.app.konsumenRepository
         Container.app.nomorService.refreshAll()
 
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Sales sales = repo.findSalesById(-1l)
-        Konsumen konsumen = repo.findKonsumenById(-1l)
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
 
         // Periksa harga terakhir sebelum faktur dibuat
-        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkA))
-        assertEquals(1500, konsumenRepo.hargaTerakhir(konsumen, produkB))
+        assertEquals(1000, konsumenRepository.hargaTerakhir(konsumen, produkA))
+        assertEquals(1500, konsumenRepository.hargaTerakhir(konsumen, produkB))
 
-        fakturJualOlehSales = repo.buat(fakturJualOlehSales, true)
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
 
         assertEquals(StatusFakturJual.DIBUAT, fakturJualOlehSales.status)
         assertEquals(LocalDate.now().plusDays(30), fakturJualOlehSales.jatuhTempo)
 
         // Periksa apakah faktur ada di konsumen
-        konsumen = repo.findKonsumenByIdFetchFakturBelumLunas(-1l)
+        konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-1l)
         assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
 
         // Periksa apakah harga terakhir terubah
-        assertEquals(8000, konsumenRepo.hargaTerakhir(konsumen, produkA))
-        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkB))
+        assertEquals(8000, konsumenRepository.hargaTerakhir(konsumen, produkA))
+        assertEquals(1000, konsumenRepository.hargaTerakhir(konsumen, produkB))
     }
 
     public void testLimitDalamKota() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
         Container.app.nomorService.refreshAll()
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Sales sales = repo.findSalesById(-1l)
-        Konsumen konsumen = repo.findKonsumenById(-1l)
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 100000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 100000))
         shouldFail(MelebihiBatasKredit) {
-            repo.buat(fakturJualOlehSales)
+            fakturJualRepository.buat(fakturJualOlehSales)
         }
     }
 
     public void testBuatFakturJualOlehSalesLuarKota() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        KonsumenRepository konsumenRepo = Container.app.konsumenRepository
-
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Sales sales = repo.findSalesById(-2l)
-        Konsumen konsumen = repo.findKonsumenById(-2l)
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-2l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 3, 1000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1500))
 
         // Periksa harga terakhir sebelum faktur dibuat
-        assertEquals(1100, konsumenRepo.hargaTerakhir(konsumen, produkA))
-        assertEquals(1600, konsumenRepo.hargaTerakhir(konsumen, produkB))
+        assertEquals(1100, konsumenRepository.hargaTerakhir(konsumen, produkA))
+        assertEquals(1600, konsumenRepository.hargaTerakhir(konsumen, produkB))
 
-        fakturJualOlehSales = repo.buat(fakturJualOlehSales, true)
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
 
 
         // Periksa faktur
@@ -125,36 +125,35 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertTrue(fakturJualOlehSales.pengeluaranBarang.sudahDiterima())
 
         // Periksa apakah jumlah barang berkurang
-        repo.withTransaction {
-            produkA = repo.findProdukById(-1l)
-            produkB = repo.findProdukById(-2l)
+        fakturJualRepository.withTransaction {
+            produkA = fakturJualRepository.findProdukById(-1l)
+            produkB = fakturJualRepository.findProdukById(-2l)
             assertEquals(1, produkA.stok(sales.gudang).jumlah)
             assertEquals(1, produkB.stok(sales.gudang).jumlah)
         }
 
         // Periksa piutang
-        repo.withTransaction {
+        fakturJualRepository.withTransaction {
             fakturJualOlehSales = merge(fakturJualOlehSales)
             assertNotNull(fakturJualOlehSales.piutang)
             assertEquals(fakturJualOlehSales.total(), fakturJualOlehSales.sisaPiutang())
         }
 
         // Periksa apakah faktur diterima oleh konsumen
-        repo.withTransaction {
+        fakturJualRepository.withTransaction {
             konsumen = findKonsumenByIdFetchFakturBelumLunas(-2l)
             assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
             assertEquals(fakturJualOlehSales.total(), konsumen.jumlahPiutang())
         }
         // Periksa apakah harga terakhir terubah
-        assertEquals(1000, konsumenRepo.hargaTerakhir(konsumen, produkA))
-        assertEquals(1500, konsumenRepo.hargaTerakhir(konsumen, produkB))
+        assertEquals(1000, konsumenRepository.hargaTerakhir(konsumen, produkA))
+        assertEquals(1500, konsumenRepository.hargaTerakhir(konsumen, produkB))
 
     }
 
     public void testBatalkanPengeluaranBarangUntukSalesLuarKota() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        repo.withTransaction {
-            FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-3l)
+        fakturJualRepository.withTransaction {
+            FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-3l)
             shouldFail(DataTidakBolehDiubah) {
                 fakturJualOlehSales.hapusPengeluaranBarang()
             }
@@ -162,9 +161,8 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testPengantaran() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        repo.withTransaction {
-            FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-4l)
+        fakturJualRepository.withTransaction {
+            FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-4l)
             fakturJualOlehSales.kirim('Final Destination', 'Jocker')
             assertEquals(StatusFakturJual.DIANTAR, fakturJualOlehSales.status)
             assertNotNull(fakturJualOlehSales.pengeluaranBarang)
@@ -174,25 +172,24 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals('Jocker', fakturJualOlehSales.pengeluaranBarang.namaSupir)
 
             // Cek jumlah produk berkurang
-            Produk produkA = repo.findProdukById(-1l)
-            Produk produkB = repo.findProdukById(-2l)
-            assertEquals(6, produkA.stok(Container.app.gudangRepository.cariGudangUtama()).jumlah)
-            assertEquals(11, produkB.stok(Container.app.gudangRepository.cariGudangUtama()).jumlah)
+            Produk produkA = fakturJualRepository.findProdukById(-1l)
+            Produk produkB = fakturJualRepository.findProdukById(-2l)
+            assertEquals(6, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
+            assertEquals(11, produkB.stok(gudangRepository.cariGudangUtama()).jumlah)
 
             // Pembatalan
             fakturJualOlehSales.hapusPengeluaranBarang()
             assertEquals(StatusFakturJual.DIBUAT, fakturJualOlehSales.status)
-            produkA = repo.findProdukById(-1l)
-            produkB = repo.findProdukById(-2l)
-            assertEquals(10, produkA.stok(Container.app.gudangRepository.cariGudangUtama()).jumlah)
-            assertEquals(14, produkB.stok(Container.app.gudangRepository.cariGudangUtama()).jumlah)
+            produkA = fakturJualRepository.findProdukById(-1l)
+            produkB = fakturJualRepository.findProdukById(-2l)
+            assertEquals(10, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
+            assertEquals(14, produkB.stok(gudangRepository.cariGudangUtama()).jumlah)
         }
     }
 
     public void testPenerimaan() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        repo.withTransaction {
-            FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-5l)
+        fakturJualRepository.withTransaction {
+            FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-5l)
             fakturJualOlehSales.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))
             assertEquals(StatusFakturJual.DITERIMA, fakturJualOlehSales.status)
             assertEquals(LocalDate.now(), fakturJualOlehSales.pengeluaranBarang.buktiTerima.tanggalTerima)
@@ -201,7 +198,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals(fakturJualOlehSales.total(), fakturJualOlehSales.piutang.jumlah)
 
             // Memeriksa poin konsumen
-            Konsumen mrNiceGuy = repo.findKonsumenById(-1l)
+            Konsumen mrNiceGuy = fakturJualRepository.findKonsumenById(-1l)
             assertEquals(52, mrNiceGuy.poinTerkumpul)
 
             // Menghapus penerimaan
@@ -210,7 +207,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertNull(fakturJualOlehSales.piutang)
 
             // Memeriksa poin konsumen setelah penghapusan
-            mrNiceGuy = repo.findKonsumenById(-1l)
+            mrNiceGuy = fakturJualRepository.findKonsumenById(-1l)
             assertEquals(50, mrNiceGuy.poinTerkumpul)
 
             // Menambah penerimaan, melakukan pembayaran, sehingga penerimaan tidak boleh dihapus
@@ -223,24 +220,23 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testPembayaran() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
-        FakturJualOlehSales fakturJualOlehSales = repo.findFakturJualOlehSalesById(-7l)
+        FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-7l)
         BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
-        fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
+        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000), bg)
         assertEquals(0, fakturJualOlehSales.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertEquals(20000, fakturJualOlehSales.piutang.sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
-        assertEquals(bg, repo.findBilyetGiroByNomorSeri('NX-0001'))
+        assertEquals(bg, fakturJualRepository.findBilyetGiroByNomorSeri('NX-0001'))
 
-        fakturJualOlehSales = repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000))
+        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 10000))
         assertEquals(10000, fakturJualOlehSales.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertEquals(10000, fakturJualOlehSales.piutang.sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertFalse(fakturJualOlehSales.piutang.lunas)
 
         shouldFail(IllegalArgumentException) {
-            repo.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 100000))
+            fakturJualRepository.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 100000))
         }
 
-        repo.withTransaction {
+        fakturJualRepository.withTransaction {
 
             bg = findBilyetGiroByNomorSeri('NX-0001')
             fakturJualOlehSales = findFakturJualOlehSalesById(-7l)
@@ -255,45 +251,43 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testBonus() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
         Container.app.nomorService.refreshAll()
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Sales sales = repo.findSalesById(-1l)
-        Konsumen konsumen = repo.findKonsumenById(-1l)
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
 
         // Tambah bonus
-        fakturJualOlehSales = repo.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 1), new ItemBarang(produkB, 3)])
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 1), new ItemBarang(produkB, 3)])
 
         // Periksa bahwa total faktur tidak dipengaruhi oleh bonus
         assertEquals(69000, fakturJualOlehSales.total())
 
         // Periksa bahwa jumlah barang sudah berkurang
-        repo.kirim(fakturJualOlehSales, 'Alamat', 'Supir')
-        repo.withTransaction {
-            produkA = repo.findProdukById(-1l)
-            produkB = repo.findProdukById(-2l)
+        fakturJualRepository.kirim(fakturJualOlehSales, 'Alamat', 'Supir')
+        fakturJualRepository.withTransaction {
+            produkA = fakturJualRepository.findProdukById(-1l)
+            produkB = fakturJualRepository.findProdukById(-2l)
             assertEquals(1, produkA.stok(sales.gudang).jumlah)  // dari 10 berkurang sebanyak 8 item + 1 item bonus
             assertEquals(6, produkB.stok(sales.gudang).jumlah) // dari 14 berkurang sebanyak 5 item + 3 item bonus
         }
     }
 
     public void testBonusGagal() {
-        FakturJualRepository repo = Container.app.fakturJualRepository
         Container.app.nomorService.refreshAll()
-        Produk produkA = repo.findProdukById(-1l)
-        Produk produkB = repo.findProdukById(-2l)
-        Sales sales = repo.findSalesById(-1l)
-        Konsumen konsumen = repo.findKonsumenById(-1l)
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
 
         shouldFail(StokTidakCukup) {
-            repo.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 5), new ItemBarang(produkB, 3)])
+            fakturJualRepository.buat(fakturJualOlehSales, true, [new ItemBarang(produkA, 5), new ItemBarang(produkB, 3)])
         }
     }
 

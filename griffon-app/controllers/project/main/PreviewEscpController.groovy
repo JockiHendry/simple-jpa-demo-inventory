@@ -17,23 +17,23 @@ package project.main
 
 import domain.Container
 import domain.pengaturan.KeyPengaturan
+import domain.pengaturan.PengaturanRepository
 import simple.escp.data.DataSources
-import simple.escp.fill.FillJob
 import simple.escp.json.JsonTemplate
 import simple.escp.swing.PrintPreviewPane
-import java.awt.BorderLayout
 
 class PreviewEscpController {
 
     def model
     def view
+    PengaturanRepository pengaturanRepository
 
     void mvcGroupInit(Map args) {
         JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
         def source = args.'dataSource'
         Map options = [:]
         options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null) ?: Container.app.currentUser.nama
-        options['companyName'] = Container.app.pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
+        options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         PrintPreviewPane printPreviewPane = view.printPreviewPane
         printPreviewPane.display(template, DataSources.from(source, options))
     }

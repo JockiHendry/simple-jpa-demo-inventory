@@ -27,6 +27,7 @@ import domain.util.NomorService
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 
 class FakturJualEceranTests extends GriffonUnitTestCase {
 
@@ -36,12 +37,12 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
-        Container.app.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
-        Container.app.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     public void testAntar() {

@@ -54,23 +54,6 @@ class Container {
 
     User currentUser
 
-    GudangRepository gudangRepository
-    ProdukRepository produkRepository
-    SupplierRepository supplierRepository
-    PengaturanRepository pengaturanRepository
-    SalesRepository salesRepository
-    RegionRepository regionRepository
-    PurchaseOrderRepository purchaseOrderRepository
-    SatuanRepository satuanRepository
-    FakturJualRepository fakturJualRepository
-    KonsumenRepository konsumenRepository
-    BilyetGiroRepository bilyetGiroRepository
-    TransferRepository transferRepository
-    UserRepository userRepository
-    PenyesuaianStokRepository penyesuaianStokRepository
-    PencairanPoinRepository pencairanPoinRepository
-    PesanRepository pesanRepository
-
     InventoryEventConsumer inventoryEventConsumer
     BilyetGiroEventConsumer bilyetGiroEventConsumer
 
@@ -84,24 +67,6 @@ class Container {
     }
 
     public void setup() {
-        // Create repositories
-        gudangRepository = new GudangRepository()
-        produkRepository = new ProdukRepository()
-        supplierRepository = new SupplierRepository()
-        pengaturanRepository = new PengaturanRepository()
-        salesRepository = new SalesRepository()
-        regionRepository = new RegionRepository()
-        purchaseOrderRepository = new PurchaseOrderRepository()
-        satuanRepository = new SatuanRepository()
-        fakturJualRepository = new FakturJualRepository()
-        konsumenRepository = new KonsumenRepository()
-        bilyetGiroRepository = new BilyetGiroRepository()
-        transferRepository = new TransferRepository()
-        userRepository = new UserRepository()
-        penyesuaianStokRepository = new PenyesuaianStokRepository()
-        pencairanPoinRepository = new PencairanPoinRepository()
-        pesanRepository = new PesanRepository()
-
         // Create services
         passwordService = new PasswordService()
         nomorService = new NomorService()

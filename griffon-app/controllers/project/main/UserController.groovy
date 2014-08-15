@@ -19,17 +19,14 @@ import domain.user.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
 
 class UserController {
 
     UserModel model
     def view
-
     UserRepository userRepository
 
     void mvcGroupInit(Map args) {
-        userRepository = Container.app.userRepository
         init()
         search()
     }

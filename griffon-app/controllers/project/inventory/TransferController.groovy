@@ -31,11 +31,9 @@ class TransferController {
 
     TransferModel model
     def view
-
     TransferRepository transferRepository
 
     void mvcGroupInit(Map args) {
-        transferRepository = Container.app.transferRepository
         init()
         search()
     }

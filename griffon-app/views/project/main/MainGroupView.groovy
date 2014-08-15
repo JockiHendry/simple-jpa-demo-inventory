@@ -74,7 +74,7 @@ actions {
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
     action(id: 'piutang', name: 'Piutang', actionCommandKey: 'piutang', mnemonic: KeyEvent.VK_I,
         smallIcon: imageIcon('/menu_piutang.png'), closure: controller.switchPage)
-    action(id: 'giro', name: 'Giro', actionCommandKey: 'giro', mnemonic: KeyEvent.VK_G,
+    action(id: 'bilyetGiro', name: 'Giro', actionCommandKey: 'bilyetGiro', mnemonic: KeyEvent.VK_G,
         smallIcon: imageIcon('/menu_giro.png'), closure: controller.switchPage)
     action(id: 'pencairanPoin', name: 'Poin', actionCommandKey: 'pencairanPoin', mnemonic: KeyEvent.VK_O,
         smallIcon: imageIcon('/menu_pencairan_poin.png'), closure: controller.switchPage)
@@ -171,7 +171,7 @@ application(id: 'mainFrame',
                     visible: bind {model.hutangVisible})
                 toggleButton(buttonGroup: buttons, action: piutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.piutangVisible})
-                toggleButton(buttonGroup: buttons, action: giro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                toggleButton(buttonGroup: buttons, action: bilyetGiro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.giroVisible})
                 toggleButton(buttonGroup: buttons, action: pencairanPoin, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.pencairanPoinVisible})

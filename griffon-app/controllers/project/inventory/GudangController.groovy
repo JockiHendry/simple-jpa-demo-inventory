@@ -16,12 +16,10 @@
 
 package project.inventory
 
-import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
 import domain.inventory.Gudang
 import domain.inventory.GudangRepository
-
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
@@ -33,7 +31,6 @@ class GudangController {
     GudangRepository gudangRepository
 
     void mvcGroupInit(Map args) {
-        gudangRepository = Container.app.gudangRepository
         search()
     }
 

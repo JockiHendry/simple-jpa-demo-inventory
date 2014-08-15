@@ -15,21 +15,17 @@
  */
 package project.main
 
-import domain.Container
 import domain.util.Pesan
 import domain.util.PesanRepository
-
 import javax.swing.JOptionPane
 
 class PesanController {
 
     PesanModel model
     def view
-
     PesanRepository pesanRepository
 
     void mvcGroupInit(Map args) {
-        pesanRepository = Container.app.pesanRepository
         refresh()
     }
 

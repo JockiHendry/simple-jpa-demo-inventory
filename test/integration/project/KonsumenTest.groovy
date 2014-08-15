@@ -29,9 +29,12 @@ import domain.penjualan.PencairanPoinPotongPiutang
 import domain.penjualan.PencairanPoinTukarBarang
 import domain.penjualan.PencairanPoinTukarUang
 import org.joda.time.LocalDate
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class KonsumenTest extends DbUnitTestCase {
+
+    KonsumenRepository konsumenRepository = SimpleJpaUtil.container.konsumenRepository
 
     protected void setUp() {
         super.setUp()
@@ -45,8 +48,7 @@ class KonsumenTest extends DbUnitTestCase {
     }
 
     public void testPotongPiutang() {
-        KonsumenRepository repo = Container.app.konsumenRepository
-        repo.withTransaction {
+        konsumenRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-3l)
             assertEquals(50000, konsumen.jumlahPiutang())
             konsumen.potongPiutang(30000)

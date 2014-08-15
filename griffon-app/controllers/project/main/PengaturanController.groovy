@@ -15,11 +15,9 @@
  */
 package project.main
 
-import domain.Container
 import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.PengaturanRepository
-
 import javax.swing.event.ListSelectionEvent
 
 class PengaturanController {
@@ -30,7 +28,6 @@ class PengaturanController {
     PengaturanRepository pengaturanRepository
 
     void mvcGroupInit(Map args) {
-        pengaturanRepository = Container.app.pengaturanRepository
         refresh()
     }
 

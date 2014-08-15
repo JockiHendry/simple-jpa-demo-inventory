@@ -20,13 +20,9 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Diskon
 import domain.pembelian.*
-import project.pembelian.FakturBeliModel
-
 import javax.swing.*
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
-
 import java.text.NumberFormat
 
 class FakturBeliController {
@@ -37,7 +33,6 @@ class FakturBeliController {
     PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        purchaseOrderRepository = Container.app.purchaseOrderRepository
         model.purchaseOrder = args.'purchaseOrder'
         model.fakturBeli = model.purchaseOrder.fakturBeli
         model.editable = args.containsKey('editable')? args.'editable': false

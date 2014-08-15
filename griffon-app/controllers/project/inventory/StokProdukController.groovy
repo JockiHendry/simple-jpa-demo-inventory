@@ -15,21 +15,17 @@
  */
 package project.inventory
 
-import domain.Container
 import domain.inventory.ProdukRepository
 import simplejpa.swing.DialogUtils
-
 import java.awt.Dimension
 
 class StokProdukController {
 
     StokProdukModel model
     def view
-
     ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
-        produkRepository = Container.app.produkRepository
         model.parent = args.'parent'
         model.stokProdukList.clear()
         model.stokProdukList.addAll(model.parent.stokSemuaGudang())

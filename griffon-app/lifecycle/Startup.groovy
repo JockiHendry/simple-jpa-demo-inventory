@@ -18,6 +18,7 @@ import domain.pengaturan.KeyPengaturan
 import domain.user.Menu
 import domain.user.User
 import org.jdesktop.swingx.JXLoginPane
+import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 import util.SplashScreen
 import javax.swing.UIManager
@@ -39,12 +40,12 @@ import java.awt.Font
  */
 
 execOutsideUI {
-    Container.app.pengaturanRepository.refreshAll()
+    SimpleJpaUtil.container.pengaturanRepository.refreshAll()
     Container.app.nomorService.refreshAll()
 
     // Mengubah ukuran huruf bila diperlukan
     execInsideUISync {
-        def ukuranHuruf = Container.app.pengaturanRepository.getValue(KeyPengaturan.UKURAN_HURUF_TABEL)
+        def ukuranHuruf = SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.UKURAN_HURUF_TABEL)
         if (ukuranHuruf > 0) {
             UIManager.put('Table.font', new FontUIResource(new Font('SansSerif', Font.PLAIN, ukuranHuruf)))
             UIManager.put('Table.rowHeight', ukuranHuruf + 1)
