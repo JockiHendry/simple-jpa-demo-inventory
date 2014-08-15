@@ -87,7 +87,7 @@ griffon.simplejpa.finders.injectInto = []
 griffon.simplejpa.validation.convertEmptyStringToNull = true
 griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
 griffon.simplejpa.entityManager.propertiesFile = "${System.getProperty('user.home')}/inventory/simplejpa.properties"
-//griffon.simplejpa.model.package = 'domain.pembelian'
+griffon.simplejpa.scaffolding.generator = 'simplejpa.scaffolding.generator.ddd.DDDGenerator'
 
 griffon {
     simplejpa {

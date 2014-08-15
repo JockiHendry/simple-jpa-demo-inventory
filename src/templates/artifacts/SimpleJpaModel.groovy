@@ -1,6 +1,6 @@
-package $packageName
+package ${g.targetPackageName}
 
-import ${domainPackage}.*
+${g.imports()}
 import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
 import groovy.beans.Bindable
@@ -9,35 +9,15 @@ import javax.swing.event.*
 import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-class $className {
+class ${g.domainClassName}Model {
 
-    @Bindable Long id
-<% fields.each { field ->
-    if (["BASIC_TYPE", "DATE"].contains(field.info)) {
-        out << "\t@Bindable ${field.type} ${field.name}\n"
-    } else if ("UNKNOWN".equals(field.info)){
-        out << "\t// ${field.name} is not supported by generator.  You will need to code it manually.\n"
-        out << "\t@Bindable ${field.type} ${field.name}\n"
-    }
-} %>
-    @Bindable String ${fields[0]?.name ?: 'replaceThis'}Search
-    @Bindable String searchMessage
-<%  fields.each { field ->
-        if (isEnumerated(field)) {
-            out << "\tEnumComboBoxModel<${field.type}> ${field.name} = new EnumComboBoxModel<${field.type}>(${field.type}.class)\n"
-        } else if (isOneToOne(field) && !isMappedBy(field)) {
-            out << "\t@Bindable ${field.type} ${field.name}\n"
-        } else if (isManyToOne(field)) {
-            out << "\tBasicEventList<${field.type}> ${field.name}List = new BasicEventList<>()\n"
-            out << "\t@Bindable DefaultEventComboBoxModel<${field.type}> ${field.name} =\n"
-            out << "\t\tGlazedListsSwing.eventComboBoxModelWithThreadProxyList(${field.name}List)\n"
-        } else if (isOneToMany(field)) {
-            out << "\tList<${field.info}> ${field.name} = []\n"
-        } else if (isManyToMany(field)) {
-            out << "\tTagChooserModel ${field.name} = new TagChooserModel()\n"
-        }
-    }
-%>
-    BasicEventList<${domainClass}> ${domainClassAsProp}List = new BasicEventList<>()
+	@Bindable Long id
+
+${g.modelAttrs(1)}
+	BasicEventList<${g.domainClassName}> ${g.domainClassGlazedListVariable} = new BasicEventList<>()
+
+	@Bindable String ${g.firstAttrSearch}
+	@Bindable String created
+	@Bindable String modified
 
 }

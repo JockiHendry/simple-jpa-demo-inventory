@@ -65,3 +65,13 @@ onSimpleJpaCommitTransaction = { TransactionHolder th ->
 onSimpleJpaRollbackTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.hide()
 }
+
+onInitializeMVCGroup = { def configuration, def mvcGroup ->
+    mvcGroup.members.each { k, v ->
+        if (v instanceof griffon.core.GriffonMvcArtifact) {
+            simplejpa.SimpleJpaUtil.container.each { String name, Object value ->
+                v.hasProperty(name)?.setProperty(v, value)
+            }
+        }
+    }
+}

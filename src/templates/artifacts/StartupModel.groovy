@@ -1,7 +1,7 @@
-package $packageName
+package ${g.targetPackageName}
 
 import groovy.beans.Bindable
 
-class $className {
-    // @Bindable String propName
+class ${g.scaffolding.startupGroupName}Model {
+	// @Bindable String propName
 }

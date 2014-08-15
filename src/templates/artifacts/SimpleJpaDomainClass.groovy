@@ -11,23 +11,30 @@ import org.joda.time.*
 @DomainClass @Entity @Canonical
 class ${className} {
 
-    // Example of attribute declaration:
-    //
-    // @Size(min=2, max=50)
-    // String name
-    //
-    // @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    // DateTime birthDate
-    //
-    // String address
-    //
-    // Integer score
-    //
-    // @NotNull @ManyToOne
-    // ClassRoom classRoom
-    //
-    // @NotEmpty @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
-    // List<ItemTransaksi> listItemTransaksi = []
+	//
+	// Example of attribute declarations:
+	//
+	// @NotEmpty @Size(min=2, max=50)
+	// String name
+	//
+	// @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	// LocalDate date
+	//
+	// @Embedded
+	// Address address
+	//
+	// @NotNull @Min(value=1l)
+	// Integer score
+	//
+	// @NotNull @ManyToOne
+	// ClassRoom classRoom
+	//
+	// @NotEmpty @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
+	// List<Others> others = []
+	//
+	// @ElementCollection @OrderColumn @NotEmpty
+	// List<Items> items = []
+	//
 
 }
 

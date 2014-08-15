@@ -54,7 +54,7 @@
           <root url="jar://$IVY_CACHE$/net.java.dev.glazedlists/glazedlists_java15/jars/glazedlists_java15-1.9.0.jar!/" />
           <root url="jar://$IVY_CACHE$/org.dbunit/dbunit/jars/dbunit-2.4.9.jar!/" />
           <root url="jar://$IVY_CACHE$/junit/junit/jars/junit-3.8.2.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-simple-jpa-runtime/jars/griffon-simple-jpa-runtime-0.7.jar!/" />
+          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-simple-jpa-runtime/jars/griffon-simple-jpa-runtime-0.8.jar!/" />
           <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-swing-runtime/jars/griffon-swing-runtime-1.4.0.jar!/" />
           <root url="jar://$IVY_CACHE$/org.codehaus.griffon/swingxbuilder/jars/swingxbuilder-0.3.jar!/" />
           <root url="jar://$IVY_CACHE$/org.swinglabs/swing-worker/jars/swing-worker-1.1.jar!/" />
@@ -73,13 +73,13 @@
         </CLASSES>
         <JAVADOC>
           <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/jxlayer-1.0.0/dist/griffon-jxlayer-1.0.0-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.7/docs/griffon-simple-jpa-runtime-0.7-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/docs/griffon-simple-jpa-runtime-0.8-javadoc.jar!/" />
           <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swing-1.4.0/docs/griffon-swing-runtime-1.4.0-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/jxlayer-1.0.0/dist/griffon-jxlayer-1.0.0-sources.jar!/" />
           <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/miglayout-1.0.0/dist/griffon-miglayout-1.0.0-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.7/docs/griffon-simple-jpa-runtime-0.7-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/docs/griffon-simple-jpa-runtime-0.8-sources.jar!/" />
           <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swing-1.4.0/docs/griffon-swing-runtime-1.4.0-sources.jar!/" />
         </SOURCES>
       </library>
