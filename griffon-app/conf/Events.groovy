@@ -16,6 +16,7 @@
 
 
 import domain.Container
+import org.codehaus.groovy.runtime.InvokerHelper
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
 import griffon.util.*
@@ -66,11 +67,11 @@ onSimpleJpaRollbackTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.hide()
 }
 
-onInitializeMVCGroup = { def configuration, def mvcGroup ->
-    mvcGroup.members.each { k, v ->
-        if (v instanceof griffon.core.GriffonMvcArtifact) {
-            simplejpa.SimpleJpaUtil.container.each { String name, Object value ->
-                v.hasProperty(name)?.setProperty(v, value)
+onNewInstance = { Class klass, String t, Object instance ->
+    InvokerHelper.getMetaClass(instance).properties.each {
+        simplejpa.SimpleJpaUtil.container.each { String name, Object value ->
+            if (it.name == name) {
+                InvokerHelper.setProperty(instance, name, value)
             }
         }
     }
