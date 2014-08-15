@@ -106,18 +106,6 @@ class KonsumenController {
         }
     }
 
-    def showPencairanPoin = {
-        execInsideUISync {
-            def args = [konsumen: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Pencairan Poin', size: new Dimension(900,420)]
-            DialogUtils.showMVCGroup('pencairanPoinAsChild', args, app, view, dialogProps) { m, v, c ->
-                Konsumen konsumen = view.table.selectionModel.selected[0]
-                konsumen = konsumenRepository.findKonsumenById(konsumen.id)
-                view.table.selectionModel.selected[0] = konsumen
-            }
-        }
-    }
-
     def delete = {
         Konsumen konsumen = view.table.selectionModel.selected[0]
         konsumenRepository.remove(konsumen)
