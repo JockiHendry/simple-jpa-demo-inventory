@@ -17,6 +17,7 @@ package domain.user
 
 import domain.Container
 import org.jdesktop.swingx.auth.LoginService
+import simplejpa.SimpleJpaUtil
 
 import javax.swing.JOptionPane
 
@@ -24,7 +25,7 @@ class UserLoginService extends LoginService {
 
     @Override
     boolean authenticate(String nama, char[] password, String server) throws Exception {
-        User user = Container.app.userRepository.login(nama, new String(password))
+        User user = (SimpleJpaUtil.container.userRepository as UserRepository).login(nama, new String(password))
         if (user) {
             Container.app.currentUser = user
             return true
