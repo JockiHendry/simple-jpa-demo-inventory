@@ -17,7 +17,7 @@ package project
 
 import domain.Container
 import domain.faktur.BilyetGiro
-import domain.faktur.BilyetGiroRepository
+import project.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
@@ -30,11 +30,12 @@ class BilyetGiroTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(BilyetGiroTest)
 
-    BilyetGiroRepository bilyetGiroRepository = SimpleJpaUtil.container.bilyetGiroRepository
+    BilyetGiroRepository bilyetGiroRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
     }
 
     protected void tearDown() {

@@ -15,23 +15,23 @@
  */
 package project
 
-import domain.Container
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
-import domain.inventory.TransferRepository
+import project.inventory.TransferRepository
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class TransferTest extends DbUnitTestCase {
 
-    TransferRepository transferRepository = SimpleJpaUtil.container.transferRepository
+    TransferRepository transferRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("gudang", "/project/data_inventory.xls")
+        transferRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Transfer')
     }
 
     protected void tearDown() {

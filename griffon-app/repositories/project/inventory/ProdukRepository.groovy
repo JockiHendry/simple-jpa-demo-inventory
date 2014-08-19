@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package domain.inventory
+package project.inventory
 
 import domain.exception.DataDuplikat
+import domain.inventory.Gudang
+import domain.inventory.PeriodeItemStok
+import domain.inventory.Produk
+import domain.inventory.StokProduk
 import simplejpa.transaction.Transaction
 
 @Transaction

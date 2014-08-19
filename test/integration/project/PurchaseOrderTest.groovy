@@ -15,12 +15,11 @@
  */
 package project
 
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.ItemBarang
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PurchaseOrder
-import domain.pembelian.PurchaseOrderRepository
+import project.pembelian.PurchaseOrderRepository
 import domain.pembelian.StatusPurchaseOrder
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -32,11 +31,12 @@ class PurchaseOrderTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(PurchaseOrderTest)
 
-    PurchaseOrderRepository purchaseOrderRepository = SimpleJpaUtil.container.purchaseOrderRepository
+    PurchaseOrderRepository purchaseOrderRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("penerimaanBarang", "/project/data_pembelian.xls")
+        purchaseOrderRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PurchaseOrder')
     }
 
     protected void tearDown() {

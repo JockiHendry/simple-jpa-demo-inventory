@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.faktur
+package project.faktur
 
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah

@@ -19,7 +19,6 @@ import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.PenyesuaianStok
-import domain.inventory.PenyesuaianStokRepository
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils

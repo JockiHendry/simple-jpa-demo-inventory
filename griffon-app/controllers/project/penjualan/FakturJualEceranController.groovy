@@ -20,7 +20,6 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
 import domain.penjualan.*
-import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane

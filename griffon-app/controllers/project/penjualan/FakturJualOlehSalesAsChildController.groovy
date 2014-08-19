@@ -15,7 +15,6 @@
  */
 package project.penjualan
 
-import domain.penjualan.FakturJualRepository
 import java.text.NumberFormat
 
 class FakturJualOlehSalesAsChildController {

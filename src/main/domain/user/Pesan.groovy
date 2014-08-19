@@ -13,27 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.util
+package domain.user
 
-import simplejpa.transaction.Transaction
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
+import org.hibernate.annotations.Type
+import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
+import org.joda.time.*
 
-@Transaction
-class PesanRepository {
+@DomainClass @Entity @Canonical
+abstract class Pesan {
 
-    public Pesan buat(Pesan pesan) {
-        persist(pesan)
-        pesan
-    }
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    LocalDateTime tanggal
 
-    public List<Pesan> refresh() {
-        List<Pesan> listPesan = findAllPesan()
-        for (Pesan pesan: listPesan.toArray()) {
-            if (!pesan.masihBerlaku()) {
-                listPesan.remove(pesan)
-                remove(pesan)
-            }
-        }
-        listPesan
-    }
+    @NotBlank
+    String pesan
+
+    @NotNull
+    Integer prioritas = 1
+
+    abstract boolean masihBerlaku()
+
+    abstract String jenisPesan()
 
 }
+

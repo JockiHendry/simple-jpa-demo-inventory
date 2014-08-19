@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package project.penjualan
 
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.PencairanPoinTidakValid
 import domain.pengaturan.KeyPengaturan
+import domain.penjualan.PencairanPoin
+import domain.penjualan.PencairanPoinTukarBarang
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
@@ -47,7 +49,7 @@ class PencairanPoinRepository {
             pencairanPoin.listItemBarang.each { it.produk = merge(it.produk) }
         }
         pencairanPoin.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.PENCAIRAN_POIN)
-        BigDecimal rate = SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE)
+        BigDecimal rate = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan').getValue(KeyPengaturan.BONUS_POINT_RATE)
         pencairanPoin.rate = rate
         if (!pencairanPoin.valid()) {
             throw new PencairanPoinTidakValid(pencairanPoin)

@@ -15,11 +15,9 @@
  */
 package project.penjualan
 
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.FakturJualRepository
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils

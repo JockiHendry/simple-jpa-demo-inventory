@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.inventory
+package project.inventory
 
 import domain.Container
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.PenyesuaianStok
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction

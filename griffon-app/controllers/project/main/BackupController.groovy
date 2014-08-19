@@ -15,7 +15,7 @@
  */
 package project.main
 
-import domain.inventory.ProdukRepository
+import project.inventory.ProdukRepository
 import org.joda.time.DateTime
 import simplejpa.SimpleJpaUtil
 import javax.swing.JTextArea

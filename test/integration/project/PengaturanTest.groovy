@@ -15,25 +15,26 @@
  */
 package project
 
-import domain.Container
 import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
-import domain.pengaturan.PengaturanRepository
+import project.pengaturan.PengaturanRepository
 import domain.util.PasswordService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
-
-import java.security.MessageDigest
 
 class PengaturanTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(ProdukTest)
 
+    PengaturanRepository pengaturanRepository
+
     protected void setUp() {
         super.setUp()
         setUpDatabase("produk", "/project/data_inventory.xls")
+        pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
     }
 
     protected void tearDown() {
@@ -42,28 +43,26 @@ class PengaturanTest extends DbUnitTestCase {
     }
 
     void testSerializing() {
-        PengaturanRepository repo = new PengaturanRepository()
         PasswordService p = new PasswordService()
         byte[] nilai
 
         String s = "My name is Jocki Hendry"
-        nilai = repo.serialize(s, JenisNilai.STRING)
-        assertEquals(s, repo.deserialize(nilai, JenisNilai.STRING))
+        nilai = pengaturanRepository.serialize(s, JenisNilai.STRING)
+        assertEquals(s, pengaturanRepository.deserialize(nilai, JenisNilai.STRING))
 
         String pwd = "super-secret-password-12345"
-        nilai = repo.serialize(pwd, JenisNilai.PASSWORD)
-        assertTrue(Arrays.equals(p.plainTextToEncrypted(pwd), repo.deserialize(nilai, JenisNilai.PASSWORD)))
+        nilai = pengaturanRepository.serialize(pwd, JenisNilai.PASSWORD)
+        assertTrue(Arrays.equals(p.plainTextToEncrypted(pwd), pengaturanRepository.deserialize(nilai, JenisNilai.PASSWORD)))
 
         Integer i = 12345678
-        nilai = repo.serialize(i, JenisNilai.INTEGER)
-        assertEquals(i, repo.deserialize(nilai, JenisNilai.INTEGER))
+        nilai = pengaturanRepository.serialize(i, JenisNilai.INTEGER)
+        assertEquals(i, pengaturanRepository.deserialize(nilai, JenisNilai.INTEGER))
     }
 
     void testSave() {
-        PengaturanRepository repo = new PengaturanRepository()
         PasswordService p = new PasswordService()
-        Pengaturan pengaturan = repo.save(KeyPengaturan.SUPERVISOR_PASSWORD, 'super_secret_password')
+        Pengaturan pengaturan = pengaturanRepository.save(KeyPengaturan.SUPERVISOR_PASSWORD, 'super_secret_password')
         assertEquals(KeyPengaturan.SUPERVISOR_PASSWORD, pengaturan.keyPengaturan)
-        assertEquals(p.plainTextToEncrypted('super_secret_password'), repo.cache[KeyPengaturan.SUPERVISOR_PASSWORD])
+        assertEquals(p.plainTextToEncrypted('super_secret_password'), pengaturanRepository.cache[KeyPengaturan.SUPERVISOR_PASSWORD])
     }
 }

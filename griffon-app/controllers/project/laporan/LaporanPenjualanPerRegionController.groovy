@@ -15,7 +15,7 @@
  */
 package project.laporan
 
-import domain.penjualan.FakturJualRepository
+import project.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import javax.swing.SwingUtilities
 

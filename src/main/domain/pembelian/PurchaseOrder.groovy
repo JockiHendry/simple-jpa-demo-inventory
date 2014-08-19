@@ -15,18 +15,16 @@
  */
 package domain.pembelian
 
-import domain.Container
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
-import domain.inventory.GudangRepository
+import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
 import groovy.transform.Canonical
-import groovy.transform.EqualsAndHashCode
 import simplejpa.DomainClass
 import griffon.util.*
 import simplejpa.SimpleJpaUtil
@@ -86,7 +84,7 @@ class PurchaseOrder extends Faktur {
             }
         }
 
-        penerimaanBarang.gudang = (SimpleJpaUtil.container['gudangRepository'] as GudangRepository).cariGudangUtama()
+        penerimaanBarang.gudang = (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
 
         listPenerimaanBarang << penerimaanBarang
         if (diterimaPenuh() && fakturBeli) {

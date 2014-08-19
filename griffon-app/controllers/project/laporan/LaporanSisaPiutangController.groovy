@@ -15,7 +15,7 @@
  */
 package project.laporan
 
-import domain.penjualan.KonsumenRepository
+import project.penjualan.KonsumenRepository
 import javax.swing.SwingUtilities
 
 class LaporanSisaPiutangController {

@@ -17,10 +17,8 @@
 package project.pembelian
 
 import domain.pembelian.Supplier
-import domain.pembelian.SupplierRepository
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-
 import domain.exception.DataDuplikat
 
 class SupplierController {

@@ -16,8 +16,7 @@
 package project.main
 
 import ca.odell.glazedlists.BasicEventList
-import domain.util.Pesan
-import groovy.beans.Bindable
+import domain.user.Pesan
 
 class PesanModel {
 

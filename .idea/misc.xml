@@ -25,12 +25,16 @@
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaChildModel.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaChildView.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaController.groovy" />
+    <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaDDDChildController.groovy" />
+    <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaDDDController.groovy" />
+    <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaDDDPairController.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaDomainClass.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaIntegrationTest.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaModel.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaPairController.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaPairModel.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaPairView.groovy" />
+    <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaRepository.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaView.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/StartupController.groovy" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/StartupModel.groovy" />

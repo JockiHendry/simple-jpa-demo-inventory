@@ -15,13 +15,12 @@
  */
 package project
 
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
-import domain.inventory.GudangRepository
+import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
 import domain.inventory.Produk
@@ -42,12 +41,12 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
-        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
+        SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
-        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     public void testKirim() {

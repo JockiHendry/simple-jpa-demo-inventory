@@ -66,13 +66,3 @@ onSimpleJpaCommitTransaction = { TransactionHolder th ->
 onSimpleJpaRollbackTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.hide()
 }
-
-onNewInstance = { Class klass, String t, Object instance ->
-    InvokerHelper.getMetaClass(instance).properties.each {
-        simplejpa.SimpleJpaUtil.container.each { String name, Object value ->
-            if (it.name == name) {
-                InvokerHelper.setProperty(instance, name, value)
-            }
-        }
-    }
-}

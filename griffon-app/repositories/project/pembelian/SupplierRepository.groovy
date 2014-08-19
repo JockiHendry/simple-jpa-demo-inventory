@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.util
 
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-abstract class Pesan {
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-    LocalDateTime tanggal
+package project.pembelian
 
-    @NotBlank
-    String pesan
+import domain.exception.DataDuplikat
+import domain.pembelian.Supplier
+import simplejpa.transaction.Transaction
 
-    @NotNull
-    Integer prioritas = 1
+@Transaction
+class SupplierRepository {
 
-    abstract boolean masihBerlaku()
+    public List<Supplier> cari(String namaSearch) {
+        findAllSupplierByDsl([excludeDeleted: false]) {
+            if (namaSearch) {
+                nama like("%${namaSearch}%")
+            }
+        }
+    }
 
-    abstract String jenisPesan()
-
+    public Supplier buat(Supplier supplier) {
+        if (findSupplierByNama(supplier.nama)) {
+            throw new DataDuplikat(supplier)
+        }
+        persist(supplier)
+        supplier
+    }
 }
-

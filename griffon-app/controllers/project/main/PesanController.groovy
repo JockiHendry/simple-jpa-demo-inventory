@@ -15,8 +15,8 @@
  */
 package project.main
 
-import domain.util.Pesan
-import domain.util.PesanRepository
+import domain.user.Pesan
+import project.user.PesanRepository
 import javax.swing.JOptionPane
 
 class PesanController {

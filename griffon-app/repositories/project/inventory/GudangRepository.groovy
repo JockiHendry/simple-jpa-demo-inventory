@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package domain.inventory
+package project.inventory
 
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
+import domain.inventory.Gudang
 import simplejpa.transaction.Transaction
 
 @Transaction

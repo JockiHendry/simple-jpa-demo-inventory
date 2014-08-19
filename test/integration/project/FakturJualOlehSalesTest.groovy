@@ -23,14 +23,14 @@ import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
-import domain.inventory.GudangRepository
+import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.FakturJualRepository
+import project.penjualan.FakturJualRepository
 import domain.penjualan.Konsumen
-import domain.penjualan.KonsumenRepository
+import project.penjualan.KonsumenRepository
 import domain.penjualan.Sales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
@@ -43,13 +43,16 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(FakturJualOlehSalesTest)
 
-    GudangRepository gudangRepository = SimpleJpaUtil.container.gudangRepository
-    FakturJualRepository fakturJualRepository = SimpleJpaUtil.container.fakturJualRepository
-    KonsumenRepository konsumenRepository = SimpleJpaUtil.container.konsumenRepository
+    GudangRepository gudangRepository
+    FakturJualRepository fakturJualRepository
+    KonsumenRepository konsumenRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
+        fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
+        konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
     }
 
     protected void tearDown() {

@@ -22,11 +22,13 @@ import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
-import domain.util.PesanLevelMinimum
-import domain.util.PesanRepository
+import domain.user.PesanLevelMinimum
+import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 
 class InventoryEventListenerService {
+
+    PesanRepository pesanRepository
 
     void onPerubahanStok(PerubahanStok perubahanStok) {
         log.info "Event onPerubahanStok mulai dikerjakan..."
@@ -81,7 +83,7 @@ class InventoryEventListenerService {
     void periksaLevelMinimum(Produk produk) {
         if (!produk.periksaLevel()) {
             PesanLevelMinimum pesan = new PesanLevelMinimum(produk, produk.jumlah, produk.levelMinimum)
-            (SimpleJpaUtil.container.pesanRepository as PesanRepository).buat(pesan)
+            pesanRepository.buat(pesan)
         }
     }
 

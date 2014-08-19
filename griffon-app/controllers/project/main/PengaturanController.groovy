@@ -17,7 +17,7 @@ package project.main
 
 import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
-import domain.pengaturan.PengaturanRepository
+import project.pengaturan.PengaturanRepository
 import javax.swing.event.ListSelectionEvent
 
 class PengaturanController {

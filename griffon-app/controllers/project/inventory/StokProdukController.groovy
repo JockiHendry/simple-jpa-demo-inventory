@@ -15,7 +15,6 @@
  */
 package project.inventory
 
-import domain.inventory.ProdukRepository
 import simplejpa.swing.DialogUtils
 import java.awt.Dimension
 

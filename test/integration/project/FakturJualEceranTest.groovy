@@ -18,11 +18,10 @@ package project
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
-import domain.inventory.GudangRepository
+import project.inventory.GudangRepository
 import domain.inventory.Produk
-import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualEceran
-import domain.penjualan.FakturJualRepository
+import project.penjualan.FakturJualRepository
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -34,12 +33,14 @@ class FakturJualEceranTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(FakturJualEceranTest)
 
-    GudangRepository gudangRepository = SimpleJpaUtil.container.gudangRepository
-    FakturJualRepository fakturJualRepository = SimpleJpaUtil.container.fakturJualRepository
+    GudangRepository gudangRepository
+    FakturJualRepository fakturJualRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
+        fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
     }
 
     protected void tearDown() {

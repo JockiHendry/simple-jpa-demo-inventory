@@ -15,9 +15,8 @@
  */
 package project.penjualan
 
-import domain.pembelian.PurchaseOrderRepository
+import project.pembelian.PurchaseOrderRepository
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent

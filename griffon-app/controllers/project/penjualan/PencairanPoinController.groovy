@@ -19,7 +19,6 @@ import ast.NeedSupervisorPassword
 import domain.Container
 import domain.penjualan.PencairanPoin
 import domain.penjualan.PencairanPoinPotongPiutang
-import domain.penjualan.PencairanPoinRepository
 import domain.penjualan.PencairanPoinTukarBarang
 import domain.penjualan.PencairanPoinTukarUang
 import domain.validation.InputPencairanPoin

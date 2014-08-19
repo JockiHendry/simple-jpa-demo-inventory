@@ -15,26 +15,30 @@
  */
 package project
 
-import domain.Container
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
-import domain.pengaturan.PengaturanRepository
+import project.pengaturan.PengaturanRepository
 import domain.penjualan.*
 import org.joda.time.LocalDate
+import project.penjualan.FakturJualRepository
+import project.penjualan.PencairanPoinRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PencairanPoinTest extends DbUnitTestCase {
 
-    FakturJualRepository fakturJualRepository = SimpleJpaUtil.container.fakturJualRepository
-    PencairanPoinRepository pencairanPoinRepository = SimpleJpaUtil.container.pencairanPoinRepository
-    PengaturanRepository pengaturanRepository = SimpleJpaUtil.container.pengaturanRepository
+    FakturJualRepository fakturJualRepository
+    PencairanPoinRepository pencairanPoinRepository
+    PengaturanRepository pengaturanRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("konsumen", "/project/data_penjualan.xls")
+        fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
+        pencairanPoinRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PencairanPoin')
+        pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
     }
 
     protected void tearDown() {

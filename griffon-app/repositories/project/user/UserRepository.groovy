@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package project.user
 
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.util.PasswordService
+import domain.user.Menu
+import domain.user.User
 import org.joda.time.LocalDateTime
 import simplejpa.transaction.Transaction
 

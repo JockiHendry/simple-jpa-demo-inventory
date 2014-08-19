@@ -16,7 +16,6 @@
 package project.pembelian
 
 import domain.pembelian.PurchaseOrder
-import domain.pembelian.PurchaseOrderRepository
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent

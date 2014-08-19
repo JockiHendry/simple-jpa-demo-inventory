@@ -16,9 +16,8 @@
 
 package project
 
-import domain.Container
 import domain.inventory.Gudang
-import domain.inventory.GudangRepository
+import project.inventory.GudangRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.SimpleJpaUtil
@@ -28,11 +27,12 @@ class GudangTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(GudangTest)
 
-    GudangRepository gudangRepository = SimpleJpaUtil.container.gudangRepository
+    GudangRepository gudangRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("gudang", "/project/data_inventory.xls")
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
     }
 
     protected void tearDown() {

@@ -21,12 +21,10 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
 import domain.pembelian.PurchaseOrder
-import domain.pembelian.PurchaseOrderRepository
 import domain.util.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension

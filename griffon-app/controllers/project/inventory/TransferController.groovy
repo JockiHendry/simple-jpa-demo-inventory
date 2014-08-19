@@ -19,7 +19,6 @@ import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Transfer
-import domain.inventory.TransferRepository
 import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils

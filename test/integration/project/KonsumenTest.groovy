@@ -15,30 +15,20 @@
  */
 package project
 
-import domain.Container
-import domain.inventory.Gudang
-import domain.inventory.ItemBarang
-import domain.inventory.Produk
-import domain.pengaturan.KeyPengaturan
-import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
-import domain.penjualan.KonsumenRepository
-import domain.penjualan.PencairanPoin
-import domain.penjualan.PencairanPoinPotongPiutang
-import domain.penjualan.PencairanPoinTukarBarang
-import domain.penjualan.PencairanPoinTukarUang
-import org.joda.time.LocalDate
+import project.penjualan.KonsumenRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class KonsumenTest extends DbUnitTestCase {
 
-    KonsumenRepository konsumenRepository = SimpleJpaUtil.container.konsumenRepository
+    KonsumenRepository konsumenRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("konsumen", "/project/data_penjualan.xls")
+        konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
     }
 
     protected void tearDown() {

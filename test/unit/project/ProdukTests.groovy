@@ -15,10 +15,11 @@
  */
 package project
 
-import domain.Container
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import griffon.test.GriffonUnitTestCase
+import project.pengaturan.PengaturanRepository
+import simplejpa.SimpleJpaUtil
 
 class ProdukTests extends GriffonUnitTestCase {
 
@@ -41,7 +42,10 @@ class ProdukTests extends GriffonUnitTestCase {
     }
 
     public void testLevelMinimum() {
-        Container.app.pengaturanRepository.cache[KeyPengaturan.LEVEL_MINIMUM_STOK] = 5
+        PengaturanRepository pengaturanRepository = new PengaturanRepository()
+        pengaturanRepository.cache[KeyPengaturan.LEVEL_MINIMUM_STOK] = 5
+        SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
+        SimpleJpaUtil.instance.repositoryManager.instances['PengaturanRepository'] = pengaturanRepository
 
         Produk p1 = new Produk(nama: 'Produk A', levelMinimum: 10)
         assertEquals(10, p1.levelMinimum)

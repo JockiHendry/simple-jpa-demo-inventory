@@ -19,7 +19,6 @@ import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
-import domain.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
@@ -27,6 +26,7 @@ import domain.util.NomorService
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
 import simplejpa.SimpleJpaUtil
 
 class FakturJualEceranTests extends GriffonUnitTestCase {
@@ -37,12 +37,12 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
-        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
+        SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
+        SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
     }
 
     protected void tearDown() {
         super.tearDown()
-        SimpleJpaUtil.container.gudangRepository = new GudangRepository()
     }
 
     public void testAntar() {

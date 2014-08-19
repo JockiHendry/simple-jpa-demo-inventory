@@ -18,7 +18,6 @@ package project.pembelian
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Pembayaran
-import domain.pembelian.PurchaseOrderRepository
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent

@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package project.inventory
 
 import domain.exception.DataDuplikat
+import domain.inventory.Satuan
 import simplejpa.transaction.Transaction
 
 @Transaction
-class RegionRepository {
+class SatuanRepository {
 
-    public List<Region> cari(String namaSearch) {
-        findAllRegionByDsl([orderBy: 'nama']) {
+    public List<Satuan> cari(String namaSearch) {
+        findAllSatuanByDsl {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
-                or()
-                bagianDari__nama like("%${namaSearch}%")
             }
         }
     }
 
-    public Region buat(Region region) {
-        if (findRegionByNama(region.nama)) {
-            throw new DataDuplikat(region)
+    public Satuan buat(Satuan satuan) {
+        if (findSatuanByNama(satuan.nama)) {
+            throw new DataDuplikat(satuan)
         }
-        persist(region)
-        region
+        persist(satuan)
+        satuan
     }
 
 }

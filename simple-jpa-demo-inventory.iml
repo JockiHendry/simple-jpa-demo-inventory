@@ -11,6 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/conf" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/lifecycle" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/services" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/repositories" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
     </content>

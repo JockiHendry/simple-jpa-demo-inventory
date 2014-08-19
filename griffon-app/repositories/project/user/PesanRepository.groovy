@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.inventory
+package project.user
 
-import domain.exception.DataDuplikat
+import domain.user.Pesan
 import simplejpa.transaction.Transaction
 
 @Transaction
-class SatuanRepository {
+class PesanRepository {
 
-    public List<Satuan> cari(String namaSearch) {
-        findAllSatuanByDsl {
-            if (namaSearch) {
-                nama like("%${namaSearch}%")
-            }
-        }
+    public Pesan buat(Pesan pesan) {
+        persist(pesan)
+        pesan
     }
 
-    public Satuan buat(Satuan satuan) {
-        if (findSatuanByNama(satuan.nama)) {
-            throw new DataDuplikat(satuan)
+    public List<Pesan> refresh() {
+        List<Pesan> listPesan = findAllPesan()
+        for (Pesan pesan: listPesan.toArray()) {
+            if (!pesan.masihBerlaku()) {
+                listPesan.remove(pesan)
+                remove(pesan)
+            }
         }
-        persist(satuan)
-        satuan
+        listPesan
     }
 
 }

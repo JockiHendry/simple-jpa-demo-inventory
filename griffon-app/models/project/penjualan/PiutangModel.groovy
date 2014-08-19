@@ -17,10 +17,7 @@ package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
 import domain.faktur.Pembayaran
-import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.FakturJualRepository
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 

@@ -21,14 +21,11 @@ import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
 import domain.penjualan.*
-import domain.util.NomorService
 import domain.validation.InputPenjualanOlehSales
 import org.joda.time.LocalDate
-import project.penjualan.FakturJualOlehSalesModel
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
-import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import domain.Container
 import java.awt.Dimension

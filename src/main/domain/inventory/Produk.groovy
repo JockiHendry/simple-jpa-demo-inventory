@@ -129,7 +129,7 @@ class Produk implements Comparable {
     }
 
     public Integer getLevelMinimum() {
-        levelMinimum?: SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.LEVEL_MINIMUM_STOK)
+        levelMinimum?: SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan').getValue(KeyPengaturan.LEVEL_MINIMUM_STOK)
     }
 
     public boolean periksaLevel() {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package project.penjualan
 
 import domain.Container
 import domain.exception.DataDuplikat
@@ -21,6 +21,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
+import domain.penjualan.Konsumen
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
@@ -40,7 +41,7 @@ class KonsumenRepository {
         if (findKonsumenByNama(konsumen.nama)) {
             throw new DataDuplikat(konsumen)
         }
-        konsumen.creditLimit = SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.CREDIT_LIMIT_DEFAULT)
+        konsumen.creditLimit = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan').getValue(KeyPengaturan.CREDIT_LIMIT_DEFAULT)
         persist(konsumen)
         konsumen
     }

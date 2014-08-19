@@ -17,7 +17,7 @@ package project.inventory
 
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
-import domain.pembelian.PurchaseOrderRepository
+import project.pembelian.PurchaseOrderRepository
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 

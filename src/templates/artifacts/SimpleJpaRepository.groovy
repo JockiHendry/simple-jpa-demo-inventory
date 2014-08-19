@@ -1,7 +1,7 @@
-package ${g.domainPackageName}
+package ${g.targetPackageName}
 
+${g.imports()}
 import groovy.transform.*
-import org.apache.poi.hssf.record.formula.functions.Search
 import org.joda.time.*
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.exception.EntityNotFoundException

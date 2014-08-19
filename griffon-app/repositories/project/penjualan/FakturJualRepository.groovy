@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package project.penjualan
 
 import domain.Container
 import domain.exception.DataDuplikat
@@ -24,11 +24,16 @@ import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
-import domain.inventory.GudangRepository
+import domain.penjualan.BuktiTerima
+import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualEceran
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.Konsumen
+import domain.penjualan.StatusFakturJual
+import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
-import domain.util.NomorService
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
@@ -197,7 +202,7 @@ class FakturJualRepository {
         }
 
         // Hitung tanggal jatuh tempo
-        fakturJual.jatuhTempo = fakturJual.tanggal.plusDays(SimpleJpaUtil.container.pengaturanRepository.getValue(KeyPengaturan.MASA_JATUH_TEMPO))
+        fakturJual.jatuhTempo = fakturJual.tanggal.plusDays(SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan').getValue(KeyPengaturan.MASA_JATUH_TEMPO))
 
         persist(fakturJual)
 
@@ -224,7 +229,7 @@ class FakturJualRepository {
     FakturJualEceran buatFakturJualEceran(FakturJualEceran fakturJualEceran) {
 
         // Periksa apakah barang dalam gudang utama mencukupi
-        Gudang gudangUtama = (SimpleJpaUtil.container['gudangRepository'] as GudangRepository).cariGudangUtama()
+        Gudang gudangUtama = (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
         fakturJualEceran.listItemFaktur.each {
             Produk produk = merge(it.produk)
             int jumlahTersedia = produk.stok(gudangUtama).jumlah

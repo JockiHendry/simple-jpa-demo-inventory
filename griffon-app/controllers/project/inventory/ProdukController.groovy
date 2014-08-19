@@ -18,7 +18,6 @@ package project.inventory
 
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
-import domain.inventory.ProdukRepository
 import simplejpa.swing.DialogUtils
 import simplejpa.transaction.Transaction
 import javax.swing.JOptionPane

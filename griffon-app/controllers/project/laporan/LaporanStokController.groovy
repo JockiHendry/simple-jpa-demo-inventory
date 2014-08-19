@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package project.laporan
-import domain.inventory.ProdukRepository
+import project.inventory.ProdukRepository
 import javax.swing.SwingUtilities
 
 class LaporanStokController {

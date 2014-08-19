@@ -17,7 +17,7 @@ package project.main
 
 import domain.Container
 import domain.pengaturan.KeyPengaturan
-import domain.pengaturan.PengaturanRepository
+import project.pengaturan.PengaturanRepository
 import simple.escp.data.DataSources
 import simple.escp.json.JsonTemplate
 import simple.escp.swing.PrintPreviewPane

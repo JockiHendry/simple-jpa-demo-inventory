@@ -15,11 +15,10 @@
  */
 package project
 
-import domain.Container
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.PenyesuaianStok
-import domain.inventory.PenyesuaianStokRepository
+import project.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
@@ -27,11 +26,12 @@ import simplejpa.testing.DbUnitTestCase
 
 class PenyesuaianStokTest extends DbUnitTestCase {
 
-    PenyesuaianStokRepository penyesuaianStokRepository = SimpleJpaUtil.container.penyesuaianStokRepository
+    PenyesuaianStokRepository penyesuaianStokRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("gudang", "/project/data_inventory.xls")
+        penyesuaianStokRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenyesuaianStok')
     }
 
     protected void tearDown() {

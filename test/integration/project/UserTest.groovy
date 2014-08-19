@@ -15,20 +15,20 @@
  */
 package project
 
-import domain.Container
 import domain.user.Menu
 import domain.user.User
-import domain.user.UserRepository
+import project.user.UserRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class UserTest extends DbUnitTestCase {
 
-    UserRepository userRepository = SimpleJpaUtil.container.userRepository
+    UserRepository userRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("gudang", "/project/data_inventory.xls")
+        userRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('User')
     }
 
     protected void tearDown() {

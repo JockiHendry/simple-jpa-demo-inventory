@@ -16,7 +16,6 @@
 package project.inventory
 
 import domain.inventory.PeriodeItemStok
-import domain.inventory.ProdukRepository
 
 class ItemStokController {
 

@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package project
 
-import domain.Container
-import org.jdesktop.swingx.auth.LoginService
-import project.user.UserRepository
-import simplejpa.SimpleJpaUtil
+import simplejpa.artifact.repository.RepositoryManager
 
-class UserLoginService extends LoginService {
+import java.util.concurrent.ConcurrentHashMap
+
+class StubRepositoryManager implements RepositoryManager {
+
+    public final Map<String, Object> instances = new ConcurrentHashMap<>()
+
+    public StubRepositoryManager() {
+
+    }
+
+    public Object findRepository(String name) {
+        if (!name.endsWith('Repository')) name += 'Repository'
+        instances[name]
+    }
 
     @Override
-    boolean authenticate(String nama, char[] password, String server) throws Exception {
-        User user = (SimpleJpaUtil.instance.repositoryManager.findRepository('User') as UserRepository).login(nama, new String(password))
-        if (user) {
-            Container.app.currentUser = user
-            return true
-        }
-        false
+    Object doInstantiate(String name, boolean triggerEvent) {
+        return instances.get(name)
+    }
+
+    @Override
+    Map<String, Object> getRepositories() {
+        instances
     }
 
 }

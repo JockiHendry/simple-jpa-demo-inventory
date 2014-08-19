@@ -13,30 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
-package domain.pembelian
+package project.penjualan
 
 import domain.exception.DataDuplikat
+import domain.penjualan.Sales
 import simplejpa.transaction.Transaction
 
 @Transaction
-class SupplierRepository {
+class SalesRepository {
 
-    public List<Supplier> cari(String namaSearch) {
-        findAllSupplierByDsl([excludeDeleted: false]) {
+    public List<Sales> cari(String namaSearch) {
+        findAllSalesByDsl([orderBy: 'nama']) {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
             }
         }
     }
 
-    public Supplier buat(Supplier supplier) {
-        if (findSupplierByNama(supplier.nama)) {
-            throw new DataDuplikat(supplier)
+    public Sales buat(Sales sales) {
+        if (findSalesByNama(sales.nama)) {
+            throw new DataDuplikat(sales)
         }
-        persist(supplier)
-        supplier
+        persist(sales)
+        sales
     }
+
 }

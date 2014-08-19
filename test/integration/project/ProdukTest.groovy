@@ -16,18 +16,17 @@
 
 package project
 
-import domain.Container
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.PenyesuaianStok
-import domain.inventory.PenyesuaianStokRepository
+import project.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
 import domain.inventory.StokProduk
-import domain.inventory.ProdukRepository
+import project.inventory.ProdukRepository
 import domain.inventory.PeriodeItemStok
-import domain.util.Pesan
-import domain.util.PesanLevelMinimum
-import domain.util.PesanRepository
+import domain.user.Pesan
+import domain.user.PesanLevelMinimum
+import project.user.PesanRepository
 import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -40,13 +39,16 @@ class ProdukTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(ProdukTest)
 
-    ProdukRepository produkRepository = SimpleJpaUtil.container.produkRepository
-    PesanRepository pesanRepository = SimpleJpaUtil.container.pesanRepository
-    PenyesuaianStokRepository penyesuaianStokRepository = SimpleJpaUtil.container.penyesuaianStokRepository
+    ProdukRepository produkRepository
+    PesanRepository pesanRepository
+    PenyesuaianStokRepository penyesuaianStokRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("produk", "/project/data_inventory.xls")
+        produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
+        pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
+        penyesuaianStokRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenyesuaianStok')
     }
 
     protected void tearDown() {

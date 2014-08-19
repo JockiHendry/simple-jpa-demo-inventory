@@ -18,7 +18,6 @@ package project.pembelian
 import ca.odell.glazedlists.BasicEventList
 import domain.pembelian.FakturBeli
 import domain.faktur.Pembayaran
-import domain.pembelian.PurchaseOrderRepository
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 

@@ -19,7 +19,6 @@ package project.inventory
 import domain.exception.DataDuplikat
 import domain.exception.GudangUtamaTidakKonsisten
 import domain.inventory.Gudang
-import domain.inventory.GudangRepository
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 

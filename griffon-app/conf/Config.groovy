@@ -83,8 +83,7 @@ log4j = {
 }
 i18n.basenames = ['messages','ValidationMessages']
 
-griffon.services.eager.instantiation = true
-griffon.simplejpa.finders.injectInto = ['service']
+griffon.simplejpa.finders.injectInto = ['service', 'repository']
 griffon.simplejpa.validation.convertEmptyStringToNull = true
 griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
 griffon.simplejpa.entityManager.propertiesFile = "${System.getProperty('user.home')}/inventory/simplejpa.properties"

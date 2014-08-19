@@ -17,7 +17,7 @@ package project.main
 
 import domain.Container
 import domain.pengaturan.KeyPengaturan
-import domain.pengaturan.PengaturanRepository
+import project.pengaturan.PengaturanRepository
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
