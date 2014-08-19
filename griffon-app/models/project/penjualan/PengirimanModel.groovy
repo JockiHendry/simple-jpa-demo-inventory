@@ -16,10 +16,9 @@
 package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
-import domain.Container
+import util.SwingHelper
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
-import groovy.beans.Bindable
 import org.hibernate.validator.constraints.NotBlank
 import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
@@ -43,6 +42,6 @@ class PengirimanModel {
     @Bindable String konsumenSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
-    ListComboBoxModel statusSearch = new ListComboBoxModel(Container.app.searchEnum(StatusFakturJual))
+    ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusFakturJual))
 
 }

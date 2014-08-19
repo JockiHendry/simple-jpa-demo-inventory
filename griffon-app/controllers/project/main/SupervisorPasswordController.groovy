@@ -15,7 +15,6 @@
  */
 package project.main
 
-import domain.Container
 import domain.pengaturan.KeyPengaturan
 import project.pengaturan.PengaturanRepository
 import project.user.PasswordService
@@ -26,7 +25,6 @@ class SupervisorPasswordController {
 
     def model
     def view
-    def container = Container.app
     PengaturanRepository pengaturanRepository
     PasswordService passwordService
 

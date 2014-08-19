@@ -16,12 +16,11 @@
 package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
-import domain.Container
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
+import util.SwingHelper
 
 class BuktiTerimaModel {
 
@@ -33,7 +32,7 @@ class BuktiTerimaModel {
     @Bindable String konsumenSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
-    ListComboBoxModel statusSearch = new ListComboBoxModel(Container.app.searchEnum(StatusFakturJual))
+    ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusFakturJual))
 
     @Bindable String nomorFaktur
     @Bindable String nomorSuratJalan

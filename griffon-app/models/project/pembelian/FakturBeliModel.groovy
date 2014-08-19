@@ -15,12 +15,8 @@
  */
 package project.pembelian
 
-import domain.Container
 import domain.faktur.ItemFaktur
 import domain.pembelian.*
-import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
-import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.*
 
 class FakturBeliModel {

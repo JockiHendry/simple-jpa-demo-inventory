@@ -27,7 +27,7 @@ import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
-import domain.Container
+import util.SwingHelper
 import java.awt.Dimension
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -47,7 +47,7 @@ class FakturJualEceranController {
                 model.showFakturJual = true
                 model.showNilaiUang = true
                 model.allowAddFakturJual = true
-                model.statusSearch.selectedItem = Container.SEMUA
+                model.statusSearch.selectedItem = SwingHelper.SEMUA
                 break
             case FakturEceranViewMode.PENGELUARAN:
                 model.showPenerimaan = true
@@ -61,7 +61,7 @@ class FakturJualEceranController {
                 model.showFakturJual = true
                 model.showNilaiUang = true
                 model.allowAddFakturJual = true
-                model.statusSearch.selectedItem = Container.SEMUA
+                model.statusSearch.selectedItem = SwingHelper.SEMUA
                 break
         }
 

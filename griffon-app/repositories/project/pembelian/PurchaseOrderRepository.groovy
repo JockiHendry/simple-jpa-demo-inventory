@@ -15,7 +15,7 @@
  */
 package project.pembelian
 
-import domain.Container
+import util.SwingHelper
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakLengkap
@@ -37,7 +37,7 @@ class PurchaseOrderRepository {
             String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -60,7 +60,7 @@ class PurchaseOrderRepository {
                                               String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch == Container.SEMUA) {
+            if (statusSearch == SwingHelper.SEMUA) {
                 and()
                 status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.FAKTUR_DITERIMA])
             } else {
@@ -86,7 +86,7 @@ class PurchaseOrderRepository {
                                               String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch == Container.SEMUA) {
+            if (statusSearch == SwingHelper.SEMUA) {
                 and()
                 status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.BARANG_DITERIMA])
             } else {

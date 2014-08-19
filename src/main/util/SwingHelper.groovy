@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package domain
+package util
 
-class Container {
-
-    public static Container app = new Container()
+class SwingHelper {
 
     public static final String SEMUA = "Semua"
 
-    public List searchEnum(Class enumeration) {
+    public static List searchEnum(Class enumeration) {
         List result = [SEMUA]
         result.addAll(EnumSet.allOf(enumeration))
         result

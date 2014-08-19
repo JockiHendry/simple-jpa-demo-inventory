@@ -15,7 +15,6 @@
  */
 package domain.penjualan
 
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN

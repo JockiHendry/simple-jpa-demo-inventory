@@ -27,7 +27,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import domain.exception.DataDuplikat
-import domain.Container
+import util.SwingHelper
 import java.awt.Dimension
 import java.text.DateFormat
 import java.text.NumberFormat
@@ -52,7 +52,7 @@ class FakturJualOlehSalesController {
             model.konsumenList.addAll(konsumen)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.statusSearch.selectedItem = Container.SEMUA
+            model.statusSearch.selectedItem = SwingHelper.SEMUA
         }
     }
 

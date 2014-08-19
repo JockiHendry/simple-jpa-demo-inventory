@@ -16,11 +16,9 @@
 
 package domain.inventory
 
-import domain.Container
 import domain.faktur.Faktur
 import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Sales
-import groovy.transform.*
 import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil

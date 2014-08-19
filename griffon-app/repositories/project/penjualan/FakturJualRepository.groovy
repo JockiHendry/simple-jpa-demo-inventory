@@ -15,7 +15,6 @@
  */
 package project.penjualan
 
-import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
@@ -38,6 +37,7 @@ import org.joda.time.LocalDate
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
+import util.SwingHelper
 
 @Transaction
 class FakturJualRepository {
@@ -47,7 +47,7 @@ class FakturJualRepository {
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -65,7 +65,7 @@ class FakturJualRepository {
     List<FakturJualEceran> cariFakturJualEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String namaPembeliSearch, def statusSearch) {
         findAllFakturJualEceranByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -83,7 +83,7 @@ class FakturJualRepository {
     List<FakturJualOlehSales> cariFakturJualOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -105,7 +105,7 @@ class FakturJualRepository {
     List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -127,7 +127,7 @@ class FakturJualRepository {
     List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (statusSearch != Container.SEMUA) {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }

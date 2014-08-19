@@ -15,7 +15,6 @@
  */
 package domain.user
 
-import domain.Container
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*

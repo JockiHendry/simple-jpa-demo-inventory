@@ -15,7 +15,6 @@
  */
 package project.inventory
 
-import domain.Container
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah

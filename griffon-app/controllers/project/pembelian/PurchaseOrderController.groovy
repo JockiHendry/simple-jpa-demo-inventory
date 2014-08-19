@@ -16,7 +16,6 @@
 package project.pembelian
 
 import ast.NeedSupervisorPassword
-import domain.Container
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
@@ -25,6 +24,7 @@ import project.user.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
+import util.SwingHelper
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
@@ -75,7 +75,7 @@ class PurchaseOrderController {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
-            model.statusSearch.selectedItem = Container.SEMUA
+            model.statusSearch.selectedItem = SwingHelper.SEMUA
         }
     }
 

@@ -18,7 +18,7 @@ package project.pembelian
 import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
-import domain.Container
+import util.SwingHelper
 import domain.faktur.ItemFaktur
 import domain.pembelian.PurchaseOrder
 import domain.pembelian.StatusPurchaseOrder
@@ -43,7 +43,7 @@ class PurchaseOrderModel {
     List<ItemFaktur> listItemFaktur = []
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
-    ListComboBoxModel statusSearch = new ListComboBoxModel(Container.app.searchEnum(StatusPurchaseOrder))
+    ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusPurchaseOrder))
     @Bindable String createdBy
     @Bindable String modifiedBy
 
