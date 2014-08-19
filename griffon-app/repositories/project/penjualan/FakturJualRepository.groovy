@@ -35,11 +35,14 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
+import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 
 @Transaction
 class FakturJualRepository {
+
+    NomorService nomorService
 
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -243,7 +246,7 @@ class FakturJualRepository {
     }
 
     FakturJual buat(FakturJual fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus = []) {
-        fakturJual.nomor = Container.app.nomorService.buatNomorFakturJual(fakturJual)
+        fakturJual.nomor = nomorService.buatNomorFakturJual(fakturJual)
         if (findFakturJualByNomor(fakturJual.nomor)) {
             throw new DataDuplikat(fakturJual)
         }

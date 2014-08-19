@@ -32,7 +32,8 @@ class PreviewEscpController {
         JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
         def source = args.'dataSource'
         Map options = [:]
-        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null) ?: Container.app.currentUser.nama
+        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null) ?:
+            app.serviceManager.findService('User').currentUser?.nama
         options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         PrintPreviewPane printPreviewPane = view.printPreviewPane
         printPreviewPane.display(template, DataSources.from(source, options))

@@ -20,14 +20,14 @@ import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
-import domain.util.NomorService
+import project.user.NomorService
 import groovy.transform.*
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
-
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
+import griffon.util.*
 
 @NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
     @NamedAttributeNode('listItemFaktur'),
@@ -44,7 +44,7 @@ class FakturJualEceran extends FakturJual {
             throw new DataTidakBolehDiubah(this)
         }
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-            nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
+            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: this.tanggal,
             gudang: (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
         )

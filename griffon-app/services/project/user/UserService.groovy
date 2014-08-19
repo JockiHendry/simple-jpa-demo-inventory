@@ -13,20 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package project.user
 
-import domain.Container
+import domain.user.User
 import org.jdesktop.swingx.auth.LoginService
-import project.user.UserRepository
-import simplejpa.SimpleJpaUtil
 
-class UserLoginService extends LoginService {
+class UserService extends LoginService {
+
+    UserRepository userRepository
+    User currentUser
 
     @Override
     boolean authenticate(String nama, char[] password, String server) throws Exception {
-        User user = (SimpleJpaUtil.instance.repositoryManager.findRepository('User') as UserRepository).login(nama, new String(password))
+        User user = userRepository.login(nama, new String(password))
         if (user) {
-            Container.app.currentUser = user
+            currentUser = user
             return true
         }
         false

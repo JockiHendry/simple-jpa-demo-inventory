@@ -15,9 +15,10 @@
  */
 package util
 
-import domain.Container
+import domain.user.User
 import javax.persistence.PrePersist
 import javax.persistence.PreUpdate
+import griffon.util.*
 
 class UserAuditEntityListener {
 
@@ -25,7 +26,8 @@ class UserAuditEntityListener {
     void create(Object target) {
         target.createdDate = Calendar.instance.time
         if (target.hasProperty('createdBy')) {
-            target.createdBy = Container.app.currentUser?.nama
+            User user = ApplicationHolder.application.serviceManager.findService('User').currentUser
+            target.createdBy = user?.nama
         }
     }
 
@@ -33,7 +35,8 @@ class UserAuditEntityListener {
     void update(Object target) {
         target.modifiedDate = Calendar.instance.time
         if (target.hasProperty('modifiedBy')) {
-            target.modifiedBy = Container.app.currentUser?.nama
+            User user = ApplicationHolder.application.serviceManager.findService('User').currentUser
+            target.modifiedBy = user?.nama
         }
     }
 

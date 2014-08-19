@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.util
+package project.user
 
 import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualOlehSales
@@ -27,6 +27,10 @@ import simplejpa.transaction.Transaction
 class NomorService {
 
     private final Logger log = LoggerFactory.getLogger(NomorService)
+
+    public void serviceInit() {
+        refreshAll()
+    }
 
     public enum TIPE {
         FAKTUR_JUAL('FakturJual', '%06d/%s/%s'),

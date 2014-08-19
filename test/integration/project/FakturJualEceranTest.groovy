@@ -26,6 +26,7 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
@@ -35,12 +36,14 @@ class FakturJualEceranTest extends DbUnitTestCase {
 
     GudangRepository gudangRepository
     FakturJualRepository fakturJualRepository
+    NomorService nomorService
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
+        nomorService = app.serviceManager.findService('Nomor')
     }
 
     protected void tearDown() {
@@ -49,7 +52,7 @@ class FakturJualEceranTest extends DbUnitTestCase {
     }
 
     public void testBuat() {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         Produk produkA = fakturJualRepository.findProdukById(-1)
         Produk produkB = fakturJualRepository.findProdukById(-2)
         FakturJualEceran fakturJualEceran = new FakturJualEceran(tanggal: LocalDate.now(), namaPembeli: 'Mr. Wu')

@@ -19,7 +19,7 @@ import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
 import project.pengaturan.PengaturanRepository
-import domain.util.PasswordService
+import project.user.PasswordService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.SimpleJpaUtil

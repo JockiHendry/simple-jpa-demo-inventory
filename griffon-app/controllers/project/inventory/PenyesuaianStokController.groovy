@@ -19,7 +19,7 @@ import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.PenyesuaianStok
-import domain.util.NomorService
+import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent
@@ -31,6 +31,7 @@ class PenyesuaianStokController {
     PenyesuaianStokModel model
     def view
     PenyesuaianStokRepository penyesuaianStokRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         init()
@@ -38,7 +39,7 @@ class PenyesuaianStokController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         execInsideUISync {
             model.gudangList.clear()
         }
@@ -49,7 +50,7 @@ class PenyesuaianStokController {
             model.tanggalSelesaiSearch = LocalDate.now()
             model.gudangSearch = null
             model.nomorSearch = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PENYESUAIAN_STOK)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PENYESUAIAN_STOK)
         }
     }
 
@@ -125,7 +126,7 @@ class PenyesuaianStokController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PENYESUAIAN_STOK)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PENYESUAIAN_STOK)
             model.tanggal = null
             model.keterangan = null
             model.gudang.selectedItem = null

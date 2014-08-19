@@ -20,13 +20,14 @@ import domain.event.TransferStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.Transfer
-import domain.util.NomorService
+import project.user.NomorService
 import simplejpa.transaction.Transaction
 import org.joda.time.*
-import griffon.util.ApplicationHolder
 
 @Transaction
 class TransferRepository {
+
+    NomorService nomorService
 
     List<Transfer> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
                                String asalSearch, String tujuanSearch) {
@@ -48,7 +49,7 @@ class TransferRepository {
     }
 
     Transfer buat(Transfer transfer) {
-        transfer.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.TRANSFER)
+        transfer.nomor = nomorService.buatNomor(NomorService.TIPE.TRANSFER)
         if (findTransferByNomor(transfer.nomor)) {
             throw new DataDuplikat(transfer)
         }

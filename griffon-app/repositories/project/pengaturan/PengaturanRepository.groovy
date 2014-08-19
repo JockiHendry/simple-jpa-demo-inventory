@@ -19,6 +19,7 @@ import domain.Container
 import domain.pengaturan.JenisNilai
 import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
+import project.user.PasswordService
 import simplejpa.transaction.Transaction
 import java.nio.ByteBuffer
 import java.util.concurrent.ConcurrentHashMap
@@ -27,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap
 class PengaturanRepository {
 
     public final Map cache = new ConcurrentHashMap()
+
+    PasswordService passwordService
 
     @Transaction(Transaction.Policy.SKIP)
     public def getValue(KeyPengaturan keyPengaturan) {
@@ -40,7 +43,7 @@ class PengaturanRepository {
                 return ((String) value).bytes
 
             case JenisNilai.PASSWORD:
-                return Container.app.passwordService.plainTextToEncrypted((String)value)
+                return passwordService.plainTextToEncrypted((String)value)
 
             case JenisNilai.INTEGER:
                 return ByteBuffer.allocate(4).putInt(value).array()

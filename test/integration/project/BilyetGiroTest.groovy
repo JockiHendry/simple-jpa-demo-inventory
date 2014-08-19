@@ -23,6 +23,7 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.penjualan.BilyetGiroClearingService
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
@@ -31,11 +32,13 @@ class BilyetGiroTest extends DbUnitTestCase {
     private static final Logger log = LoggerFactory.getLogger(BilyetGiroTest)
 
     BilyetGiroRepository bilyetGiroRepository
+    BilyetGiroClearingService bilyetGiroClearingService
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
         bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
+        bilyetGiroClearingService = app.serviceManager.findService('BilyetGiroClearing')
     }
 
     protected void tearDown() {
@@ -59,7 +62,7 @@ class BilyetGiroTest extends DbUnitTestCase {
         bilyetGiroRepository.buat(bg1)
         bilyetGiroRepository.buat(bg2)
 
-        Container.app.bilyetGiroClearingService.periksaJatuhTempo()
+        bilyetGiroClearingService.periksaJatuhTempo()
 
         bg1 = bilyetGiroRepository.findBilyetGiroByNomorSeri('BS-0001')
         assertEquals(LocalDate.now(), bg1.tanggalPencairan)

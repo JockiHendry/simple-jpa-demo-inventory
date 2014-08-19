@@ -16,6 +16,7 @@
 
 
 import domain.Container
+import domain.user.User
 import org.codehaus.groovy.runtime.InvokerHelper
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
@@ -49,7 +50,8 @@ onUncaughtExceptionThrown = { Exception e ->
 
     def stringWriter = new StringWriter()
     e.printStackTrace(new PrintWriter(stringWriter))
-    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, stringWriter.toString())
+    User user = app.serviceManager.findService('User').currentUser
+    HttpUtil.instance.sendNotification(user?.nama, stringWriter.toString())
     if (SplashScreen.instance.window.visible) {
         System.exit(-1)
     }

@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.penjualan
+package project.penjualan
 
-import domain.Container
 import domain.faktur.BilyetGiro
 import org.joda.time.LocalDate
 import org.slf4j.Logger

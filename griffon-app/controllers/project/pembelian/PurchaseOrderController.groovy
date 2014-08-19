@@ -21,7 +21,7 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
 import domain.pembelian.PurchaseOrder
-import domain.util.NomorService
+import project.user.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
@@ -36,6 +36,7 @@ class PurchaseOrderController {
     PurchaseOrderModel model
     def view
     PurchaseOrderRepository purchaseOrderRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         model.mode = args.containsKey('mode')? args.'mode': POViewMode.ALL
@@ -64,7 +65,7 @@ class PurchaseOrderController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         execInsideUISync {
             model.supplierList.clear()
         }
@@ -73,7 +74,7 @@ class PurchaseOrderController {
             model.supplierList.addAll(supplier)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
             model.statusSearch.selectedItem = Container.SEMUA
         }
     }
@@ -178,7 +179,7 @@ class PurchaseOrderController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
             model.tanggal = null
             model.keterangan = null
             model.diskonPotonganLangsung = null

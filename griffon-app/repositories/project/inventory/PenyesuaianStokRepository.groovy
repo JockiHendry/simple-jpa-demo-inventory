@@ -20,13 +20,14 @@ import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.PenyesuaianStok
-import domain.util.NomorService
+import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
-import griffon.util.ApplicationHolder
 
 @Transaction
 class PenyesuaianStokRepository {
+
+    NomorService nomorService
 
     List cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String gudangSearch) {
         findAllPenyesuaianStokByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -43,7 +44,7 @@ class PenyesuaianStokRepository {
     }
 
     PenyesuaianStok buat(PenyesuaianStok penyesuaianStok) {
-        penyesuaianStok.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.PENYESUAIAN_STOK)
+        penyesuaianStok.nomor = nomorService.buatNomor(NomorService.TIPE.PENYESUAIAN_STOK)
         if (findPenyesuaianStokByNomor(penyesuaianStok.nomor)) {
             throw new DataDuplikat(penyesuaianStok)
         }

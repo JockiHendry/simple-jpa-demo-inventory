@@ -16,46 +16,16 @@
 
 package domain
 
-import domain.penjualan.BilyetGiroClearingService
-import domain.user.User
-import domain.user.UserLoginService
-import domain.util.NomorService
-import domain.util.PasswordService
-import griffon.util.*
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import griffon.core.*
-
 class Container {
-
-    private final Logger log = LoggerFactory.getLogger(Container)
 
     public static Container app = new Container()
 
     public static final String SEMUA = "Semua"
-
-    User currentUser
-
-    PasswordService passwordService
-    NomorService nomorService
-    BilyetGiroClearingService bilyetGiroClearingService
-    UserLoginService userLoginService
-
-    private Container() {
-        setup()
-    }
-
-    public void setup() {
-        // Create services
-        passwordService = new PasswordService()
-        nomorService = new NomorService()
-        bilyetGiroClearingService = new BilyetGiroClearingService()
-        userLoginService = new UserLoginService()
-    }
 
     public List searchEnum(Class enumeration) {
         List result = [SEMUA]
         result.addAll(EnumSet.allOf(enumeration))
         result
     }
+
 }

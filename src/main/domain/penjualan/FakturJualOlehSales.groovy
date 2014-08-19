@@ -23,7 +23,7 @@ import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
-import domain.util.NomorService
+import project.user.NomorService
 import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -32,7 +32,6 @@ import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.joda.time.*
 import griffon.util.*
-
 import javax.validation.groups.Default
 
 @NamedEntityGraphs([
@@ -72,7 +71,7 @@ class FakturJualOlehSales extends FakturJual {
 
         // Buat PengeluaranBarang berdasarkan data yang ada di faktur
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-            nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
+            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(), gudang: konsumen.sales.gudang,
             alamatTujuan: alamatTujuan, namaSupir: namaSupir
         )
@@ -152,7 +151,7 @@ class FakturJualOlehSales extends FakturJual {
         }
         BonusPenjualan bonusPenjualan = new BonusPenjualan(
             tanggal: tanggal, gudang: konsumen.sales.gudang,
-            nomor: Container.app.nomorService.buatNomor(NomorService.TIPE.PENGELUARAN_BONUS)
+            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BONUS)
         )
         listItemBarang.each { bonusPenjualan.tambah(it) }
         this.bonusPenjualan = bonusPenjualan

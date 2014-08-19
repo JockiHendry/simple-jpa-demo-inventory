@@ -15,14 +15,14 @@
  */
 package project
 
-import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
-import domain.util.NomorService
+import griffon.test.mock.MockGriffonApplication
+import project.user.NomorService
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
@@ -39,6 +39,30 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
         SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
         SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
+        MockGriffonApplication app = new MockGriffonApplication()
+        app.serviceManager = new ServiceManager() {
+
+            NomorService nomorService = new NomorService()
+
+            @Override
+            Map<String, GriffonService> getServices() {
+                [:]
+            }
+
+            @Override
+            GriffonService findService(String name) {
+                if (name == 'Nomor') {
+                    return nomorService
+                }
+                null
+            }
+
+            @Override
+            GriffonApplication getApp() {
+                return null
+            }
+        }
+        ApplicationHolder.application = app
     }
 
     protected void tearDown() {
@@ -52,7 +76,7 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
 
-        Container.app.nomorService.nomorUrutTerakhir[NomorService.TIPE.PENGELUARAN_BARANG] = 5
+        ApplicationHolder.application.serviceManager.findService('Nomor').nomorUrutTerakhir[NomorService.TIPE.PENGELUARAN_BARANG] = 5
         f.antar()
 
         assertEquals(StatusFakturJual.DIANTAR, f.status)

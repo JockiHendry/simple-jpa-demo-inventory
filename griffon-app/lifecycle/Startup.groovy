@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.Container
 import domain.pengaturan.KeyPengaturan
 import domain.user.Menu
 import domain.user.User
 import org.jdesktop.swingx.JXLoginPane
 import project.pengaturan.PengaturanRepository
+import project.user.UserService
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 import util.SplashScreen
@@ -41,15 +41,15 @@ import java.awt.Font
  */
 
 execOutsideUI {
-    // Create listener
+    // Create listener and init services
     ServiceManager serviceManager = app.serviceManager
     serviceManager.findService('BilyetGiroEventListener')
     serviceManager.findService('InventoryEventListener')
+    serviceManager.findService('Nomor')
 
     // Create repository
     PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
     pengaturanRepository.refreshAll()
-    Container.app.nomorService.refreshAll()
 
     // Mengubah ukuran huruf bila diperlukan
     execInsideUISync {
@@ -61,20 +61,21 @@ execOutsideUI {
     }
 
     // Clearing bilyet giro yang jatuh tempo
-    Container.app.bilyetGiroClearingService.periksaJatuhTempo()
+    serviceManager.findService('BilyetGiroClearing').periksaJatuhTempo()
 }
 
 SplashScreen.instance.dispose()
 
 if (Environment.current != Environment.TEST) {
-    JXLoginPane panel = new JXLoginPane(Container.app.userLoginService)
+    UserService userService = app.serviceManager.findService('User')
+    JXLoginPane panel = new JXLoginPane(userService)
     JXLoginPane.Status status = JXLoginPane.showLoginDialog(app.windowManager.getStartingWindow(), panel)
     if (status != JXLoginPane.Status.SUCCEEDED) {
         app.shutdown()
     }
     MVCGroup mainGroup = app.mvcGroupManager.findGroup('mainGroup')
 
-    User currentUser = Container.app.currentUser
+    User currentUser = app.serviceManager.findService('User').currentUser
     mainGroup.model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
     mainGroup.model.penerimaanBarangVisible = currentUser.bolehAkses(Menu.PENERIMAAN_BARANG)
     mainGroup.model.pengeluaranBarangVisible = currentUser.bolehAkses(Menu.PENGELUARAN_BARANG)
@@ -94,5 +95,5 @@ if (Environment.current != Environment.TEST) {
 }
 
 execOutsideUI {
-    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, "Startup...")
+    HttpUtil.instance.sendNotification(app.serviceManager.findService('User').currentUser?.nama, "Startup...")
 }

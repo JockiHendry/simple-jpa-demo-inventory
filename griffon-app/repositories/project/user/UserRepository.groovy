@@ -28,6 +28,8 @@ class UserRepository {
 
     private static final String DEFAULT_PASSWORD = '12345'
 
+    PasswordService passwordService
+
     List<User> cari(String namaSearch) {
         findAllUserByDsl {
             if (namaSearch) {
@@ -40,7 +42,7 @@ class UserRepository {
         if (findUserByNama(user.nama)) {
             throw new DataDuplikat(user)
         }
-        user.password = Container.app.passwordService.plainTextToEncrypted(password?:DEFAULT_PASSWORD)
+        user.password = passwordService.plainTextToEncrypted(password?:DEFAULT_PASSWORD)
         persist(user)
         user
     }
@@ -50,7 +52,7 @@ class UserRepository {
         if (!user) {
             throw new DataTidakBolehDiubah(user)
         }
-        user.password = Container.app.passwordService.plainTextToEncrypted(passwordBaru)
+        user.password = passwordService.plainTextToEncrypted(passwordBaru)
         user
     }
 
@@ -65,7 +67,7 @@ class UserRepository {
             Menu.values().each { user.hakAkses << it }
             buat(user)
         }
-        if (user && Container.app.passwordService.periksaPassword(user.password, inputPassword)) {
+        if (user && passwordService.periksaPassword(user.password, inputPassword)) {
             user.loginTerakhir = LocalDateTime.now()
             return user
         }

@@ -23,6 +23,7 @@ import domain.penjualan.PencairanPoinTukarBarang
 import domain.penjualan.PencairanPoinTukarUang
 import domain.validation.InputPencairanPoin
 import org.joda.time.LocalDate
+import project.user.NomorService
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -34,6 +35,7 @@ class PencairanPoinController {
     PencairanPoinModel model
     def view
     PencairanPoinRepository pencairanPoinRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         init()
@@ -41,7 +43,7 @@ class PencairanPoinController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         execInsideUISync {
             model.konsumenList.clear()
         }

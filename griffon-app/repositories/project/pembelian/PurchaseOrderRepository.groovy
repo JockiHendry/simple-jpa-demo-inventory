@@ -24,12 +24,14 @@ import domain.pembelian.FakturBeli
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PurchaseOrder
 import domain.pembelian.StatusPurchaseOrder
-import domain.util.NomorService
+import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 
 @Transaction
 class PurchaseOrderRepository {
+
+    NomorService nomorService
 
     public List<PurchaseOrder> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
             String nomorFakturSearch, String supplierSearch, def statusSearch) {
@@ -140,7 +142,7 @@ class PurchaseOrderRepository {
     }
 
     public PurchaseOrder buat(PurchaseOrder purchaseOrder) {
-        purchaseOrder.nomor = Container.app.nomorService.buatNomor(NomorService.TIPE.PURCHASE_ORDER)
+        purchaseOrder.nomor = nomorService.buatNomor(NomorService.TIPE.PURCHASE_ORDER)
         if (findPurchaseOrderByNomor(purchaseOrder.nomor)) {
             throw new DataDuplikat(purchaseOrder)
         }

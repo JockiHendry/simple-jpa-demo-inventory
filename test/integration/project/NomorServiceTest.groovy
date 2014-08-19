@@ -15,10 +15,8 @@
  */
 package project
 
-import domain.Container
-import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Sales
-import domain.util.NomorService
+import project.user.NomorService
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,9 +26,12 @@ class NomorServiceTest extends DbUnitTestCase {
 
     private static final Logger log = LoggerFactory.getLogger(NomorServiceTest)
 
+    NomorService nomorService
+
     protected void setUp() {
         super.setUp()
         setUpDatabase("penjualan", "/project/data_penjualan.xls")
+        nomorService = app.serviceManager.findService('Nomor')
     }
 
     protected void tearDown() {
@@ -39,29 +40,27 @@ class NomorServiceTest extends DbUnitTestCase {
     }
 
     void testGetNomorFakturJualTerakhir() {
-        NomorService service = Container.app.nomorService
-        assertEquals(2, service.getNomorFakturJualTerakhir())
+        assertEquals(2, nomorService.getNomorFakturJualTerakhir())
 
-        Sales sales1 = service.findSalesById(-1l)
-        Sales sales2 = service.findSalesById(-2l)
-        Sales sales3 = service.findSalesById(-3l)
-        assertEquals(4, service.getNomorFakturJualTerakhir(sales1))
-        assertEquals(0, service.getNomorFakturJualTerakhir(sales2))
-        assertEquals(1, service.getNomorFakturJualTerakhir(sales3))
+        Sales sales1 = nomorService.findSalesById(-1l)
+        Sales sales2 = nomorService.findSalesById(-2l)
+        Sales sales3 = nomorService.findSalesById(-3l)
+        assertEquals(4, nomorService.getNomorFakturJualTerakhir(sales1))
+        assertEquals(0, nomorService.getNomorFakturJualTerakhir(sales2))
+        assertEquals(1, nomorService.getNomorFakturJualTerakhir(sales3))
     }
 
     void testGetCalonNomorFakturJual() {
-        NomorService service = Container.app.nomorService
         String bulanTahun = LocalDate.now().toString('MMyyyy')
 
-        assertEquals("000003/$bulanTahun/ECERAN", service.getCalonNomorFakturJual())
+        assertEquals("000003/$bulanTahun/ECERAN", nomorService.getCalonNomorFakturJual())
 
-        Sales sales1 = service.findSalesById(-1l)
-        Sales sales2 = service.findSalesById(-2l)
-        Sales sales3 = service.findSalesById(-3l)
-        assertEquals("000005/$bulanTahun/SA", service.getCalonNomorFakturJual(sales1))
-        assertEquals("000001/$bulanTahun/SB", service.getCalonNomorFakturJual(sales2))
-        assertEquals("000002/$bulanTahun/SC", service.getCalonNomorFakturJual(sales3))
+        Sales sales1 = nomorService.findSalesById(-1l)
+        Sales sales2 = nomorService.findSalesById(-2l)
+        Sales sales3 = nomorService.findSalesById(-3l)
+        assertEquals("000005/$bulanTahun/SA", nomorService.getCalonNomorFakturJual(sales1))
+        assertEquals("000001/$bulanTahun/SB", nomorService.getCalonNomorFakturJual(sales2))
+        assertEquals("000002/$bulanTahun/SC", nomorService.getCalonNomorFakturJual(sales3))
     }
 
 }

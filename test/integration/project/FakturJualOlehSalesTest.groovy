@@ -36,6 +36,7 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
@@ -46,6 +47,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     GudangRepository gudangRepository
     FakturJualRepository fakturJualRepository
     KonsumenRepository konsumenRepository
+    NomorService nomorService
 
     protected void setUp() {
         super.setUp()
@@ -53,6 +55,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
+        nomorService = app.serviceManager.findService('Nomor')
     }
 
     protected void tearDown() {
@@ -61,7 +64,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testBuatFakturJualOlehSalesDalamKota() {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
 
         Produk produkA = fakturJualRepository.findProdukById(-1l)
         Produk produkB = fakturJualRepository.findProdukById(-2l)
@@ -90,7 +93,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testLimitDalamKota() {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         Produk produkA = fakturJualRepository.findProdukById(-1l)
         Produk produkB = fakturJualRepository.findProdukById(-2l)
         Sales sales = fakturJualRepository.findSalesById(-1l)
@@ -253,7 +256,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testBonus() {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         Produk produkA = fakturJualRepository.findProdukById(-1l)
         Produk produkB = fakturJualRepository.findProdukById(-2l)
         Sales sales = fakturJualRepository.findSalesById(-1l)
@@ -279,7 +282,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testBonusGagal() {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         Produk produkA = fakturJualRepository.findProdukById(-1l)
         Produk produkB = fakturJualRepository.findProdukById(-2l)
         Sales sales = fakturJualRepository.findSalesById(-1l)

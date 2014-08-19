@@ -18,7 +18,7 @@ package project.penjualan
 import domain.Container
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.FakturJualOlehSales
-import domain.util.NomorService
+import project.user.NomorService
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
@@ -32,6 +32,7 @@ class PengirimanController {
     PengirimanModel model
     def view
     FakturJualRepository fakturJualRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         init()
@@ -40,7 +41,7 @@ class PengirimanController {
 
     def init = {
         execInsideUISync {
-            model.nomorSuratJalan = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
+            model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
@@ -111,7 +112,7 @@ class PengirimanController {
     def clear = {
         execInsideUISync {
             model.nomorFakturJual = null
-            model.nomorSuratJalan = Container.app.nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
+            model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
             model.tanggal = null
             model.keterangan = null
             model.alamatTujuan = null

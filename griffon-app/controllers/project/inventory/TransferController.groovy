@@ -19,7 +19,7 @@ import ast.NeedSupervisorPassword
 import domain.Container
 import domain.exception.DataDuplikat
 import domain.inventory.Transfer
-import domain.util.NomorService
+import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent
@@ -31,6 +31,7 @@ class TransferController {
     TransferModel model
     def view
     TransferRepository transferRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         init()
@@ -38,7 +39,7 @@ class TransferController {
     }
 
     def init = {
-        Container.app.nomorService.refreshAll()
+        nomorService.refreshAll()
         execInsideUISync {
             model.transferList.clear()
         }
@@ -49,7 +50,7 @@ class TransferController {
             model.tanggalSelesaiSearch = LocalDate.now()
             model.asalSearch = null
             model.tujuanSearch = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.TRANSFER)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.TRANSFER)
         }
     }
 
@@ -119,7 +120,7 @@ class TransferController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomor(NomorService.TIPE.TRANSFER)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.TRANSFER)
             model.tanggal = null
             model.keterangan = null
             model.gudang.selectedItem = null

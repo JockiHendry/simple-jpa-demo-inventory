@@ -21,6 +21,7 @@ import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
 import domain.penjualan.*
 import org.joda.time.LocalDate
+import project.user.NomorService
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -36,6 +37,7 @@ class FakturJualEceranController {
     FakturJualEceranModel model
     def view
     FakturJualRepository fakturJualRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         model.mode = args.containsKey('mode')? args.'mode': FakturEceranViewMode.ALL
@@ -68,7 +70,7 @@ class FakturJualEceranController {
     }
 
     def init = {
-        model.nomor = Container.app.nomorService.getCalonNomorFakturJual()
+        model.nomor = nomorService.getCalonNomorFakturJual()
         model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
         model.tanggalSelesaiSearch = LocalDate.now()
     }
@@ -198,7 +200,7 @@ class FakturJualEceranController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = Container.app.nomorService.getCalonNomorFakturJual()
+            model.nomor = nomorService.getCalonNomorFakturJual()
             model.tanggal = null
             model.namaPembeli = null
             model.keterangan = null

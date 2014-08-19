@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.Container
+import domain.user.User
 import util.HttpUtil
 
 /*
@@ -30,5 +30,6 @@ import util.HttpUtil
  * - execInsideUISync { // your code }
  */
 execOutsideUI {
-    HttpUtil.instance.sendNotification(Container.app.currentUser?.nama, "Shutdown...")
+    User user = app.serviceManager.findService('User').currentUser
+    HttpUtil.instance.sendNotification(user?.nama, "Shutdown...")
 }

@@ -15,8 +15,7 @@
  */
 package project
 
-import domain.Container
-import domain.util.NomorService
+import project.user.NomorService
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
 
@@ -31,7 +30,7 @@ class NomorServiceTests extends GriffonUnitTestCase {
     }
 
     void testBuatNomor() {
-        NomorService nomorService = Container.app.nomorService
+        NomorService nomorService = new NomorService()
         nomorService.nomorUrutTerakhir[NomorService.TIPE.PURCHASE_ORDER] = 0
         assertEquals(String.format('000001-PO-KB-%s', LocalDate.now().toString('MMyyyy')), nomorService.buatNomor(NomorService.TIPE.PURCHASE_ORDER))
         assertEquals(String.format('000002-PO-KB-%s', LocalDate.now().toString('MMyyyy')), nomorService.buatNomor(NomorService.TIPE.PURCHASE_ORDER))
@@ -44,7 +43,7 @@ class NomorServiceTests extends GriffonUnitTestCase {
     }
 
     void testCalonNomor() {
-        NomorService nomorService = Container.app.nomorService
+        NomorService nomorService = new NomorService()
         nomorService.nomorUrutTerakhir[NomorService.TIPE.PURCHASE_ORDER] = 0
         assertEquals(String.format('000001-PO-KB-%s', LocalDate.now().toString('MMyyyy')), nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER))
         assertEquals(String.format('000001-PO-KB-%s', LocalDate.now().toString('MMyyyy')), nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER))
