@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.user.User
+import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 
 /*
@@ -30,6 +30,5 @@ import util.HttpUtil
  * - execInsideUISync { // your code }
  */
 execOutsideUI {
-    User user = app.serviceManager.findService('User').currentUser
-    HttpUtil.instance.sendNotification(user?.nama, "Shutdown...")
+    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Shutdown...")
 }

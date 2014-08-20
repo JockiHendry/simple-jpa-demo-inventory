@@ -89,6 +89,16 @@ griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
 griffon.simplejpa.entityManager.propertiesFile = "${System.getProperty('user.home')}/inventory/simplejpa.properties"
 griffon.simplejpa.scaffolding.generator = 'simplejpa.scaffolding.generator.ddd.DDDGenerator'
 
+environments {
+    development {
+        griffon.simplejpa.auditing.loginService = 'UserService'
+    }
+    production {
+        griffon.simplejpa.auditing.loginService = 'UserService'
+    }
+}
+
+
 griffon {
     simplejpa {
         entityManager {

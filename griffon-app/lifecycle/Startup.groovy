@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 import domain.pengaturan.KeyPengaturan
-import domain.user.Menu
-import domain.user.User
-import org.jdesktop.swingx.JXLoginPane
 import project.pengaturan.PengaturanRepository
-import project.user.UserService
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 import util.SplashScreen
@@ -66,34 +62,6 @@ execOutsideUI {
 
 SplashScreen.instance.dispose()
 
-if (Environment.current != Environment.TEST) {
-    UserService userService = app.serviceManager.findService('User')
-    JXLoginPane panel = new JXLoginPane(userService)
-    JXLoginPane.Status status = JXLoginPane.showLoginDialog(app.windowManager.getStartingWindow(), panel)
-    if (status != JXLoginPane.Status.SUCCEEDED) {
-        app.shutdown()
-    }
-    MVCGroup mainGroup = app.mvcGroupManager.findGroup('mainGroup')
-
-    User currentUser = app.serviceManager.findService('User').currentUser
-    mainGroup.model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
-    mainGroup.model.penerimaanBarangVisible = currentUser.bolehAkses(Menu.PENERIMAAN_BARANG)
-    mainGroup.model.pengeluaranBarangVisible = currentUser.bolehAkses(Menu.PENGELUARAN_BARANG)
-    mainGroup.model.buktiTerimaVisible = currentUser.bolehAkses(Menu.BUKTI_TERIMA)
-    mainGroup.model.purchaseOrderVisible = currentUser.bolehAkses(Menu.PURCHASE_ORDER)
-    mainGroup.model.fakturBeliVisible = currentUser.bolehAkses(Menu.FAKTUR_BELI)
-    mainGroup.model.fakturJualVisible = currentUser.bolehAkses(Menu.FAKTUR_JUAL)
-    mainGroup.model.hutangVisible = currentUser.bolehAkses(Menu.HUTANG)
-    mainGroup.model.piutangVisible = currentUser.bolehAkses(Menu.PIUTANG)
-    mainGroup.model.giroVisible = currentUser.bolehAkses(Menu.GIRO)
-    mainGroup.model.produkVisible = currentUser.bolehAkses(Menu.PRODUK)
-    mainGroup.model.transferVisible = currentUser.bolehAkses(Menu.TRANSFER)
-    mainGroup.model.penyesuaianStokVisible = currentUser.bolehAkses(Menu.PENYESUAIAN_STOK)
-    mainGroup.model.laporanVisible = currentUser.bolehAkses(Menu.LAPORAN)
-    mainGroup.model.maintenanceVisible = currentUser.bolehAkses(Menu.MAINTENANCE)
-
-}
-
 execOutsideUI {
-    HttpUtil.instance.sendNotification(app.serviceManager.findService('User').currentUser?.nama, "Startup...")
+    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Startup...")
 }

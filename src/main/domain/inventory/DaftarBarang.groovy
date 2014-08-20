@@ -15,7 +15,6 @@
  */
 package domain.inventory
 
-import ast.Auditable
 import domain.faktur.Faktur
 import domain.validation.TanpaGudang
 import groovy.transform.Canonical
@@ -32,7 +31,7 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 import javax.validation.groups.Default
 
-@MappedSuperclass @Canonical(excludes='items') @Auditable
+@MappedSuperclass @Canonical(excludes='items')
 abstract class DaftarBarang {
 
     @NotBlank(groups=[Default,TanpaGudang]) @Size(min=2, max=100, groups=[Default,TanpaGudang])

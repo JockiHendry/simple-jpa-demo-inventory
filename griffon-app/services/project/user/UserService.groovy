@@ -15,22 +15,17 @@
  */
 package project.user
 
-import domain.user.User
 import org.jdesktop.swingx.auth.LoginService
+import simplejpa.SimpleJpaUtil
 
 class UserService extends LoginService {
 
     UserRepository userRepository
-    User currentUser
 
     @Override
     boolean authenticate(String nama, char[] password, String server) throws Exception {
-        User user = userRepository.login(nama, new String(password))
-        if (user) {
-            currentUser = user
-            return true
-        }
-        false
+        SimpleJpaUtil.instance.user = userRepository.login(nama, new String(password))
+        return (SimpleJpaUtil.instance.user != null)? true: false
     }
 
 }

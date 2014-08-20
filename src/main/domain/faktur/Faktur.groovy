@@ -16,7 +16,6 @@
 
 package domain.faktur
 
-import ast.Auditable
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
@@ -28,7 +27,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import javax.validation.groups.Default
 
-@MappedSuperclass @Canonical(excludes='listItemFaktur') @Auditable
+@MappedSuperclass @Canonical(excludes='listItemFaktur')
 abstract class Faktur {
 
     @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])

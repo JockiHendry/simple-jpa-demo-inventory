@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import domain.user.User
+import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
 import griffon.util.*
@@ -46,8 +47,7 @@ onUncaughtExceptionThrown = { Exception e ->
 
     def stringWriter = new StringWriter()
     e.printStackTrace(new PrintWriter(stringWriter))
-    User user = app.serviceManager.findService('User').currentUser
-    HttpUtil.instance.sendNotification(user?.nama, stringWriter.toString())
+    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, stringWriter.toString())
     if (SplashScreen.instance.window.visible) {
         System.exit(-1)
     }

@@ -16,6 +16,7 @@
 package domain.user
 
 import groovy.transform.*
+import simplejpa.AuditableUser
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
@@ -24,7 +25,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical(includes='nama')
-class User {
+class User implements AuditableUser {
 
     @NotBlank @Size(min=3, max=50)
     String nama
@@ -40,6 +41,11 @@ class User {
 
     public boolean bolehAkses(Menu menu) {
         hakAkses.contains(menu)
+    }
+
+    @Override
+    String getUserName() {
+        nama
     }
 
 }

@@ -20,6 +20,7 @@ import project.pengaturan.PengaturanRepository
 import simple.escp.data.DataSources
 import simple.escp.json.JsonTemplate
 import simple.escp.swing.PrintPreviewPane
+import simplejpa.SimpleJpaUtil
 
 class PreviewEscpController {
 
@@ -31,8 +32,7 @@ class PreviewEscpController {
         JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
         def source = args.'dataSource'
         Map options = [:]
-        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null) ?:
-            app.serviceManager.findService('User').currentUser?.nama
+        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null)?: SimpleJpaUtil.instance.user.userName
         options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         PrintPreviewPane printPreviewPane = view.printPreviewPane
         printPreviewPane.display(template, DataSources.from(source, options))

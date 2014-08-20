@@ -16,6 +16,8 @@
 
 package project.main
 
+import domain.user.User
+import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
 import java.awt.*
 import java.awt.event.*
@@ -25,6 +27,27 @@ class MainGroupController {
     MainGroupModel model
     def view
     def groupId
+
+    void mvcGroupInit(Map args) {
+        User currentUser = SimpleJpaUtil.instance.user
+        if (currentUser) {
+            model.status = "Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, ${currentUser.nama}."
+            model.penerimaanBarangVisible = currentUser.bolehAkses(domain.user.Menu.PENERIMAAN_BARANG)
+            model.pengeluaranBarangVisible = currentUser.bolehAkses(domain.user.Menu.PENGELUARAN_BARANG)
+            model.buktiTerimaVisible = currentUser.bolehAkses(domain.user.Menu.BUKTI_TERIMA)
+            model.purchaseOrderVisible = currentUser.bolehAkses(domain.user.Menu.PURCHASE_ORDER)
+            model.fakturBeliVisible = currentUser.bolehAkses(domain.user.Menu.FAKTUR_BELI)
+            model.fakturJualVisible = currentUser.bolehAkses(domain.user.Menu.FAKTUR_JUAL)
+            model.hutangVisible = currentUser.bolehAkses(domain.user.Menu.HUTANG)
+            model.piutangVisible = currentUser.bolehAkses(domain.user.Menu.PIUTANG)
+            model.giroVisible = currentUser.bolehAkses(domain.user.Menu.GIRO)
+            model.produkVisible = currentUser.bolehAkses(domain.user.Menu.PRODUK)
+            model.transferVisible = currentUser.bolehAkses(domain.user.Menu.TRANSFER)
+            model.penyesuaianStokVisible = currentUser.bolehAkses(domain.user.Menu.PENYESUAIAN_STOK)
+            model.laporanVisible = currentUser.bolehAkses(domain.user.Menu.LAPORAN)
+            model.maintenanceVisible = currentUser.bolehAkses(domain.user.Menu.MAINTENANCE)
+        }
+    }
 
     def switchPage = { ActionEvent event, Map arguments = [:] ->
 
