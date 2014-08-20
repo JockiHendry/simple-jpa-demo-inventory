@@ -10,7 +10,7 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ${g.repositoryType} {
 
-	public List<${g.domainClassName}> search(String ${g.firstAttrSearch}) {
+	public List<${g.domainClassName}> cari(String ${g.firstAttrSearch}) {
 		findAll${g.domainClassName}ByDsl([excludeDeleted: false]) {
 			if (${g.firstAttrSearch}) {
 				${g.firstAttr} like("%\${${g.firstAttrSearch}}%")
@@ -18,7 +18,7 @@ class ${g.repositoryType} {
 		}
 	}
 
-	public ${g.domainClassName} create(${g.domainClassName} ${g.domainClassNameAsProperty}) {
+	public ${g.domainClassName} buat(${g.domainClassName} ${g.domainClassNameAsProperty}) {
 		if (find${g.domainClassName}By${g.firstAttrAsCapitalized}(${g.domainClassNameAsProperty}.${g.firstAttr})) {
 			throw new DuplicateEntityException(${g.domainClassNameAsProperty})
 		}
