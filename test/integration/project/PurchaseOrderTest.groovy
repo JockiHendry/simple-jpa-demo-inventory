@@ -17,6 +17,7 @@ package project
 
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.ItemBarang
+import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
@@ -69,12 +70,18 @@ class PurchaseOrderTest extends DbUnitTestCase {
             penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-1), 5))
             penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-2), 3))
             p.tambah(penerimaanBarang)
-            assertEquals(42, purchaseOrderRepository.findProdukById(-1).jumlah)
-            assertEquals(30, purchaseOrderRepository.findProdukById(-2).jumlah)
+            Produk produk1 = purchaseOrderRepository.findProdukById(-1l)
+            Produk produk2 = purchaseOrderRepository.findProdukById(-2l)
+            assertEquals(p.supplier, produk1.supplier)
+            assertEquals(p.supplier, produk2.supplier)
+            assertEquals(42, produk1.jumlah)
+            assertEquals(30, produk2.jumlah)
             penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING 2!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
             penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-3), 4))
             p.tambah(penerimaanBarang)
-            assertEquals(32, purchaseOrderRepository.findProdukById(-3).jumlah)
+            Produk produk3 = purchaseOrderRepository.findProdukById(-3l)
+            assertEquals(p.supplier, produk3.supplier)
+            assertEquals(32, produk3.jumlah)
             assertTrue(p.diterimaPenuh())
         }
 

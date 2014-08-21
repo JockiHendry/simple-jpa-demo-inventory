@@ -79,6 +79,7 @@ application(title: 'Produk',
                 glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                         doubleClickAction: pilih, enterKeyAction: pilih) {
 					glazedColumn(name: 'Nama', property: 'nama')
+                    glazedColumn(name: 'Supplier', expression: { it.supplier?.nama?: ''})
 					glazedColumn(name: 'HET Dalam Kota', property: 'hargaDalamKota', columnClass: Integer) {
                         templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                     }

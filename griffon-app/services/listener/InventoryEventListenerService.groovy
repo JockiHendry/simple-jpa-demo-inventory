@@ -22,9 +22,9 @@ import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
+import domain.pembelian.PurchaseOrder
 import domain.user.PesanLevelMinimum
 import project.user.PesanRepository
-import simplejpa.SimpleJpaUtil
 
 class InventoryEventListenerService {
 
@@ -50,6 +50,11 @@ class InventoryEventListenerService {
                 keterangan = faktur?.keterangan?: daftarBarang.keterangan
             }
             i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
+
+            // Mengisi supplier untuk produk (dengan asumsi bahwa 1 produk 1 supplier)
+            if (faktur instanceof PurchaseOrder) {
+                i.produk.supplier = faktur.supplier
+            }
 
             periksaLevelMinimum(i.produk)
 

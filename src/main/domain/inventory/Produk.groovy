@@ -17,6 +17,7 @@
 package domain.inventory
 
 import domain.faktur.Faktur
+import domain.pembelian.Supplier
 import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Sales
 import org.joda.time.LocalDate
@@ -83,6 +84,9 @@ class Produk implements Comparable {
 
     @Min(0l)
     Integer levelMinimum
+
+    @ManyToOne
+    Supplier supplier
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
     Map<Gudang, StokProduk> daftarStok = [:]
