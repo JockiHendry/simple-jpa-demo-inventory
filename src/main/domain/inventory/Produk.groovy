@@ -144,13 +144,13 @@ class Produk implements Comparable {
 
         Produk produk = (Produk) o
 
-        if (nama != produk.nama) return false
+        if (nama != produk?.nama) return false
 
         return true
     }
 
     int hashCode() {
-        return nama.hashCode()
+        return nama?.hashCode()?: 0
     }
 
     String toString() {
@@ -160,7 +160,7 @@ class Produk implements Comparable {
     @Override
     int compareTo(Object o) {
         if (!(o instanceof Produk)) return -1
-        nama.compareTo(o.nama)
+        nama? nama.compareTo(o?.nama): -1
     }
 }
 

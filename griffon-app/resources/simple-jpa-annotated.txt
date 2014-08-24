@@ -17,3 +17,5 @@ project.penjualan.SalesRepository
 project.user.PesanRepository
 project.user.UserRepository
 listener.BilyetGiroEventListenerService
+project.retur.ReturBeliRepository
+project.retur.ReturJualRepository

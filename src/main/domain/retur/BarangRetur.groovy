@@ -13,36 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.retur
 
-package domain.pembelian
-
+import domain.inventory.Produk
 import groovy.transform.*
-import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
 
-@DomainClass @Entity @Canonical
-class Supplier implements Comparable {
+@Embeddable @Canonical
+class BarangRetur {
 
-    @NotEmpty @Size(min=2, max=100)
-    String nama
+    @NotNull @ManyToOne
+    Produk produk
 
-    @Size(min=2, max=150)
-    String alamat
+    @NotNull @Min(1l)
+    Integer jumlah
 
-    @Size(min=2, max=50)
-    String nomorTelepon
+    @Min(0l)
+    Integer jumlahDiKlaim
 
-    @Override
-    String toString() {
-        "$nama"
+    @NotNull
+    Boolean tukar = false
+
+    @Size(min=2, max=100)
+    String nomorKlaim
+
+    boolean sudahDiKlaim() {
+        tukar || jumlahDiKlaim == jumlah
     }
 
-    @Override
-    int compareTo(Object o) {
-        if (!(o instanceof Supplier)) return -1
-        nama? nama.compareTo(o?.nama): -1
-    }
 }
 

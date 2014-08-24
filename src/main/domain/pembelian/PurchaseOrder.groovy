@@ -21,6 +21,8 @@ import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.retur.ReturBeli
+import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.validation.InputPurchaseOrder
@@ -174,6 +176,15 @@ class PurchaseOrder extends Faktur {
         if (fakturBeli.hutang.lunas) {
             status = StatusPurchaseOrder.LUNAS
         }
+    }
+
+    void bayar(ReturBeli returBeli) {
+        if (returBeli.supplier != supplier) {
+            throw new IllegalArgumentException("Supplier retur [${returBeli.supplier}] tidak sama dengan di PO [$supplier]")
+        }
+        Pembayaran pembayaran = new Pembayaran(LocalDate.now(), returBeli.sisaPotongan(), true)
+        returBeli.prosesPotongan(returBeli.sisaPotongan())
+        bayar(pembayaran)
     }
 
     BigDecimal sisaHutang() {

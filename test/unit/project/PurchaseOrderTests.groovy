@@ -19,6 +19,8 @@ import domain.exception.DataTidakKonsisten
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.pembelian.Supplier
+import domain.retur.ReturBeli
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -142,6 +144,60 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
+        p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-05-2013'), 15000))
+        assertEquals(0, p.sisaHutang())
+        assertTrue(p.fakturBeli.hutang.lunas)
+        assertTrue(p.status == StatusPurchaseOrder.LUNAS)
+    }
+
+    void testBayarHutangDenganReturBeli() {
+        Supplier supplier = new Supplier()
+        PurchaseOrder p = new PurchaseOrder(supplier: supplier)
+        Produk produkA = new Produk('Produk A', 10000)
+        Produk produkB = new Produk('Produk B', 12000)
+        Produk produkC = new Produk('Produk C',  8000)
+        p.tambah(new ItemFaktur(produkA, 10, 9000))
+        p.tambah(new ItemFaktur(produkB, 5,  11000))
+        p.tambah(new ItemFaktur(produkC, 8,  5000))
+        PenerimaanBarang penerimaanBarang = new PenerimaanBarang()
+        penerimaanBarang.tambah(new ItemBarang(produkA, 10))
+        penerimaanBarang.tambah(new ItemBarang(produkB, 5))
+        penerimaanBarang.tambah(new ItemBarang(produkC, 8))
+        p.tambah(penerimaanBarang)
+        FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now())
+        fakturBeli.tambah(new ItemFaktur(produkA, 10,  9000))
+        fakturBeli.tambah(new ItemFaktur(produkB,  5, 11000))
+        fakturBeli.tambah(new ItemFaktur(produkC,  8,  5000))
+        p.tambah(fakturBeli)
+
+        ReturBeli r1 = new ReturBeli(supplier: supplier, potongan: 50000)
+        assertFalse(r1.sudahDiklaim)
+        p.bayar(r1)
+        assertTrue(r1.sudahDiklaim)
+        assertEquals(135000, p.sisaHutang())
+        assertFalse(p.fakturBeli.hutang.lunas)
+        assertFalse(p.status == StatusPurchaseOrder.LUNAS)
+
+        ReturBeli r2 = new ReturBeli(supplier: supplier, potongan: 70000)
+        assertFalse(r2.sudahDiklaim)
+        p.bayar(r2)
+        assertTrue(r2.sudahDiklaim)
+        assertEquals(65000, p.sisaHutang())
+        assertFalse(p.fakturBeli.hutang.lunas)
+        assertFalse(p.status == StatusPurchaseOrder.LUNAS)
+
+        ReturBeli r3 = new ReturBeli(supplier: supplier, potongan: 50000)
+        assertFalse(r3.sudahDiklaim)
+        p.bayar(r3)
+        assertTrue(r3.sudahDiklaim)
+        assertEquals(15000, p.sisaHutang())
+        assertFalse(p.fakturBeli.hutang.lunas)
+        assertFalse(p.status == StatusPurchaseOrder.LUNAS)
+
+        ReturBeli r4 = new ReturBeli(supplier: new Supplier(), potongan: 10000)
+        shouldFail(IllegalArgumentException) {
+            p.bayar(r4)
+        }
         p.bayar(new Pembayaran(Periode.format.parseLocalDate('01-05-2013'), 15000))
         assertEquals(0, p.sisaHutang())
         assertTrue(p.fakturBeli.hutang.lunas)
