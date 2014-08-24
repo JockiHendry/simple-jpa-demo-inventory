@@ -1,3 +1,18 @@
+/*
+ * Copyright 2014 Jocki Hendry.
+ *
+ * Licensed under the Apache License, Version 2.0 (the 'License');
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an 'AS IS' BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ${g.targetPackageName}
 
 ${g.imports()}
@@ -34,7 +49,7 @@ ${g.listAll_set(3)}
 	}
 
 	def search = {
-        List result = ${g.repositoryVar}.search(model.${g.firstAttrSearch})
+        List result = ${g.repositoryVar}.cari(model.${g.firstAttrSearch})
         execInsideUISync {
             model.${g.domainClassGlazedListVariable}.clear()
             model.${g.domainClassGlazedListVariable}.addAll(result)
@@ -57,7 +72,7 @@ ${g.listAll_set(3)}
 <%
     out << g.saveOneToManyInverse(g.domainClass,4)
     out << g.saveManyToManyInverse(g.domainClass,4)
-%>                ${g.repositoryVar}.create(${g.domainClassNameAsProperty})
+%>                ${g.repositoryVar}.buat(${g.domainClassNameAsProperty})
                 execInsideUISync {
                     model.${g.domainClassGlazedListVariable} << ${g.domainClassNameAsProperty}
                     view.table.changeSelection(model.${g.domainClassGlazedListVariable}.size()-1, 0, false, false)
@@ -76,24 +91,23 @@ ${g.listAll_set(3)}
         }
 	}
 
-	def delete = {
+    @NeedSupervisorPassword
+    def delete = {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-		${g.domainClassName} ${g.domainClassNameAsProperty} = view.table.selectionModel.selected[0]
-${g.delete(2)}
-		execInsideUISync {
-			model.${g.domainClassGlazedListVariable}.remove(${g.domainClassNameAsProperty})
-			clear()
-		}
-	}
+        ${g.domainClassName} ${g.domainClassNameAsProperty} = view.table.selectionModel.selected[0]
+        ${g.domainClassNameAsProperty} = ${g.repositoryVar}.hapus(${g.domainClassNameAsProperty})
+        execInsideUISync {
+            view.table.selectionModel.selected[0] = ${g.domainClassNameAsProperty}
+            clear()
+        }
+    }
 ${g.popups(1)}
 	def clear = {
 		execInsideUISync {
 			model.id = null
 ${g.clear(3)}
-			model.created = null
-            model.modified = null
             model.errors.clear()
 			view.table.selectionModel.clearSelection()
 		}
@@ -108,8 +122,6 @@ ${g.clear(3)}
 				model.errors.clear()
 				model.id = selected.id
 ${g.selected(4)}
-                model.created = selected.createdDate
-                model.modified = selected.modifiedDate
 			}
 		}
 	}
