@@ -48,7 +48,7 @@ abstract class Retur {
     BigDecimal potonganCair = BigDecimal.ZERO
 
     public Boolean getSudahDiklaim() {
-        (items.every { it.sudahDiKlaim() }? Boolean.TRUE: Boolean.FALSE) && (sisaPotongan() == BigDecimal.ZERO)
+        (items.every { it.sudahDiKlaim() }? true: false) && (sisaPotongan() == 0)
     }
 
     void tambah(BarangRetur barangRetur) {
@@ -95,7 +95,7 @@ abstract class Retur {
     }
 
     BigDecimal sisaPotongan() {
-        potongan - potonganCair
+        (potongan?:0) - (potonganCair?:0)
     }
 
 }

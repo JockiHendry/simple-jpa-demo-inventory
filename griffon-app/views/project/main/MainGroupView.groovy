@@ -86,6 +86,9 @@ actions {
     action(id: 'penyesuaianStok', name: 'Penyesuaian', actionCommandKey: 'penyesuaianStok', mnemonic: KeyEvent.VK_Y,
         smallIcon: imageIcon('/menu_penyesuaianstok.png'), closure: controller.switchPage)
 
+    action(id: 'returJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_U,
+        smallIcon: imageIcon('/menu_retur_jual.png'), closure: controller.switchPage)
+
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
     action(id: 'pesan', name: 'Notifikasi', actionCommandKey: 'pesan', mnemonic: KeyEvent.VK_N,
@@ -182,6 +185,9 @@ application(id: 'mainFrame',
                     visible: bind {model.transferVisible})
                 toggleButton(buttonGroup: buttons, action: penyesuaianStok, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.penyesuaianStokVisible})
+                separator()
+                toggleButton(buttonGroup: buttons, action: returJual, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    visible: bind {model.returJualVisible})
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.laporanVisible})

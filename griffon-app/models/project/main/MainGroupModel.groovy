@@ -35,6 +35,7 @@ class MainGroupModel {
     @Bindable boolean produkVisible = true
     @Bindable boolean transferVisible = true
     @Bindable boolean penyesuaianStokVisible = true
+    @Bindable boolean returJualVisible = true
     @Bindable boolean laporanVisible = true
     @Bindable boolean pesanVisible = true
     @Bindable boolean maintenanceVisible = true

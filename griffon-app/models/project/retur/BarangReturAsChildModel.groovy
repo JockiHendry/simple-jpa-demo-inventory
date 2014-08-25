@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.retur
+package project.retur
 
-import domain.inventory.Produk
-import groovy.transform.*
-import javax.persistence.*
-import javax.validation.constraints.*
+import domain.retur.*
+import domain.inventory.*
+import ca.odell.glazedlists.*
+import ca.odell.glazedlists.swing.*
+import groovy.beans.Bindable
+import org.joda.time.*
+import javax.swing.event.*
+import simplejpa.swing.*
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-@Embeddable @Canonical
-class BarangRetur {
+class BarangReturAsChildModel {
 
-    @NotNull @ManyToOne
-    Produk produk
+    @Bindable Long id
 
-    @NotNull @Min(1l)
-    Integer jumlah
-
-    @Min(0l)
-    Integer jumlahDiKlaim
-
-    @NotNull
-    Boolean tukar = false
-
-    @Size(min=2, max=100)
-    String nomorKlaim
-
-    boolean sudahDiKlaim() {
-        tukar? jumlahDiKlaim == jumlah: true
-    }
+    @Bindable Produk produk
+    @Bindable Integer jumlah
+    @Bindable Integer jumlahDiKlaim
+    @Bindable Boolean tukar
+    @Bindable String nomorKlaim
+    BasicEventList<BarangRetur> barangReturList = new BasicEventList<>()
 
 }
-

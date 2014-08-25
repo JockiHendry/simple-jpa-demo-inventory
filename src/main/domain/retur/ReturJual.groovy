@@ -72,5 +72,9 @@ class ReturJual extends Retur {
         konsumen.potongPiutang(jumlah)
     }
 
+    void potongPiutang() {
+        potongPiutang(potongan)
+    }
+
 }
 

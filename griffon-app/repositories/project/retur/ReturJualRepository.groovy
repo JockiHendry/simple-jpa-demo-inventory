@@ -44,7 +44,9 @@ class ReturJualRepository {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
+        returJual.konsumen = merge(returJual.konsumen)
 		persist(returJual)
+        returJual.potongPiutang()
 		returJual
 	}
 
