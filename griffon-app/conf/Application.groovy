@@ -23,11 +23,11 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
-    // MVC Group for "barangReturAsChild"
-    'barangReturAsChild' {
-        model      = 'project.retur.BarangReturAsChildModel'
-        view       = 'project.retur.BarangReturAsChildView'
-        controller = 'project.retur.BarangReturAsChildController'
+    // MVC Group for "klaimReturAsChild"
+    'klaimReturAsChild' {
+        model      = 'project.retur.KlaimReturAsChildModel'
+        view       = 'project.retur.KlaimReturAsChildView'
+        controller = 'project.retur.KlaimReturAsChildController'
     }
 
     // MVC Group for "returJual"

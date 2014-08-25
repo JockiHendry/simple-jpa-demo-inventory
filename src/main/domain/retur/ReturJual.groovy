@@ -38,43 +38,42 @@ class ReturJual extends Retur {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PengeluaranBarang pengeluaranBarang
 
-    void klaim(ReturBeli returBeli) {
-        if (!items.any { it.produk.supplier == returBeli.supplier}) {
-            throw new UnsupportedOperationException("Tidak ada produk dari supplier ${returBeli.supplier} pada prosesKlaim $returBeli")
-        }
-        returBeli.items.each {
-            prosesKlaim(it.produk, it.jumlah, returBeli.nomor)
-        }
-    }
-
-    PengeluaranBarang tukarBaru() {
+    PengeluaranBarang tukar() {
         if (pengeluaranBarang) {
             throw new DataTidakBolehDiubah(this)
+        }
+        List<KlaimRetur> klaimTukar = getKlaimTukar(true)
+        if (klaimTukar.empty) {
+            throw new UnsupportedOperationException("Tidak ada penukaran yang dapat dilakukan untuk retur jual [$nomor]")
         }
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),
-            gudang: SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').cariGudangUtama()
+            gudang: gudang,
+            keterangan: "Retur Jual $nomor"
         )
-        getBarangDitukar().each {
+        getKlaimTukar(true).each {
             pengeluaranBarang.tambah(new ItemBarang(it.produk, it.jumlah))
+            it.sudahDiproses = true
         }
         pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama)
         this.pengeluaranBarang = pengeluaranBarang
         pengeluaranBarang
     }
 
-    void potongPiutang(BigDecimal jumlah) {
+    void potongPiutang() {
         if (konsumen==null) {
             throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
         }
-        prosesPotongan(jumlah)
-        konsumen.potongPiutang(jumlah)
+        getKlaimPotongan(true).each {
+            konsumen.potongPiutang(it.potongan)
+            it.sudahDiproses = true
+        }
     }
 
-    void potongPiutang() {
-        potongPiutang(potongan)
+    @Override
+    int faktor() {
+        1
     }
-
 }
 

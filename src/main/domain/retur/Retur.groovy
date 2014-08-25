@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.inventory.DaftarBarang
 import domain.inventory.Produk
 import groovy.transform.*
 import javax.persistence.*
@@ -23,80 +24,47 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@MappedSuperclass @Canonical(excludes='items')
-abstract class Retur {
-
-    @NotBlank @Size(min=2, max=100)
-    String nomor
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggal
-
-    @Size(min=2, max=200)
-    String keterangan
+@MappedSuperclass
+abstract class Retur extends DaftarBarang {
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty
-    List<BarangRetur> items = []
+    List<KlaimRetur> listKlaimRetur = []
 
     @NotNull
-    Boolean sudahDiklaim = Boolean.FALSE
+    Boolean sudahDiproses = false
 
-    @Min(0l)
-    BigDecimal potongan = BigDecimal.ZERO
-
-    @Min(0l)
-    BigDecimal potonganCair = BigDecimal.ZERO
-
-    public Boolean getSudahDiklaim() {
-        (items.every { it.sudahDiKlaim() }? true: false) && (sisaPotongan() == 0)
+    public Boolean getSudahDiproses() {
+        listKlaimRetur.every { it.sudahDiproses }
     }
 
-    void tambah(BarangRetur barangRetur) {
-        items << barangRetur
-        if (barangRetur.tukar) {
-            barangRetur.jumlahDiKlaim = 0
-        } else {
-            barangRetur.jumlahDiKlaim = barangRetur.jumlah
-        }
+    void tambahKlaimPotongan(BigDecimal jumlah) {
+        listKlaimRetur << new KlaimRetur(potongan: jumlah)
     }
 
-    void prosesKlaim(Produk produk, int jumlah, String nomorKlaim) {
-        def listItems = items.findAll { it.produk == produk  && !it.sudahDiKlaim() }
-        if (listItems.empty) {
-            throw new UnsupportedOperationException("Tidak menemukan [$produk] untuk di-prosesKlaim di [$this]")
-        }
-        listItems.each {
-            it.jumlahDiKlaim += jumlah
-            if (it.nomorKlaim) {
-                it.nomorKlaim += ',' + nomorKlaim
-            } else {
-                it.nomorKlaim = nomorKlaim
-            }
-        }
+    void tambahKlaimTukar(Produk produk, int jumlah) {
+        listKlaimRetur << new KlaimRetur(produk, jumlah)
     }
 
-    void prosesPotongan(BigDecimal jumlah) {
-        if (jumlah > sisaPotongan()) {
-            throw new IllegalArgumentException("Tidak dapat melakukan potongan [$jumlah] untuk sisa potongan [${sisaPotongan()}]")
-        }
-        potonganCair += jumlah
-    }
-
-    List<BarangRetur> getBelumDiklaim() {
-        def hasil = []
-        hasil.addAll(items.findAll{ !it.sudahDiKlaim() })
+    List<KlaimRetur> getKlaimTukar(boolean hanyaBelumDiproses = false) {
+        List<KlaimRetur> hasil = []
+        hasil.addAll(listKlaimRetur.findAll {it.produk!=null && (hanyaBelumDiproses? it.sudahDiproses==false: true)})
         hasil
     }
 
-    List<BarangRetur> getBarangDitukar() {
-        def hasil = []
-        hasil.addAll(items.findAll{ it.tukar })
+    List<KlaimRetur> getKlaimPotongan(boolean hanyaBelumDiproses = false) {
+        List<KlaimRetur> hasil = []
+        hasil.addAll(listKlaimRetur.findAll {it.potongan!=null && (hanyaBelumDiproses? it.sudahDiproses==false: true)})
         hasil
     }
 
     BigDecimal sisaPotongan() {
-        (potongan?:0) - (potonganCair?:0)
+        getKlaimPotongan(true).sum { it.potongan }?: 0
     }
+
+    void prosesSisaPotongan() {
+        getKlaimPotongan(true).each { it.sudahDiproses = true }
+    }
+
 
 }
 

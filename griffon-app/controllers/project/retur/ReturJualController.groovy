@@ -71,7 +71,12 @@ class ReturJualController {
             }
         }
 
-        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), potongan: model.potongan, konsumen: model.konsumen.selectedItem)
+        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen.selectedItem)
+        returJual.listKlaimRetur.addAll(model.listKlaimRetur)
+        if (model.potongan > 0) {
+            returJual.tambahKlaimPotongan(model.potongan)
+        }
+
         if (!returJualRepository.validate(returJual, Default, model)) return
 
         try {
@@ -109,14 +114,24 @@ class ReturJualController {
         }
     }
 
-    @Transaction(Transaction.Policy.SKIP)
     def showBarangRetur = {
         execInsideUISync {
-            def args = [parentList: model.items]
+            def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false]
             def props = [title: 'Items']
-            DialogUtils.showMVCGroup('barangReturAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
-                model.items.addAll(m.barangReturList)
+                model.items.addAll(m.itemBarangList)
+            }
+        }
+    }
+
+    def showKlaimRetur = {
+        execInsideUISync {
+            def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0]]
+            def props = [title: 'Items']
+            DialogUtils.showMVCGroup('klaimReturAsChild', args, app, view, props) { m, v, c ->
+                model.listKlaimRetur.clear()
+                model.listKlaimRetur.addAll(m.klaimReturList)
             }
         }
     }
@@ -128,7 +143,7 @@ class ReturJualController {
             model.tanggal = null
             model.keterangan = null
             model.items.clear()
-            model.sudahDiklaim = false
+            model.listKlaimRetur.clear()
             model.potongan = null
             model.konsumen.selectedItem = null
             model.created = null
@@ -153,8 +168,9 @@ class ReturJualController {
                 model.keterangan = selected.keterangan
                 model.items.clear()
                 model.items.addAll(selected.items)
-                model.sudahDiklaim = selected.sudahDiklaim
-                model.potongan = selected.potongan
+                model.listKlaimRetur.clear()
+                model.listKlaimRetur.addAll(selected.getKlaimTukar())
+                model.potongan = selected.getKlaimPotongan().sum { it.potongan }
                 model.konsumen.selectedItem = selected.konsumen
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null

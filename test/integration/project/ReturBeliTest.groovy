@@ -16,8 +16,11 @@
 package project
 
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import domain.pembelian.Supplier
 import domain.retur.ReturBeli
+import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.retur.ReturBeliRepository
@@ -41,13 +44,48 @@ class ReturBeliTest extends DbUnitTestCase {
         super.deleteAll()
     }
 
+    public void testJumlahReturDiProduk() {
+        Produk p1 = returBeliRepository.findProdukById(-1l)
+        Produk p2 = returBeliRepository.findProdukById(-2l)
+        Produk p3 = returBeliRepository.findProdukById(-3l)
+        Supplier s = returBeliRepository.findSupplierById(-1l)
+        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s)
+        returBeli.tambah(new ItemBarang(p1, 10))
+        returBeli.tambah(new ItemBarang(p2, 20))
+        returBeli.tambah(new ItemBarang(p3, 30))
+        returBeli.tambahKlaimTukar(p1, 1)
+        returBeliRepository.buat(returBeli)
+
+        // Periksa nilai jumlah retur di produk
+        p1 = returBeliRepository.findProdukById(-1l)
+        assertEquals(40, p1.jumlahRetur)
+        p2 = returBeliRepository.findProdukById(-2l)
+        assertEquals(40, p2.jumlahRetur)
+        p3 = returBeliRepository.findProdukById(-3l)
+        assertEquals(10, p3.jumlahRetur)
+    }
+
+    public void testJumlahReturDiProdukSetelahHapus() {
+        ReturBeli returBeli = returBeliRepository.findReturBeliById(-1l)
+        returBeliRepository.hapus(returBeli)
+
+        // Periksa nilai jumlah retur di produk
+        Produk p1 = returBeliRepository.findProdukById(-1l)
+        assertEquals(55, p1.jumlahRetur)
+        Produk p2 = returBeliRepository.findProdukById(-2l)
+        assertEquals(63, p2.jumlahRetur)
+        Produk p3 = returBeliRepository.findProdukById(-3l)
+        assertEquals(42, p3.jumlahRetur)
+    }
+
+
     public void testTukarBaru() {
         returBeliRepository.withTransaction {
             ReturBeli returBeli = returBeliRepository.findReturBeliById(-1l)
             returBeli = returBeliRepository.tukarBaru(returBeli)
 
-            assertTrue(returBeli.sudahDiklaim)
-            assertTrue(returBeli.getBelumDiklaim().empty)
+            assertTrue(returBeli.sudahDiproses)
+            assertTrue(returBeli.getKlaimTukar(true).empty)
             assertNotNull(returBeli.penerimaanBarang)
 
             Gudang g = findGudangById(-1l)

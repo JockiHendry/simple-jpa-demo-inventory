@@ -15,6 +15,7 @@
  */
 package listener
 
+import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.event.TransferStok
 import domain.faktur.Faktur
@@ -23,12 +24,30 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.pembelian.PurchaseOrder
+import domain.retur.Retur
 import domain.user.PesanLevelMinimum
 import project.user.PesanRepository
 
 class InventoryEventListenerService {
 
     PesanRepository pesanRepository
+
+    void onPerubahanRetur(PerubahanRetur perubahanRetur) {
+        log.info "Event onPerubahanRetur mulai dikerjakan..."
+
+        Retur retur = perubahanRetur.retur
+        retur.items.each { ItemBarang itemBarang ->
+            int pengali = (perubahanRetur.invers? -1: 1) * retur.faktor()
+            int jumlahRetur = pengali * itemBarang.jumlah
+            if (itemBarang.produk.jumlahRetur == null) {
+                itemBarang.produk.jumlahRetur = jumlahRetur
+            } else {
+                itemBarang.produk.jumlahRetur += jumlahRetur
+            }
+        }
+
+        log.info "Event onPerubahanRetur selesai dikerjakan!"
+    }
 
     void onPerubahanStok(PerubahanStok perubahanStok) {
         log.info "Event onPerubahanStok mulai dikerjakan..."

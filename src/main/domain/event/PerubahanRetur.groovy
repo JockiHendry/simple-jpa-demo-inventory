@@ -13,34 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.retur
+package domain.event
 
-import domain.inventory.Produk
-import groovy.transform.*
-import javax.persistence.*
-import javax.validation.constraints.*
+import domain.retur.Retur
+import griffon.core.*
 
-@Embeddable @Canonical
-class BarangRetur {
+class PerubahanRetur extends Event {
 
-    @NotNull @ManyToOne
-    Produk produk
+    boolean invers
+    Retur retur
 
-    @NotNull @Min(1l)
-    Integer jumlah
-
-    @Min(0l)
-    Integer jumlahDiKlaim
-
-    @NotNull
-    Boolean tukar = false
-
-    @Size(min=2, max=100)
-    String nomorKlaim
-
-    boolean sudahDiKlaim() {
-        tukar? jumlahDiKlaim == jumlah: true
+    PerubahanRetur(Retur retur, boolean invers = false) {
+        super(retur)
+        this.retur = retur
+        this.invers = invers
     }
 
 }
-

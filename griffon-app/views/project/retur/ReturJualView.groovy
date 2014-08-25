@@ -29,6 +29,7 @@ actions {
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
+    action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Klaim Penukaran Barang...', closure: controller.showKlaimRetur)
 }
 
 application(title: 'Retur Jual',
@@ -63,12 +64,6 @@ application(title: 'Retur Jual',
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
-                glazedColumn(name: 'Potongan Piutang', property: 'potongan', columnClass: Integer) {
-                    templateRenderer(exp: { it? currencyFormat(it): '' }, horizontalAlignment: RIGHT)
-                }
-                glazedColumn(name: 'Sudah Diklaim', property: 'sudahDiklaim') {
-                    templateRenderer(exp: { it? 'Y': ''})
-                }
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
             }
         }
@@ -92,6 +87,9 @@ application(title: 'Retur Jual',
             label('Items:')
             button(action: showBarangRetur, errorPath: 'items')
             errorLabel(path: 'items', constraints: 'wrap')
+            label('Klaim:')
+            button(action: showKlaimRetur, errorPath: 'listKlaimRetur')
+            errorLabel(path: 'listKlaimRetur', constraints: 'wrap')
             panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 label('Created:')

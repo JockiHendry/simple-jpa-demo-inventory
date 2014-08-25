@@ -16,10 +16,11 @@
 package project
 
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
-import domain.retur.BarangRetur
+import domain.retur.KlaimRetur
 import domain.retur.ReturBeli
 import griffon.core.GriffonApplication
 import griffon.core.GriffonService
@@ -78,11 +79,14 @@ class ReturBeliTests extends GriffonUnitTestCase {
         Produk produk3 = new Produk()
         Supplier supplier = new Supplier()
         ReturBeli returBeli = new ReturBeli(supplier: supplier)
-        returBeli.tambah(new BarangRetur(produk: produk1, jumlah: 10, tukar: true))
-        returBeli.tambah(new BarangRetur(produk: produk2, jumlah: 20, tukar: true))
-        returBeli.tambah(new BarangRetur(produk3, 30))
+        returBeli.tambah(new ItemBarang(produk1, 10))
+        returBeli.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(new ItemBarang(produk3, 30))
+        returBeli.tambahKlaimTukar(produk1, 10)
+        returBeli.tambahKlaimTukar(produk2, 20)
 
-        PenerimaanBarang penerimaanBarang = returBeli.tukarBaru()
+        PenerimaanBarang penerimaanBarang = returBeli.tukar()
+        assertTrue(returBeli.getKlaimTukar(true).empty)
         assertEquals(penerimaanBarang, returBeli.penerimaanBarang)
         assertNotNull(penerimaanBarang.nomor)
         assertEquals(LocalDate.now(), penerimaanBarang.tanggal)
@@ -92,6 +96,40 @@ class ReturBeliTests extends GriffonUnitTestCase {
         assertEquals(10, penerimaanBarang.items[0].jumlah)
         assertEquals(produk2, penerimaanBarang.items[1].produk)
         assertEquals(20, penerimaanBarang.items[1].jumlah)
+    }
+
+    public void testSisaPotongan() {
+        Produk produk1 = new Produk()
+        Produk produk2 = new Produk()
+        Produk produk3 = new Produk()
+        Supplier supplier = new Supplier()
+        ReturBeli returBeli = new ReturBeli(supplier: supplier)
+        returBeli.tambah(new ItemBarang(produk1, 10))
+        returBeli.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(new ItemBarang(produk3, 30))
+        returBeli.tambahKlaimPotongan(10000)
+        returBeli.tambahKlaimTukar(produk1, 10)
+        assertEquals(10000, returBeli.sisaPotongan())
+
+        KlaimRetur klaim1 = new KlaimRetur(sudahDiproses: true, potongan: 20000)
+        returBeli.listKlaimRetur << klaim1
+        assertEquals(10000, returBeli.sisaPotongan())
+    }
+
+    public void testProsesSisaPotongan() {
+        Produk produk1 = new Produk()
+        Produk produk2 = new Produk()
+        Produk produk3 = new Produk()
+        Supplier supplier = new Supplier()
+        ReturBeli returBeli = new ReturBeli(supplier: supplier)
+        returBeli.tambah(new ItemBarang(produk1, 10))
+        returBeli.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(new ItemBarang(produk3, 30))
+        returBeli.tambahKlaimPotongan(10000)
+        returBeli.tambahKlaimTukar(produk1, 10)
+        assertEquals(10000, returBeli.sisaPotongan())
+        returBeli.prosesSisaPotongan()
+        assertEquals(0, returBeli.sisaPotongan())
     }
 
 }

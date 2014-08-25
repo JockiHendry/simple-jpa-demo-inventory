@@ -183,7 +183,7 @@ class PurchaseOrder extends Faktur {
             throw new IllegalArgumentException("Supplier retur [${returBeli.supplier}] tidak sama dengan di PO [$supplier]")
         }
         Pembayaran pembayaran = new Pembayaran(LocalDate.now(), returBeli.sisaPotongan(), true)
-        returBeli.prosesPotongan(returBeli.sisaPotongan())
+        returBeli.prosesSisaPotongan()
         bayar(pembayaran)
     }
 

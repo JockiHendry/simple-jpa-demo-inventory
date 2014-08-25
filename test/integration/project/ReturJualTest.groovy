@@ -16,7 +16,9 @@
 package project
 
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import domain.penjualan.Konsumen
 import domain.retur.ReturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -42,14 +44,47 @@ class ReturJualTest extends DbUnitTestCase {
 		super.deleteAll()
 	}
 
+    public void testJumlahReturDiProduk() {
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        Produk p3 = returJualRepository.findProdukById(-3l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k)
+        returJual.tambah(new ItemBarang(p1, 10))
+        returJual.tambah(new ItemBarang(p2, 20))
+        returJual.tambah(new ItemBarang(p3, 30))
+        returJual.tambahKlaimTukar(p1, 1)
+        returJualRepository.buat(returJual)
+
+        // Periksa nilai jumlah retur di produk
+        p1 = returJualRepository.findProdukById(-1l)
+        assertEquals(20, p1.jumlahRetur)
+        p2 = returJualRepository.findProdukById(-2l)
+        assertEquals(23, p2.jumlahRetur)
+        p3 = returJualRepository.findProdukById(-3l)
+        assertEquals(35, p3.jumlahRetur)
+    }
+
+    public void testJumlahReturDiProdukSetelahHapus() {
+        ReturJual returJual = returJualRepository.findReturJualById(-1l)
+        returJualRepository.hapus(returJual)
+
+        // Periksa nilai jumlah retur di produk
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        assertEquals(5, p1.jumlahRetur)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, p2.jumlahRetur)
+        Produk p3 = returJualRepository.findProdukById(-3l)
+        assertEquals(3, p3.jumlahRetur)
+    }
+
     public void testTukarBaru() {
         returJualRepository.withTransaction {
             ReturJual returJual = returJualRepository.findReturJualById(-1l)
-            returJual = returJualRepository.tukarBaru(returJual)
+            returJual = returJualRepository.tukar(returJual)
 
-            assertTrue(returJual.sudahDiklaim)
-            assertTrue(returJual.getBelumDiklaim().empty)
-
+            assertTrue(returJual.sudahDiproses)
+            assertTrue(returJual.getKlaimTukar(true).empty)
             assertNotNull(returJual.pengeluaranBarang)
             assertTrue(returJual.pengeluaranBarang.sudahDiterima())
 

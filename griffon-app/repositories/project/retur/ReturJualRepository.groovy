@@ -15,16 +15,20 @@
  */
 package project.retur
 
+import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
 import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturJualRepository {
+
+    GudangRepository gudangRepository
 
     List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch) {
         findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -44,9 +48,12 @@ class ReturJualRepository {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
+        returJual.gudang = gudangRepository.cariGudangUtama()
         returJual.konsumen = merge(returJual.konsumen)
+        returJual.items.each { it.produk = merge(it.produk) }
 		persist(returJual)
         returJual.potongPiutang()
+        ApplicationHolder.application?.event(new PerubahanRetur(returJual))
 		returJual
 	}
 
@@ -68,13 +75,14 @@ class ReturJualRepository {
         if (!returJual || returJual.pengeluaranBarang) {
             throw new DataTidakBolehDiubah(returJual)
         }
+        ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
         returJual.deleted = 'Y'
         returJual
     }
 
-    public ReturJual tukarBaru(ReturJual returJual) {
+    public ReturJual tukar(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
-        PengeluaranBarang pengeluaranBarang = returJual.tukarBaru()
+        PengeluaranBarang pengeluaranBarang = returJual.tukar()
         persist(pengeluaranBarang)
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
         returJual

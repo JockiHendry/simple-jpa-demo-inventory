@@ -37,21 +37,27 @@ class ReturBeli extends Retur {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PenerimaanBarang penerimaanBarang
 
-    PenerimaanBarang tukarBaru() {
+    PenerimaanBarang tukar() {
         if (this.penerimaanBarang) {
             throw new DataTidakBolehDiubah(this)
         }
         PenerimaanBarang penerimaanBarang = new PenerimaanBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),
-            gudang: SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').cariGudangUtama()
+            gudang: gudang,
+            keterangan: "Retur Beli $nomor"
         )
-        getBarangDitukar().each {
+        getKlaimTukar(true).each {
             penerimaanBarang.tambah(new ItemBarang(it.produk, it.jumlah))
+            it.sudahDiproses = true
         }
         this.penerimaanBarang = penerimaanBarang
         penerimaanBarang
     }
 
+    @Override
+    int faktor() {
+        -1
+    }
 }
 
