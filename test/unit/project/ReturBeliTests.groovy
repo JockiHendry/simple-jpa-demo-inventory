@@ -78,7 +78,7 @@ class ReturBeliTests extends GriffonUnitTestCase {
         Produk produk2 = new Produk()
         Produk produk3 = new Produk()
         Supplier supplier = new Supplier()
-        ReturBeli returBeli = new ReturBeli(supplier: supplier)
+        ReturBeli returBeli = new ReturBeli(supplier: supplier, gudang: gudangUtama)
         returBeli.tambah(new ItemBarang(produk1, 10))
         returBeli.tambah(new ItemBarang(produk2, 20))
         returBeli.tambah(new ItemBarang(produk3, 30))

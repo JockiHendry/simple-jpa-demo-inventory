@@ -23,6 +23,7 @@ import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.inventory.GudangRepository
 import project.retur.ReturBeliRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
@@ -32,11 +33,13 @@ class ReturBeliTest extends DbUnitTestCase {
     private static final Logger log = LoggerFactory.getLogger(ReturBeliTest)
 
     ReturBeliRepository returBeliRepository
+    GudangRepository gudangRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("returBeli", "/project/data_pembelian.xls")
         returBeliRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturBeli')
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
     }
 
     protected void tearDown() {
@@ -49,7 +52,7 @@ class ReturBeliTest extends DbUnitTestCase {
         Produk p2 = returBeliRepository.findProdukById(-2l)
         Produk p3 = returBeliRepository.findProdukById(-3l)
         Supplier s = returBeliRepository.findSupplierById(-1l)
-        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s)
+        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s, gudang: gudangRepository.cariGudangUtama())
         returBeli.tambah(new ItemBarang(p1, 10))
         returBeli.tambah(new ItemBarang(p2, 20))
         returBeli.tambah(new ItemBarang(p3, 30))
@@ -82,7 +85,7 @@ class ReturBeliTest extends DbUnitTestCase {
     public void testTukarBaru() {
         returBeliRepository.withTransaction {
             ReturBeli returBeli = returBeliRepository.findReturBeliById(-1l)
-            returBeli = returBeliRepository.tukarBaru(returBeli)
+            returBeli = returBeliRepository.tukar(returBeli)
 
             assertTrue(returBeli.sudahDiproses)
             assertTrue(returBeli.getKlaimTukar(true).empty)

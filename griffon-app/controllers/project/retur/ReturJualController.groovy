@@ -17,12 +17,11 @@ package project.retur
 
 import ast.NeedSupervisorPassword
 import domain.retur.*
-import domain.penjualan.*
-import domain.penjualan.*
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
-import simplejpa.transaction.Transaction
+
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -32,8 +31,19 @@ class ReturJualController {
     ReturJualModel model
     def view
     ReturJualRepository returJualRepository
+    GudangRepository gudangRepository
 
     void mvcGroupInit(Map args) {
+        model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
+        if (model.mode == ReturJualViewMode.INPUT) {
+            model.showSave = true
+            model.showPenukaran = false
+            model.statusSearch.selectedItem = StatusReturJual.SEMUA
+        } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
+            model.showSave = false
+            model.showPenukaran = true
+            model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
+        }
         listAll()
         search()
     }
@@ -45,9 +55,7 @@ class ReturJualController {
         execInsideUISync {
             model.konsumenList.clear()
         }
-
         List konsumenResult = returJualRepository.findAllKonsumen()
-
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
@@ -57,7 +65,13 @@ class ReturJualController {
     }
 
     def search = {
-        List result = returJualRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch)
+        Boolean sudahDiproses = null
+        if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
+            sudahDiproses = true
+        } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
+            sudahDiproses = false
+        }
+        List result = returJualRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses)
         execInsideUISync {
             model.returJualList.clear()
             model.returJualList.addAll(result)
@@ -72,6 +86,7 @@ class ReturJualController {
         }
 
         ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen.selectedItem)
+        returJual.gudang = gudangRepository.cariGudangUtama()
         returJual.listKlaimRetur.addAll(model.listKlaimRetur)
         if (model.potongan > 0) {
             returJual.tambahKlaimPotongan(model.potongan)
@@ -98,6 +113,18 @@ class ReturJualController {
         execInsideUISync {
             clear()
             view.form.getFocusTraversalPolicy().getFirstComponent(view.form).requestFocusInWindow()
+        }
+    }
+
+    def prosesTukar = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        ReturJual returJual = view.table.selectionModel.selected[0]
+        returJual = returJualRepository.tukar(returJual)
+        execInsideUISync {
+            view.table.selectionModel.selected[0] = returJual
+            clear()
         }
     }
 
@@ -135,7 +162,7 @@ class ReturJualController {
             }
         }
     }
-
+    
     def clear = {
         execInsideUISync {
             model.id = null

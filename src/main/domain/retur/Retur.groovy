@@ -24,7 +24,7 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@MappedSuperclass
+@MappedSuperclass @Canonical(excludes='listKlaimRetur')
 abstract class Retur extends DaftarBarang {
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty
@@ -33,8 +33,9 @@ abstract class Retur extends DaftarBarang {
     @NotNull
     Boolean sudahDiproses = false
 
-    public Boolean getSudahDiproses() {
-        listKlaimRetur.every { it.sudahDiproses }
+    Boolean getSudahDiproses() {
+        sudahDiproses = listKlaimRetur.every { it.sudahDiproses }
+        sudahDiproses
     }
 
     void tambahKlaimPotongan(BigDecimal jumlah) {

@@ -158,5 +158,5 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(0, r.sisaPotongan())
         assertEquals(250000, konsumen.jumlahPiutang())
     }
-
+    
 }

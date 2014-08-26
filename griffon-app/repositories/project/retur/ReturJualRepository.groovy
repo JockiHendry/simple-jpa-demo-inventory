@@ -27,10 +27,8 @@ import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturJualRepository {
-
-    GudangRepository gudangRepository
-
-    List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch) {
+    
+    List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
         findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
@@ -41,6 +39,10 @@ class ReturJualRepository {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
             }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
         }
     }
 
@@ -48,7 +50,6 @@ class ReturJualRepository {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
-        returJual.gudang = gudangRepository.cariGudangUtama()
         returJual.konsumen = merge(returJual.konsumen)
         returJual.items.each { it.produk = merge(it.produk) }
 		persist(returJual)
@@ -81,10 +82,11 @@ class ReturJualRepository {
     }
 
     public ReturJual tukar(ReturJual returJual) {
-        returJual = findReturJualById(returJual.id)
+        returJual = merge(returJual)
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         persist(pengeluaranBarang)
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
+        returJual.sudahDiproses = true
         returJual
     }
 

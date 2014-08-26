@@ -30,6 +30,7 @@ actions {
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
     action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Klaim Penukaran Barang...', closure: controller.showKlaimRetur)
+    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
 }
 
 application(title: 'Retur Jual',
@@ -49,8 +50,9 @@ application(title: 'Retur Jual',
             dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
             label(' s/d ')
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
-            textField(id: 'nomorSearch', columns: 20, text: bind('nomorSearch', target: model, mutual: true), action: search)
-            textField(id: 'konsumenSearch', columns: 20, text: bind('konsumenSearch', target: model, mutual: true), action: search)
+            textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), action: search)
+            textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), action: search)
+            comboBox(id: 'statusSearch', model: model.statusSearch)
             button(action: search)
         }
 
@@ -64,6 +66,9 @@ application(title: 'Retur Jual',
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
+                glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
+                    templateRenderer(exp: { it? 'Y': ''})
+                }
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
             }
         }
@@ -101,9 +106,10 @@ application(title: 'Retur Jual',
             }
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(action: save)
-                button(visible: bind { table.isRowSelected }, action: cancel)
-                button(visible: bind { table.isRowSelected }, action: delete)
+                button(action: save, visible: bind{ model.showSave })
+                button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
+                button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: delete)
+                button(visible: bind{ model.showPenukaran }, action: penukaran)
             }
         }
     }

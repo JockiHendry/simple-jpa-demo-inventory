@@ -23,6 +23,7 @@ import domain.retur.ReturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.inventory.GudangRepository
 import project.retur.ReturJualRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
@@ -32,11 +33,13 @@ class ReturJualTest extends DbUnitTestCase {
 	private static final Logger log = LoggerFactory.getLogger(ReturJualTest)
 
     ReturJualRepository returJualRepository
+    GudangRepository gudangRepository
 
 	protected void setUp() {
 		super.setUp()
 		setUpDatabase("returJual", "/project/data_penjualan.xls")
         returJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturJual')
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
 	}
 
 	protected void tearDown() {
@@ -49,7 +52,7 @@ class ReturJualTest extends DbUnitTestCase {
         Produk p2 = returJualRepository.findProdukById(-2l)
         Produk p3 = returJualRepository.findProdukById(-3l)
         Konsumen k = returJualRepository.findKonsumenById(-1l)
-        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k)
+        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
         returJual.tambah(new ItemBarang(p1, 10))
         returJual.tambah(new ItemBarang(p2, 20))
         returJual.tambah(new ItemBarang(p3, 30))

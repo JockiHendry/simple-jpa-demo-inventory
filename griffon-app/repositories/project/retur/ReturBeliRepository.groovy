@@ -22,13 +22,10 @@ import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.PenerimaanBarang
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
-import project.inventory.GudangRepository
 import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturBeliRepository {
-
-    GudangRepository gudangRepository
 
     List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -48,7 +45,6 @@ class ReturBeliRepository {
         if (findReturBeliByNomor(returBeli.nomor)) {
             throw new DataDuplikat(returBeli)
         }
-        returBeli.gudang = gudangRepository.cariGudangUtama()
         returBeli.items.each { it.produk = merge(it.produk) }
         persist(returBeli)
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli))
