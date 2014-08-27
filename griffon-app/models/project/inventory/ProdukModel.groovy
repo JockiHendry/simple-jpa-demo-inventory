@@ -22,10 +22,13 @@ import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.Produk
 import domain.inventory.Satuan
 import domain.inventory.StokProduk
+import domain.pembelian.Supplier
 
 class ProdukModel {
 
     @Bindable boolean allowTambahProduk
+    @Bindable boolean showReturOnly
+    Supplier supplierSearch
 
     @Bindable Long id
 	@Bindable String nama
@@ -35,6 +38,8 @@ class ProdukModel {
     @Bindable Integer poin
     @Bindable Integer levelMinimum
     @Bindable DefaultEventComboBoxModel<Satuan> satuan = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(satuanList)
+    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
 
     @Bindable String namaSearch
     @Bindable String searchMessage

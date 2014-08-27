@@ -27,7 +27,7 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturBeliRepository {
 
-    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch) {
+    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
@@ -36,7 +36,11 @@ class ReturBeliRepository {
             }
             if (supplierSearch) {
                 and()
-                supplier_nama like("%${supplierSearch}%")
+                supplier__nama like("%${supplierSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
             }
         }
     }
@@ -76,7 +80,7 @@ class ReturBeliRepository {
         returBeli
     }
 
-    public ReturBeli tukarBaru(ReturBeli returBeli) {
+    public ReturBeli tukar(ReturBeli returBeli) {
         returBeli = findReturBeliById(returBeli.id)
         PenerimaanBarang penerimaanBarang = returBeli.tukar()
         persist(penerimaanBarang)

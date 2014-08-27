@@ -96,6 +96,9 @@ application(title: 'Produk',
                     glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer) {
                         templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                     }
+                    glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer) {
+                        templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
+                    }
                 }
             }
         }
@@ -111,6 +114,9 @@ application(title: 'Produk',
             label('HET Luar Kota:')
             decimalTextField(id: 'hargaLuarKota', columns: 20, bindTo: 'hargaLuarKota', errorPath: 'hargaLuarKota')
             errorLabel(path: 'hargaLuarKota', constraints: 'wrap')
+            label('Supplier:')
+            comboBox(id: 'supplier', model: model.supplier, errorPath: 'supplier')
+            errorLabel(path: 'supplier', constraints: 'wrap')
             label('Satuan:')
             comboBox(id: 'satuan', model: model.satuan, templateRenderer: '${value}', errorPath: 'satuan')
             errorLabel(path: 'satuan', constraints: 'wrap')

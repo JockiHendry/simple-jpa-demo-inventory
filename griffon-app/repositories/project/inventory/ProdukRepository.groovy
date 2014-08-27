@@ -21,15 +21,24 @@ import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
+import domain.pembelian.Supplier
 import simplejpa.transaction.Transaction
 
 @Transaction
 class ProdukRepository {
 
-    public List<Produk> cari(String namaSearch) {
+    public List<Produk> cari(String namaSearch, boolean hanyaRetur = false, Supplier supplierSearch = null) {
         findAllProdukByDslFetchComplete([excludeDeleted: false]) {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
+            }
+            if (hanyaRetur) {
+                and()
+                jumlahRetur gt(0)
+            }
+            if (supplierSearch) {
+                and()
+                supplier eq(supplierSearch)
             }
         }
     }
@@ -71,6 +80,7 @@ class ProdukRepository {
         p.hargaDalamKota = produk.hargaDalamKota
         p.hargaLuarKota = produk.hargaLuarKota
         p.satuan = produk.satuan
+        p.supplier = produk.supplier
         p.poin = produk.poin
         p.levelMinimum = produk.levelMinimum
         p

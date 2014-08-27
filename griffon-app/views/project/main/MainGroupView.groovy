@@ -91,6 +91,8 @@ actions {
 
     action(id: 'returJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_U,
         smallIcon: imageIcon('/menu_retur_jual.png'), closure: controller.switchPage)
+    action(id: 'returBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
+        smallIcon: imageIcon('/menu_retur_beli.png'), closure: controller.switchPage)
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
@@ -192,6 +194,8 @@ application(id: 'mainFrame',
                 separator()
                 toggleButton(buttonGroup: buttons, action: returJual, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.returJualVisible})
+                toggleButton(buttonGroup: buttons, action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    visible: bind {model.returBeliVisible})
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.laporanVisible})

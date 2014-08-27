@@ -31,6 +31,8 @@ class ItemBarangAsChildController {
         model.parent = args.'parent'
         model.editable = args.containsKey('editable')? args.'editable': (model.parent?.id == null)
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
+        model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
+        model.supplierSearch = args.containsKey('supplierSearch')? args.'supplierSearch': null
         execInsideUISync {
             model.itemBarangList.clear()
             model.itemBarangList.addAll(args.'listItemBarang')
@@ -57,7 +59,7 @@ class ItemBarangAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk)
+        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk, model.showReturOnly, model.supplierSearch)
         if (produk) {
             model.produk = produk
             view.jumlah.requestFocusInWindow()

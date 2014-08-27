@@ -18,6 +18,7 @@ package project.inventory
 
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
+import domain.pembelian.Supplier
 import simplejpa.swing.DialogUtils
 import simplejpa.transaction.Transaction
 import javax.swing.JOptionPane
@@ -32,8 +33,8 @@ class ProdukController {
 
     ProdukRepository produkRepository
 
-    public static Produk displayProdukPopup(view, boolean allowTambahProduk = true) {
-        def args = [popup: true, allowTambahProduk: allowTambahProduk]
+    public static Produk displayProdukPopup(view, boolean allowTambahProduk = true, boolean showReturOnly = false, Supplier supplierSearch = null) {
+        def args = [popup: true, allowTambahProduk: allowTambahProduk, showReturOnly: showReturOnly, supplierSearch: supplierSearch]
         def dialogProps = [title: 'Cari Produk', size: new Dimension(900,420)]
         Produk result = null
         DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
@@ -49,6 +50,8 @@ class ProdukController {
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popup'?: false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
+        model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
+        model.supplierSearch = args.containsKey('supplierSearch')? args.'supplierSearch': null
         init()
         search()
     }
@@ -56,15 +59,18 @@ class ProdukController {
     def init = {
         execInsideUISync {
             model.satuanList.clear()
+            model.supplierList.clear()
         }
         List satuan = produkRepository.findAllSatuan()
+        List supplier = produkRepository.findAllSupplier()
         execInsideUISync {
             model.satuanList.addAll(satuan)
+            model.supplierList.addAll(supplier)
         }
     }
 
     def search = {
-        List produkResult = produkRepository.cari(model.namaSearch)
+        List produkResult = produkRepository.cari(model.namaSearch, model.showReturOnly, model.supplierSearch)
         execInsideUISync {
             model.produkList.clear()
             model.produkList.addAll(produkResult)
@@ -73,7 +79,7 @@ class ProdukController {
     }
 
     def save = {
-        Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota,
+        Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota, supplier: model.supplier.selectedItem,
             hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem, poin: model.poin, levelMinimum: model.levelMinimum)
         if (!produkRepository.validate(produk, Default, model)) return
 
@@ -115,6 +121,7 @@ class ProdukController {
             model.satuan.selectedItem = null
             model.poin = null
             model.levelMinimum = null
+            model.supplier.selectedItem = null
 			model.daftarStok.clear()
 
             model.errors.clear()
@@ -143,6 +150,7 @@ class ProdukController {
 				model.hargaDalamKota = selected.hargaDalamKota
                 model.hargaLuarKota = selected.hargaLuarKota
                 model.satuan.selectedItem = selected.satuan
+                model.supplier.selectedItem = selected.supplier
                 model.poin = selected.poin
                 model.levelMinimum = selected.levelMinimum
 				model.daftarStok.clear()

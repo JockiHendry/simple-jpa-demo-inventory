@@ -34,6 +34,8 @@ class KlaimReturAsChildController {
     void mvcGroupInit(Map args) {
         model.parent = args.parent
         model.editable = args.containsKey('editable')? args.'editable': (model.parent?.id == null)
+        model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
+        model.supplierSearch = args.containsKey('supplierSearch')? args.'supplierSearch': null
         model.klaimReturList.addAll(args.'parentList' ?: [])
     }
 
@@ -81,7 +83,7 @@ class KlaimReturAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view, false)
+        Produk produk = ProdukController.displayProdukPopup(view, false, model.showReturOnly, model.supplierSearch)
         if (produk) {
             model.produk = produk
             view.jumlah.requestFocusInWindow()

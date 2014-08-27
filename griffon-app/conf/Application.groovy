@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "returBeli"
+    'returBeli' {
+        model      = 'project.retur.ReturBeliModel'
+        view       = 'project.retur.ReturBeliView'
+        controller = 'project.retur.ReturBeliController'
+    }
+
     // MVC Group for "klaimReturAsChild"
     'klaimReturAsChild' {
         model      = 'project.retur.KlaimReturAsChildModel'

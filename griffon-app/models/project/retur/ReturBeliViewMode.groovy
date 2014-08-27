@@ -15,30 +15,6 @@
  */
 package project.retur
 
-import domain.pembelian.Supplier
-import domain.retur.*
-import domain.inventory.*
-import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
-import groovy.beans.Bindable
-import org.joda.time.*
-import javax.swing.event.*
-import simplejpa.swing.*
-import org.jdesktop.swingx.combobox.EnumComboBoxModel
-
-class KlaimReturAsChildModel {
-
-    @Bindable Long id
-
-    def parent
-
-    @Bindable Produk produk
-    @Bindable Integer jumlah
-
-    BasicEventList<KlaimRetur> klaimReturList = new BasicEventList<>()
-
-    @Bindable boolean editable
-    @Bindable boolean showReturOnly
-    Supplier supplierSearch
-
+public enum ReturBeliViewMode {
+    INPUT, PENGELUARAN
 }
