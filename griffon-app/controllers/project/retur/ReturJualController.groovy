@@ -21,7 +21,6 @@ import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
-
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -31,7 +30,6 @@ class ReturJualController {
     ReturJualModel model
     def view
     ReturJualRepository returJualRepository
-    GudangRepository gudangRepository
 
     void mvcGroupInit(Map args) {
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
@@ -58,10 +56,13 @@ class ReturJualController {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.konsumenList.clear()
+            model.gudangList.clear()
         }
         List konsumenResult = returJualRepository.findAllKonsumen()
+        List gudangResult = returJualRepository.findAllGudang()
         execInsideUISync {
             model.konsumenList.addAll(konsumenResult)
+            model.gudangList.addAll(gudangResult)
         }
     }
 
@@ -86,8 +87,7 @@ class ReturJualController {
             }
         }
 
-        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen.selectedItem)
-        returJual.gudang = gudangRepository.cariGudangUtama()
+        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen.selectedItem, gudang: model.gudang.selectedItem)
         returJual.listKlaimRetur.addAll(model.listKlaimRetur)
         if (model.potongan > 0) {
             returJual.tambahKlaimPotongan(model.potongan)
@@ -174,6 +174,7 @@ class ReturJualController {
             model.listKlaimRetur.clear()
             model.potongan = null
             model.konsumen.selectedItem = null
+            model.gudang.selectedItem = null
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -200,6 +201,7 @@ class ReturJualController {
                 model.listKlaimRetur.addAll(selected.getKlaimTukar())
                 model.potongan = selected.getKlaimPotongan().sum { it.potongan }
                 model.konsumen.selectedItem = selected.konsumen
+                model.gudang.selectedItem = selected.gudang
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate

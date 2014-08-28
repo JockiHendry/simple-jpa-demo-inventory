@@ -67,6 +67,7 @@ class ReturJualRepository {
 			nomor = returJual.nomor
 			tanggal = returJual.tanggal
 			keterangan = returJual.keterangan
+            gudang = returJual.gudang
 		}
 		mergedRetur
 	}

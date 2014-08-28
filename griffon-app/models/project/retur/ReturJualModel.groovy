@@ -15,6 +15,7 @@
  */
 package project.retur
 
+import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.retur.*
 import domain.penjualan.*
@@ -41,6 +42,8 @@ class ReturJualModel {
     @Bindable String nomorSearch
     @Bindable String konsumenSearch
     EnumComboBoxModel statusSearch = new EnumComboBoxModel(StatusReturJual)
+    BasicEventList<Gudang> gudangList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
 
     @Bindable String nomor
     @Bindable LocalDate tanggal
