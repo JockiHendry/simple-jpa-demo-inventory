@@ -53,13 +53,14 @@ class ReturJualController {
 
     def listAll = {
         execInsideUISync {
+            model.nomorSearch = null
+            model.konsumenSearch = null
+            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalSelesaiSearch = LocalDate.now()
             model.konsumenList.clear()
         }
         List konsumenResult = returJualRepository.findAllKonsumen()
         execInsideUISync {
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
-            model.tanggalSelesaiSearch = LocalDate.now()
-            model.nomorSearch = null
             model.konsumenList.addAll(konsumenResult)
         }
     }

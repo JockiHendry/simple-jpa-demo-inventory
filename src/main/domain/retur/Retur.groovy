@@ -33,9 +33,10 @@ abstract class Retur extends DaftarBarang {
     @NotNull
     Boolean sudahDiproses = false
 
-    Boolean getSudahDiproses() {
-        sudahDiproses = listKlaimRetur.every { it.sudahDiproses }
-        sudahDiproses
+    void periksaSelesaiDiproses() {
+        if (!sudahDiproses) {
+            sudahDiproses = listKlaimRetur.every { it.sudahDiproses }
+        }
     }
 
     void tambahKlaimPotongan(BigDecimal jumlah) {

@@ -45,13 +45,14 @@ class ReturBeli extends Retur {
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),
             gudang: gudang,
-            keterangan: "Retur Beli $nomor"
+            keterangan: "Retur Beli [$nomor]"
         )
         getKlaimTukar(true).each {
             penerimaanBarang.tambah(new ItemBarang(it.produk, it.jumlah))
             it.sudahDiproses = true
         }
         this.penerimaanBarang = penerimaanBarang
+        periksaSelesaiDiproses()
         penerimaanBarang
     }
 

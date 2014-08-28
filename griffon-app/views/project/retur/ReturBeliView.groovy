@@ -29,7 +29,7 @@ actions {
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showItemBarang)
-    action(id: 'showKlaimRetur', name: 'List Klaim Retur', closure: controller.showKlaimRetur)
+    action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atua Mengisi Klaim Retur...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
 }
 

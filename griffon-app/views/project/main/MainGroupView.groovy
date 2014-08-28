@@ -18,9 +18,9 @@
 
 package project.main
 
-import project.main.MainGroupModel
 import project.pembelian.POViewMode
 import project.penjualan.FakturEceranViewMode
+import project.retur.ReturBeliViewMode
 import project.retur.ReturJualViewMode
 import util.BusyLayerUI
 
@@ -33,6 +33,10 @@ def popupMaintenance = {
     maintenancePopup.show(maintenanceButton, 0, maintenanceButton.getHeight())
 }
 
+def popupPenerimaanBarang = {
+    penerimaanBarangPopup.show(penerimaanBarangButton, 0, penerimaanBarangButton.getHeight())
+}
+
 def popupPengeluaranBarang = {
     pengeluaranBarangPopup.show(pengeluaranBarangButton, 0, pengeluaranBarangButton.getHeight())
 }
@@ -41,8 +45,6 @@ def popupPenjualan = {
     penjualanPopup.show(fakturJualButton, 0, fakturJualButton.getHeight())
 }
 
-
-
 def switchPageWithArguments = { Map arguments ->
     return { ActionEvent event ->
         controller.switchPage(event, arguments)
@@ -50,8 +52,11 @@ def switchPageWithArguments = { Map arguments ->
 }
 
 actions {
-    action(id: 'penerimaanBarang', name: 'Terima Barang', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_T,
-        smallIcon: imageIcon('/menu_penerimaan_barang.png'), closure: switchPageWithArguments([mode: POViewMode.PENERIMAAN]))
+    action(id: 'penerimaanBarang', name: 'Terima Barang', smallIcon: imageIcon('/menu_penerimaan_barang.png'), mnemonic: KeyEvent.VK_T, closure: popupPenerimaanBarang)
+    action(id: 'penerimaanPembelian', name: 'Terima Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_P,
+        smallIcon: imageIcon('/menu_penerimaan_po.png'), closure: switchPageWithArguments([mode: POViewMode.PENERIMAAN]))
+    action(id: 'penerimaanReturBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
+        smallIcon: imageIcon('/menu_penerimaan_retur_beli.png'), closure: switchPageWithArguments([mode: ReturBeliViewMode.PENERIMAAN]))
     action(id: 'pengeluaranBarang', name: 'Antar Barang', actionCommandKey: 'pengeluaranBarang', mnemonic: KeyEvent.VK_A,
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
     action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
@@ -145,6 +150,11 @@ application(id: 'mainFrame',
         menuItem(action: user)
     }
 
+    popupMenu(id: 'penerimaanBarangPopup') {
+        menuItem(action: penerimaanPembelian)
+        menuItem(action: penerimaanReturBeli)
+    }
+
     popupMenu(id: 'pengeluaranBarangPopup') {
         menuItem(action: pengeluaranBarangEceran)
         menuItem(action: pengiriman)
@@ -163,7 +173,7 @@ application(id: 'mainFrame',
 
             toolBar(id: 'toolbar', constraints: BorderLayout.PAGE_START) {
                 buttonGroup(id: 'buttons')
-                toggleButton(buttonGroup: buttons, action: penerimaanBarang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                toggleButton(buttonGroup: buttons, action: penerimaanBarang, id: 'penerimaanBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.penerimaanBarangVisible})
                 toggleButton(buttonGroup: buttons, action: pengeluaranBarang, id: 'pengeluaranBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.pengeluaranBarangVisible})

@@ -38,7 +38,7 @@ class ReturBeliController {
             model.showSave = true
             model.showPenukaran = false
             model.statusSearch.selectedItem = StatusReturBeli.SEMUA
-        } else if (model.mode == ReturBeliViewMode.PENGELUARAN) {
+        } else if (model.mode == ReturBeliViewMode.PENERIMAAN) {
             model.showSave = false
             model.showPenukaran = true
             model.statusSearch.selectedItem = StatusReturBeli.BELUM_DIPROSES
@@ -59,15 +59,16 @@ class ReturBeliController {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomorSearch = null
+            model.supplierSearch = null
             model.supplierList.addAll(supplierResult)
         }
     }
 
     def search = {
         Boolean sudahDiproses = null
-        if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
+        if (model.statusSearch.selectedItem == StatusReturBeli.SUDAH_DIPROSES) {
             sudahDiproses = true
-        } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
+        } else if (model.statusSearch.selectedItem == StatusReturBeli.BELUM_DIPROSES) {
             sudahDiproses = false
         }
         List result = returBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch, sudahDiproses)

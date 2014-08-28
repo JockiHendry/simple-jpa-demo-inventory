@@ -16,5 +16,5 @@
 package project.retur
 
 public enum ReturBeliViewMode {
-    INPUT, PENGELUARAN
+    INPUT, PENERIMAAN
 }

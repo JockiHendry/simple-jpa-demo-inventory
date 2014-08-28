@@ -50,12 +50,13 @@ class ReturJual extends Retur {
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),
             gudang: gudang,
-            keterangan: "Retur Jual $nomor"
+            keterangan: "Retur Jual [$nomor]"
         )
         getKlaimTukar(true).each {
             pengeluaranBarang.tambah(new ItemBarang(it.produk, it.jumlah))
             it.sudahDiproses = true
         }
+        periksaSelesaiDiproses()
         pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama)
         this.pengeluaranBarang = pengeluaranBarang
         pengeluaranBarang
@@ -69,6 +70,7 @@ class ReturJual extends Retur {
             konsumen.potongPiutang(it.potongan)
             it.sudahDiproses = true
         }
+        periksaSelesaiDiproses()
     }
 
     @Override
