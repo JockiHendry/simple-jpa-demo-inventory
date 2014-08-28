@@ -83,7 +83,7 @@ application(title: 'Retur Beli',
             label('Supplier:')
             comboBox(id: 'supplier', model: model.supplier, errorPath: 'supplier')
             errorLabel(path: 'supplier', constraints: 'wrap')
-            label('Potongan Piutang:')
+            label('Potongan Hutang:')
             decimalTextField(id: 'potongan', columns: 20, bindTo: 'potongan', errorPath: 'potongan')
             errorLabel(path: 'potongan', constraints: 'wrap')
             label('Keterangan:')

@@ -42,7 +42,12 @@ class ReturBeliController {
             model.showSave = false
             model.showPenukaran = true
             model.statusSearch.selectedItem = StatusReturBeli.BELUM_DIPROSES
+        } else if (model.mode == ReturBeliViewMode.BAYAR) {
+            model.showSave = false
+            model.showPenukaran = false
+            model.statusSearch.selectedItem = StatusReturBeli.BELUM_DIPROSES
         }
+        model.forSupplier = args.forSupplier?: null
         listAll()
         search()
     }
@@ -71,7 +76,12 @@ class ReturBeliController {
         } else if (model.statusSearch.selectedItem == StatusReturBeli.BELUM_DIPROSES) {
             sudahDiproses = false
         }
-        List result = returBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch, sudahDiproses)
+        List result
+        if (model.forSupplier) {
+            result = returBeliRepository.cariForSupplier(model.forSupplier, model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, sudahDiproses)
+        } else {
+            result = returBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch, sudahDiproses)
+        }
         execInsideUISync {
             model.returBeliList.clear()
             model.returBeliList.addAll(result)

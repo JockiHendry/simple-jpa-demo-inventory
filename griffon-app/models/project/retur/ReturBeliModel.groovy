@@ -29,6 +29,7 @@ class ReturBeliModel {
     ReturBeliViewMode mode
     @Bindable boolean showSave
     @Bindable boolean showPenukaran
+    Supplier forSupplier
 
     @Bindable Long id
     @Bindable LocalDate tanggalMulaiSearch

@@ -29,6 +29,7 @@ import static javax.swing.SwingConstants.RIGHT
 
 actions {
     action(id: 'showPembayaran', name: 'Klik Disini Untuk Melihat Pembayaran Yang Telah Dilakukan...', closure: controller.showPembayaran)
+    action(id: 'showPembayaranRetur', name: 'Klik Disini Untuk Membayar Berdasarkan Retur...', closure: controller.showPembayaranRetur)
 }
 
 application(title: 'hutang',
@@ -95,6 +96,7 @@ application(title: 'hutang',
         panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind {table.isRowSelected}, constraints: PAGE_END, focusCycleRoot: true) {
             label('Pembayaran:')
             button(id: 'listPembayaranHutang', action: showPembayaran, errorPath: 'listPembayaranHutang')
+            button(action: showPembayaranRetur)
             errorLabel(path: 'listPembayaranHutang', constraints: 'wrap')
         }
     }

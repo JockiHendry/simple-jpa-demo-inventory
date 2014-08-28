@@ -65,6 +65,7 @@ abstract class Retur extends DaftarBarang {
 
     void prosesSisaPotongan() {
         getKlaimPotongan(true).each { it.sudahDiproses = true }
+        periksaSelesaiDiproses()
     }
 
 

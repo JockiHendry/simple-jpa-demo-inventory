@@ -16,8 +16,11 @@
 package project.pembelian
 
 import domain.pembelian.PurchaseOrder
+import domain.retur.ReturBeli
 import org.joda.time.LocalDate
+import project.retur.ReturBeliViewMode
 import simplejpa.swing.DialogUtils
+import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
@@ -60,6 +63,31 @@ class HutangController {
                 view.table.selectionModel.selected[0] = m.faktur
             }
         }
+    }
+
+    def showPembayaranRetur = {
+        ReturBeli returBeli = null
+        PurchaseOrder purchaseOrder = view.table.selectionModel.selected[0]
+        execInsideUISync {
+            def args = [mode: ReturBeliViewMode.BAYAR, forSupplier: purchaseOrder.supplier]
+            def dialogProps = [title: 'Pembayaran Hutang', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('returBeli', args, app, view, dialogProps) { m, v, c ->
+                returBeli = v.table.selectionModel.selected[0]
+            }
+        }
+        if (!returBeli) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada retur beli yang dipilih!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        purchaseOrderRepository.withTransaction {
+            purchaseOrder = merge(purchaseOrder)
+            returBeli = merge(returBeli)
+            purchaseOrder.bayar(returBeli)
+        }
+        execInsideUISync {
+            view.table.selectionModel.selected[0] = purchaseOrder
+        }
+        JOptionPane.showMessageDialog(view.mainPanel, "Potongan hutang berdasarkan retur beli [${returBeli.nomor}] telah ditambahkan.", 'Informasi', JOptionPane.INFORMATION_MESSAGE)
     }
 
     def clear = {

@@ -20,6 +20,7 @@ import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.PenerimaanBarang
+import domain.pembelian.Supplier
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
@@ -37,6 +38,22 @@ class ReturBeliRepository {
             if (supplierSearch) {
                 and()
                 supplier__nama like("%${supplierSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
+    List<ReturBeli> cariForSupplier(Supplier supplierSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, Boolean sudahDiprosesSearch) {
+        findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+            supplier eq(supplierSearch)
+            and()
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
             }
             if (sudahDiprosesSearch != null) {
                 and()

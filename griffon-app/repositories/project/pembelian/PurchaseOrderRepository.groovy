@@ -109,7 +109,7 @@ class PurchaseOrderRepository {
     }
 
 
-    public List<FakturBeli> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
+    public List<PurchaseOrder> cariHutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
            String supplierSearch, LocalDate tanggalJatuhTempo = null,
            StatusHutangSearch statusHutangSearch = StatusHutangSearch.SEMUA) {
 
