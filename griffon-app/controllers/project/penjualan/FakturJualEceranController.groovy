@@ -93,11 +93,12 @@ class FakturJualEceranController {
 
         try {
             if (fakturJualEceran.id == null) {
-                fakturJualRepository.buat(fakturJualEceran)
+                fakturJualEceran = fakturJualRepository.buat(fakturJualEceran)
                 execInsideUISync {
                     model.fakturJualEceranList << fakturJualEceran
                     view.table.changeSelection(model.fakturJualEceranList.size() - 1, 0, false, false)
                     clear()
+                    cetak(fakturJualEceran)
                 }
             } else {
                 fakturJualEceran = fakturJualRepository.update(fakturJualEceran)
@@ -194,6 +195,15 @@ class FakturJualEceranController {
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
             }
+        }
+    }
+
+    def cetak = { e ->
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_eceran.json']
+            if (e instanceof FakturJual) args.dataSource = e
+            def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
     }
 

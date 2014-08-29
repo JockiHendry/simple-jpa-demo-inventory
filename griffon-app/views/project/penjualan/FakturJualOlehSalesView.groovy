@@ -25,6 +25,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
     action(id: 'showBonus', name: 'Klik Disini Untuk Melihat Atau Mengisi Bonus...', closure: controller.showBonus)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Faktur Jual Oleh Sales',
@@ -131,10 +132,7 @@ application(title: 'Faktur Jual Oleh Sales',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
-                mvcPopupButton('Cetak', mvcGroup: 'previewEscp', args: {[
-                    dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json'
-                ]}, dialogProperties: [title: 'Preview Faktur Jual', preferredSize: new Dimension(920,400)],
-                    visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual } ))
+                button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual}))
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

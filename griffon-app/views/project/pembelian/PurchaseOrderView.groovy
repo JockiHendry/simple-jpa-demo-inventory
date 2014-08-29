@@ -28,6 +28,7 @@ import static javax.swing.SwingConstants.*
 
 actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Purchase Order...', closure: controller.showItemFaktur)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Received Not Invoiced',
@@ -135,10 +136,7 @@ application(title: 'Received Not Invoiced',
                     controller.save()
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
-                mvcPopupButton('Cetak', mvcGroup: 'previewEscp', args: {[
-                        dataSource: view.table.selectionModel.selected[0], template: 'purchase_order.json'
-                    ]}, dialogProperties: [title: 'Preview Purchase Order', preferredSize: new Dimension(920,400)],
-                    visible: bind('isRowSelected', source: table, converter: { it && model.allowAddPO } ))
+                button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowAddPO}))
                 mvcPopupButton(id: 'penerimaanBarang', text: 'Penerimaan Barang', mvcGroup: 'penerimaanBarang',
                     args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},
                     dialogProperties: [title: 'Penerimaan Barang', size: new Dimension(900,420)],

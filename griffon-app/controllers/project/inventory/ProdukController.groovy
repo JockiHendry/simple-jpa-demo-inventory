@@ -35,7 +35,7 @@ class ProdukController {
 
     public static Produk displayProdukPopup(view, boolean allowTambahProduk = true, boolean showReturOnly = false, Supplier supplierSearch = null) {
         def args = [popup: true, allowTambahProduk: allowTambahProduk, showReturOnly: showReturOnly, supplierSearch: supplierSearch]
-        def dialogProps = [title: 'Cari Produk', size: new Dimension(900,420)]
+        def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900,600)]
         Produk result = null
         DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
             if (v.table.selectionModel.isSelectionEmpty()) {

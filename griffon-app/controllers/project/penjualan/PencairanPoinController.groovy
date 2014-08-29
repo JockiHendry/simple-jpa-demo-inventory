@@ -92,6 +92,7 @@ class PencairanPoinController {
                 model.pencairanPoinList << pencairanPoin
                 view.table.changeSelection(model.pencairanPoinList.size() - 1, 0, false, false)
                 clear()
+                cetak(pencairanPoin)
             }
 
         } catch (Exception ex) {
@@ -114,10 +115,11 @@ class PencairanPoinController {
         }
     }
 
-    def cetak = {
+    def cetak = { e ->
         execInsideUISync {
             def args = [dataSource: view.table.selectionModel.selected[0], template: model.jenisPencairanPoin.selectedItem.fileLaporan]
-            def dialogProps = [title: 'Preview Bukti Pencairan Poin', preferredSize: new Dimension(920, 400)]
+            if (e instanceof PencairanPoin) args.dataSource = e
+            def dialogProps = [title: 'Preview Bukti Pencairan Poin', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
     }

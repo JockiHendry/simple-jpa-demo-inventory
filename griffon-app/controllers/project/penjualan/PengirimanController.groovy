@@ -68,6 +68,7 @@ class PengirimanController {
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
+                cetak(faktur)
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
@@ -97,11 +98,11 @@ class PengirimanController {
         }
     }
 
-    def cetak = {
-        FakturJualOlehSales selected = view.table.selectionModel.selected[0]
+    def cetak = { e ->
+        FakturJualOlehSales selected = e instanceof FakturJualOlehSales? e: view.table.selectionModel.selected[0]
         if (selected.status == StatusFakturJual.DIANTAR) {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'surat_jalan.json']
-            def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(920, 400)]
+            def args = [dataSource: selected, template: 'surat_jalan.json']
+            def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         } else {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual belum diantar sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)

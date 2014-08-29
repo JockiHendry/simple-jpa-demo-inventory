@@ -76,14 +76,15 @@ class FakturJualOlehSalesController {
         try {
             if (fakturJualOlehSales.id == null) {
                 if (!model.listBonus.empty) {
-                    fakturJualRepository.buat(fakturJualOlehSales, false, model.listBonus)
+                    fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false, model.listBonus)
                 } else {
-                    fakturJualRepository.buat(fakturJualOlehSales, false)
+                    fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false)
                 }
                 execInsideUISync {
                     model.fakturJualOlehSalesList << fakturJualOlehSales
                     view.table.changeSelection(model.fakturJualOlehSalesList.size() - 1, 0, false, false)
                     clear()
+                    cetak(fakturJualOlehSales)
                 }
             } else {
                 fakturJualOlehSales = fakturJualRepository.update(fakturJualOlehSales)
@@ -148,6 +149,15 @@ class FakturJualOlehSalesController {
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
             }
+        }
+    }
+
+    def cetak = { e ->
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json']
+            if (e instanceof FakturJual) args.dataSource = e
+            def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
     }
 

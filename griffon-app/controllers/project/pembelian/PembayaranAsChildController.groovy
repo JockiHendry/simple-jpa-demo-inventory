@@ -28,7 +28,7 @@ class PembayaranAsChildController {
 
     PembayaranAsChildModel model
     def view
-    PurchaseOrderRepository repo
+    PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
         model.faktur = args.'faktur'
@@ -41,10 +41,10 @@ class PembayaranAsChildController {
 
     def save = {
         Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan, bilyetGiro: model.bilyetGiro)
-        if (!repo.validate(pembayaran, Default, model)) return
+        if (!purchaseOrderRepository.validate(pembayaran, Default, model)) return
 
         try {
-            repo.withTransaction {
+            purchaseOrderRepository.withTransaction {
                 model.faktur = merge(model.faktur)
                 model.faktur.bayar(pembayaran)
             }
@@ -63,8 +63,8 @@ class PembayaranAsChildController {
     def delete = {
         try {
             Pembayaran pembayaranHutang = view.table.selectionModel.selected[0]
-            repo.withTransaction {
-                model.faktur = repo.merge(model.faktur)
+            purchaseOrderRepository.withTransaction {
+                model.faktur = purchaseOrderRepository.merge(model.faktur)
                 model.faktur.hapus(pembayaranHutang)
             }
             execInsideUISync {
@@ -110,7 +110,7 @@ class PembayaranAsChildController {
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah
-                model.potongan = selected.potongan
+                model.potongan = selected.potongan? true: false
                 model.bilyetGiro = selected.bilyetGiro
             }
         }

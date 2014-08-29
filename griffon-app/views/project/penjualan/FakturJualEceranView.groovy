@@ -26,6 +26,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Faktur Jual Eceran',
@@ -133,10 +134,7 @@ application(title: 'Faktur Jual Eceran',
                     actionPerformed: controller.batalAntar)
                 button('Barang Diterima Dan Telah Dibayar', visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }),
                     actionPerformed: controller.bayar)
-                mvcPopupButton('Cetak', mvcGroup: 'previewEscp', args: {[
-                    dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_eceran.json'
-                ]}, dialogProperties: [title: 'Preview Faktur Jual', preferredSize: new Dimension(920,400)],
-                    visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual } ))
+                button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual } ))
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

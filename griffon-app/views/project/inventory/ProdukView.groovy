@@ -43,14 +43,7 @@ actions {
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
 }
 
-application(title: 'Produk',
-        preferredSize: [520, 340],
-        pack: true,
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                imageIcon('/griffon-icon-32x32.png').image,
-                imageIcon('/griffon-icon-16x16.png').image]) {
+application {
 
     panel(id: 'mainPanel') {
         borderLayout()
