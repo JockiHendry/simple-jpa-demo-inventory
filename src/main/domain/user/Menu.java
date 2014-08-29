@@ -25,11 +25,15 @@ public enum Menu {
     HUTANG("Hutang"),
     PIUTANG("Piutang"),
     GIRO("Giro"),
+    PENCAIRAN_POIN("Poin"),
     PRODUK("Produk"),
     TRANSFER("Transfer"),
     PENYESUAIAN_STOK("Penyesuaian"),
+    RETUR_JUAL("Retur Jual"),
+    RETUR_BELI("Retur Beli"),
     LAPORAN("Laporan"),
-    MAINTENANCE("Maintenance");
+    MAINTENANCE("Maintenance"),
+    PESAN("Pesan");
 
     public String naturalName;
 
