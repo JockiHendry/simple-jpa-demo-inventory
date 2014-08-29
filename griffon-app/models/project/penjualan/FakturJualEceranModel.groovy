@@ -39,6 +39,9 @@ class FakturJualEceranModel {
     @Bindable String keterangan
     @Bindable StatusFakturJual status
     List<ItemFaktur> listItemFaktur = []
+
+    @Bindable String created
+    @Bindable String modified
     @Bindable String createdBy
     @Bindable String modifiedBy
 

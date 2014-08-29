@@ -42,8 +42,6 @@ class FakturJualOlehSalesModel {
     @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
     List<ItemFaktur> listItemFaktur = []
     List<ItemBarang> listBonus = []
-    @Bindable String createdBy
-    @Bindable String modifiedBy
 
     @Bindable String nomorSearch
     @Bindable String salesSearch
@@ -56,5 +54,10 @@ class FakturJualOlehSalesModel {
 
     @Bindable String informasi
     @Bindable String informasiBonus
+
+    @Bindable String created
+    @Bindable String modified
+    @Bindable String createdBy
+    @Bindable String modifiedBy
 
 }

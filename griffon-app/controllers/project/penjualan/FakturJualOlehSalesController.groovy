@@ -182,7 +182,9 @@ class FakturJualOlehSalesController {
             model.status = null
             model.listItemFaktur.clear()
             model.listBonus.clear()
+            model.created = null
             model.createdBy = null
+            model.modified = null
             model.modifiedBy = null
 
             model.errors.clear()
@@ -212,10 +214,10 @@ class FakturJualOlehSalesController {
                 if (selected.bonusPenjualan) {
                     model.listBonus.addAll(selected.bonusPenjualan.items)
                 }
-                model.createdBy = (selected.createdBy && selected.createdDate)?
-                    "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
-                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
-                    "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
+                model.created = selected.createdDate
+                model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
+                model.modified = selected.modifiedDate
+                model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
                 refreshInformasi()
             }
         }

@@ -195,7 +195,9 @@ class PurchaseOrderController {
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
             model.supplier.selectedItem = null
+            model.created = null
             model.createdBy = null
+            model.modified = null
             model.modifiedBy = null
             model.listItemFaktur.clear()
 
@@ -221,10 +223,10 @@ class PurchaseOrderController {
                 model.supplier.selectedItem = selected.supplier
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(selected.listItemFaktur)
-                model.createdBy = (selected.createdBy && selected.createdDate)?
-                    "${selected.createdBy} (${DateFormat.getDateTimeInstance().format(selected.createdDate)})": "-"
-                model.modifiedBy = (selected.modifiedBy && selected.modifiedDate)?
-                    "${selected.modifiedBy} (${DateFormat.getDateTimeInstance().format(selected.modifiedDate)})": "-"
+                model.created = selected.createdDate
+                model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
+                model.modified = selected.modifiedDate
+                model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
                 refreshInformasi()
             }
         }

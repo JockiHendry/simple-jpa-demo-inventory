@@ -44,6 +44,9 @@ class PurchaseOrderModel {
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
     ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusPurchaseOrder))
+
+    @Bindable String created
+    @Bindable String modified
     @Bindable String createdBy
     @Bindable String modifiedBy
 

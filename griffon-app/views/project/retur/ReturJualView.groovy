@@ -100,10 +100,10 @@ application(title: 'Retur Jual',
             errorLabel(path: 'listKlaimRetur', constraints: 'wrap')
             panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                label('Created:')
+                label('Dibuat:')
                 label(text: bind { model.created })
                 label(text: bind { model.createdBy })
-                label('   Modified:')
+                label('   Dimodifikasi:')
                 label(text: bind { model.modified })
                 label(text: bind { model.modifiedBy })
             }

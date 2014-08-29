@@ -81,12 +81,14 @@ application() {
             textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')
 
-            panel(constraints: 'span, growx, wrap') {
+            panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                label('Dibuat Oleh: ')
-                label(text: bind {model.createdBy})
-                label('               Dimodifikasi Oleh: ')
-                label(text: bind {model.modifiedBy})
+                label('Dibuat:')
+                label(text: bind { model.created })
+                label(text: bind { model.createdBy })
+                label('   Dimodifikasi:')
+                label(text: bind { model.modified })
+                label(text: bind { model.modifiedBy })
             }
 
             panel(constraints: 'span, growx, wrap') {
