@@ -42,7 +42,7 @@ class PesanController {
             return
         }
         Pesan pesan = view.table.selectionModel.selected[0]
-        pesanRepository.remove(pesan)
+        pesanRepository.hapus(pesan)
         execInsideUISync {
             model.pesanList.remove(pesan)
             view.table.selectionModel.clearSelection()

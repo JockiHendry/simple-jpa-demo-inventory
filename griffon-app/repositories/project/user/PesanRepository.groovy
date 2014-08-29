@@ -17,12 +17,19 @@ package project.user
 
 import domain.user.Pesan
 import simplejpa.transaction.Transaction
+import griffon.core.*
+import griffon.util.*
 
 @Transaction
 class PesanRepository {
 
+    public static final String EVENT_UPDATE_PESAN = 'UpdatePesan'
+
+    GriffonApplication app = ApplicationHolder.application
+
     public Pesan buat(Pesan pesan) {
         persist(pesan)
+        app.event(EVENT_UPDATE_PESAN, [true])
         pesan
     }
 
@@ -34,7 +41,13 @@ class PesanRepository {
                 remove(pesan)
             }
         }
+        app.event(EVENT_UPDATE_PESAN, [!listPesan.empty])
         listPesan
+    }
+
+    public void hapus(Pesan pesan) {
+        remove(pesan)
+        app.event(EVENT_UPDATE_PESAN, [!findAllPesan().empty])
     }
 
 }

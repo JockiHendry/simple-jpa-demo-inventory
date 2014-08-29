@@ -19,6 +19,7 @@ package project.main
 import domain.user.User
 import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
+import javax.swing.JButton
 import java.awt.*
 import java.awt.event.*
 
@@ -46,6 +47,16 @@ class MainGroupController {
             model.penyesuaianStokVisible = currentUser.bolehAkses(domain.user.Menu.PENYESUAIAN_STOK)
             model.laporanVisible = currentUser.bolehAkses(domain.user.Menu.LAPORAN)
             model.maintenanceVisible = currentUser.bolehAkses(domain.user.Menu.MAINTENANCE)
+        }
+        app.addApplicationEventListener(this)
+    }
+
+    void onUpdatePesan(boolean visible) {
+        JButton pesanNotifikasi = view.pesanNotifikasi
+        if (model.pesanVisible) {
+            pesanNotifikasi.visible = visible
+        } else {
+            pesanNotifikasi.visible = false
         }
     }
 

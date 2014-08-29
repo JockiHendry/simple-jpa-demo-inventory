@@ -17,8 +17,11 @@ package project.faktur
 
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
-
+import org.joda.time.LocalDate
+import javax.swing.ImageIcon
+import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
+import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
 
@@ -33,6 +36,8 @@ actions {
         }
     })
 }
+
+def warningIcon = imageIcon('/warning.png')
 
 application() {
 
@@ -51,13 +56,16 @@ application() {
                 glazedColumn(name: '', property: 'deleted', width: 20) {
                     templateRenderer(exp: { it == 'Y' ? 'D' : '' })
                 }
-                glazedColumn(name: 'Nomor Seri', property: 'nomorSeri')
+                glazedColumn(name: 'Nomor Seri', expression: {it}) {
+                    templateRenderer(exp: {it.nomorSeri}, horizontalTextPosition: SwingConstants.LEFT) {
+                        condition(if_: {value.jatuhTempo.isBefore(LocalDate.now())},
+                                  then_: {it.icon = warningIcon}, else_: {it.icon = null})
+                    }
+                }
                 glazedColumn(name: 'Nominal', property: 'nominal', columnClass: Integer) {
                     templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo') {
-                    templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
-                }
+                glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo')
                 glazedColumn(name: 'Nama Bank', property: 'namaBank')
                 glazedColumn(name: 'Tanggal Pencairan', property: 'tanggalPencairan') {
                     templateRenderer(exp: {it?.toString('dd-MM-yyyy')})

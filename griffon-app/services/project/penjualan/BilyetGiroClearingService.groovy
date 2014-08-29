@@ -16,15 +16,19 @@
 package project.penjualan
 
 import domain.faktur.BilyetGiro
+import domain.user.PesanGiroJatuhTempo
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
 @Transaction
 class BilyetGiroClearingService {
 
     final Logger log = LoggerFactory.getLogger(BilyetGiroClearingService)
+
+    PesanRepository pesanRepository
 
     public void periksaJatuhTempo() {
         log.debug "Memeriksa bilyet giro yang sudah jatuh tempo..."
@@ -34,7 +38,7 @@ class BilyetGiroClearingService {
             jatuhTempo lt(LocalDate.now())
         }.each { BilyetGiro bg ->
             log.info "Memproses bilyet giro yang jatuh tempo: $bg"
-            bg.cairkan(LocalDate.now())
+            pesanRepository.buat(new PesanGiroJatuhTempo(bg))
         }
         log.debug "Pemeriksaan selesai!"
     }

@@ -15,6 +15,7 @@
  */
 package domain.user
 
+import domain.faktur.BilyetGiro
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -24,26 +25,28 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-abstract class Pesan implements Comparable {
+class PesanGiroJatuhTempo extends Pesan {
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-    LocalDateTime tanggal
+    @NotNull @ManyToOne
+    BilyetGiro bilyetGiro
 
-    @NotBlank
-    String pesan
+    PesanGiroJatuhTempo() {}
 
-    @NotNull
-    Integer prioritas = 1
-
-    abstract boolean masihBerlaku()
-
-    abstract String jenisPesan()
+    PesanGiroJatuhTempo(BilyetGiro bilyetGiro) {
+        this.tanggal = LocalDateTime.now()
+        this.bilyetGiro = bilyetGiro
+        this.pesan = "Giro ${bilyetGiro.nomorSeri} untuk bank ${bilyetGiro.namaBank} sudah jatuh tempo"
+    }
 
     @Override
-    int compareTo(Object o) {
-        if (o==null) return -1
-        if (!(o instanceof Pesan)) return -1
-        id == o.id
+    boolean masihBerlaku() {
+        !bilyetGiro.sudahDicairkan()
     }
+
+    @Override
+    String jenisPesan() {
+        "Jatuh Tempo Giro"
+    }
+
 }
 

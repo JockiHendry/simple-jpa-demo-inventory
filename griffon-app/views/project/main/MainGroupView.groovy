@@ -18,6 +18,7 @@
 
 package project.main
 
+import org.jdesktop.swingx.JXStatusBar
 import project.pembelian.POViewMode
 import project.penjualan.FakturEceranViewMode
 import project.retur.ReturBeliViewMode
@@ -101,8 +102,6 @@ actions {
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
-    action(id: 'pesan', name: 'Notifikasi', actionCommandKey: 'pesan', mnemonic: KeyEvent.VK_N,
-        smallIcon: imageIcon('/menu_notifikasi.png'), closure: controller.switchPage)
 
     action(id: 'maintenance', name: 'Maintenance', actionCommandKey: 'maintenance', mnemonic: KeyEvent.VK_M,
         smallIcon: imageIcon('/menu_maintenance.png'), closure: popupMaintenance)
@@ -126,6 +125,9 @@ actions {
         smallIcon: imageIcon('/menu_maintenance_restore.png'), closure: controller.switchPage)
     action(id: 'user', name: 'User', actionCommandKey: 'user', mnemonic: KeyEvent.VK_U,
         smallIcon: imageIcon('/menu_maintenance_user.png'), closure: controller.switchPage)
+
+    action(id: 'pesan', name: '<html><strong>Ada pesan notifikasi yang belum dibaca!</strong></html>',
+        actionCommandKey: 'pesan', smallIcon: imageIcon('/warning.png'), closure: controller.switchPage)
 }
 
 application(id: 'mainFrame',
@@ -209,8 +211,6 @@ application(id: 'mainFrame',
                 separator()
                 toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.laporanVisible})
-                toggleButton(buttonGroup: buttons, action: pesan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.pesanVisible})
                 toggleButton(buttonGroup: buttons, action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.maintenanceVisible})
             }
@@ -219,8 +219,9 @@ application(id: 'mainFrame',
                 borderLayout()
             }
 
-            statusBar(constraints: BorderLayout.PAGE_END, border: BorderFactory.createBevelBorder(BevelBorder.LOWERED)) {
-                label(text:bind {model.status})
+            statusBar(id: 'statusBar', constraints: BorderLayout.PAGE_END, border: BorderFactory.createBevelBorder(BevelBorder.LOWERED)) {
+                label(text:bind {model.status}, constraints: new JXStatusBar.Constraint(JXStatusBar.Constraint.ResizeBehavior.FILL))
+                hyperlink(id: 'pesanNotifikasi', visible: false, action: pesan)
             }
         }
     }
