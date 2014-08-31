@@ -16,6 +16,8 @@
 package project
 
 import domain.faktur.BilyetGiro
+import domain.user.Pesan
+import domain.user.PesanGiroJatuhTempo
 import project.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
@@ -23,6 +25,7 @@ import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.penjualan.BilyetGiroClearingService
+import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
@@ -32,11 +35,13 @@ class BilyetGiroTest extends DbUnitTestCase {
 
     BilyetGiroRepository bilyetGiroRepository
     BilyetGiroClearingService bilyetGiroClearingService
+    PesanRepository pesanRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("fakturJual", "/project/data_penjualan.xls")
         bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
+        pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
         bilyetGiroClearingService = app.serviceManager.findService('BilyetGiroClearing')
     }
 
@@ -63,13 +68,8 @@ class BilyetGiroTest extends DbUnitTestCase {
 
         bilyetGiroClearingService.periksaJatuhTempo()
 
-        bg1 = bilyetGiroRepository.findBilyetGiroByNomorSeri('BS-0001')
-        assertEquals(LocalDate.now(), bg1.tanggalPencairan)
-        assertTrue(bg1.sudahDicairkan())
-
-        bg2 = bilyetGiroRepository.findBilyetGiroByNomorSeri('BS-0002')
-        assertNull(bg2.tanggalPencairan)
-        assertFalse(bg2.sudahDicairkan())
+        List<Pesan> result = pesanRepository.refresh()
+        assertTrue(result.find {(it instanceof PesanGiroJatuhTempo) && it.bilyetGiro == bg1} != null)
     }
 
 }
