@@ -11,7 +11,7 @@
            "    %{176 R6}    Nomor     : ${nomor:25}",
            "   %{176 R8}   Tanggal   : {{tanggal.toString('dd-MM-YYYY')::10}}                     Jatuh Tempo : {{jatuhTempo.toString('dd-MM-YYYY')::10}}",
            "     %{176 R4}     Nama      : ${konsumen.nama:20 }               Sales   : ${konsumen.sales.nama:20}",
-           "      %{176 R2}      Credit    : ${konsumen.creditTerpakai:number:15}             Credit Limit   : ${konsumen.creditLimit:number:15}"
+           "      %{176 R2}"
         ],
         "detail": [
             {
@@ -33,10 +33,10 @@
                 "line": " ${produk.nama:41} x ${jumlah:3:right} ${produk.satuan.singkatan:5}"
             },
             "",
-            "        Hormat kami,                                       Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
+            "         Penerima,                  Hormat kami,           Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
             "                                                              Sub Total : ${@subtotal:currency:20:right}",
             "                                                        Diskon Tambahan : ${@jumlahDiskonTanpaDiskonItem:currency:20:right}",
-            "  (${createdBy:21:center})                                   Total Order : ${@total:currency:20:right}"
+            "  (                     )     (${createdBy:21:center})       Total Order : ${@total:currency:20:right}"
         ]
     }
 }
