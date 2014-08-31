@@ -39,7 +39,9 @@ class NomorService {
         PURCHASE_ORDER('PurchaseOrder', '%06d-PO-KB-%s'),
         TRANSFER('Transfer', '%06d-TR-KB-%s'),
         PENYESUAIAN_STOK('PenyesuaianStok', '%06d-PS-KB-%s'),
-        PENCAIRAN_POIN('PencairanPoin', '%06d-PP-KB-%s')
+        PENCAIRAN_POIN('PencairanPoin', '%06d-PP-KB-%s'),
+        RETUR_BELI('ReturBeli', '%06d-RB-KB-%s'),
+        RETUR_JUAL('ReturJual', '%06d-RJ-KB-%s')
 
         String format;
         String desc;

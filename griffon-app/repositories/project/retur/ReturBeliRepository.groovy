@@ -23,10 +23,13 @@ import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
+import project.user.NomorService
 import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturBeliRepository {
+
+    NomorService nomorService
 
     List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -66,6 +69,7 @@ class ReturBeliRepository {
         if (findReturBeliByNomor(returBeli.nomor)) {
             throw new DataDuplikat(returBeli)
         }
+        returBeli.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_BELI)
         returBeli.items.each { it.produk = merge(it.produk) }
         persist(returBeli)
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli))

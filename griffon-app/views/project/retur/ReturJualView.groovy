@@ -75,7 +75,7 @@ application(title: 'Retur Jual',
 
         panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
             label('Nomor:')
-            textField(id: 'nomor', columns: 50, text: bind('nomor', target: model, mutual: true), errorPath: 'nomor')
+            label(id: 'nomor', text: bind('nomor', target: model, mutual: true), errorPath: 'nomor')
             errorLabel(path: 'nomor', constraints: 'wrap')
             label('Tanggal:')
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', dateVisible: true, timeVisible: false)

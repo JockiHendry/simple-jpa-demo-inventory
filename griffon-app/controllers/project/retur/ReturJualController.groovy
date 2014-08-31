@@ -19,6 +19,7 @@ import ast.NeedSupervisorPassword
 import domain.retur.*
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
+import project.user.NomorService
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
 import javax.swing.*
@@ -30,6 +31,7 @@ class ReturJualController {
     ReturJualModel model
     def view
     ReturJualRepository returJualRepository
+    NomorService nomorService
 
     void mvcGroupInit(Map args) {
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
@@ -58,6 +60,7 @@ class ReturJualController {
             model.konsumenList.clear()
             model.gudangList.clear()
         }
+        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL)
         List konsumenResult = returJualRepository.findAllKonsumen()
         List gudangResult = returJualRepository.findAllGudang()
         execInsideUISync {
@@ -167,7 +170,7 @@ class ReturJualController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = null
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL)
             model.tanggal = null
             model.keterangan = null
             model.items.clear()

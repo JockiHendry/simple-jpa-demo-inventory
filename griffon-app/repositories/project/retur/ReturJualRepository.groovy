@@ -22,11 +22,13 @@ import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
-import project.inventory.GudangRepository
+import project.user.NomorService
 import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturJualRepository {
+
+    NomorService nomorService
     
     List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
         findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -50,6 +52,7 @@ class ReturJualRepository {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
+        returJual.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL)
         returJual.konsumen = merge(returJual.konsumen)
         returJual.items.each { it.produk = merge(it.produk) }
 		persist(returJual)
