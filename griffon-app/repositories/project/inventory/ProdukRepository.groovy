@@ -28,7 +28,7 @@ import simplejpa.transaction.Transaction
 class ProdukRepository {
 
     public List<Produk> cari(String namaSearch, boolean hanyaRetur = false, Supplier supplierSearch = null) {
-        findAllProdukByDslFetchComplete([excludeDeleted: false]) {
+        findAllProdukByDslFetchComplete([excludeDeleted: false, orderBy: 'nama']) {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
             }
