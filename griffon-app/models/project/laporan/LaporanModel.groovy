@@ -30,7 +30,8 @@ public enum JenisLaporan {
     LAPORAN_PENJUALAN_REGION('Laporan Penjualan Per Region', 'laporan_penjualan_region', 'laporanPenjualanPerRegion'),
     LAPORAN_PENJUALAN_KONSUMEN('Laporan Penjualan Per Konsumen', 'laporan_penjualan_konsumen', 'laporanPenjualanPerKonsumen'),
     LAPORAN_SISA_PIUTANG('Laporan Sisa Piutang', 'laporan_sisa_piutang', 'laporanSisaPiutang'),
-    LAPORAN_STOK('Laporan Stok Per Gudang', 'laporan_stok_gudang', 'laporanStokGudang')
+    LAPORAN_STOK('Laporan Summary Stok', 'laporan_stok', 'laporanStok'),
+    LAPORAN_STOK_GUDANG('Laporan Stok Per Gudang', 'laporan_stok_gudang', 'laporanStokGudang')
 
     String nama
     String namaLaporan
