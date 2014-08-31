@@ -22,7 +22,7 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 
 @DomainClass @Entity @Canonical
-class Region {
+class Region implements Comparable {
 
     @NotEmpty @Size(min=2, max=100)
     String nama
@@ -33,6 +33,13 @@ class Region {
     @Override
     String toString() {
         nama
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (o == null) return -1
+        if (!(o instanceof Region)) return -1
+        nama?.compareTo(o?.nama)?: -1
     }
 }
 

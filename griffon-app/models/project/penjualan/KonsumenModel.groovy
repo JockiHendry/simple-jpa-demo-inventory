@@ -36,9 +36,11 @@ class KonsumenModel {
     BasicEventList<Sales> salesList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
 
-
     @Bindable String namaSearch
+    @Bindable String salesSearch
 
     BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
+
+    @Bindable boolean popupMode = false
 
 }

@@ -41,26 +41,32 @@ application(title: 'Konsumen',
         borderLayout()
 
         panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search)
-            button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+            borderLayout()
+            label('<html><b>Petunjuk:</b> <i>Cari dan pilih jenis pekerjaan di tabel dan tekan Enter untuk selesai!</i></html>',
+                    visible: bind{model.popupMode}, horizontalAlignment: CENTER, constraints: PAGE_START)
+            panel(constraints: CENTER) {
+                flowLayout(alignment: FlowLayout.LEADING)
+                textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search)
+                textField(id: 'salesSearch', columns: 20, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
+                button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+            }
         }
 
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.konsumenList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                     doubleClickAction: showFakturBelumLunas, enterKeyAction: showFakturBelumLunas) {
-                glazedColumn(name: 'Nama', property: 'nama')
-                glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
+                glazedColumn(name: 'Nama', property: 'nama', preferredWidth: 300)
+                glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon', preferredWidth: 100)
                 glazedColumn(name: 'Region', property: 'region')
                 glazedColumn(name: 'Sales', expression: { it.sales.nama })
-                glazedColumn(name: 'Total Poin', property: 'poinTerkumpul', columnClass: Integer)
-                glazedColumn(name: 'Credit Limit', property: 'creditLimit', columnClass: Integer) {
+                glazedColumn(name: 'Total Poin', property: 'poinTerkumpul', columnClass: Integer, visible: bind {!model.popupMode})
+                glazedColumn(name: 'Credit Limit', property: 'creditLimit', columnClass: Integer, visible: bind {!model.popupMode}) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Credit Terpakai', property: 'creditTerpakai', columnClass: Integer) {
+                glazedColumn(name: 'Credit Terpakai', property: 'creditTerpakai', columnClass: Integer, visible: bind {!model.popupMode}) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Penggunaan Credit (%)', expression: { it.getRatioPenggunaanCredit() }, columnClass: Integer) {
+                glazedColumn(name: 'Penggunaan Credit (%)', expression: { it.getRatioPenggunaanCredit() }, columnClass: Integer, visible: bind {!model.popupMode}) {
                     templateRenderer(exp: { NumberFormat.percentInstance.format(it) }, horizontalAlignment: RIGHT) {
                         condition(if_: {it>=1}, then_property_: 'foreground', is_: Color.RED, else_is_: Color.BLACK)
                         condition(if_: {isSelected}, then_property_: 'foreground', is_: Color.WHITE)
@@ -69,7 +75,7 @@ application(title: 'Konsumen',
             }
         }
 
-        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
+        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true, visible: bind {!model.popupMode}) {
             label('Nama:')
             textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
             errorLabel(path: 'nama', constraints: 'wrap')
@@ -116,4 +122,5 @@ application(title: 'Konsumen',
     }
 }
 
-PromptSupport.setPrompt("Cari Nama...", namaSearch)
+PromptSupport.setPrompt("Nama...", namaSearch)
+PromptSupport.setPrompt("Sales...", salesSearch)

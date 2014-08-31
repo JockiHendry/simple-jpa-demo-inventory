@@ -61,8 +61,8 @@ class ProdukController {
             model.satuanList.clear()
             model.supplierList.clear()
         }
-        List satuan = produkRepository.findAllSatuan()
-        List supplier = produkRepository.findAllSupplier()
+        List satuan = produkRepository.findAllSatuan([orderBy: 'nama'])
+        List supplier = produkRepository.findAllSupplier([orderBy: 'nama'])
         execInsideUISync {
             model.satuanList.addAll(satuan)
             model.supplierList.addAll(supplier)

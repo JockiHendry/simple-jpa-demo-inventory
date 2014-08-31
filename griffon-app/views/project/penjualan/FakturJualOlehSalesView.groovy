@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -26,6 +27,7 @@ actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
     action(id: 'showBonus', name: 'Klik Disini Untuk Melihat Atau Mengisi Bonus...', closure: controller.showBonus)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
 application(title: 'Faktur Jual Oleh Sales',
@@ -86,7 +88,10 @@ application(title: 'Faktur Jual Oleh Sales',
                 dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
                 errorLabel(path: 'tanggal', constraints: 'wrap')
                 label('Konsumen:')
-                comboBox(id: 'konsumen', model: model.konsumen, templateRenderer: '${value.nama} - ${value.region}', errorPath: 'konsumen')
+                panel {
+                    label(text: bind {model.konsumen?: '- kosong -'})
+                    button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumen')
+                }
                 errorLabel(path: 'konsumen', constraints: 'wrap')
                 label('Diskon:')
                 panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {

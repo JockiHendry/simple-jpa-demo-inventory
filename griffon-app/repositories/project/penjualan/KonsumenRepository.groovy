@@ -26,10 +26,14 @@ import simplejpa.transaction.Transaction
 @Transaction
 class KonsumenRepository {
 
-    public List<Konsumen> cari(String namaSearch) {
-        findAllKonsumenByDsl([excludeDeleted: false]) {
+    public List<Konsumen> cari(String namaSearch, String salesSearch) {
+        findAllKonsumenByDsl([excludeDeleted: false, orderBy: 'nama']) {
             if (namaSearch) {
                 nama like("%${namaSearch}%")
+            }
+            if (salesSearch) {
+                and()
+                sales__nama like("%${salesSearch}")
             }
         }
     }

@@ -16,6 +16,7 @@
 package project.retur
 
 import javax.swing.JOptionPane
+import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -31,6 +32,7 @@ actions {
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
     action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Klaim Penukaran Barang...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
+    action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
 application(title: 'Retur Jual',
@@ -84,7 +86,10 @@ application(title: 'Retur Jual',
             comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
             errorLabel(path: 'gudang', constraints: 'wrap')
             label('Konsumen:')
-            comboBox(id: 'konsumen', model: model.konsumen, templateRenderer: '${value.nama} - ${value.region}', errorPath: 'konsumen')
+            panel {
+                label(text: bind {model.konsumen?: '- kosong -'})
+                button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumen')
+            }
             errorLabel(path: 'konsumen', constraints: 'wrap')
             label('Potongan Piutang:')
             decimalTextField(id: 'potongan', columns: 20, bindTo: 'potongan', errorPath: 'potongan')

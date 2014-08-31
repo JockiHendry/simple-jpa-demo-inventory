@@ -38,8 +38,7 @@ class FakturJualOlehSalesModel {
     @Bindable BigDecimal diskonPotonganLangsung
     @Bindable String keterangan
     @Bindable StatusFakturJual status
-    BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
+    @Bindable Konsumen konsumen
     List<ItemFaktur> listItemFaktur = []
     List<ItemBarang> listBonus = []
 

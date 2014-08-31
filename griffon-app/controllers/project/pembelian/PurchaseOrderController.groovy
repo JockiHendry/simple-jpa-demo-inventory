@@ -69,7 +69,7 @@ class PurchaseOrderController {
         execInsideUISync {
             model.supplierList.clear()
         }
-        List supplier = purchaseOrderRepository.findAllSupplier()
+        List supplier = purchaseOrderRepository.findAllSupplier([orderBy: 'nama'])
         execInsideUISync {
             model.supplierList.addAll(supplier)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)

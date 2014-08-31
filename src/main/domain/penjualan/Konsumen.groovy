@@ -162,5 +162,9 @@ class Konsumen {
         hapusPoin(daftarBarang.toPoin())
     }
 
+    @Override
+    String toString() {
+        "${nama} - Sales: ${sales?.nama} - Region: ${region?.nama}"
+    }
 }
 

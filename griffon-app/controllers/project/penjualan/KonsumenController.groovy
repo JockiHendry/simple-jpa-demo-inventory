@@ -19,6 +19,7 @@ import ast.NeedSupervisorPassword
 import domain.penjualan.*
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
@@ -31,6 +32,7 @@ class KonsumenController {
     KonsumenRepository konsumenRepository
 
     void mvcGroupInit(Map args) {
+        model.popupMode = args.'popup'?: false
         init()
         search()
     }
@@ -45,15 +47,16 @@ class KonsumenController {
         execInsideUISync {
             model.regionList.addAll(region)
             model.salesList.addAll(sales)
+            model.namaSearch = null
+            model.salesSearch = null
         }
     }
 
     def search = {
-        List result = konsumenRepository.cari(model.namaSearch)
+        List result = konsumenRepository.cari(model.namaSearch, model.salesSearch)
         execInsideUISync {
             model.konsumenList.clear()
             model.konsumenList.addAll(result)
-            model.namaSearch = null
         }
     }
 
@@ -99,10 +102,14 @@ class KonsumenController {
     }
 
     def showFakturBelumLunas = {
-        execInsideUISync {
-            def args = [konsumen: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Faktur Belum Lunas', size: new Dimension(900,420)]
-            DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
+        if (model.popupMode) {
+            SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
+        } else {
+            execInsideUISync {
+                def args = [konsumen: view.table.selectionModel.selected[0]]
+                def dialogProps = [title: 'Faktur Belum Lunas', size: new Dimension(900, 420)]
+                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
+            }
         }
     }
 

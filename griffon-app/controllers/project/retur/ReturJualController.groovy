@@ -25,6 +25,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
 class ReturJualController {
 
@@ -57,14 +58,11 @@ class ReturJualController {
             model.konsumenSearch = null
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.konsumenList.clear()
             model.gudangList.clear()
         }
         model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL)
-        List konsumenResult = returJualRepository.findAllKonsumen()
-        List gudangResult = returJualRepository.findAllGudang()
+        List gudangResult = returJualRepository.findAllGudang([orderBy: 'nama'])
         execInsideUISync {
-            model.konsumenList.addAll(konsumenResult)
             model.gudangList.addAll(gudangResult)
         }
     }
@@ -90,7 +88,7 @@ class ReturJualController {
             }
         }
 
-        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen.selectedItem, gudang: model.gudang.selectedItem)
+        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen, gudang: model.gudang.selectedItem)
         returJual.listKlaimRetur.addAll(model.listKlaimRetur)
         if (model.potongan > 0) {
             returJual.tambahKlaimPotongan(model.potongan)
@@ -145,6 +143,20 @@ class ReturJualController {
         }
     }
 
+    def cariKonsumen = {
+        execInsideUISync {
+            def args = [popup: true]
+            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                } else {
+                    model.konsumen = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
     def showBarangRetur = {
         execInsideUISync {
             def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false]
@@ -176,7 +188,7 @@ class ReturJualController {
             model.items.clear()
             model.listKlaimRetur.clear()
             model.potongan = null
-            model.konsumen.selectedItem = null
+            model.konsumen = null
             model.gudang.selectedItem = null
             model.created = null
             model.createdBy = null
@@ -203,7 +215,7 @@ class ReturJualController {
                 model.listKlaimRetur.clear()
                 model.listKlaimRetur.addAll(selected.getKlaimTukar())
                 model.potongan = selected.getKlaimPotongan().sum { it.potongan }
-                model.konsumen.selectedItem = selected.konsumen
+                model.konsumen = selected.konsumen
                 model.gudang.selectedItem = selected.gudang
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null

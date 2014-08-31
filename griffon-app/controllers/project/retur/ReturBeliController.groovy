@@ -62,7 +62,7 @@ class ReturBeliController {
             model.supplierList.clear()
         }
         model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_BELI)
-        List supplierResult = returBeliRepository.findAllSupplier()
+        List supplierResult = returBeliRepository.findAllSupplier([orderBy: 'nama'])
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()

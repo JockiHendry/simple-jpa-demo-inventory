@@ -45,11 +45,6 @@ class FakturJualOlehSalesController {
 
     def init = {
         execInsideUISync {
-            model.konsumenList.clear()
-        }
-        List konsumen = fakturJualRepository.findAllKonsumen()
-        execInsideUISync {
-            model.konsumenList.addAll(konsumen)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = SwingHelper.SEMUA
@@ -68,7 +63,7 @@ class FakturJualOlehSalesController {
     def save = {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
-            konsumen: model.konsumen.selectedItem)
+            konsumen: model.konsumen)
         model.listItemFaktur.each { fakturJualOlehSales.tambah(it) }
 
         if (!fakturJualRepository.validate(fakturJualOlehSales, InputPenjualanOlehSales, model)) return
@@ -136,18 +131,32 @@ class FakturJualOlehSalesController {
     }
 
     def showItemFaktur = {
-        if (!model.konsumen.selectedItem) {
+        if (!model.konsumen) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
             return
         }
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
-                        konsumen: model.konsumen.selectedItem, allowTambahProduk: false, showHarga: model.showFakturJual]
+                        konsumen: model.konsumen, allowTambahProduk: false, showHarga: model.showFakturJual]
             def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
+            }
+        }
+    }
+
+    def cariKonsumen = {
+        execInsideUISync {
+            def args = [popup: true]
+            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                } else {
+                    model.konsumen = v.view.table.selectionModel.selected[0]
+                }
             }
         }
     }
@@ -163,7 +172,7 @@ class FakturJualOlehSalesController {
 
     def refreshInformasi = {
         def jumlahItem = model.listItemFaktur.toArray().sum{ it.jumlah }?: 0
-        def total = model.listItemFaktur.toArray().sum { it.total() }?: 0
+        def total = model.listItemFaktur.toArray().sum { it?.total() ?: 0 }?: 0
         model.informasi = "Qty ${jumlahItem}   Total ${NumberFormat.currencyInstance.format(total)}"
 
         jumlahItem = model.listBonus.toArray().sum { it.jumlah }?: 0
@@ -175,7 +184,7 @@ class FakturJualOlehSalesController {
             model.id = null
             model.nomor = null
             model.tanggal = null
-            model.konsumen.selectedItem = null
+            model.konsumen = null
             model.keterangan = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
@@ -203,7 +212,7 @@ class FakturJualOlehSalesController {
                 model.id = selected.id
                 model.nomor = selected.nomor
                 model.tanggal = selected.tanggal
-                model.konsumen.selectedItem = selected.konsumen
+                model.konsumen = selected.konsumen
                 model.keterangan = selected.keterangan
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen

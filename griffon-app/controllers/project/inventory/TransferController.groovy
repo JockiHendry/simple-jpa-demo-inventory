@@ -42,7 +42,7 @@ class TransferController {
         execInsideUISync {
             model.transferList.clear()
         }
-        List gudang = transferRepository.findAllGudang()
+        List gudang = transferRepository.findAllGudang([orderBy: 'nama'])
         execInsideUISync {
             model.gudangList.addAll(gudang)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)

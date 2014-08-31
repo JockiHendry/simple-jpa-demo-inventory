@@ -51,8 +51,7 @@ class ReturJualModel {
     List<ItemBarang> items = []
     List<KlaimRetur> listKlaimRetur = []
     @Bindable BigDecimal potongan
-    BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
+    @Bindable Konsumen konsumen
 
     BasicEventList<ReturJual> returJualList = new BasicEventList<>()
 
