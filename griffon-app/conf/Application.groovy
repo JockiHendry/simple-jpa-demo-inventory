@@ -115,10 +115,10 @@ mvcGroups {
     }
 
     // MVC Group for "laporanStok"
-    'laporanStok' {
-        model      = 'project.laporan.LaporanStokModel'
-        view       = 'project.laporan.LaporanStokView'
-        controller = 'project.laporan.LaporanStokController'
+    'laporanStokGudang' {
+        model      = 'project.laporan.LaporanStokGudangModel'
+        view       = 'project.laporan.LaporanStokGudangView'
+        controller = 'project.laporan.LaporanStokGudangController'
     }
 
     // MVC Group for "laporan"

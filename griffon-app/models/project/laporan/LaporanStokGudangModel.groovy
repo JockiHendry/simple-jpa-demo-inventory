@@ -17,7 +17,7 @@ package project.laporan
 
 import groovy.beans.Bindable
 
-class LaporanStokModel {
+class LaporanStokGudangModel {
 
     @Bindable String produkSearch
     @Bindable String gudangSearch

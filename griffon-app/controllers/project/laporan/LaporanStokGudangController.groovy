@@ -17,9 +17,9 @@ package project.laporan
 import project.inventory.ProdukRepository
 import javax.swing.SwingUtilities
 
-class LaporanStokController {
+class LaporanStokGudangController {
 
-    LaporanStokModel model
+    LaporanStokGudangModel model
     def view
     ProdukRepository produkRepository
 
