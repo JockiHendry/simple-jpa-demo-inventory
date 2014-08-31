@@ -54,17 +54,17 @@ application(title: 'simple-jpa-demo-inventory',
 
             panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left,grow]',''), constraints: PAGE_END, focusCycleRoot: true) {
                 label('Key:')
-                textField(id: 'key', columns: 20, text: bind('keyPengaturan', source: model), editable: false, constraints: 'wrap')
+                textField(id: 'key', columns: 50, text: bind('keyPengaturan', source: model), editable: false, constraints: 'wrap')
 
                 label('Nilai:', visible: bind { model.genericValue })
-                textField(id: 'nilai', columns: 20, text: bind('nilai', target: model, mutual: true), visible: bind { model.genericValue }, errorPath: 'nilai')
+                textField(id: 'nilai', columns: 50, text: bind('nilai', target: model, mutual: true), visible: bind { model.genericValue }, errorPath: 'nilai')
                 errorLabel(path: 'nilai', visible: bind { model.genericValue }, constraints: 'wrap')
 
                 label('Password Baru:', visible: bind { model.passwordValue })
-                passwordField(id: 'passwordBaru', columns: 20, visible: bind { model.passwordValue }, errorPath: 'nilai')
+                passwordField(id: 'passwordBaru', columns: 50, visible: bind { model.passwordValue }, errorPath: 'nilai')
                 errorLabel(path: 'nilai', visible: bind { model.passwordValue }, constraints: 'wrap')
                 label('Ulangi Password Baru:', visible: bind { model.passwordValue })
-                passwordField(id: 'ulangiPasswordBaru', columns: 20, visible: bind { model.passwordValue }, errorPath: 'ulangiPasswordBaru')
+                passwordField(id: 'ulangiPasswordBaru', columns: 50, visible: bind { model.passwordValue }, errorPath: 'ulangiPasswordBaru')
                 errorLabel(path: 'ulangiPasswordBaru', visible: bind { model.passwordValue }, constraints: 'wrap')
 
                 panel(constraints: 'span, growx, wrap') {

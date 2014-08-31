@@ -33,6 +33,7 @@ class PengaturanController {
 
     def refresh = {
         List result = []
+        pengaturanRepository.refreshAll()
         pengaturanRepository.cache.sort().each { KeyPengaturan k, def v ->
             def nilai = v
             if (nilai!=null) {
