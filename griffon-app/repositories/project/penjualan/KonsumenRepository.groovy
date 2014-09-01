@@ -20,6 +20,8 @@ import domain.exception.DataTidakBolehDiubah
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Konsumen
+import domain.penjualan.RiwayatPoin
+import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 
@@ -36,6 +38,16 @@ class KonsumenRepository {
                 sales__nama like("%${salesSearch}")
             }
         }
+    }
+
+    public List<RiwayatPoin> cariRiwayatPoin(Konsumen konsumenSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch) {
+        List<Konsumen> result = executeQuery('SELECT DISTINCT k FROM Konsumen k JOIN FETCH k.listRiwayatPoin r WHERE ' +
+            'k = :konsumen AND r.tanggal BETWEEN :tanggalMulaiSearch AND :tanggalSelesaiSearch ORDER BY r.tanggal', [:],
+            [konsumen: konsumenSearch, tanggalMulaiSearch: tanggalMulaiSearch, tanggalSelesaiSearch: tanggalSelesaiSearch])
+        if (result.size() > 1) {
+            throw new IllegalStateException("Jumlah konsumen yang ditemukan untuk [${konsumenSearch}] lebih dari satu!")
+        }
+        result.empty? []: result[0].listRiwayatPoin
     }
 
     public Konsumen buat(Konsumen konsumen) {

@@ -109,13 +109,17 @@ class KonsumenTests extends GriffonUnitTestCase {
         Produk produkA = new Produk(nama: 'Produk A', poin: 10)
         Produk produkB = new Produk(nama: 'Produk B', poin: 0)
         Produk produkC = new Produk(nama: 'Produk C', poin: 5)
-        PengeluaranBarang daftarBarang = new PengeluaranBarang()
+        PengeluaranBarang daftarBarang = new PengeluaranBarang(nomor: 'PB-123')
         daftarBarang.tambah(new ItemBarang(produkA, 10))
         daftarBarang.tambah(new ItemBarang(produkB, 20))
         daftarBarang.tambah(new ItemBarang(produkC, 30))
 
         mrNiceGuy.tambahPoin(daftarBarang)
         assertEquals(320, mrNiceGuy.poinTerkumpul)
+        assertEquals(3, mrNiceGuy.listRiwayatPoin.size())
+        assertEquals(LocalDate.now(), mrNiceGuy.listRiwayatPoin[2].tanggal)
+        assertEquals(250, mrNiceGuy.listRiwayatPoin[2].poin)
+        assertEquals('PB-123', mrNiceGuy.listRiwayatPoin[2].referensi)
     }
 
     public void testHapusPoin() {
@@ -127,13 +131,20 @@ class KonsumenTests extends GriffonUnitTestCase {
         Produk produkA = new Produk(nama: 'Produk A', poin: 10)
         Produk produkB = new Produk(nama: 'Produk B', poin: 0)
         Produk produkC = new Produk(nama: 'Produk C', poin: 5)
-        PengeluaranBarang daftarBarang = new PengeluaranBarang()
+        PengeluaranBarang daftarBarang = new PengeluaranBarang(nomor: 'PB-123')
         daftarBarang.tambah(new ItemBarang(produkA, 10))
         daftarBarang.tambah(new ItemBarang(produkB, 20))
         daftarBarang.tambah(new ItemBarang(produkC, 30))
 
         mrNiceGuy.hapusPoin(daftarBarang)
         assertEquals(0, mrNiceGuy.poinTerkumpul)
+        assertEquals(2, mrNiceGuy.listRiwayatPoin.size())
+        assertEquals(LocalDate.now(), mrNiceGuy.listRiwayatPoin[0].tanggal)
+        assertEquals(-20, mrNiceGuy.listRiwayatPoin[0].poin)
+        assertNull(mrNiceGuy.listRiwayatPoin[0].referensi)
+        assertEquals(LocalDate.now(), mrNiceGuy.listRiwayatPoin[1].tanggal)
+        assertEquals(-250, mrNiceGuy.listRiwayatPoin[1].poin)
+        assertEquals('PB-123', mrNiceGuy.listRiwayatPoin[1].referensi)
     }
 
     public void testPotongPiutang() {

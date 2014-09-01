@@ -25,7 +25,7 @@ public enum Menu {
     HUTANG("Hutang"),
     PIUTANG("Piutang"),
     GIRO("Giro"),
-    PENCAIRAN_POIN("Poin"),
+    POIN("Poin"),
     PRODUK("Produk"),
     TRANSFER("Transfer"),
     PENYESUAIAN_STOK("Penyesuaian"),

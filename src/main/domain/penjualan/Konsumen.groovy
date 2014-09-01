@@ -75,6 +75,9 @@ class Konsumen {
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
 
+    @ElementCollection @OrderColumn
+    List<RiwayatPoin> listRiwayatPoin = []
+
     @ElementCollection
     Map<Produk, BigDecimal> hargaTerakhir = [:]
 
@@ -145,21 +148,25 @@ class Konsumen {
         }
     }
 
-    public void tambahPoin(Integer poin) {
+    public void tambahPoin(Integer poin, String referensi = null) {
+        RiwayatPoin riwayatPoin = new RiwayatPoin(tanggal: LocalDate.now(), poin: poin, referensi: referensi)
+        listRiwayatPoin << riwayatPoin
         this.poinTerkumpul += poin
     }
 
     public void tambahPoin(DaftarBarang daftarBarang) {
-        tambahPoin(daftarBarang.toPoin())
+        tambahPoin(daftarBarang.toPoin(), daftarBarang.nomor)
     }
 
-    public void hapusPoin(Integer poin) {
+    public void hapusPoin(Integer poin, String referensi = null) {
+        RiwayatPoin riwayatPoin = new RiwayatPoin(tanggal: LocalDate.now(), poin: -poin, referensi: referensi)
+        listRiwayatPoin << riwayatPoin
         this.poinTerkumpul -= poin
         if (this.poinTerkumpul < 0) this.poinTerkumpul = 0
     }
 
     public void hapusPoin(DaftarBarang daftarBarang) {
-        hapusPoin(daftarBarang.toPoin())
+        hapusPoin(daftarBarang.toPoin(), daftarBarang.nomor)
     }
 
     @Override

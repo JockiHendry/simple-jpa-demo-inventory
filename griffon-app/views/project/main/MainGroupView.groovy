@@ -46,6 +46,10 @@ def popupPenjualan = {
     penjualanPopup.show(fakturJualButton, 0, fakturJualButton.getHeight())
 }
 
+def popupPoin = {
+    poinPopup.show(poinButton, 0, poinButton.getHeight())
+}
+
 def switchPageWithArguments = { Map arguments ->
     return { ActionEvent event ->
         controller.switchPage(event, arguments)
@@ -85,8 +89,11 @@ actions {
         smallIcon: imageIcon('/menu_piutang.png'), closure: controller.switchPage)
     action(id: 'bilyetGiro', name: 'Giro', actionCommandKey: 'bilyetGiro', mnemonic: KeyEvent.VK_G,
         smallIcon: imageIcon('/menu_giro.png'), closure: controller.switchPage)
-    action(id: 'pencairanPoin', name: 'Poin', actionCommandKey: 'pencairanPoin', mnemonic: KeyEvent.VK_O,
+    action(id: 'poin', name: 'Poin', smallIcon: imageIcon('/menu_poin.png'), closure: popupPoin)
+    action(id: 'pencairanPoin', name: 'Pencairan', actionCommandKey: 'pencairanPoin', mnemonic: KeyEvent.VK_O,
         smallIcon: imageIcon('/menu_pencairan_poin.png'), closure: controller.switchPage)
+    action(id: 'riwayatPoin', name: 'Riwayat', actionCommandKey: 'riwayatPoin', mnemonic: KeyEvent.VK_R,
+        smallIcon: imageIcon('/menu_riwayat_poin.png'), closure: controller.switchPage)
 
     action(id: 'produk', name: 'Produk', actionCommandKey: 'produk', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_produk.png'), closure: controller.switchPage)
@@ -168,6 +175,11 @@ application(id: 'mainFrame',
         menuItem(action: fakturJualOlehSales)
     }
 
+    popupMenu(id: 'poinPopup') {
+        menuItem(action: pencairanPoin)
+        menuItem(action: riwayatPoin)
+    }
+
     borderLayout()
     jxlayer(UI: BusyLayerUI.instance, constraints: BorderLayout.CENTER) {
         panel() {
@@ -194,8 +206,8 @@ application(id: 'mainFrame',
                     visible: bind {model.piutangVisible})
                 toggleButton(buttonGroup: buttons, action: bilyetGiro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.giroVisible})
-                toggleButton(buttonGroup: buttons, action: pencairanPoin, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.pencairanPoinVisible})
+                toggleButton(buttonGroup: buttons, action: poin, id: 'poinButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    visible: bind {model.poinVisible})
                 separator()
                 toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.produkVisible})

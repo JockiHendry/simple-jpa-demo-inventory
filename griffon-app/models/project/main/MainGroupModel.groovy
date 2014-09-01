@@ -31,7 +31,7 @@ class MainGroupModel {
     @Bindable boolean hutangVisible = true
     @Bindable boolean piutangVisible = true
     @Bindable boolean giroVisible = true
-    @Bindable boolean pencairanPoinVisible = true
+    @Bindable boolean poinVisible = true
     @Bindable boolean produkVisible = true
     @Bindable boolean transferVisible = true
     @Bindable boolean penyesuaianStokVisible = true

@@ -42,7 +42,7 @@ class MainGroupController {
             model.hutangVisible = currentUser.bolehAkses(domain.user.Menu.HUTANG)
             model.piutangVisible = currentUser.bolehAkses(domain.user.Menu.PIUTANG)
             model.giroVisible = currentUser.bolehAkses(domain.user.Menu.GIRO)
-            model.pencairanPoinVisible = currentUser.bolehAkses(domain.user.Menu.PENCAIRAN_POIN)
+            model.poinVisible = currentUser.bolehAkses(domain.user.Menu.POIN)
             model.produkVisible = currentUser.bolehAkses(domain.user.Menu.PRODUK)
             model.transferVisible = currentUser.bolehAkses(domain.user.Menu.TRANSFER)
             model.penyesuaianStokVisible = currentUser.bolehAkses(domain.user.Menu.PENYESUAIAN_STOK)

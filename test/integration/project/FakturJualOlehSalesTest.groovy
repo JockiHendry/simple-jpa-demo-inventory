@@ -204,6 +204,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             // Memeriksa poin konsumen
             Konsumen mrNiceGuy = fakturJualRepository.findKonsumenById(-1l)
             assertEquals(52, mrNiceGuy.poinTerkumpul)
+            assertEquals(1, mrNiceGuy.listRiwayatPoin.size())
+            assertEquals(LocalDate.now(), mrNiceGuy.listRiwayatPoin[0].tanggal)
+            assertEquals(2, mrNiceGuy.listRiwayatPoin[0].poin)
+            assertEquals(fakturJualOlehSales.pengeluaranBarang.nomor, mrNiceGuy.listRiwayatPoin[0].referensi)
 
             // Menghapus penerimaan
             fakturJualOlehSales.hapusBuktiTerima()
