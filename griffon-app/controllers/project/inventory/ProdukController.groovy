@@ -16,6 +16,7 @@
 
 package project.inventory
 
+import ast.NeedSupervisorPassword
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
 import domain.pembelian.Supplier
@@ -103,6 +104,7 @@ class ProdukController {
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         Produk produk = view.table.selectionModel.selected[0]
 		produkRepository.remove(produk)
