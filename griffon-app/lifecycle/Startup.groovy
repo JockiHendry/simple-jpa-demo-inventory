@@ -44,7 +44,7 @@ execOutsideUI {
     serviceManager.findService('Nomor')
 
     // Create repository
-    PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
+    PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
     pengaturanRepository.refreshAll()
 
     // Mengubah ukuran huruf bila diperlukan
