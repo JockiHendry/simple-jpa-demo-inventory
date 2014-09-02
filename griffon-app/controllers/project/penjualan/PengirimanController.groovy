@@ -64,7 +64,7 @@ class PengirimanController {
 
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.kirim(faktur, model.alamatTujuan, model.namaSupir, model.tanggal)
+            faktur = fakturJualRepository.kirim(faktur, model.alamatTujuan, model.namaSupir, model.tanggal, model.keterangan)
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()

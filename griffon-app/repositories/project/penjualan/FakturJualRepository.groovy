@@ -338,9 +338,9 @@ class FakturJualRepository {
         fakturJualEceran
     }
 
-    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now()) {
+    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.kirim(alamatTujuan, namaSupir, tanggalKirim)
+        faktur.kirim(alamatTujuan, namaSupir, tanggalKirim, keterangan)
         faktur
     }
 

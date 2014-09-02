@@ -63,7 +63,7 @@ class FakturJualOlehSales extends FakturJual {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     BonusPenjualan bonusPenjualan
 
-    void kirim(String alamatTujuan, String namaSupir, LocalDate tanggal = LocalDate.now()) {
+    void kirim(String alamatTujuan, String namaSupir, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
@@ -71,7 +71,7 @@ class FakturJualOlehSales extends FakturJual {
         // Buat PengeluaranBarang berdasarkan data yang ada di faktur
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: LocalDate.now(), gudang: konsumen.sales.gudang,
+            tanggal: LocalDate.now(), gudang: konsumen.sales.gudang, keterangan: keterangan,
             alamatTujuan: alamatTujuan, namaSupir: namaSupir
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items

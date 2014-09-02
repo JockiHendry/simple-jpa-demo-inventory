@@ -45,7 +45,7 @@ import java.text.NumberFormat
         ])
     ])
 ])
-@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,hargaTerakhir')
+@DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,listRiwayatPoin,hargaTerakhir')
 class Konsumen {
 
     @NotEmpty @Size(min=2, max=100)

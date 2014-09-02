@@ -44,11 +44,6 @@ class PencairanPoinController {
     def init = {
         nomorService.refreshAll()
         execInsideUISync {
-            model.konsumenList.clear()
-        }
-        List konsumen = pencairanPoinRepository.findAllKonsumen()
-        execInsideUISync {
-            model.konsumenList.addAll(konsumen)
             model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
             model.tanggalSelesaiSearch = LocalDate.now()
         }
@@ -67,22 +62,19 @@ class PencairanPoinController {
         PencairanPoin pencairanPoin
 
         if (jenisPencarian == JenisPencairanPoin.TUKAR_UANG) {
-            pencairanPoin = new PencairanPoinTukarUang(tanggal: model.tanggal, konsumen: model.konsumen.selectedItem,
-                jumlahPoin: model.jumlahPoin)
+            pencairanPoin = new PencairanPoinTukarUang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: model.jumlahPoin, keterangan: model.keterangan)
         } else if (jenisPencarian == JenisPencairanPoin.TUKAR_BARANG) {
-            pencairanPoin = new PencairanPoinTukarBarang(tanggal: model.tanggal, konsumen: model.konsumen.selectedItem,
-                jumlahPoin: 1)
+            pencairanPoin = new PencairanPoinTukarBarang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: 1, keterangan: model.keterangan)
             pencairanPoin.listItemBarang.addAll(model.items)
         } else if (jenisPencarian == JenisPencairanPoin.POTONG_PIUTANG) {
-            pencairanPoin = new PencairanPoinPotongPiutang(tanggal: model.tanggal, konsumen: model.konsumen.selectedItem,
-                jumlahPoin: model.jumlahPoin)
+            pencairanPoin = new PencairanPoinPotongPiutang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: model.jumlahPoin, keterangan: model.keterangan)
         } else {
             model.errors['jenisPencairanPoin'] = 'Tidak didukung untuk saat ini!'
             return
         }
 
         if (!pencairanPoinRepository.validate(pencairanPoin, InputPencairanPoin, model)) {
-            JOptionPane.showMessageDialog(null, "Errosr = " + model.errors)
+            JOptionPane.showMessageDialog(null, "Error = " + model.errors)
             return
         }
 
@@ -135,6 +127,20 @@ class PencairanPoinController {
         }
     }
 
+    def cariKonsumen = {
+        execInsideUISync {
+            def args = [popup: true]
+            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                } else {
+                    model.konsumen = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
     def onPerubahanJenisLaporan = {
         if (model.jenisPencairanPoin.selectedItem == JenisPencairanPoin.TUKAR_BARANG) {
             model.daftarBarangVisible = true
@@ -151,7 +157,7 @@ class PencairanPoinController {
             model.jumlahPoin = null
             model.keterangan = null
             model.rate = null
-            model.konsumen.selectedItem = null
+            model.konsumen = null
             model.items.clear()
             model.created = null
             model.createdBy = null
@@ -176,7 +182,7 @@ class PencairanPoinController {
                 model.jumlahPoin = selected.jumlahPoin
                 model.keterangan = selected.keterangan
                 model.rate = selected.rate
-                model.konsumen.selectedItem = selected.konsumen
+                model.konsumen = selected.konsumen
                 model.items.clear()
                 if (selected instanceof PencairanPoinTukarUang) {
                     model.jenisPencairanPoin.selectedItem = JenisPencairanPoin.TUKAR_UANG

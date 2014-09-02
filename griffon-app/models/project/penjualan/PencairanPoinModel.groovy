@@ -38,8 +38,7 @@ class PencairanPoinModel {
     @Bindable Integer jumlahPoin
     @Bindable String keterangan
     @Bindable BigDecimal rate
-    BasicEventList<Konsumen> konsumenList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Konsumen> konsumen = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(konsumenList)
+    @Bindable Konsumen konsumen
     List<ItemBarang> items = []
     EnumComboBoxModel<JenisPencairanPoin> jenisPencairanPoin = new EnumComboBoxModel<JenisPencairanPoin>(JenisPencairanPoin)
 

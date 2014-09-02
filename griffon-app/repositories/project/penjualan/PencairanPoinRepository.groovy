@@ -46,6 +46,10 @@ class PencairanPoinRepository {
 
     public PencairanPoin buat(PencairanPoin pencairanPoin) {
         pencairanPoin.konsumen = merge(pencairanPoin.konsumen)
+        // Apakah poin cukup?
+        if (pencairanPoin.konsumen.poinTerkumpul < pencairanPoin.jumlahPoin) {
+            throw new IllegalArgumentException("Jumlah poin konsumen [${pencairanPoin.konsumen.poinTerkumpul}] tidak mencukupi!")
+        }
         if (pencairanPoin instanceof PencairanPoinTukarBarang) {
             pencairanPoin.listItemBarang.each { it.produk = merge(it.produk) }
         }

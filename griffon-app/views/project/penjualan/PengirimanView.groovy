@@ -58,7 +58,7 @@ application() {
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
                 glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
                 glazedColumn(name: 'Status', property: 'status')
-                glazedColumn(name: 'Keterangan', property: 'keterangan')
+                glazedColumn(name: 'Keterangan', expression: { it.pengeluaranBarang?.keterangan?: ''})
             }
         }
 

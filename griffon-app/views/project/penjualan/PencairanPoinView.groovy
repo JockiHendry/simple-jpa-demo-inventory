@@ -17,15 +17,15 @@ package project.penjualan
 
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
-import org.joda.time.LocalDate
-import java.awt.Color
 import java.awt.FlowLayout
+import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.RIGHT
 
 actions {
     action(id: 'showDaftarBarang', name: 'Isi Daftar Produk Yang Ditukar...', closure: controller.showDaftarBarang)
+    action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
 application() {
@@ -66,7 +66,10 @@ application() {
             dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
             errorLabel(path: 'tanggal', constraints: 'wrap')
             label('Konsumen:')
-            comboBox(id: 'konsumen', model: model.konsumen, templateRenderer: '${value.nama} - ${value.region}', errorPath: 'konsumen')
+            panel {
+                label(text: bind {model.konsumen?: '- kosong -'})
+                button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumen')
+            }
             errorLabel(path: 'konsumen', constraints: 'wrap')
             label('Jumlah Poin:')
             numberTextField(id: 'jumlahPoin', columns: 20, bindTo: 'jumlahPoin', errorPath: 'jumlahPoin')
