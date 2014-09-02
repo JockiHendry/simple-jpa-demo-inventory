@@ -33,7 +33,7 @@ class ReturJualModel {
 
     ReturJualViewMode mode
     @Bindable boolean showSave
-    @Bindable boolean showPenukaran
+    @Bindable boolean allowPenukaran
 
     @Bindable Long id
 

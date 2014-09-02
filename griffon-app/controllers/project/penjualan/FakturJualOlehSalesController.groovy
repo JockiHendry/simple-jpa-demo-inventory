@@ -228,6 +228,7 @@ class FakturJualOlehSalesController {
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
                 refreshInformasi()
+                model.allowPrint = (selected.deleted != 'Y')
             }
         }
     }

@@ -30,6 +30,7 @@ class FakturJualOlehSalesModel {
     @Bindable boolean showNilaiUang = true
     @Bindable boolean showFakturJual = true
     @Bindable boolean allowAddFakturJual = true
+    @Bindable boolean allowPrint = true
 
     @Bindable Long id
     @Bindable String nomor

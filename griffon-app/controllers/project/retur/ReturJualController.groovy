@@ -38,11 +38,9 @@ class ReturJualController {
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
         if (model.mode == ReturJualViewMode.INPUT) {
             model.showSave = true
-            model.showPenukaran = false
             model.statusSearch.selectedItem = StatusReturJual.SEMUA
         } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
             model.showSave = false
-            model.showPenukaran = true
             model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
         }
         listAll()
@@ -203,6 +201,7 @@ class ReturJualController {
         execInsideUISync {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
+                model.allowPenukaran = false
             } else {
                 ReturJual selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
@@ -221,6 +220,9 @@ class ReturJualController {
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
+                if (model.mode == ReturJualViewMode.PENGELUARAN && selected.deleted != 'Y') {
+                    model.allowPenukaran = true
+                }
             }
         }
     }

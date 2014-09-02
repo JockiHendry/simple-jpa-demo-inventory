@@ -133,8 +133,10 @@ class PengirimanController {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.nomorFakturJual = selected.nomor
                 if (selected.pengeluaranBarang) {
-                    model.allowKirim = false
-                    model.allowBatalKirim = (selected.status == StatusFakturJual.DIANTAR)
+                    if (selected.deleted != 'Y') {
+                        model.allowKirim = false
+                        model.allowBatalKirim = (selected.status == StatusFakturJual.DIANTAR)
+                    }
                     model.nomorSuratJalan = selected.pengeluaranBarang.nomor
                     model.tanggal = selected.pengeluaranBarang.tanggal
                     model.namaSupir = selected.pengeluaranBarang.namaSupir
@@ -146,12 +148,13 @@ class PengirimanController {
                     model.namaSupir = null
                     model.alamatTujuan = null
                     model.keterangan = null
-                    if (selected.status.pengeluaranBolehDiubah) {
+                    if (selected.status.pengeluaranBolehDiubah && selected.deleted != 'Y') {
                         model.allowKirim = true
                         model.allowBatalKirim = false
                         model.alamatTujuan = selected.konsumen.alamat
                     }
                 }
+                model.allowPrint = (selected.deleted != 'Y')
             }
         }
     }

@@ -27,6 +27,7 @@ class PengirimanModel {
 
     @Bindable boolean allowKirim
     @Bindable boolean allowBatalKirim
+    @Bindable boolean allowPrint = true
 
     @Bindable String nomorFakturJual
     @Bindable String nomorSuratJalan

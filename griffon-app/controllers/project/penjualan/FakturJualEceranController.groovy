@@ -251,6 +251,8 @@ class FakturJualEceranController {
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
                 refreshInformasi()
+                model.allowPrint = (selected.deleted != 'Y')
+                model.allowAntar = (selected.deleted != 'Y')
             }
         }
     }

@@ -29,6 +29,8 @@ class FakturJualEceranModel {
     @Bindable boolean showFakturJual
     @Bindable boolean showNilaiUang
     @Bindable boolean allowAddFakturJual
+    @Bindable boolean allowPrint = true
+    @Bindable boolean allowAntar = true
 
     @Bindable Long id
     @Bindable String nomor

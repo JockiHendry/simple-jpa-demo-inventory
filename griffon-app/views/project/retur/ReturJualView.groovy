@@ -117,7 +117,7 @@ application(title: 'Retur Jual',
                 button(action: save, visible: bind{ model.showSave })
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: delete)
-                button(visible: bind{ model.showPenukaran }, action: penukaran)
+                button(visible: bind{ model.allowPenukaran }, action: penukaran)
             }
         }
     }
