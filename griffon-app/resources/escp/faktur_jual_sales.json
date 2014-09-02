@@ -32,6 +32,7 @@
                 "header": [" Bonus:"],
                 "line": " ${produk.nama:41} x ${jumlah:3:right} ${produk.satuan.singkatan:5}"
             },
+            " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
             "         Penerima,                  Hormat kami,           Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
             "                                                              Sub Total : ${@subtotal:currency:20:right}",

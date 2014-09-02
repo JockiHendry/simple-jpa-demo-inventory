@@ -26,6 +26,8 @@
                 ]
            },
            "",
+           " {{keterangan?'Ket : ' + keterangan:''::94}}",
+           "",
            "        Hormat kami,                                                        Penerima,           ",
            "",
            "",

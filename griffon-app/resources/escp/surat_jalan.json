@@ -24,6 +24,7 @@
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
                 ]
             },
+            " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
             "        Hormat kami,                          Supir,                          Penerima,         ",
             "                                                                                ",

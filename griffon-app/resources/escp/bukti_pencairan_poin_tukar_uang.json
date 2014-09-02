@@ -13,6 +13,8 @@
            "      %{176 R2}      Poin      : ${jumlahPoin:number:5}",
            "              Sisa Poin : {{konsumen.getPoinTerkumpul()?:0::number::5}}",
            "",
+           " {{keterangan?'Ket : ' + keterangan:''::94}}",
+           "",
            "  Jumlah Penarikan: ${nominal:currency}",
            "",
            "        Hormat kami,                                                        Penerima,           ",
