@@ -191,9 +191,10 @@ class FakturJualRepository {
         DaftarBarangSementara stokYangDibutuhkan = fakturJual.barangYangHarusDikirim()
         stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
             Produk produk = findProdukById(itemBarang.produk.id)
-            int jumlahTersedia = produk.stok(fakturJual.konsumen.sales.gudang).jumlah
+            Gudang gudang = fakturJual.konsumen.sales.gudang
+            int jumlahTersedia = produk.stok(gudang).jumlah
             if (jumlahTersedia < itemBarang.jumlah) {
-                throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia)
+                throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia, gudang)
             }
         }
 
@@ -237,7 +238,7 @@ class FakturJualRepository {
             Produk produk = merge(it.produk)
             int jumlahTersedia = produk.stok(gudangUtama).jumlah
             if (jumlahTersedia < it.jumlah) {
-                throw new StokTidakCukup(produk.nama, it.jumlah, jumlahTersedia)
+                throw new StokTidakCukup(produk.nama, it.jumlah, jumlahTersedia, gudangUtama)
             }
         }
 
