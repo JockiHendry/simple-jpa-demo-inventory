@@ -37,6 +37,7 @@ class ProdukModel {
     BasicEventList<Satuan> satuanList = new BasicEventList<>()
     @Bindable Integer poin
     @Bindable Integer levelMinimum
+    @Bindable Integer jumlahAkanDikirim
     @Bindable DefaultEventComboBoxModel<Satuan> satuan = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(satuanList)
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)

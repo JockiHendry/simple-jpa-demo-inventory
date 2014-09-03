@@ -92,6 +92,9 @@ application {
                     glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode}) {
                         templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                     }
+                    glazedColumn(name: 'Qty Ready', expression: {(it.jumlah?:0) - (it.jumlahAkanDikirim?:0)}, columnClass: Integer, preferredWidth: 30) {
+                        templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
+                    }
                 }
             }
         }
@@ -119,6 +122,9 @@ application {
             label('Stok Level Minimum:')
             numberTextField(id: 'levelMinimum', columns: 20, bindTo: 'levelMinimum', errorPath: 'levelMinimum')
             errorLabel(path: 'levelMinimum', constraints: 'wrap')
+            label('Jumlah Akan Dikirim:')
+            numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', errorPath: 'jumlahAkanDikirim')
+            errorLabel(path: 'jumlahAkanDikirim', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
