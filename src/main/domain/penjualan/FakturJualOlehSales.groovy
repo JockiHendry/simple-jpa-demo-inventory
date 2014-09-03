@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
@@ -75,6 +76,7 @@ class FakturJualOlehSales extends FakturJual {
             alamatTujuan: alamatTujuan, namaSupir: namaSupir
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
+        ApplicationHolder.application.event(new PesanStok(this, true))
         tambah(pengeluaranBarang)
     }
 
@@ -110,6 +112,7 @@ class FakturJualOlehSales extends FakturJual {
             throw new DataTidakBolehDiubah(this)
         }
         super.hapusPengeluaranBarang()
+        ApplicationHolder.application.event(new PesanStok(this))
     }
 
     @Override

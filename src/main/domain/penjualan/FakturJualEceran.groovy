@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
 import project.inventory.GudangRepository
@@ -51,6 +52,7 @@ class FakturJualEceran extends FakturJual {
             pengeluaranBarang.tambah(new ItemBarang(produk: it.produk, jumlah: it.jumlah))
         }
         tambah(pengeluaranBarang)
+        ApplicationHolder.application.event(new PesanStok(this, true))
     }
 
     public void batalAntar() {

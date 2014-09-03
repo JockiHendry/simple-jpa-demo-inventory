@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
@@ -38,6 +39,7 @@ import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 import util.SwingHelper
+import griffon.util.*
 
 @Transaction
 class FakturJualRepository {
@@ -262,6 +264,10 @@ class FakturJualRepository {
             fakturJual = buatFakturJualEceran(fakturJual)
         }
 
+        ApplicationHolder.application.event(new PesanStok(fakturJual))
+        // Simpan perubahan pada produk bila perlu
+        fakturJual.listItemFaktur.each { merge(it.produk) }
+
         fakturJual
     }
 
@@ -318,6 +324,7 @@ class FakturJualRepository {
             throw new DataTidakBolehDiubah(fakturJual)
         }
         fakturJual.deleted = 'Y'
+        ApplicationHolder.application.event(new PesanStok(fakturJual, true))
         fakturJual
     }
 
@@ -342,12 +349,16 @@ class FakturJualRepository {
     FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.kirim(alamatTujuan, namaSupir, tanggalKirim, keterangan)
+        // Simpan perubahan pada produk bila perlu
+        faktur.listItemFaktur.each { merge(it.produk) }
         faktur
     }
 
     FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.hapusPengeluaranBarang()
+        // Simpan perubahan pada produk bila perlu
+        faktur.listItemFaktur.each { merge(it.produk) }
         faktur
     }
 

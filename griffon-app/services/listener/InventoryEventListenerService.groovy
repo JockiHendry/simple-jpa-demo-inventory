@@ -17,6 +17,7 @@ package listener
 
 import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
+import domain.event.PesanStok
 import domain.event.TransferStok
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
@@ -24,6 +25,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.pembelian.PurchaseOrder
+import domain.penjualan.FakturJualOlehSales
 import domain.retur.Retur
 import domain.user.PesanLevelMinimum
 import project.user.PesanRepository
@@ -47,6 +49,31 @@ class InventoryEventListenerService {
         }
 
         log.info "Event onPerubahanRetur selesai dikerjakan!"
+    }
+
+    void onPesanStok(PesanStok pesanStok) {
+        log.info "Event onPesanStok mulai dikerjakan..."
+
+        // Pemesanan luar kota akan langsung mengurangi stok sehingga tidak perlu di-'pesan' terlebih dahulu.
+        if (pesanStok.faktur instanceof FakturJualOlehSales && !pesanStok.faktur.konsumen.sales.dalamKota()) {
+            return
+        }
+
+        int pengali = pesanStok.invers? -1: 1
+
+        pesanStok.faktur.listItemFaktur.each {
+            Produk produk = it.produk
+            produk.jumlahAkanDikirim += pengali * it.jumlah
+        }
+
+        if (pesanStok.faktur instanceof FakturJualOlehSales && pesanStok.faktur.bonusPenjualan != null) {
+            (pesanStok.faktur as FakturJualOlehSales).bonusPenjualan.items.each {
+                Produk produk = it.produk
+                produk.jumlahAkanDikirim += pengali * it.jumlah
+            }
+        }
+
+        log.info "Event onPesanStok selesai dikerjakan!"
     }
 
     void onPerubahanStok(PerubahanStok perubahanStok) {

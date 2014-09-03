@@ -89,6 +89,19 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         // Periksa apakah harga terakhir terubah
         assertEquals(8000, konsumenRepository.hargaTerakhir(konsumen, produkA))
         assertEquals(1000, konsumenRepository.hargaTerakhir(konsumen, produkB))
+
+        // Periksa apakah jumlah pemesanan di produk bertambah
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(18, produkA.jumlahAkanDikirim)
+        assertEquals(15, produkB.jumlahAkanDikirim)
+
+        // Test menghapus faktur dan periksa efeknya pada jumlah pemesanan di produk
+        fakturJualRepository.hapus(fakturJualOlehSales)
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(10, produkA.jumlahAkanDikirim)
+        assertEquals(10, produkB.jumlahAkanDikirim)
     }
 
     public void testLimitDalamKota() {
@@ -119,7 +132,6 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(1600, konsumenRepository.hargaTerakhir(konsumen, produkB))
 
         fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
-
 
         // Periksa faktur
         assertEquals(StatusFakturJual.DITERIMA, fakturJualOlehSales.status)
@@ -165,8 +177,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     }
 
     public void testPengantaran() {
+        FakturJualOlehSales fakturJualOlehSales
+
         fakturJualRepository.withTransaction {
-            FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-4l)
+            fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-4l)
             fakturJualOlehSales.kirim('Final Destination', 'Jocker')
             assertEquals(StatusFakturJual.DIANTAR, fakturJualOlehSales.status)
             assertNotNull(fakturJualOlehSales.pengeluaranBarang)
@@ -181,13 +195,21 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals(6, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
             assertEquals(11, produkB.stok(gudangRepository.cariGudangUtama()).jumlah)
 
-            // Pembatalan
-            fakturJualOlehSales.hapusPengeluaranBarang()
+            // Cek pemesanan produk berkurang
+            assertEquals(6, produkA.jumlahAkanDikirim)
+            assertEquals(7, produkB.jumlahAkanDikirim)
+        }
+
+        // Pembatalan
+        fakturJualOlehSales = fakturJualRepository.batalKirim(fakturJualOlehSales)
+        fakturJualRepository.withTransaction {
             assertEquals(StatusFakturJual.DIBUAT, fakturJualOlehSales.status)
-            produkA = fakturJualRepository.findProdukById(-1l)
-            produkB = fakturJualRepository.findProdukById(-2l)
+            Produk produkA = fakturJualRepository.findProdukById(-1l)
+            Produk produkB = fakturJualRepository.findProdukById(-2l)
             assertEquals(10, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
             assertEquals(14, produkB.stok(gudangRepository.cariGudangUtama()).jumlah)
+            assertEquals(10, produkA.jumlahAkanDikirim)
+            assertEquals(10, produkB.jumlahAkanDikirim)
         }
     }
 
@@ -274,13 +296,21 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         // Periksa bahwa total faktur tidak dipengaruhi oleh bonus
         assertEquals(69000, fakturJualOlehSales.total())
 
+        // Periksa bahwa pesanan produk sudah ada
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(19, produkA.jumlahAkanDikirim)
+        assertEquals(18, produkB.jumlahAkanDikirim)
+
         // Periksa bahwa jumlah barang sudah berkurang
         fakturJualRepository.kirim(fakturJualOlehSales, 'Alamat', 'Supir')
         fakturJualRepository.withTransaction {
-            produkA = fakturJualRepository.findProdukById(-1l)
-            produkB = fakturJualRepository.findProdukById(-2l)
+            produkA = findProdukById(-1l)
+            produkB = findProdukById(-2l)
             assertEquals(1, produkA.stok(sales.gudang).jumlah)  // dari 10 berkurang sebanyak 8 item + 1 item bonus
             assertEquals(6, produkB.stok(sales.gudang).jumlah) // dari 14 berkurang sebanyak 5 item + 3 item bonus
+            assertEquals(10, produkA.jumlahAkanDikirim)
+            assertEquals(10, produkB.jumlahAkanDikirim)
         }
     }
 
