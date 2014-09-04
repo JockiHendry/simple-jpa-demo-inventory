@@ -15,6 +15,8 @@
  */
 package project.pembelian
 
+import domain.faktur.BilyetGiro
+import domain.faktur.Pembayaran
 import util.SwingHelper
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
@@ -213,6 +215,26 @@ class PurchaseOrderRepository {
             throw new DataTidakBolehDiubah(purchaseOrder)
         }
         purchaseOrder.deleted = 'Y'
+        purchaseOrder
+    }
+
+    public PurchaseOrder hapus(PurchaseOrder purchaseOrder, Pembayaran pembayaran) {
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder.hapus(pembayaran)
+        purchaseOrder
+    }
+
+    public PurchaseOrder bayar(PurchaseOrder purchaseOrder, Pembayaran pembayaran, BilyetGiro bilyetGiro = null) {
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        if (bilyetGiro) {
+            if (bilyetGiro.id == null) {
+                persist(bilyetGiro)
+            } else {
+                bilyetGiro = merge(bilyetGiro)
+            }
+            pembayaran.bilyetGiro = bilyetGiro
+        }
+        purchaseOrder.bayar(pembayaran)
         purchaseOrder
     }
 

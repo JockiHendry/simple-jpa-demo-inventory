@@ -272,7 +272,7 @@ class FakturJualRepository {
     }
 
     FakturJualOlehSales bayar(FakturJualOlehSales fakturJualOlehSales, Pembayaran pembayaran, BilyetGiro bilyetGiro = null) {
-        fakturJualOlehSales = merge(fakturJualOlehSales)
+        fakturJualOlehSales = findFakturJualOlehSalesById(fakturJualOlehSales.id)
         if(bilyetGiro) {
             if (bilyetGiro.id == null) {
                 persist(bilyetGiro)
@@ -282,6 +282,12 @@ class FakturJualRepository {
             pembayaran.bilyetGiro = bilyetGiro
         }
         fakturJualOlehSales.bayar(pembayaran)
+        fakturJualOlehSales
+    }
+
+    FakturJualOlehSales hapusPembayaran(FakturJualOlehSales fakturJualOlehSales, Pembayaran pembayaran) {
+        fakturJualOlehSales = findFakturJualOlehSalesById(fakturJualOlehSales.id)
+        fakturJualOlehSales.hapus(pembayaran)
         fakturJualOlehSales
     }
 

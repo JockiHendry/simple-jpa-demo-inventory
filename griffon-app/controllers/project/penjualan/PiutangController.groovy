@@ -54,7 +54,7 @@ class PiutangController {
         execInsideUISync {
             def args = [faktur: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranPiutang]
             def dialogProps = [title: 'Pembayaran Piutang', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('pembayaranAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('pembayaranPiutangAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listPembayaranPiutang.clear()
                 model.listPembayaranPiutang.addAll(m.pembayaranList)
                 view.table.selectionModel.selected[0] = m.faktur

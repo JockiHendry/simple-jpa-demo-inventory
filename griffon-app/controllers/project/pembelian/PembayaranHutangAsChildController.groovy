@@ -20,18 +20,19 @@ import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Pembayaran
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
+import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
-class PembayaranAsChildController {
+class PembayaranHutangAsChildController {
 
-    PembayaranAsChildModel model
+    PembayaranHutangAsChildModel model
     def view
     PurchaseOrderRepository purchaseOrderRepository
 
     void mvcGroupInit(Map args) {
-        model.faktur = args.'faktur'
+        model.purchaseOrder = args.'purchaseOrder'
         model.editable = true
         execInsideUISync {
             model.pembayaranList.clear()
@@ -40,14 +41,15 @@ class PembayaranAsChildController {
     }
 
     def save = {
-        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan, bilyetGiro: model.bilyetGiro)
+        if (!view.table.selectionModel.selectionEmpty) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan)
         if (!purchaseOrderRepository.validate(pembayaran, Default, model)) return
 
         try {
-            purchaseOrderRepository.withTransaction {
-                model.faktur = merge(model.faktur)
-                model.faktur.bayar(pembayaran)
-            }
+            model.purchaseOrder = purchaseOrderRepository.bayar(model.purchaseOrder, pembayaran, model.bilyetGiro)
             execInsideUISync {
                 model.pembayaranList << pembayaran
                 clear()
@@ -61,12 +63,13 @@ class PembayaranAsChildController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
+                app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
         try {
             Pembayaran pembayaranHutang = view.table.selectionModel.selected[0]
-            purchaseOrderRepository.withTransaction {
-                model.faktur = purchaseOrderRepository.merge(model.faktur)
-                model.faktur.hapus(pembayaranHutang)
-            }
+            model.purchaseOrder = purchaseOrderRepository.hapus(model.purchaseOrder, pembayaranHutang)
             execInsideUISync {
                 model.pembayaranList.remove(pembayaranHutang)
                 clear()
@@ -88,6 +91,10 @@ class PembayaranAsChildController {
                 model.bilyetGiro = v.table.selectionModel.selected[0]
             }
         }
+    }
+
+    def close = {
+        SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
     }
 
     def clear = {

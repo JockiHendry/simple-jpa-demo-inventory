@@ -72,7 +72,7 @@ class Konsumen {
     @NotNull
     Integer poinTerkumpul = 0
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true) @JoinTable @OrderColumn(name='FAKTUR_ORDER')
+    @OneToMany @JoinTable @OrderColumn(name='FAKTUR_ORDER')
     List<FakturJualOlehSales> listFakturBelumLunas = []
 
     @ElementCollection @OrderColumn

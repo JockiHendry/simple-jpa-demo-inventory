@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "pembayaranPiutangAsChild"
+    'pembayaranPiutangAsChild' {
+        model      = 'project.penjualan.PembayaranPiutangAsChildModel'
+        view       = 'project.penjualan.PembayaranPiutangAsChildView'
+        controller = 'project.penjualan.PembayaranPiutangAsChildController'
+    }
+
     // MVC Group for "riwayatPoin"
     'riwayatPoin' {
         model      = 'project.penjualan.RiwayatPoinModel'
@@ -234,10 +241,10 @@ mvcGroups {
     }
 
     // MVC Group for "pembayaranHutangAsChild"
-    'pembayaranAsChild' {
-        model      = 'project.pembelian.PembayaranAsChildModel'
-        view       = 'project.pembelian.PembayaranAsChildView'
-        controller = 'project.pembelian.PembayaranAsChildController'
+    'pembayaranHutangAsChild' {
+        model      = 'project.pembelian.PembayaranHutangAsChildModel'
+        view       = 'project.pembelian.PembayaranHutangAsChildView'
+        controller = 'project.pembelian.PembayaranHutangAsChildController'
     }
 
     // MVC Group for "hutang"

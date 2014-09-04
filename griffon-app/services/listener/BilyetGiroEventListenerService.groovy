@@ -16,6 +16,8 @@
 package listener
 
 import domain.event.BilyetGiroCleared
+import domain.pembelian.PurchaseOrder
+import domain.pembelian.StatusPurchaseOrder
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
 import simplejpa.transaction.Transaction
@@ -28,14 +30,24 @@ class BilyetGiroEventListenerService {
 
         // Cari seluruh faktur jual oleh sales yang berhubungan dengan giro ini dan set status
         // menjadi lunas bila perlu.
-
         List<FakturJualOlehSales> fakturBelumLunas = executeQuery('SELECT DISTINCT f FROM FakturJualOlehSales f, ' +
-                'IN(f.piutang.listPembayaran) p WHERE f.status <> domain.penjualan.StatusFakturJual.LUNAS ' +
-                'AND p.bilyetGiro = :bilyetGiro ',
-                [:], [bilyetGiro: bilyetGiroCleared.source])
+            'IN(f.piutang.listPembayaran) b WHERE f.status <> domain.penjualan.StatusFakturJual.LUNAS ' +
+            'AND b.bilyetGiro = :bilyetGiro ',
+            [:], [bilyetGiro: bilyetGiroCleared.source])
         fakturBelumLunas.each {
             if (it.piutang.lunas) {
                 it.status = StatusFakturJual.LUNAS
+            }
+        }
+
+        // Cari seluruh purchase order yang berhubungan dengan giro ini dan set status menjadi lunas bila perlu.
+        List<PurchaseOrder> purchaseOrderBelumLunas = executeQuery('SELECT DISTINCT p FROM PurchaseOrder p, ' +
+            'IN(p.fakturBeli.hutang.listPembayaran) b WHERE p.status <> domain.pembelian.StatusPurchaseOrder.LUNAS ' +
+            'AND b.bilyetGiro = :bilyetGiro ',
+            [:], [bilyetGiro: bilyetGiroCleared.source])
+        purchaseOrderBelumLunas.each {
+            if (it.fakturBeli.hutang.lunas) {
+                it.status = StatusPurchaseOrder.LUNAS
             }
         }
 

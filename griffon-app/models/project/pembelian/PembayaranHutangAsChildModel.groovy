@@ -19,11 +19,13 @@ import ca.odell.glazedlists.BasicEventList
 import domain.faktur.BilyetGiro
 import domain.faktur.Faktur
 import domain.faktur.Pembayaran
+import domain.pembelian.FakturBeli
+import domain.pembelian.PurchaseOrder
 import org.joda.time.LocalDate
 
-class PembayaranAsChildModel {
+class PembayaranHutangAsChildModel {
 
-    Faktur faktur
+    PurchaseOrder purchaseOrder
 
     @Bindable LocalDate tanggal
     @Bindable BigDecimal jumlah

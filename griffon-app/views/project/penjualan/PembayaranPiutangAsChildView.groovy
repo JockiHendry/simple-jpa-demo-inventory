@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.pembelian
+package project.penjualan
 
 import net.miginfocom.swing.MigLayout
-
 import javax.swing.JOptionPane
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.RIGHT
 
-application(title: 'simple-jpa-demo-inventory',
-        preferredSize: [320, 240],
-        pack: true,
-        //location: [50,50],
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                     imageIcon('/griffon-icon-32x32.png').image,
-                     imageIcon('/griffon-icon-16x16.png').image]) {
+actions {
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'close', name: 'Tutup', closure: controller.close, mnemonic: KeyEvent.VK_T)
+}
+
+application() {
 
     panel(id: 'mainPanel') {
         borderLayout()
@@ -75,25 +72,12 @@ application(title: 'simple-jpa-demo-inventory',
             errorLabel(path: 'bilyetGiro', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button('Simpan', actionPerformed: {
-                    if (!view.table.selectionModel.selectionEmpty) {
-                        JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
-                        return
-                    }
-                    controller.save()
-                    jumlah.requestFocusInWindow()
-                }, visible: bind{model.editable}, mnemonic: KeyEvent.VK_S)
-                button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: controller.clear, mnemonic: KeyEvent.VK_B)
-                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                            app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                        controller.delete()
-                    }
-                }, mnemonic: KeyEvent.VK_H)
-                button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                    SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-                }, mnemonic: KeyEvent.VK_T)
+                button(action: save, visible: bind{model.editable})
+                button(action: cancel, visible: bind('isRowSelected', source: table, converter: {it && model.editable}))
+                button(action: delete, visible: bind('isRowSelected', source: table, converter: {it && model.editable}))
+                button(action: close)
             }
         }
     }
+
 }
