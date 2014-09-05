@@ -58,7 +58,7 @@ application() {
                 }
                 glazedColumn(name: 'Nomor Seri', expression: {it}) {
                     templateRenderer(exp: {it.nomorSeri}, horizontalTextPosition: SwingConstants.LEFT) {
-                        condition(if_: {value.jatuhTempo.isBefore(LocalDate.now())},
+                        condition(if_: {value.jatuhTempo.isBefore(LocalDate.now()) && it.tanggalPencairan == null},
                                   then_: {it.icon = warningIcon}, else_: {it.icon = null})
                     }
                 }
