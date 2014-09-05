@@ -46,7 +46,7 @@ import java.text.NumberFormat
     ])
 ])
 @DomainClass @Entity @Canonical(excludes='listFakturBelumLunas,listRiwayatPoin,hargaTerakhir')
-class Konsumen {
+class Konsumen implements Comparable {
 
     @NotEmpty @Size(min=2, max=100)
     String nama
@@ -172,6 +172,13 @@ class Konsumen {
     @Override
     String toString() {
         "${nama} - Sales: ${sales?.nama} - Region: ${region?.nama}"
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (o == null) return -1
+        if (!(o instanceof Konsumen)) return -1
+        nama?.compareTo(o.nama)?: -1
     }
 }
 
