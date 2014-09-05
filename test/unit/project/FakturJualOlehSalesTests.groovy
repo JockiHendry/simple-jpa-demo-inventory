@@ -59,11 +59,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkB, 20))
         assertEquals(StatusFakturJual.DIBUAT, f.status)
 
-        f.kirim('Xtra Street', 'Mr. Nice Guy')
+        f.kirim('Xtra Street')
         assertEquals(StatusFakturJual.DIANTAR, f.status)
         assertEquals(LocalDate.now(), f.pengeluaranBarang.tanggal)
         assertEquals('Xtra Street', f.pengeluaranBarang.alamatTujuan)
-        assertEquals('Mr. Nice Guy', f.pengeluaranBarang.namaSupir)
     }
 
     public void testTambahBuktiTerima() {
@@ -76,10 +75,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
-        f.kirim('Xtra Street', 'Mr. Nice Guy')
+        f.kirim('Xtra Street')
         assertEquals(StatusFakturJual.DIANTAR, f.status)
 
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))
+        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
         assertNotNull(f.pengeluaranBarang.buktiTerima)
         assertEquals(StatusFakturJual.DITERIMA, f.status)
         assertNotNull(f.piutang)
@@ -96,8 +95,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
         k.tambahFakturBelumLunas(f)
-        f.kirim('Xtra Street', 'Mr. Nice Guy')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))
+        f.kirim('Xtra Street')
+        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
 
         f.bayar(new Pembayaran(LocalDate.now(), 120000))
         assertEquals(StatusFakturJual.DITERIMA, f.status)
@@ -118,8 +117,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkB, 20, 12000))
         k.tambahFakturBelumLunas(f)
 
-        f.kirim('Xtra Street', 'Mr. Nice Guy')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))
+        f.kirim('Xtra Street')
+        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
 
         f.bayar(new Pembayaran(LocalDate.now(), 100000))
         assertEquals(StatusFakturJual.DITERIMA, f.status)
@@ -139,8 +138,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
         k.tambahFakturBelumLunas(f)
-        f.kirim('Xtra Street', 'Mr. Nice Guy')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger'))
+        f.kirim('Xtra Street')
+        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
 
         assertEquals(340000, f.sisaPiutang())
         f.bayar(new Pembayaran(LocalDate.now(), 120000))

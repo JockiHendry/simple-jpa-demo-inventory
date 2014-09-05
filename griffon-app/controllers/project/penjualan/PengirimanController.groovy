@@ -64,7 +64,7 @@ class PengirimanController {
 
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.kirim(faktur, model.alamatTujuan, model.namaSupir, model.tanggal, model.keterangan)
+            faktur = fakturJualRepository.kirim(faktur, model.alamatTujuan, model.tanggal, model.keterangan)
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
@@ -116,7 +116,6 @@ class PengirimanController {
             model.tanggal = null
             model.keterangan = null
             model.alamatTujuan = null
-            model.namaSupir = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -139,13 +138,11 @@ class PengirimanController {
                     }
                     model.nomorSuratJalan = selected.pengeluaranBarang.nomor
                     model.tanggal = selected.pengeluaranBarang.tanggal
-                    model.namaSupir = selected.pengeluaranBarang.namaSupir
                     model.alamatTujuan = selected.pengeluaranBarang.alamatTujuan
                     model.keterangan = selected.pengeluaranBarang.keterangan
                 } else {
                     model.nomorSuratJalan = null
                     model.tanggal = null
-                    model.namaSupir = null
                     model.alamatTujuan = null
                     model.keterangan = null
                     if (selected.status.pengeluaranBolehDiubah && selected.deleted != 'Y') {

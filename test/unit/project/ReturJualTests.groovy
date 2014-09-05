@@ -145,7 +145,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen)
         f.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
         f.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
-        f.kirim("test", "test")
+        f.kirim("test")
         f.tambah(new BuktiTerima())
         konsumen.tambahFakturBelumLunas(f)
         assertEquals(500000, f.total())

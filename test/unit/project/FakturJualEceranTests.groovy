@@ -85,7 +85,6 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         assertEquals(LocalDate.now(), f.pengeluaranBarang.tanggal)
         assertEquals(gudangUtama, f.pengeluaranBarang.gudang)
         assertNull(f.pengeluaranBarang.alamatTujuan)
-        assertNull(f.pengeluaranBarang.namaSupir)
         assertNull(f.pengeluaranBarang.buktiTerima)
         assertEquals(2, f.pengeluaranBarang.items.size())
         assertTrue(f.pengeluaranBarang.items.contains(new ItemBarang(produkA, 20)))

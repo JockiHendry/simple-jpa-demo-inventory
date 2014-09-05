@@ -22,7 +22,6 @@ import java.awt.FlowLayout
 
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.CENTER
-import static javax.swing.SwingConstants.RIGHT
 
 actions {
     action(id: 'showBarangYangHarusDikirim', name: 'Klik Disini Untuk Melihat Item Untuk Dikirim...', closure: controller.showBarangYangHarusDikirim)
@@ -73,9 +72,6 @@ application() {
                 label('Tanggal Kirim:')
                 dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
                 errorLabel(path: 'tanggal', constraints: 'wrap')
-                label('Nama Supir:')
-                textField(id: 'namaSupir', columns: 20, text: bind('namaSupir', target: model, mutual: true), errorPath: 'namaSupir')
-                errorLabel(path: 'namaSupir', constraints: 'wrap')
                 label('Alamat Tujuan:')
                 textField(id: 'alamatTujuan', columns: 60, text: bind('alamatTujuan', target: model, mutual: true), errorPath: 'alamatTujuan')
                 errorLabel(path: 'alamatTujuan', constraints: 'wrap')

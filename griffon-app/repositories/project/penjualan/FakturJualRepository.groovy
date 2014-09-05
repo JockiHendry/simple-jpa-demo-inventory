@@ -217,7 +217,7 @@ class FakturJualRepository {
             fakturJual.listItemFaktur.each {
                 it.produk = merge(it.produk)
             }
-            fakturJual.kirim('Luar Kota', "Luar Kota (${fakturJual.konsumen.sales.nama})")
+            fakturJual.kirim('Luar Kota')
             fakturJual.tambah(new BuktiTerima(fakturJual.tanggal, 'Luar Kota'))
         }
 
@@ -352,9 +352,9 @@ class FakturJualRepository {
         fakturJualEceran
     }
 
-    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, String namaSupir, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
+    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.kirim(alamatTujuan, namaSupir, tanggalKirim, keterangan)
+        faktur.kirim(alamatTujuan, tanggalKirim, keterangan)
         // Simpan perubahan pada produk bila perlu
         faktur.listItemFaktur.each { merge(it.produk) }
         faktur

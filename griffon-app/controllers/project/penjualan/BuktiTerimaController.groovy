@@ -53,7 +53,7 @@ class BuktiTerimaController {
     }
 
     def save = {
-        BuktiTerima buktiTerima = new BuktiTerima(tanggalTerima: model.tanggal, namaPenerima: model.namaPenerima)
+        BuktiTerima buktiTerima = new BuktiTerima(tanggalTerima: model.tanggal, namaPenerima: model.namaPenerima, namaSupir: model.namaSupir)
         if (!fakturJualRepository.validate(buktiTerima, Default, model)) return
         if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang yang dikirim telah diterima untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
             return
@@ -97,6 +97,7 @@ class BuktiTerimaController {
             model.nomorSuratJalan = null
             model.tanggal = null
             model.namaPenerima = null
+            model.namaSupir = null
 
             model.errors.clear()
             view.table.selectionModel.clearSelection()
@@ -118,6 +119,7 @@ class BuktiTerimaController {
                     model.allowHapus = (selected.status == StatusFakturJual.DITERIMA)
                     model.tanggal = selected.pengeluaranBarang.buktiTerima.tanggalTerima
                     model.namaPenerima = selected.pengeluaranBarang.buktiTerima.namaPenerima
+                    model.namaSupir = selected.pengeluaranBarang.buktiTerima.namaSupir
                 } else {
                     model.allowSimpan = (selected.status == StatusFakturJual.DIANTAR)
                     model.allowHapus = false
@@ -125,6 +127,7 @@ class BuktiTerimaController {
                     model.nomorSuratJalan = null
                     model.tanggal = null
                     model.namaPenerima = null
+                    model.namaSupir = null
                 }
             }
         }

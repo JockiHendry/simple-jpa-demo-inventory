@@ -32,7 +32,7 @@ class PengeluaranBarangTests extends GriffonUnitTestCase {
 
     public void testDiterima1() {
         PengeluaranBarang p = new PengeluaranBarang(tanggal: LocalDate.now(), nomor: 'SJ001')
-        p.diterima(new BuktiTerima(LocalDate.now(), 'Mr. Xu'))
+        p.diterima(new BuktiTerima(LocalDate.now(), 'Mr. Xu', 'Mr. Nice Guy'))
         assertNotNull(p.buktiTerima)
         assertEquals(LocalDate.now(), p.buktiTerima.tanggalTerima)
         assertEquals('Mr. Xu', p.buktiTerima.namaPenerima)
@@ -40,7 +40,7 @@ class PengeluaranBarangTests extends GriffonUnitTestCase {
 
     public void testDiterima2() {
         PengeluaranBarang p = new PengeluaranBarang(tanggal: LocalDate.now(), nomor: 'SJ001')
-        p.diterima(LocalDate.now(), 'Mr.Xu')
+        p.diterima(LocalDate.now(), 'Mr.Xu', 'Mr. Nice Guy')
         assertNotNull(p.buktiTerima)
         assertEquals(LocalDate.now(), p.buktiTerima.tanggalTerima)
         assertEquals('Mr.Xu', p.buktiTerima.namaPenerima)
@@ -48,7 +48,7 @@ class PengeluaranBarangTests extends GriffonUnitTestCase {
 
     public void testBatalDiterima() {
         PengeluaranBarang p = new PengeluaranBarang(tanggal: LocalDate.now(), nomor: 'SJ001')
-        p.diterima(LocalDate.now(), 'Mr.Xu')
+        p.diterima(LocalDate.now(), 'Mr.Xu', 'Mr. Nice Guy')
         assertNotNull(p.buktiTerima)
         p.batalDiterima()
         assertNull(p.buktiTerima)
@@ -57,7 +57,7 @@ class PengeluaranBarangTests extends GriffonUnitTestCase {
     public void testSudahDiterima() {
         PengeluaranBarang p = new PengeluaranBarang(tanggal: LocalDate.now(), nomor: 'SJ001')
         assertFalse(p.sudahDiterima())
-        p.diterima(LocalDate.now(), 'Mr.Xu')
+        p.diterima(LocalDate.now(), 'Mr.Xu', 'Mr. Nice Guy')
         assertTrue(p.sudahDiterima())
     }
 

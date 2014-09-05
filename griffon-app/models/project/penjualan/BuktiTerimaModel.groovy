@@ -38,6 +38,7 @@ class BuktiTerimaModel {
     @Bindable String nomorSuratJalan
     @Bindable LocalDate tanggal
     @Bindable String namaPenerima
+    @Bindable String namaSupir
 
     BasicEventList<FakturJualOlehSales> fakturJualOlehSalesList = new BasicEventList<>()
 

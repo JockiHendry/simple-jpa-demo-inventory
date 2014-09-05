@@ -58,7 +58,6 @@ application() {
                 glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
                 glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
                 glazedColumn(name: 'Status', property: 'status')
-                glazedColumn(name: 'Nama Supir', expression: { it.pengeluaranBarang?.namaSupir })
                 glazedColumn(name: 'Alamat Tujuan', expression: { it.pengeluaranBarang?.alamatTujuan })
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
             }
@@ -78,6 +77,9 @@ application() {
                 label('Nama Penerima:')
                 textField(id: 'namaPenerima', columns: 20, text: bind('namaPenerima', target: model, mutual: true), errorPath: 'namaPenerima')
                 errorLabel(path: 'namaPenerima', constraints: 'wrap')
+                label('Nama Supir:')
+                textField(id: 'namaSupir', columns: 20, text: bind('namaSupir', target: model, mutual: true), errorPath: 'namaSupir')
+                errorLabel(path: 'namaSupir', constraints: 'wrap')
             }
 
             panel(constraints: PAGE_END) {

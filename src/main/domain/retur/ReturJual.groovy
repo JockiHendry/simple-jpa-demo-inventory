@@ -57,7 +57,7 @@ class ReturJual extends Retur {
             it.sudahDiproses = true
         }
         periksaSelesaiDiproses()
-        pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama)
+        pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama, '[Retur Jual]')
         this.pengeluaranBarang = pengeluaranBarang
         pengeluaranBarang
     }

@@ -26,10 +26,10 @@
             },
             " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
-            "      Penerima,                       Supir,                              Hormat kami,         ",
+            "        Penerima,                       Supir,                           Hormat kami,         ",
             "                                                                                ",
             "",
-            "  ( ............ )            (${pengeluaranBarang.namaSupir:21:center})               ({{pengeluaranBarang.createdBy::21::center}})      "
+            "  (....................)        (....................)             ({{pengeluaranBarang.createdBy::21::center}})"
         ]
     }
 }

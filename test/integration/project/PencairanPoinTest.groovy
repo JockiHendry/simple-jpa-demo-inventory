@@ -106,7 +106,7 @@ class PencairanPoinTest extends DbUnitTestCase {
 
             // Melakukan penerimaan untuk salah satu faktur sehingga piutangnya bisa dibayar
             FakturJualOlehSales f = konsumen.listFakturBelumLunas[0]
-            fakturJualRepository.kirim(f, 'test', 'test')
+            fakturJualRepository.kirim(f, 'test')
             fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'test'))
             // Poin bertambah akibat penerimaan
             assertEquals(60, konsumen.poinTerkumpul)

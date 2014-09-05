@@ -34,7 +34,6 @@ class PengirimanModel {
     @Bindable LocalDate tanggal
     @Bindable String keterangan
     @Bindable @NotBlank String alamatTujuan
-    @Bindable @NotBlank String namaSupir
 
     BasicEventList<FakturJualOlehSales> fakturJualOlehSalesList = new BasicEventList<>()
 

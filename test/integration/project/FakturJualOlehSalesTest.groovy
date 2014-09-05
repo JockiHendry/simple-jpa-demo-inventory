@@ -181,13 +181,12 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
         fakturJualRepository.withTransaction {
             fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-4l)
-            fakturJualOlehSales.kirim('Final Destination', 'Jocker')
+            fakturJualOlehSales.kirim('Final Destination')
             assertEquals(StatusFakturJual.DIANTAR, fakturJualOlehSales.status)
             assertNotNull(fakturJualOlehSales.pengeluaranBarang)
             assertTrue(fakturJualOlehSales.pengeluaranBarang.isiSamaDengan(fakturJualOlehSales))
             assertEquals(LocalDate.now(), fakturJualOlehSales.pengeluaranBarang.tanggal)
             assertEquals('Final Destination', fakturJualOlehSales.pengeluaranBarang.alamatTujuan)
-            assertEquals('Jocker', fakturJualOlehSales.pengeluaranBarang.namaSupir)
 
             // Cek jumlah produk berkurang
             Produk produkA = fakturJualRepository.findProdukById(-1l)
@@ -303,7 +302,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(18, produkB.jumlahAkanDikirim)
 
         // Periksa bahwa jumlah barang sudah berkurang
-        fakturJualRepository.kirim(fakturJualOlehSales, 'Alamat', 'Supir')
+        fakturJualRepository.kirim(fakturJualOlehSales, 'Alamat')
         fakturJualRepository.withTransaction {
             produkA = findProdukById(-1l)
             produkB = findProdukById(-2l)

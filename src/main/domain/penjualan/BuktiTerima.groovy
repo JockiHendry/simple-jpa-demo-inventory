@@ -32,5 +32,8 @@ class BuktiTerima {
     @NotBlank @Size(max=50)
     String namaPenerima
 
+    @NotBlank @Size(max=50)
+    String namaSupir
+
 }
 

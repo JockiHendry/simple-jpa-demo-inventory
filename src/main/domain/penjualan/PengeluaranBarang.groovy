@@ -33,9 +33,6 @@ class PengeluaranBarang extends DaftarBarang {
     @Size(max=150, groups=[Default,PenjualanOlehSales]) @NotNull(groups=[PenjualanOlehSales])
     String alamatTujuan
 
-    @Size(max=50, groups=[Default,PenjualanOlehSales]) @NotNull(groups=[PenjualanDiterima,PenjualanOlehSales])
-    String namaSupir
-
     @Embedded @NotNull(groups=[PenjualanDiterima])
     BuktiTerima buktiTerima
 
@@ -48,8 +45,8 @@ class PengeluaranBarang extends DaftarBarang {
         this.buktiTerima = buktiTerima
     }
 
-    void diterima(LocalDate tanggal, String namaPenerima) {
-        this.buktiTerima = new BuktiTerima(tanggal, namaPenerima)
+    void diterima(LocalDate tanggal, String namaPenerima, String namaSupir) {
+        this.buktiTerima = new BuktiTerima(tanggal, namaPenerima, namaSupir)
     }
 
     void batalDiterima() {
@@ -62,7 +59,7 @@ class PengeluaranBarang extends DaftarBarang {
 
     PengeluaranBarang plus(DaftarBarangSementara daftarBarangSementara) {
         PengeluaranBarang hasil = new PengeluaranBarang(nomor: this.nomor, tanggal: this.tanggal, keterangan: this.keterangan,
-            gudang: this.gudang, alamatTujuan: this.alamatTujuan, namaSupir: this.namaSupir, buktiTerima: this.buktiTerima)
+            gudang: this.gudang, alamatTujuan: this.alamatTujuan, buktiTerima: this.buktiTerima)
         (daftarBarangSementara + this).items.each {
             hasil.tambah(it)
         }
