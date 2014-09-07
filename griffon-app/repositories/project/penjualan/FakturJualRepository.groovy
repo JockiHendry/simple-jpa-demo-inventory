@@ -45,6 +45,7 @@ import griffon.util.*
 class FakturJualRepository {
 
     NomorService nomorService
+    GudangRepository gudangRepository
 
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -193,7 +194,7 @@ class FakturJualRepository {
         DaftarBarangSementara stokYangDibutuhkan = fakturJual.barangYangHarusDikirim()
         stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
             Produk produk = findProdukById(itemBarang.produk.id)
-            Gudang gudang = fakturJual.konsumen.sales.gudang
+            Gudang gudang = fakturJual.kirimDariGudangUtama? gudangRepository.cariGudangUtama(): fakturJual.konsumen.sales.gudang
             int jumlahTersedia = produk.stok(gudang).jumlah
             if (jumlahTersedia < itemBarang.jumlah) {
                 throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia, gudang)
@@ -213,7 +214,7 @@ class FakturJualRepository {
         persist(fakturJual)
 
         // Perlakuan khusus untuk faktur jual luar kota
-        if (!fakturJual.konsumen.sales.dalamKota()) {
+        if (!fakturJual.konsumen.sales.dalamKota() && !fakturJual.kirimDariGudangUtama) {
             fakturJual.listItemFaktur.each {
                 it.produk = merge(it.produk)
             }
@@ -264,7 +265,7 @@ class FakturJualRepository {
             fakturJual = buatFakturJualEceran(fakturJual)
         }
 
-        ApplicationHolder.application.event(new PesanStok(fakturJual))
+        ApplicationHolder.application.event(new PesanStok(fakturJual, false))
         // Simpan perubahan pada produk bila perlu
         fakturJual.listItemFaktur.each { merge(it.produk) }
 

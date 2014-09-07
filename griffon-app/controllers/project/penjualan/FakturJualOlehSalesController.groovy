@@ -63,7 +63,7 @@ class FakturJualOlehSalesController {
     def save = {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
-            konsumen: model.konsumen)
+            konsumen: model.konsumen, kirimDariGudangUtama: model.kirimDariGudangUtama)
         model.listItemFaktur.each { fakturJualOlehSales.tambah(it) }
 
         if (!fakturJualRepository.validate(fakturJualOlehSales, InputPenjualanOlehSales, model)) return
@@ -185,6 +185,7 @@ class FakturJualOlehSalesController {
             model.nomor = null
             model.tanggal = null
             model.konsumen = null
+            model.kirimDariGudangUtama = Boolean.FALSE
             model.keterangan = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
@@ -213,6 +214,7 @@ class FakturJualOlehSalesController {
                 model.nomor = selected.nomor
                 model.tanggal = selected.tanggal
                 model.konsumen = selected.konsumen
+                model.kirimDariGudangUtama = selected.kirimDariGudangUtama
                 model.keterangan = selected.keterangan
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen

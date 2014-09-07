@@ -22,11 +22,15 @@ import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
+import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import project.inventory.GudangRepository
 import project.user.NomorService
 import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
+import simplejpa.SimpleJpaUtil
+
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
@@ -64,15 +68,18 @@ class FakturJualOlehSales extends FakturJual {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     BonusPenjualan bonusPenjualan
 
+    Boolean kirimDariGudangUtama
+
     void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
 
         // Buat PengeluaranBarang berdasarkan data yang ada di faktur
+        Gudang gudang = kirimDariGudangUtama? (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama(): konsumen.sales.gudang
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: LocalDate.now(), gudang: konsumen.sales.gudang, keterangan: keterangan, alamatTujuan: alamatTujuan
+            tanggal: LocalDate.now(), gudang: gudang, keterangan: keterangan, alamatTujuan: alamatTujuan
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
         ApplicationHolder.application.event(new PesanStok(this, true))

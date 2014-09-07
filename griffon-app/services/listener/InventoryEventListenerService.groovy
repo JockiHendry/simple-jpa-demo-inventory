@@ -55,7 +55,7 @@ class InventoryEventListenerService {
         log.info "Event onPesanStok mulai dikerjakan..."
 
         // Pemesanan luar kota akan langsung mengurangi stok sehingga tidak perlu di-'pesan' terlebih dahulu.
-        if (pesanStok.faktur instanceof FakturJualOlehSales && !pesanStok.faktur.konsumen.sales.dalamKota()) {
+        if (pesanStok.faktur instanceof FakturJualOlehSales && !pesanStok.faktur.konsumen.sales.dalamKota() && !pesanStok.faktur.kirimDariGudangUtama) {
             return
         }
 

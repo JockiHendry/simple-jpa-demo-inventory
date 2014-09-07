@@ -40,6 +40,7 @@ class FakturJualOlehSalesModel {
     @Bindable String keterangan
     @Bindable StatusFakturJual status
     @Bindable Konsumen konsumen
+    @Bindable Boolean kirimDariGudangUtama
     List<ItemFaktur> listItemFaktur = []
     List<ItemBarang> listBonus = []
 

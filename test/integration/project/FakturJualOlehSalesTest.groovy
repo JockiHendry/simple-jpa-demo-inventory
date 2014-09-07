@@ -22,11 +22,14 @@ import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.inventory.Gudang
+import domain.pengaturan.Pengaturan
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
+import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import domain.penjualan.Konsumen
 import project.penjualan.KonsumenRepository
@@ -55,11 +58,83 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
         nomorService = app.serviceManager.findService('Nomor')
+        (SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan') as PengaturanRepository).refreshAll()
     }
 
     protected void tearDown() {
         super.tearDown()
         super.deleteAll()
+    }
+
+    public void testBuatPenjualanLuarKota() {
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-2l)
+        Gudang gudang = fakturJualRepository.findGudangById(-2l)
+
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen:  konsumen, tanggal: LocalDate.now())
+        f.tambah(new ItemFaktur(produkA, 3, 10000))
+        f.tambah(new ItemFaktur(produkB, 5, 12000))
+
+        f = fakturJualRepository.buat(f, true)
+
+        // Penjualan luar kota langsung terkirim
+        assertEquals(StatusFakturJual.DITERIMA, f.status)
+        assertNotNull(f.pengeluaranBarang)
+        assertEquals(2, f.pengeluaranBarang.items.size())
+        assertEquals(produkA, f.pengeluaranBarang.items[0].produk)
+        assertEquals(3, f.pengeluaranBarang.items[0].jumlah)
+        assertEquals(produkB, f.pengeluaranBarang.items[1].produk)
+        assertEquals(5, f.pengeluaranBarang.items[1].jumlah)
+        assertNotNull(f.pengeluaranBarang.buktiTerima)
+        assertEquals(LocalDate.now(), f.pengeluaranBarang.buktiTerima.tanggalTerima)
+
+        // Stok langsung berubah
+        produkA = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(1, produkA.stok(gudang).jumlah)
+        assertEquals(1, produkB.stok(gudang).jumlah)
+    }
+
+    public void testBuatPenjualanLuarKotaKirimDariGudangUtama() {
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-2l)
+        Gudang gudang = gudangRepository.cariGudangUtama()
+        Gudang gudangLuarKota = gudangRepository.findGudangById(-2l)
+
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen:  konsumen, tanggal: LocalDate.now(), kirimDariGudangUtama: true)
+        f.tambah(new ItemFaktur(produkA, 3, 10000))
+        f.tambah(new ItemFaktur(produkB, 5, 12000))
+
+        f = fakturJualRepository.buat(f, true)
+
+        // Penjualan luar kota yang dikirim dari gudang utama perlu dikirim secara manual
+        assertEquals(StatusFakturJual.DIBUAT, f.status)
+        assertNull(f.pengeluaranBarang)
+
+        // Stok tidak langsung berubah
+        produkA = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(4, produkA.stok(gudangLuarKota).jumlah)
+        assertEquals(10, produkA.stok(gudang).jumlah)
+        assertEquals(13, produkA.jumlahAkanDikirim)
+        assertEquals(6, produkB.stok(gudangLuarKota).jumlah)
+        assertEquals(14, produkB.stok(gudang).jumlah)
+        assertEquals(15, produkB.jumlahAkanDikirim)
+
+        // Buat pengeluaran barang
+        f = fakturJualRepository.kirim(f, 'Alamat 1')
+        assertEquals(StatusFakturJual.DIANTAR, f.status)
+        assertNotNull(f.pengeluaranBarang)
+        produkA = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(4, produkA.stok(gudangLuarKota).jumlah)
+        assertEquals(7, produkA.stok(gudang).jumlah)
+        assertEquals(10, produkA.jumlahAkanDikirim)
+        assertEquals(6, produkB.stok(gudangLuarKota).jumlah)
+        assertEquals(9, produkB.stok(gudang).jumlah)
+        assertEquals(10, produkB.jumlahAkanDikirim)
     }
 
     public void testBuatFakturJualOlehSalesDalamKota() {

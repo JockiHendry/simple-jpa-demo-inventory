@@ -91,8 +91,10 @@ application(title: 'Faktur Jual Oleh Sales',
                 panel {
                     label(text: bind {model.konsumen?: '- kosong -'})
                     button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumen')
+                    checkBox('Kirim Dari Gudang Utama', selected: bind('kirimDariGudangUtama', target: model, mutual: true), errorPath: 'kirimDariGudangUtama')
+                    errorLabel(path: 'kirimDariGudangUtama')
                 }
-                errorLabel(path: 'konsumen', constraints: 'wrap')
+                errorLabel(path: 'konsumen', constraints: 'wrap')                
                 label('Diskon:')
                 panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0)) {
                     decimalTextField(id: 'diskonPotonganPersen', columns: 5, bindTo: 'diskonPotonganPersen', errorPath: 'diskonPotonganPersen')
