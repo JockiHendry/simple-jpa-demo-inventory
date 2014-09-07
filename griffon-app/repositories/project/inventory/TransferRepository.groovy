@@ -18,6 +18,7 @@ package project.inventory
 import domain.event.TransferStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.StokTidakCukup
 import domain.inventory.Transfer
 import project.user.NomorService
 import simplejpa.transaction.Transaction
@@ -55,7 +56,13 @@ class TransferRepository {
         if (transfer.gudang.equals(transfer.tujuan)) {
             throw new IllegalStateException('Gudang asal dan gudang tujuan tidak boleh sama!')
         }
-        transfer.items.each { it.produk = merge(it.produk) }
+        transfer.items.each {
+            it.produk = merge(it.produk)
+            int jumlahTersedia = it.produk.stok(transfer.gudang).jumlah
+            if (jumlahTersedia < it.jumlah) {
+                throw new StokTidakCukup(it.produk.nama, it.jumlah, jumlahTersedia, transfer.gudang)
+            }
+        }
         persist(transfer)
         ApplicationHolder.application?.event(new TransferStok(transfer))
         transfer

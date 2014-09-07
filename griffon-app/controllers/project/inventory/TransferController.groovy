@@ -17,6 +17,7 @@ package project.inventory
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataDuplikat
+import domain.exception.StokTidakCukup
 import domain.inventory.Transfer
 import project.user.NomorService
 import org.joda.time.LocalDate
@@ -86,6 +87,8 @@ class TransferController {
             }
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
+        } catch (StokTidakCukup ex) {
+            model.errors['items'] = ex.message
         }
     }
 
