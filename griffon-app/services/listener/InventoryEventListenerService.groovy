@@ -63,7 +63,7 @@ class InventoryEventListenerService {
 
         pesanStok.faktur.listItemFaktur.each {
             Produk produk = it.produk
-            produk.jumlahAkanDikirim += pengali * it.jumlah
+            produk.jumlahAkanDikirim = (produk.jumlahAkanDikirim?:0) + (pengali * (it.jumlah?:0))
         }
 
         if (pesanStok.faktur instanceof FakturJualOlehSales && pesanStok.faktur.bonusPenjualan != null) {
