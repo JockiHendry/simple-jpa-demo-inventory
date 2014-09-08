@@ -92,7 +92,7 @@ application {
                     glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode}) {
                         templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                     }
-                    glazedColumn(name: 'Qty Ready', expression: {(it.jumlah?:0) - (it.jumlahAkanDikirim?:0)}, columnClass: Integer, preferredWidth: 30) {
+                    glazedColumn(name: 'Qty Ready', expression: {it.jumlahReadyGudangUtama()}, columnClass: Integer, preferredWidth: 30) {
                         templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                     }
                 }

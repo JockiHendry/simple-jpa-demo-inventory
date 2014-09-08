@@ -24,10 +24,15 @@ import simplejpa.transaction.Transaction
 @Transaction
 class GudangRepository {
 
+    private Gudang gudangUtama
+
     public Gudang cariGudangUtama() {
-        Gudang gudangUtama = findGudangByUtama(true)
         if (!gudangUtama) {
-            throw new GudangUtamaTidakKonsisten()
+            Gudang gudangUtama = findGudangByUtama(true)
+            if (!gudangUtama) {
+                throw new GudangUtamaTidakKonsisten()
+            }
+            this.gudangUtama = gudangUtama
         }
         gudangUtama
     }

@@ -140,6 +140,11 @@ class Produk implements Comparable {
         jumlah > getLevelMinimum()
     }
 
+    public int jumlahReadyGudangUtama() {
+        def qty = daftarStok.find { k, v -> k.utama }?.value?.jumlah ?: 0
+        qty - (jumlahAkanDikirim?:0)
+    }
+
     boolean equals(o) {
         if (o == null) return false
         if (this.is(o)) return true
