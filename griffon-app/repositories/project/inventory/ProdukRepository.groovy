@@ -17,11 +17,14 @@
 package project.inventory
 
 import domain.exception.DataDuplikat
+import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.pembelian.Supplier
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.StatusFakturJual
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -85,6 +88,22 @@ class ProdukRepository {
         p.levelMinimum = produk.levelMinimum
         p.jumlahAkanDikirim = produk.jumlahAkanDikirim
         p
+    }
+
+    public void refreshJumlahAkanDikirim() {
+        def pengiriman = [:]
+        findAllFakturJualOlehSalesByStatus(StatusFakturJual.DIBUAT).each { FakturJualOlehSales f ->
+            f.listItemFaktur.each { ItemFaktur i ->
+                if (pengiriman.containsKey(i.produk)) {
+                    pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
+                } else {
+                    pengiriman[i.produk] = i.jumlah
+                }
+            }
+        }
+        findAllProduk().each { Produk p ->
+            p.jumlahAkanDikirim = pengiriman[p]?: 0
+        }
     }
 
 }

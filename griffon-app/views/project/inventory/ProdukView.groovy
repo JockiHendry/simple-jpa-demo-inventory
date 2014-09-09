@@ -41,6 +41,7 @@ actions {
         }
     })
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
+    action(id: 'refreshJumlahAkanDikirim', name: 'Refresh Jumlah Akan Dikirim', closure: controller.refreshJumlahAkanDikirim)
 }
 
 application {
@@ -60,6 +61,7 @@ application {
                     }
                 )
                 button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+                button(action: refreshJumlahAkanDikirim)
             }
         }
 

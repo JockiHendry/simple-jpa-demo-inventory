@@ -29,6 +29,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
+import project.inventory.ProdukRepository
 import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import domain.penjualan.Konsumen
@@ -50,6 +51,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     FakturJualRepository fakturJualRepository
     KonsumenRepository konsumenRepository
     NomorService nomorService
+    ProdukRepository produkRepository
 
     protected void setUp() {
         super.setUp()
@@ -57,6 +59,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
+        produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
         nomorService = app.serviceManager.findService('Nomor')
         (SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan') as PengaturanRepository).refreshAll()
     }
@@ -403,4 +406,30 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
     }
 
+    public void testRefreshJumlahAkanDikirim() {
+        produkRepository.refreshJumlahAkanDikirim()
+        Produk produk1 = produkRepository.findProdukById(-1l)
+        Produk produk2 = produkRepository.findProdukById(-2l)
+        Produk produk3 = produkRepository.findProdukById(-3l)
+        Produk produk4 = produkRepository.findProdukById(-4l)
+        Produk produk5 = produkRepository.findProdukById(-5l)
+        Produk produk6 = produkRepository.findProdukById(-6l)
+        Produk produk7 = produkRepository.findProdukById(-7l)
+        Produk produk8 = produkRepository.findProdukById(-8l)
+        Produk produk9 = produkRepository.findProdukById(-9l)
+        Produk produk10 = produkRepository.findProdukById(-10l)
+        Produk produk11 = produkRepository.findProdukById(-11l)
+
+        assertEquals(4, produk1.jumlahAkanDikirim)
+        assertEquals(3, produk2.jumlahAkanDikirim)
+        assertEquals(0, produk3.jumlahAkanDikirim)
+        assertEquals(0, produk4.jumlahAkanDikirim)
+        assertEquals(0, produk5.jumlahAkanDikirim)
+        assertEquals(0, produk6.jumlahAkanDikirim)
+        assertEquals(0, produk7.jumlahAkanDikirim)
+        assertEquals(0, produk8.jumlahAkanDikirim)
+        assertEquals(0, produk9.jumlahAkanDikirim)
+        assertEquals(0, produk10.jumlahAkanDikirim)
+        assertEquals(0, produk11.jumlahAkanDikirim)
+    }
 }

@@ -114,6 +114,12 @@ class ProdukController {
         }
     }
 
+    def refreshJumlahAkanDikirim = {
+        produkRepository.refreshJumlahAkanDikirim()
+        search()
+        JOptionPane.showMessageDialog(view.mainPanel, 'Jumlah akan dikirim untuk seluruh produk sudah diperbaharui!', 'Sukses', JOptionPane.INFORMATION_MESSAGE)
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null
