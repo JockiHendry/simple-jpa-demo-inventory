@@ -29,10 +29,10 @@
             },
             " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
-            "        Hormat kami,                                       Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
-            "                                                              Sub Total : ${@subtotal:currency:20:right}",
-            "                                                        Diskon Tambahan : ${@jumlahDiskonTanpaDiskonItem:currency:20:right}",
-            "  (${createdBy:21:center})                                   Total Order : ${@total:currency:20:right}"
+            "        Hormat kami,                                       Total Diskon : Rp %{BOLD}${@jumlahDiskonItem:number:17:right}%{BOLD}",
+            "                                                              Sub Total : Rp %{BOLD}${@subtotal:number:17:right}%{BOLD}",
+            "                                                        Diskon Tambahan : Rp %{BOLD}${@jumlahDiskonTanpaDiskonItem:number:17:right}%{BOLD}",
+            "  (${createdBy:21:center})                                   Total Order : Rp %{BOLD}${@total:number:17:right}%{BOLD}"
         ]
     }
 }
