@@ -23,8 +23,19 @@ import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
 import project.penjualan.KonsumenRepository
 import project.inventory.ProdukController
+import simplejpa.swing.DialogUtils
+import javax.swing.JComponent
+import javax.swing.JDialog
+import javax.swing.JOptionPane
+import javax.swing.KeyStroke
+import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dialog
+import java.awt.Dimension
+import java.awt.Window
+import java.awt.event.ActionEvent
+import java.awt.event.KeyEvent
 
 class ItemFakturAsChildController {
 
@@ -64,17 +75,27 @@ class ItemFakturAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk)
-        if (produk) {
-            model.produk = produk
-            if ((model.parent==null) || (model.parent instanceof PurchaseOrder) || (model.parent instanceof FakturBeli)) {
-                if (model.konsumen) {
-                    model.harga = konsumenRepository.hargaTerakhir(model.konsumen, model.produk)
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: model.allowTambahProduk, showReturOnly: false, supplierSearch: null]
+            def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
+            Produk produk = null
+            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                    return
                 } else {
-                    model.harga = produk.hargaDalamKota
+                    produk = v.view.table.selectionModel.selected[0]
                 }
+                model.produk = produk
+                if ((model.parent == null) || (model.parent instanceof PurchaseOrder) || (model.parent instanceof FakturBeli)) {
+                    if (model.konsumen) {
+                        model.harga = konsumenRepository.hargaTerakhir(model.konsumen, model.produk)
+                    } else {
+                        model.harga = produk.hargaDalamKota
+                    }
+                }
+                view.jumlah.requestFocusInWindow()
             }
-            view.jumlah.requestFocusInWindow()
         }
     }
 

@@ -146,7 +146,6 @@ class ProdukController {
         }
     }
 
-    @Transaction(Transaction.Policy.SKIP)
     def tableSelectionChanged = { ListSelectionEvent event ->
         execInsideUISync {
             if (view.table.selectionModel.isSelectionEmpty()) {

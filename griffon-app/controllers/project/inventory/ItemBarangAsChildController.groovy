@@ -17,9 +17,14 @@ package project.inventory
 
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import domain.pembelian.FakturBeli
+import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
+import simplejpa.swing.DialogUtils
+import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
 class ItemBarangAsChildController {
 
@@ -59,10 +64,19 @@ class ItemBarangAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view, model.allowTambahProduk, model.showReturOnly, model.supplierSearch)
-        if (produk) {
-            model.produk = produk
-            view.jumlah.requestFocusInWindow()
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: model.allowTambahProduk, showReturOnly: model.showReturOnly, supplierSearch: model.supplierSearch]
+            def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
+            Produk produk = null
+            DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                } else {
+                    produk = v.view.table.selectionModel.selected[0]
+                }
+                model.produk = produk
+                view.jumlah.requestFocusInWindow()
+            }
         }
     }
 

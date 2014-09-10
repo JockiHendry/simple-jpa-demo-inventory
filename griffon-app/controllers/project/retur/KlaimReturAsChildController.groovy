@@ -17,13 +17,11 @@ package project.retur
 
 import domain.retur.*
 import domain.inventory.*
-import project.inventory.ProdukController
-import project.retur.*
 import simplejpa.swing.DialogUtils
-import simplejpa.transaction.Transaction
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
 class KlaimReturAsChildController {
 
@@ -83,10 +81,19 @@ class KlaimReturAsChildController {
     }
 
     def showProduk = {
-        Produk produk = ProdukController.displayProdukPopup(view, false, model.showReturOnly, model.supplierSearch)
-        if (produk) {
-            model.produk = produk
-            view.jumlah.requestFocusInWindow()
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: false, showReturOnly: model.showReturOnly, supplierSearch: model.supplierSearch]
+            def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
+            Produk produk = null
+            DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                } else {
+                    produk = v.view.table.selectionModel.selected[0]
+                }
+                model.produk = produk
+                view.jumlah.requestFocusInWindow()
+            }
         }
     }
 
