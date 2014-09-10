@@ -34,12 +34,12 @@ class PencairanPoinRepository {
         findAllPencairanPoinByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
-                and
+                and()
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {
-                and
-                konsumen like("%${konsumenSearch}%")
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
             }
         }
     }
