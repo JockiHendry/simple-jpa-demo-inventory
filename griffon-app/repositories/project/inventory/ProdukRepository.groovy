@@ -78,7 +78,7 @@ class ProdukRepository {
     }
 
     public Produk update(Produk produk) {
-        Produk p = findProdukById(produk.id)
+        Produk p = findProdukByIdFetchComplete(produk.id)
         p.nama = produk.nama
         p.hargaDalamKota = produk.hargaDalamKota
         p.hargaLuarKota = produk.hargaLuarKota
