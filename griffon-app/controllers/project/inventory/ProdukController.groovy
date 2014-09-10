@@ -81,7 +81,7 @@ class ProdukController {
 
     def save = {
         Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota, supplier: model.supplier.selectedItem,
-            hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem, poin: model.poin, levelMinimum: model.levelMinimum, jumlahAkanDikirim: model.jumlahAkanDikirim)
+            hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem, poin: model.poin, levelMinimum: model.levelMinimum, jumlahAkanDikirim: 0)
         if (!produkRepository.validate(produk, Default, model)) return
 
         try {

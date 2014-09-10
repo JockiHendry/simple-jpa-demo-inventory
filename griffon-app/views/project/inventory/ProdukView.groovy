@@ -125,7 +125,7 @@ application {
             numberTextField(id: 'levelMinimum', columns: 20, bindTo: 'levelMinimum', errorPath: 'levelMinimum')
             errorLabel(path: 'levelMinimum', constraints: 'wrap')
             label('Jumlah Akan Dikirim:')
-            numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', errorPath: 'jumlahAkanDikirim')
+            numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', editable: false, errorPath: 'jumlahAkanDikirim')
             errorLabel(path: 'jumlahAkanDikirim', constraints: 'wrap')
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
