@@ -180,14 +180,15 @@ class FakturJualRepository {
     }
 
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
-        fakturJual.listItemFaktur.each { it.produk = merge(it.produk) }
-        bonus.each { it.produk = merge(it.produk) }
+        fakturJual.listItemFaktur.each { it.produk = findProdukById(it.produk.id) }
+        bonus.each { it.produk = findProdukById(it.produk.id) }
         fakturJual.tambahBonus(bonus)
         buatFakturJualOlehSales(fakturJual, tanpaLimit)
     }
 
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false) {
-        fakturJual.konsumen = merge(fakturJual.konsumen)
+        fakturJual.listItemFaktur.each { it.produk = findProdukById(it.produk.id) }
+        fakturJual.konsumen = findKonsumenById(fakturJual.konsumen.id)
         Konsumen konsumen = fakturJual.konsumen
 
         // Periksa apakah jumlah barang yang tersedia cukup
@@ -216,7 +217,7 @@ class FakturJualRepository {
         // Perlakuan khusus untuk faktur jual luar kota
         if (!fakturJual.konsumen.sales.dalamKota() && !fakturJual.kirimDariGudangUtama) {
             fakturJual.listItemFaktur.each {
-                it.produk = merge(it.produk)
+                it.produk = findProdukById(it.produk.id)
             }
             fakturJual.kirim('Luar Kota')
             fakturJual.tambah(new BuktiTerima(fakturJual.tanggal, 'Luar Kota'))
@@ -238,10 +239,10 @@ class FakturJualRepository {
         // Periksa apakah barang dalam gudang utama mencukupi
         Gudang gudangUtama = (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
         fakturJualEceran.listItemFaktur.each {
-            Produk produk = merge(it.produk)
-            int jumlahTersedia = produk.stok(gudangUtama).jumlah
+            it.produk = findProdukById(it.produk.id)
+            int jumlahTersedia = it.produk.stok(gudangUtama).jumlah
             if (jumlahTersedia < it.jumlah) {
-                throw new StokTidakCukup(produk.nama, it.jumlah, jumlahTersedia, gudangUtama)
+                throw new StokTidakCukup(it.produk.nama, it.jumlah, jumlahTersedia, gudangUtama)
             }
         }
 
@@ -266,9 +267,6 @@ class FakturJualRepository {
         }
 
         ApplicationHolder.application.event(new PesanStok(fakturJual, false))
-        // Simpan perubahan pada produk bila perlu
-        fakturJual.listItemFaktur.each { merge(it.produk) }
-
         fakturJual
     }
 
@@ -356,16 +354,12 @@ class FakturJualRepository {
     FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.kirim(alamatTujuan, tanggalKirim, keterangan)
-        // Simpan perubahan pada produk bila perlu
-        faktur.listItemFaktur.each { merge(it.produk) }
         faktur
     }
 
     FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.hapusPengeluaranBarang()
-        // Simpan perubahan pada produk bila perlu
-        faktur.listItemFaktur.each { merge(it.produk) }
         faktur
     }
 

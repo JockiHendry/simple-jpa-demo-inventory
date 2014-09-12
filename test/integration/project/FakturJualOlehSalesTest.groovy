@@ -23,6 +23,7 @@ import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
 import domain.inventory.Gudang
+import domain.inventory.PeriodeItemStok
 import domain.pengaturan.Pengaturan
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
@@ -431,5 +432,53 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(0, produk9.jumlahAkanDikirim)
         assertEquals(0, produk10.jumlahAkanDikirim)
         assertEquals(0, produk11.jumlahAkanDikirim)
+    }
+
+    public void testPeriksaJumlahStok() {
+        Konsumen k = produkRepository.findKonsumenById(-1)
+        Gudang g = gudangRepository.cariGudangUtama()
+        Produk p1 = produkRepository.findProdukById(-1l)
+        Produk p2 = produkRepository.findProdukById(-2l)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: k, tanggal: LocalDate.now())
+        f.tambah(new ItemFaktur(p1, 2, 10000))
+        f.tambah(new ItemFaktur(p2, 5, 10000))
+        f = fakturJualRepository.buat(f, true)
+
+        // Pastikan bahwa stok masih belum berkurang dan jumlah akan dikirim bertambah
+        produkRepository.withTransaction {
+            p1 = findProdukById(-1l)
+            assertEquals(37, p1.jumlah)
+            assertEquals(10, p1.stok(g).jumlah)
+            assertEquals(12, p1.jumlahAkanDikirim)
+            p2 = findProdukById(-2l)
+            assertEquals(27, p2.jumlah)
+            assertEquals(14, p2.stok(g).jumlah)
+            assertEquals(15, p2.jumlahAkanDikirim)
+        }
+
+        // Melakukan pengiriman barang dan memeriksa perubahan pada stok serta jumlah akan dikirim yang harus berkurang
+        f = fakturJualRepository.kirim(f, 'test')
+        produkRepository.withTransaction {
+            p1 = findProdukById(-1l)
+            assertEquals(35, p1.jumlah)
+            assertEquals(8, p1.stok(g).jumlah)
+            assertEquals(10, p1.jumlahAkanDikirim)
+            PeriodeItemStok pis = p1.stok(g).periode(LocalDate.now())
+            assertEquals(-2, pis.jumlah)
+            assertEquals(-2, pis.listItem[0].jumlah)
+            assertEquals(LocalDate.now(), pis.listItem[0].tanggal)
+            assertNotNull(pis.listItem[0].nomorReferensi)
+
+            p2 = findProdukById(-2l)
+            assertEquals(22, p2.jumlah)
+            assertEquals(9, p2.stok(g).jumlah)
+            assertEquals(10, p2.jumlahAkanDikirim)
+            pis = p2.stok(g).periode(LocalDate.now())
+            assertEquals(-5, pis.jumlah)
+            assertEquals(-5, pis.listItem[0].jumlah)
+            assertEquals(LocalDate.now(), pis.listItem[0].tanggal)
+            assertNotNull(pis.listItem[0].nomorReferensi)
+        }
+
     }
 }
