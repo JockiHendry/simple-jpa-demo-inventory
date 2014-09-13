@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
@@ -70,14 +71,18 @@ class BuktiTerimaController {
         }
     }
 
+    @NeedSupervisorPassword
     def hapus = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan menghapus bukti terima barang untuk faktur ini?', 'Konfirmasi Pembatalan Bukti Terima', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan menghapus bukti terima barang untuk faktur ini?', 'Konfirmasi Pembatalan Bukti Terima', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.hapusBuktiTerima(faktur)
-            view.table.selectionModel.selected[0] = faktur
+            fakturJualRepository.hapusBuktiTerima(faktur)
+            execInsideUISync {
+                model.fakturJualOlehSalesList.remove(faktur)
+                clear()
+            }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }

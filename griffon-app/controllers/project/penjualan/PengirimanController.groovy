@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.FakturJualOlehSales
 import project.user.NomorService
@@ -75,16 +76,18 @@ class PengirimanController {
         }
     }
 
+    @NeedSupervisorPassword
     def batalKirim = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.batalKirim(faktur)
-            view.table.selectionModel.selected[0] = faktur
-            clear()
+            fakturJualRepository.batalKirim(faktur)
+            execInsideUISync {
+                model.fakturJualOlehSalesList.remove(faktur)
+                clear()
+            }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }

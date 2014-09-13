@@ -83,7 +83,7 @@ application() {
             panel(constraints: PAGE_END) {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button('Proses Pengiriman Barang', actionPerformed: controller.kirim, visible: bind { model.allowKirim })
-                button('Batalkan Pengiriman', actionPerformed: controller.batalKirim, visible: bind { model.allowBatalKirim})
+                button('Hapus Pengiriman', actionPerformed: controller.batalKirim, visible: bind { model.allowBatalKirim})
                 button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
                 button('Cetak', actionPerformed: controller.cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowPrint}))
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)

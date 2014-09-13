@@ -114,9 +114,6 @@ class FakturJualOlehSales extends FakturJual {
 
     @Override
     void hapusPengeluaranBarang() {
-        if (!konsumen.sales.dalamKota()) {
-            throw new DataTidakBolehDiubah(this)
-        }
         super.hapusPengeluaranBarang()
         ApplicationHolder.application.event(new PesanStok(this))
     }
