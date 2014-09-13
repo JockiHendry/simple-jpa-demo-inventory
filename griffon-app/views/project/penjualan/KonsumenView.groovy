@@ -59,7 +59,7 @@ application(title: 'Konsumen',
                 glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon', preferredWidth: 100)
                 glazedColumn(name: 'Region', property: 'region')
                 glazedColumn(name: 'Sales', expression: { it.sales.nama })
-                glazedColumn(name: 'Total Poin', property: 'poinTerkumpul', columnClass: Integer, visible: bind {!model.popupMode})
+                glazedColumn(name: 'Total Poin', property: 'poinTerkumpul', columnClass: Integer)
                 glazedColumn(name: 'Credit Limit', property: 'creditLimit', columnClass: Integer, visible: bind {!model.popupMode}) {
                     templateRenderer(exp: { it==null ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
                 }
