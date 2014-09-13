@@ -105,4 +105,10 @@ class ProdukRepository {
         }
     }
 
+    public Produk aturJumlahRetur(Produk produk, Integer jumlahRetur) {
+        Produk p = findProdukByIdFetchComplete(produk.id)
+        p.jumlahRetur = jumlahRetur
+        p
+    }
+
 }

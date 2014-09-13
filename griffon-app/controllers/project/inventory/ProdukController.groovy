@@ -34,20 +34,6 @@ class ProdukController {
 
     ProdukRepository produkRepository
 
-    public static Produk displayProdukPopup(view, boolean allowTambahProduk = true, boolean showReturOnly = false, Supplier supplierSearch = null) {
-        def args = [popup: true, allowTambahProduk: allowTambahProduk, showReturOnly: showReturOnly, supplierSearch: supplierSearch]
-        def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900,600)]
-        Produk result = null
-        DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
-            if (v.table.selectionModel.isSelectionEmpty()) {
-                JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
-            } else {
-                result = v.view.table.selectionModel.selected[0]
-            }
-        }
-        result
-    }
-
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popup'?: false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
@@ -118,6 +104,22 @@ class ProdukController {
         produkRepository.refreshJumlahAkanDikirim()
         search()
         JOptionPane.showMessageDialog(view.mainPanel, 'Jumlah akan dikirim untuk seluruh produk sudah diperbaharui!', 'Sukses', JOptionPane.INFORMATION_MESSAGE)
+    }
+    
+    @NeedSupervisorPassword
+    def showUbahJumlahRetur = {
+        String input = JOptionPane.showInputDialog(view.mainPanel, 'Masukkan nilai qty retur baru:', 'Input Qty Retur', JOptionPane.QUESTION_MESSAGE)
+        try {
+            Integer qtyRetur = new Integer(input)
+            Produk produk = view.table.selectionModel.selected[0]
+            produk = produkRepository.aturJumlahRetur(produk, qtyRetur)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = produk
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Nilai qty retur bukan nilai yang valid!', 'Kesalahan Input', JOptionPane.ERROR_MESSAGE)
+        }
+
     }
 
     def clear = {

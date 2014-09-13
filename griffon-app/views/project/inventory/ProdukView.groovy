@@ -41,6 +41,7 @@ actions {
         }
     })
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
+    action(id: 'showUbahJumlahRetur', name: 'Ubah Qty Retur...', closure: controller.showUbahJumlahRetur)
     action(id: 'refreshJumlahAkanDikirim', name: 'Refresh Jumlah Akan Dikirim', closure: controller.refreshJumlahAkanDikirim)
 }
 
@@ -141,6 +142,7 @@ application {
                 })
                 button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
                 button(id: 'stokProduk', action: showStokProduk, visible: bind{table.isRowSelected})
+                button(id: 'ubahJumlahRetur', action: showUbahJumlahRetur, visible: bind{table.isRowSelected})
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
                 button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {
                     if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
