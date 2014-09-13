@@ -49,7 +49,8 @@ application(title: 'simple-jpa-demo-inventory',
             label('Password Database: ')
             passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
 
-            button('Mulai Restore', actionPerformed: controller.&mulai, constraints: 'gaptop 10px, wrap')
+            button('Mulai Restore', actionPerformed: controller.&mulai, constraints: 'gaptop 10px')
+            button('Refresh Stok', actionPerformed: controller.refreshStok, constraints: 'wrap')
         }
 
         scrollPane(constraints: CENTER) {

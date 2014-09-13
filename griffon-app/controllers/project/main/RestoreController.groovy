@@ -15,12 +15,17 @@
  */
 package project.main
 
+import domain.inventory.Gudang
+import domain.inventory.PeriodeItemStok
+import domain.inventory.Produk
+import domain.inventory.StokProduk
 import org.dbunit.database.DatabaseConnection
 import org.dbunit.dataset.IDataSet
 import org.dbunit.dataset.csv.CsvDataSet
 import org.dbunit.dataset.excel.XlsDataSet
 import org.dbunit.operation.DatabaseOperation
 import org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+import project.inventory.ProdukRepository
 import project.main.RestoreModel
 import simplejpa.SimpleJpaUtil
 
@@ -32,6 +37,7 @@ import java.sql.Statement
 
 class RestoreController {
 
+    ProdukRepository produkRepository
     RestoreModel model
     def view
 
@@ -82,6 +88,37 @@ class RestoreController {
             if (!connection?.isClosed()) connection.close()
         }
         execInsideUISync { output.append("Selesai.\n\n") }
+    }
+
+    def refreshStok = {
+        JTextArea output = view.output
+        execInsideUISync { output.append("Mulai...\n\n") }
+        produkRepository.withTransaction {
+            findAllProduk().each { Produk p ->
+                def total = 0
+                p.daftarStok.each { Gudang g, StokProduk s ->
+                    def jumlah = 0
+                    s.listPeriodeRiwayat.each { PeriodeItemStok pr ->
+                        def totalPeriode = pr.listItem.sum {it.jumlah}?: 0
+                        if (pr.jumlah != totalPeriode) {
+                            execInsideUISync { output.append("${p.nama} pada ${pr.tanggalMulai.toString('dd-MM-YYYY')} sampai ${pr.tanggalSelesai.toString('dd-MM-YYYY')} harus berjumlah ${totalPeriode} tetapi ${pr.jumlah}\n") }
+                            pr.jumlah = totalPeriode
+                        }
+                        jumlah += totalPeriode
+                    }
+                    total += jumlah
+                    if (s.jumlah != jumlah) {
+                        execInsideUISync { output.append("${p.nama} pada ${g.nama} harus berjumlah ${jumlah} tetapi ${s.jumlah}\n") }
+                        s.jumlah = jumlah
+                    }
+                }
+                if (p.jumlah != total) {
+                    execInsideUISync { output.append("${p.nama} harus berjumlah ${total} tetapi ${p.jumlah}\n") }
+                    p.jumlah = total
+                }
+            }
+        }
+        execInsideUISync { output.append("\nSelesai!\n\n") }
     }
 
 
