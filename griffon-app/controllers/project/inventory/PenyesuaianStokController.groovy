@@ -17,6 +17,7 @@ package project.inventory
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataDuplikat
+import domain.exception.StokTidakCukup
 import domain.inventory.PenyesuaianStok
 import project.user.NomorService
 import org.joda.time.LocalDate
@@ -92,6 +93,8 @@ class PenyesuaianStokController {
             }
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
+        } catch (StokTidakCukup ex) {
+            model.errors['items'] = ex.message
         }
     }
 

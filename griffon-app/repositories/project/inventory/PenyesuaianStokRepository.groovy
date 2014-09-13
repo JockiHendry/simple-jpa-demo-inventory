@@ -18,6 +18,7 @@ package project.inventory
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.StokTidakCukup
 import domain.inventory.PenyesuaianStok
 import project.user.NomorService
 import org.joda.time.LocalDate
@@ -47,7 +48,15 @@ class PenyesuaianStokRepository {
         if (findPenyesuaianStokByNomor(penyesuaianStok.nomor)) {
             throw new DataDuplikat(penyesuaianStok)
         }
-        penyesuaianStok.items.each { it.produk = merge(it.produk) }
+        penyesuaianStok.items.each {
+            it.produk = merge(it.produk)
+            if (!penyesuaianStok.bertambah) {
+                int jumlahTersedia = it.produk.stok(penyesuaianStok.gudang).jumlah
+                if (jumlahTersedia < it.jumlah) {
+                    throw new StokTidakCukup(it.produk.nama, it.jumlah, jumlahTersedia, penyesuaianStok.gudang)
+                }
+            }
+        }
         if (!penyesuaianStok.keterangan) penyesuaianStok.keterangan = 'Penyesuaian Stok'
         persist(penyesuaianStok)
         ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, null))
