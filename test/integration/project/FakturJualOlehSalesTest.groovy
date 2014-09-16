@@ -24,6 +24,7 @@ import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
+import domain.pembelian.PenerimaanBarang
 import domain.pengaturan.Pengaturan
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
@@ -479,6 +480,117 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals(LocalDate.now(), pis.listItem[0].tanggal)
             assertNotNull(pis.listItem[0].nomorReferensi)
         }
-
     }
+
+    public void testReturSudahDiterima() {
+        Konsumen k = produkRepository.findKonsumenById(-1)
+        Gudang g = gudangRepository.cariGudangUtama()
+        Produk p1 = produkRepository.findProdukById(-1l)
+        Produk p2 = produkRepository.findProdukById(-2l)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: k, tanggal: LocalDate.now())
+        f.tambah(new ItemFaktur(p1, 10, 10000))
+        f.tambah(new ItemFaktur(p2, 10, 20000))
+        f = fakturJualRepository.buat(f, true)
+        f = fakturJualRepository.kirim(f, 'Destination')
+        f = fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'Receiver', 'Driver'))
+
+        PenerimaanBarang retur = new PenerimaanBarang(nomor: 'NOMOR', tanggal: LocalDate.now())
+        retur.tambah(new ItemBarang(p1, 10))
+        retur.tambah(new ItemBarang(p2, 5))
+        f = fakturJualRepository.retur(f, retur)
+
+        fakturJualRepository.withTransaction {
+            f = findFakturJualOlehSalesById(f.id)
+
+            // Periksa retur
+            assertEquals(1, f.retur.size())
+            assertEquals(2, f.retur[0].items.size())
+            assertEquals(p1, f.retur[0].items[0].produk)
+            assertEquals(10, f.retur[0].items[0].jumlah)
+            assertEquals(p2, f.retur[0].items[1].produk)
+            assertEquals(5, f.retur[0].items[1].jumlah)
+
+            // Periksa apakah piutang berkurang
+            assertEquals(300000, f.piutang.jumlah)
+            assertEquals(200000, f.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+
+            // Periksa apakah bonus berkurang
+            k = findKonsumenById(-1l)
+            assertEquals(60, k.poinTerkumpul)
+            assertEquals(30, k.listRiwayatPoin[0].poin)
+            assertEquals(-20, k.listRiwayatPoin[1].poin)
+
+            // Periksa apakah stok bertambah
+            p1 = findProdukById(-1l)
+            assertEquals(37, p1.jumlah)
+            assertEquals(10, p1.stok(g).jumlah)
+            assertNotNull(p1.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == -10})
+            assertNotNull(p1.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == 10})
+            p2 = findProdukById(-2l)
+            assertEquals(22, p2.jumlah)
+            assertEquals(9, p2.stok(g).jumlah)
+            assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == -10})
+            assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == 5})
+        }
+    }
+
+    public void testReturDiantar() {
+        Konsumen k = produkRepository.findKonsumenById(-1)
+        Gudang g = gudangRepository.cariGudangUtama()
+        Produk p1 = produkRepository.findProdukById(-1l)
+        Produk p2 = produkRepository.findProdukById(-2l)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: k, tanggal: LocalDate.now())
+        f.tambah(new ItemFaktur(p1, 10, 10000))
+        f.tambah(new ItemFaktur(p2, 10, 20000))
+        f = fakturJualRepository.buat(f, true)
+        f = fakturJualRepository.kirim(f, 'Destination')
+
+        PenerimaanBarang retur = new PenerimaanBarang(nomor: 'NOMOR', tanggal: LocalDate.now())
+        retur.tambah(new ItemBarang(p1, 10))
+        retur.tambah(new ItemBarang(p2, 5))
+        f = fakturJualRepository.retur(f, retur)
+
+        fakturJualRepository.withTransaction {
+            f = findFakturJualOlehSalesById(f.id)
+
+            // Periksa retur
+            assertEquals(1, f.retur.size())
+            assertEquals(2, f.retur[0].items.size())
+            assertEquals(p1, f.retur[0].items[0].produk)
+            assertEquals(10, f.retur[0].items[0].jumlah)
+            assertEquals(p2, f.retur[0].items[1].produk)
+            assertEquals(5, f.retur[0].items[1].jumlah)
+
+            // Periksa apakah piutang dan bonus masih kosong
+            assertNull(f.piutang)
+            k = findKonsumenById(-1l)
+            assertEquals(50, k.poinTerkumpul)
+
+            // Periksa apakah stok bertambah
+            p1 = findProdukById(-1l)
+            assertEquals(37, p1.jumlah)
+            assertEquals(10, p1.stok(g).jumlah)
+            assertNotNull(p1.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == -10})
+            assertNotNull(p1.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == 10})
+            p2 = findProdukById(-2l)
+            assertEquals(22, p2.jumlah)
+            assertEquals(9, p2.stok(g).jumlah)
+            assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == -10})
+            assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == 5})
+        }
+
+        f = fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'Receiver', 'Driver'))
+
+        fakturJualRepository.withTransaction {
+            f = findFakturJualOlehSalesById(f.id)
+
+            // Periksa piutang
+            assertEquals(100000, f.piutang.jumlah)
+
+            // Periksa apakah bonus berkurang
+            k = findKonsumenById(-1l)
+            assertEquals(60, k.poinTerkumpul)
+        }
+    }
+
 }

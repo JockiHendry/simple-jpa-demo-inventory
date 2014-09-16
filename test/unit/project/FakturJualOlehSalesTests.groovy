@@ -20,6 +20,7 @@ import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
+import domain.pembelian.PenerimaanBarang
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -180,7 +181,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertNull(f.bonusPenjualan)
     }
 
-    void testSudahJatuhTempo() {
+    public void testSudahJatuhTempo() {
         FakturJualOlehSales f = new FakturJualOlehSales(tanggal: Periode.format.parseLocalDate('01-01-2013'))
         f.jatuhTempo = f.tanggal.plusDays(15)
         assertTrue(f.sudahJatuhTempo(Periode.format.parseLocalDate('16-01-2013')))
@@ -188,7 +189,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertFalse(f.sudahJatuhTempo(Periode.format.parseLocalDate('15-01-2013')))
     }
 
-    void testBarangYangHarusDikirim() {
+    public void testBarangYangHarusDikirim() {
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
@@ -204,4 +205,105 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(21, hasil.items.find {it.produk==produkB}.jumlah)
     }
 
+    public void testReturFakturDiterima() {
+        Produk produkA = new Produk('Produk A', 50, 10000, 10100)
+        produkA.setPoin(3)
+        Produk produkB = new Produk('Produk B', 50, 12000, 12100)
+        produkB.setPoin(4)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(sales: showroom)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.kirim('Tujuan')
+        f.tambah(new BuktiTerima())
+        assertEquals(340000, f.piutang.jumlah)
+        assertEquals(110, konsumen.poinTerkumpul)
+
+        PenerimaanBarang retur1 = new PenerimaanBarang()
+        retur1.tambah(new ItemBarang(produkA, 5))
+        f.tambahRetur(retur1)
+        assertEquals(1, f.retur.size())
+        assertEquals(retur1, f.retur[0])
+        assertEquals(340000, f.piutang.jumlah)
+        assertEquals(290000, f.piutang.sisa())
+        assertEquals(1, f.piutang.listPembayaran.size())
+        assertEquals(50000, f.piutang.listPembayaran[0].jumlah)
+        assertTrue(f.piutang.listPembayaran[0].potongan)
+        assertEquals(95, konsumen.poinTerkumpul)
+        assertEquals(110, konsumen.listRiwayatPoin[0].poin)
+        assertEquals(-15, konsumen.listRiwayatPoin[1].poin)
+
+        PenerimaanBarang retur2 = new PenerimaanBarang()
+        retur2.tambah(new ItemBarang(produkB, 20))
+        f.tambahRetur(retur2)
+        assertEquals(2, f.retur.size())
+        assertEquals(retur2, f.retur[1])
+        assertEquals(340000, f.piutang.jumlah)
+        assertEquals(50000, f.piutang.sisa())
+        assertEquals(2, f.piutang.listPembayaran.size())
+        assertEquals(240000, f.piutang.listPembayaran[1].jumlah)
+        assertTrue(f.piutang.listPembayaran[1].potongan)
+        assertEquals(15, konsumen.poinTerkumpul)
+        assertEquals(110, konsumen.listRiwayatPoin[0].poin)
+        assertEquals(-15, konsumen.listRiwayatPoin[1].poin)
+        assertEquals(-80, konsumen.listRiwayatPoin[2].poin)
+    }
+
+    public void testReturFakturDiantar() {
+        Produk produkA = new Produk('Produk A', 50, 10000, 10100)
+        produkA.setPoin(3)
+        Produk produkB = new Produk('Produk B', 50, 12000, 12100)
+        produkB.setPoin(4)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(sales: showroom)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.kirim('Tujuan')
+
+        PenerimaanBarang retur1 = new PenerimaanBarang()
+        retur1.tambah(new ItemBarang(produkA, 5))
+        f.tambahRetur(retur1)
+        assertEquals(1, f.retur.size())
+        assertEquals(retur1, f.retur[0])
+        assertNull(f.piutang)
+        assertEquals(0, konsumen.poinTerkumpul)
+
+        PenerimaanBarang retur2 = new PenerimaanBarang()
+        retur2.tambah(new ItemBarang(produkB, 20))
+        f.tambahRetur(retur2)
+        assertEquals(2, f.retur.size())
+        assertEquals(retur2, f.retur[1])
+        assertNull(f.piutang)
+        assertEquals(0, konsumen.poinTerkumpul)
+
+        // Pastikan barang yang diantar sudah dikurangi barang retur
+        f.tambah(new BuktiTerima())
+        assertEquals(50000, f.piutang.jumlah)
+        assertEquals(15, konsumen.poinTerkumpul)
+    }
+
+    public void testTotalRetur() {
+        Produk produkA = new Produk('Produk A', 50, 10000, 10100)
+        produkA.setPoin(3)
+        Produk produkB = new Produk('Produk B', 50, 12000, 12100)
+        produkB.setPoin(4)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(sales: showroom)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.kirim('Tujuan')
+
+        PenerimaanBarang retur1 = new PenerimaanBarang()
+        retur1.tambah(new ItemBarang(produkA, 5))
+        f.tambahRetur(retur1)
+
+        PenerimaanBarang retur2 = new PenerimaanBarang()
+        retur2.tambah(new ItemBarang(produkB, 20))
+        f.tambahRetur(retur2)
+
+        assertEquals(290000, f.totalRetur())
+    }
 }

@@ -24,6 +24,7 @@ import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
+import domain.pembelian.PenerimaanBarang
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualEceran
@@ -366,6 +367,14 @@ class FakturJualRepository {
     FakturJualOlehSales terima(FakturJualOlehSales faktur, BuktiTerima buktiTerima) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.tambah(buktiTerima)
+        faktur
+    }
+
+    FakturJualOlehSales retur(FakturJualOlehSales faktur, PenerimaanBarang penerimaanBarang) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        penerimaanBarang.items.each { it.produk = findProdukById(it.produk.id) }
+        faktur.tambahRetur(penerimaanBarang)
+        persist(penerimaanBarang)
         faktur
     }
 

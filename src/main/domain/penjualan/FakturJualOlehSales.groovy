@@ -15,15 +15,19 @@
  */
 package domain.penjualan
 
+import domain.event.PerubahanStok
 import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
+import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.pembelian.PenerimaanBarang
 import project.inventory.GudangRepository
 import project.user.NomorService
 import domain.validation.InputPenjualanOlehSales
@@ -53,7 +57,7 @@ import javax.validation.groups.Default
         @NamedAttributeNode('listItemFaktur')
     ])
 ])
-@DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan')
+@DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan,retur') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan,retur')
 class FakturJualOlehSales extends FakturJual {
 
     @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
@@ -70,28 +74,39 @@ class FakturJualOlehSales extends FakturJual {
 
     Boolean kirimDariGudangUtama
 
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur') @OrderColumn
+    List<PenerimaanBarang> retur = []
+
     void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
 
         // Buat PengeluaranBarang berdasarkan data yang ada di faktur
-        Gudang gudang = kirimDariGudangUtama? (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama(): konsumen.sales.gudang
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: LocalDate.now(), gudang: gudang, keterangan: keterangan, alamatTujuan: alamatTujuan
+            tanggal: LocalDate.now(), gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
         ApplicationHolder.application.event(new PesanStok(this, true))
         tambah(pengeluaranBarang)
     }
 
+    Gudang kirimDari() {
+        kirimDariGudangUtama? (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama(): konsumen.sales.gudang
+    }
+
     void tambah(BuktiTerima buktiTerima) {
         super.tambah(buktiTerima)
-        piutang = new KewajibanPembayaran(jumlah: total())
 
-        // Menambahkan poin pada konsumen
-        konsumen.tambahPoin(pengeluaranBarang)
+        // Menambah piutang
+        piutang = new KewajibanPembayaran(jumlah: total() - totalRetur())
+
+        // Menambah poin
+        DaftarBarangSementara daftarBarang = new DaftarBarangSementara(pengeluaranBarang.items)
+        retur.each { daftarBarang -= it}
+        daftarBarang.nomor = pengeluaranBarang.nomor
+        konsumen.tambahPoin(daftarBarang)
     }
 
     void bayar(Pembayaran pembayaran) {
@@ -183,6 +198,59 @@ class FakturJualOlehSales extends FakturJual {
         }
         hasil.items = hasil.normalisasi()
         hasil
+    }
+
+    void tambahRetur(PenerimaanBarang penerimaanBarang) {
+        // Periksa apakah barang yang dikembalikan adalah barang yang sudah dipesan sebelumnya.
+        if (status == StatusFakturJual.LUNAS) {
+            throw new DataTidakBolehDiubah('Faktur jual yang telah lunas tidak boleh di-retur!', this)
+        }
+        if (piutang && piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN) > 0) {
+            throw new DataTidakBolehDiubah('Faktur jual yang telah dibayar tidak boleh di-retur!', this)
+        }
+        BigDecimal harga = 0
+        penerimaanBarang.gudang = kirimDari()
+        penerimaanBarang.normalisasi().each { ItemBarang barangRetur ->
+            ItemFaktur itemFaktur = listItemFaktur.find { (it.produk == barangRetur.produk) && (it.jumlah >= barangRetur.jumlah) }
+            if (itemFaktur) {
+                BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga
+                harga += itemFaktur.diskon? itemFaktur.diskon.hasil(hargaRetur): hargaRetur
+            } else {
+                throw new DataTidakKonsisten("Tidak ada penjualan ${barangRetur.produk.nama} sejumlah ${barangRetur.jumlah} di faktur jual ${nomor}!")
+            }
+        }
+
+        // Tambahkan pada retur
+        retur.add(penerimaanBarang)
+
+        // Kurangi piutang bila ada
+        if (piutang) {
+            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true))
+        }
+
+        // Kurangi bonus untuk konsumen tersebut
+        if (status == StatusFakturJual.DITERIMA) {
+            konsumen.hapusPoin(penerimaanBarang)
+        }
+
+        // Lakukan Perubahan stok (bertambah)
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this))
+    }
+
+    BigDecimal totalRetur() {
+        BigDecimal total = 0
+        retur.each { PenerimaanBarang penerimaanBarang ->
+            penerimaanBarang.items.each { ItemBarang barangRetur ->
+                ItemFaktur itemFaktur = listItemFaktur.find { (it.produk == barangRetur.produk) && (it.jumlah >= barangRetur.jumlah) }
+                if (itemFaktur) {
+                    BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga
+                    total += itemFaktur.diskon? itemFaktur.diskon.hasil(hargaRetur): hargaRetur
+                } else {
+                    throw new DataTidakKonsisten('Barang retur melebihi batas yang ditentukan!', this)
+                }
+            }
+        }
+        total
     }
 
     boolean equals(o) {

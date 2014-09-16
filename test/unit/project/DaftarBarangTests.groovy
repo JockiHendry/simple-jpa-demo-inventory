@@ -17,6 +17,7 @@ package project
 
 import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import griffon.test.*
@@ -116,6 +117,30 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         daftarBarang.tambah(new ItemBarang(produkB, 5))   // Poin:  0 * 5  =   0
 
         assertEquals(280, daftarBarang.toPoin())
+    }
+
+    void testMinus() {
+        Produk produkA = new Produk(nama: 'Produk A')
+        Produk produkB = new Produk(nama: 'Produk B')
+        Produk produkC = new Produk(nama: 'Produk C')
+
+        DaftarBarangSementara d1 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 10),
+            new ItemBarang(produkB, 20),
+            new ItemBarang(produkC, 30)
+        ])
+
+        DaftarBarangSementara d2 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 5),
+            new ItemBarang(produkB, 20)
+        ])
+
+        DaftarBarangSementara d3 = d1 - d2
+        assertEquals(2, d3.items.size())
+        assertEquals(produkA, d3.items[0].produk)
+        assertEquals(5, d3.items[0].jumlah)
+        assertEquals(produkC, d3.items[1].produk)
+        assertEquals(30, d3.items[1].jumlah)
     }
 
 }
