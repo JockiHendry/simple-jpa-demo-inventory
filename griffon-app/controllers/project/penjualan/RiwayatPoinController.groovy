@@ -45,13 +45,9 @@ class RiwayatPoinController {
             model.errors['konsumenSearch'] = 'Konsumen harus di-isi!'
             return
         }
+        execInsideUISync { model.riwayatPoinList.clear() }
         List<RiwayatPoin> result = konsumenRepository.cariRiwayatPoin(model.konsumenSearch, model.tanggalMulaiSearch, model.tanggalSelesaiSearch)
-        if (!result.empty) {
-            execInsideUISync {
-                model.riwayatPoinList.clear()
-                model.riwayatPoinList.addAll(result)
-            }
-        }
+        execInsideUISync { model.riwayatPoinList.addAll(result) }
     }
 
 }

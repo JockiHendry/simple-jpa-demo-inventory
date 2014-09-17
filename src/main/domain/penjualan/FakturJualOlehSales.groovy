@@ -196,6 +196,9 @@ class FakturJualOlehSales extends FakturJual {
         if (bonusPenjualan) {
             hasil += bonusPenjualan
         }
+        retur.each {
+            hasil -= it
+        }
         hasil.items = hasil.normalisasi()
         hasil
     }
@@ -251,6 +254,10 @@ class FakturJualOlehSales extends FakturJual {
             }
         }
         total
+    }
+
+    BigDecimal totalSetelahRetur() {
+        total() - totalRetur()
     }
 
     boolean equals(o) {

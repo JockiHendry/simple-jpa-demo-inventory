@@ -26,6 +26,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
     action(id: 'showBonus', name: 'Klik Disini Untuk Melihat Atau Mengisi Bonus...', closure: controller.showBonus)
+    action(id: 'retur', name: 'Retur', closure: controller.showRetur)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
@@ -142,6 +143,7 @@ application(title: 'Faktur Jual Oleh Sales',
                     form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
                 })
                 button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
+                button(id: 'showRetur', action: retur, visible: bind { table.isRowSelected })
                 button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                     table.isRowSelected
                 }, actionPerformed: controller.clear)

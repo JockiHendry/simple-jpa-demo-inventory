@@ -28,10 +28,10 @@
 		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
 	</field>
 	<variable name="totalSemua" class="java.lang.Number" calculation="Sum">
-		<variableExpression><![CDATA[$F{_THIS}.total()]]></variableExpression>
+		<variableExpression><![CDATA[$F{_THIS}.totalSetelahRetur()]]></variableExpression>
 	</variable>
 	<variable name="jumlahPerRegion" class="java.lang.Number" resetType="Group" resetGroup="RegionGroup" calculation="Sum">
-		<variableExpression><![CDATA[$F{_THIS}.total()]]></variableExpression>
+		<variableExpression><![CDATA[$F{_THIS}.totalSetelahRetur()]]></variableExpression>
 	</variable>
 	<group name="RegionGroup">
 		<groupExpression><![CDATA[$F{konsumen}.region]]></groupExpression>
@@ -187,7 +187,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{_THIS}.total()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{_THIS}.totalSetelahRetur()]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="408" y="1" width="64" height="16" uuid="3c83282b-3193-4fae-bebf-7dd5fad5974f"/>

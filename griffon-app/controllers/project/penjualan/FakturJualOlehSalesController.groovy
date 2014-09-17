@@ -121,7 +121,7 @@ class FakturJualOlehSalesController {
                 args.'editable' = true
             }
 
-            def dialogProps = [title: 'Detail Bonus', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Detail Bonus', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listBonus.clear()
                 model.listBonus.addAll(m.itemBarangList)
@@ -138,11 +138,21 @@ class FakturJualOlehSalesController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
                         konsumen: model.konsumen, allowTambahProduk: false, showHarga: model.showFakturJual]
-            def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
+            }
+        }
+    }
+
+    def showRetur = {
+        execInsideUISync {
+            def args = [fakturJualOlehSales: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Retur Faktur', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('retur', args, app, view, dialogProps) { m, v, c ->
+                view.table.selectionModel.selected[0] = m.fakturJualOlehSales
             }
         }
     }

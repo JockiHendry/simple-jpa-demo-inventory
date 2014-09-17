@@ -47,7 +47,7 @@ class KonsumenRepository {
         if (result.size() > 1) {
             throw new IllegalStateException("Jumlah konsumen yang ditemukan untuk [${konsumenSearch}] lebih dari satu!")
         }
-        result.empty? []: result[0].listRiwayatPoin
+        result[0]?.listRiwayatPoin?.findAll { it != null }?: []
     }
 
     public Konsumen buat(Konsumen konsumen) {

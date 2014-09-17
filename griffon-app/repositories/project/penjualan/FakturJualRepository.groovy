@@ -372,6 +372,9 @@ class FakturJualRepository {
 
     FakturJualOlehSales retur(FakturJualOlehSales faktur, PenerimaanBarang penerimaanBarang) {
         faktur = findFakturJualOlehSalesById(faktur.id)
+        if (!faktur) {
+            throw new DataTidakBolehDiubah(faktur)
+        }
         penerimaanBarang.items.each { it.produk = findProdukById(it.produk.id) }
         faktur.tambahRetur(penerimaanBarang)
         persist(penerimaanBarang)
