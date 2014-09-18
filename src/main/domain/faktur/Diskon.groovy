@@ -58,7 +58,7 @@ class Diskon implements Comparable {
     int compareTo(Object o) {
         if (!o) return -1
         if (o instanceof Diskon) {
-            return (potonganPersen?:0 - o?.potonganPersen?:0) + (potonganLangsung?:0 - o?.potonganLangsung?:0)
+            return ((potonganPersen?:0) - (o?.potonganPersen?:0)) + ((potonganLangsung?:0) - (o?.potonganLangsung?:0))
         } else {
             return -1
         }
