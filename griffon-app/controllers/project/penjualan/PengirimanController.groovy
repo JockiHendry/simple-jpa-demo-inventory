@@ -104,9 +104,11 @@ class PengirimanController {
     def cetak = { e ->
         FakturJualOlehSales selected = e instanceof FakturJualOlehSales? e: view.table.selectionModel.selected[0]
         if (selected.status == StatusFakturJual.DIANTAR) {
-            def args = [dataSource: selected, template: 'surat_jalan.json']
-            def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            execInsideUISync {
+                def args = [dataSource: selected, template: 'surat_jalan.json']
+                def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
+                DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            }
         } else {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual belum diantar sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
         }

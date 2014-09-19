@@ -72,18 +72,18 @@ class Konsumen implements Comparable {
     @NotNull
     Integer poinTerkumpul = 0
 
-    @OneToMany @JoinTable @OrderColumn(name='FAKTUR_ORDER')
-    List<FakturJualOlehSales> listFakturBelumLunas = []
-
     @ElementCollection @OrderColumn
     List<RiwayatPoin> listRiwayatPoin = []
+
+    @OneToMany @JoinTable
+    Set<FakturJualOlehSales> listFakturBelumLunas = [] as Set
 
     @ElementCollection
     Map<Produk, BigDecimal> hargaTerakhir = [:]
 
     public BigDecimal jumlahPiutang() {
         listFakturBelumLunas.sum {
-            it.piutang? it.sisaPiutang(): it.total()
+            (it.deleted == 'Y')? 0: (it.piutang ? it.sisaPiutang() : it.total())
         }?: 0
     }
 
