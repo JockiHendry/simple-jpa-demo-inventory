@@ -331,6 +331,11 @@ class FakturJualRepository {
         }
         fakturJual.deleted = 'Y'
         ApplicationHolder.application.event(new PesanStok(fakturJual, true))
+
+        // Hapus dari konsumen bila perlu
+        if (fakturJual instanceof FakturJualOlehSales) {
+            fakturJual.konsumen.hapusFakturBelumLunas(fakturJual)
+        }
         fakturJual
     }
 
