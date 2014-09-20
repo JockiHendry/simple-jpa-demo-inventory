@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -37,6 +38,13 @@ class KlaimRetur {
     BigDecimal potongan
 
     Boolean sudahDiproses = false
+
+    Object asType(Class type) {
+        if (type == ItemBarang) {
+            return new ItemBarang(produk, jumlah)
+        }
+        super.asType(type)
+    }
 
 }
 

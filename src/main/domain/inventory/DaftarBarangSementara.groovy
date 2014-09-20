@@ -22,8 +22,10 @@ class DaftarBarangSementara extends DaftarBarang {
 
     int nilaiFaktor
 
-    public DaftarBarangSementara(List<ItemBarang> items, int nilaiFaktor = 1) {
-        this.items = items
+    public DaftarBarangSementara(List items, int nilaiFaktor = 1) {
+        if (!items.empty) {
+            this.items = items.collect { it as ItemBarang }
+        }
         this.nilaiFaktor = nilaiFaktor
     }
 
@@ -40,17 +42,14 @@ class DaftarBarangSementara extends DaftarBarang {
     }
 
     DaftarBarangSementara minus(List<ItemBarang> daftarLain) {
-        List<ItemBarang> hasil = []
-        normalisasi().each { ItemBarang itemBarang ->
-            ItemBarang itemBarangLain = daftarLain.find { it.produk == itemBarang.produk }
-            if (itemBarangLain) {
-                if (itemBarangLain.jumlah < itemBarang.jumlah) {
-                    hasil << new ItemBarang(itemBarang.produk, itemBarang.jumlah - itemBarangLain.jumlah)
-                } else {
-                    // item dihapus sehingga tidak perlu ditambahkan
+        List<ItemBarang> hasil = new ArrayList<>(normalisasi())
+        daftarLain.each { ItemBarang itemBarang ->
+            ItemBarang lhs = hasil.find { it.produk == itemBarang.produk }
+            if (lhs) {
+                lhs.jumlah -= itemBarang.jumlah
+                if (lhs.jumlah == 0) {
+                    hasil.remove(lhs)
                 }
-            } else {
-                hasil << itemBarang
             }
         }
         new DaftarBarangSementara(hasil, nilaiFaktor)

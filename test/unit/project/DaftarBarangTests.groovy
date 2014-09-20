@@ -141,6 +141,22 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(5, d3.items[0].jumlah)
         assertEquals(produkC, d3.items[1].produk)
         assertEquals(30, d3.items[1].jumlah)
+
+        DaftarBarangSementara d4 = d1 - new DaftarBarangSementara([], 1)
+        assertEquals(3, d4.items.size())
+        assertEquals(produkA, d4.items[0].produk)
+        assertEquals(10, d4.items[0].jumlah)
+        assertEquals(produkB, d4.items[1].produk)
+        assertEquals(20, d4.items[1].jumlah)
+        assertEquals(produkC, d4.items[2].produk)
+        assertEquals(30, d4.items[2].jumlah)
+
+        DaftarBarangSementara d5 = d1 - new DaftarBarangSementara([new ItemBarang(produkA, 3), new ItemBarang(produkA, 2), new ItemBarang(produkB, 20)])
+        assertEquals(2, d5.items.size())
+        assertEquals(produkA, d5.items[0].produk)
+        assertEquals(5, d5.items[0].jumlah)
+        assertEquals(produkC, d5.items[1].produk)
+        assertEquals(30, d5.items[1].jumlah)
     }
 
 }

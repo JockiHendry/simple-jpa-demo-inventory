@@ -33,6 +33,7 @@ class ReturJualController {
     def view
     ReturJualRepository returJualRepository
     NomorService nomorService
+    ReturJualService returJualService
 
     void mvcGroupInit(Map args) {
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
@@ -158,7 +159,7 @@ class ReturJualController {
     def showBarangRetur = {
         execInsideUISync {
             def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false]
-            def props = [title: 'Items']
+            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
@@ -167,13 +168,20 @@ class ReturJualController {
     }
 
     def showKlaimRetur = {
+        if (!model.konsumen) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            return
+        }
         execInsideUISync {
             def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0]]
-            def props = [title: 'Items']
+            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('klaimReturAsChild', args, app, view, props) { m, v, c ->
                 model.listKlaimRetur.clear()
                 model.listKlaimRetur.addAll(m.klaimReturList)
             }
+        }
+        if (view.table.selectionModel.isSelectionEmpty()) {
+            model.potongan = returJualService.hitungPotonganPiutang(model.items, model.listKlaimRetur, model.konsumen)
         }
     }
     
