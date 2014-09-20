@@ -58,9 +58,7 @@ application(title: 'Faktur Jual Oleh Sales',
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                     doubleClickAction: showItemFaktur, enterKeyAction: showItemFaktur) {
-                glazedColumn(name: '', property: 'deleted', width: 20) {
-                    templateRenderer(exp: { it == 'Y'? 'D': ''})
-                }
+                glazedColumn(name: '', expression: { it.deleted == 'Y'? 'D': (!it.retur.empty? 'R': '')}, width: 20)
                 glazedColumn(name: 'Nomor', property: 'nomor', width: 140)
                 glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
