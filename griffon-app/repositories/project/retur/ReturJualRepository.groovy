@@ -19,6 +19,8 @@ import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.DaftarBarangSementara
+import domain.inventory.ItemBarang
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
@@ -52,6 +54,18 @@ class ReturJualRepository {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
+
+        // Validasi barang yang ditukar harus sama atau kurang dari barang yang diretur
+        List<ItemBarang> items = returJual.normalisasi()
+        List<ItemBarang> klaims = new DaftarBarangSementara(returJual.listKlaimRetur).normalisasi()
+        klaims.each { ItemBarang itemKlaim ->
+            if (itemKlaim.produk) {
+                if (items.find { (it.produk == itemKlaim.produk) && (it.jumlah >= itemKlaim.jumlah) } == null) {
+                    throw new IllegalStateException("Tidak dapat menukar lebih dari yang di-retur: ${itemKlaim.produk.nama} sejumlah ${itemKlaim.jumlah}")
+                }
+            }
+        }
+
         returJual.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL)
         returJual.konsumen = merge(returJual.konsumen)
         returJual.items.each { it.produk = merge(it.produk) }

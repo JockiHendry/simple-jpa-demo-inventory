@@ -108,12 +108,14 @@ class ReturJualController {
                 returJual = returJualRepository.update(returJual)
                 execInsideUISync { view.table.selectionModel.selected[0] = returJual }
             }
+            execInsideUISync {
+                clear()
+                view.form.getFocusTraversalPolicy().getFirstComponent(view.form).requestFocusInWindow()
+            }
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
-        }
-        execInsideUISync {
-            clear()
-            view.form.getFocusTraversalPolicy().getFirstComponent(view.form).requestFocusInWindow()
+        } catch (IllegalStateException ex) {
+            model.errors['listKlaimRetur'] = ex.message
         }
     }
 

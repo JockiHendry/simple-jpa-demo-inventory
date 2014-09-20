@@ -110,4 +110,18 @@ class ReturJualTest extends DbUnitTestCase {
         }
     }
 
+    public void testBuat() {
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        returJual.tambah(new ItemBarang(p1, 10))
+        returJual.tambah(new ItemBarang(p2, 20))
+        returJual.tambahKlaimTukar(p1, 20)
+
+        shouldFail(IllegalStateException) {
+            returJualRepository.buat(returJual)
+        }
+    }
+
 }
