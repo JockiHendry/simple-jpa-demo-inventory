@@ -76,9 +76,9 @@ application() {
             label('Perubahan:')
             panel {
                 buttonGroup(id: 'bertambahGroup')
-                radioButton('Bertambah', id: 'bertambah', buttonGroup: bertambahGroup)
+                radioButton('Bertambah', id: 'bertambah', buttonGroup: bertambahGroup, errorPath: 'bertambah')
                 bind(source: bertambah, sourceEvent: 'stateChanged', sourceValue: {bertambah.selected}, target: model, targetProperty: 'bertambah')
-                radioButton('Berkurang', id: 'berkurang', buttonGroup: bertambahGroup)
+                radioButton('Berkurang', id: 'berkurang', buttonGroup: bertambahGroup, errorPath: 'bertambah')
                 bind(source: berkurang, sourceEvent: 'stateChanged', sourceValue: {berkurang.selected}, target: model, targetProperty: 'berkurang')
             }
             errorLabel(path: 'bertambah', constraints: 'wrap')
