@@ -169,6 +169,20 @@ class ReturJualController {
         }
     }
 
+    def autoCalculate = {
+        if (!model.gudang.selectedItem) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih gudang terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        if (model.items.empty) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus mengisi item retur terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        model.listKlaimRetur.clear()
+        model.listKlaimRetur.addAll(returJualService.cariBarangYangBisaDitukar(model.items, model.gudang.selectedItem))
+        model.potongan = returJualService.hitungPotonganPiutang(model.items, model.listKlaimRetur, model.konsumen)
+    }
+
     def showKlaimRetur = {
         if (!model.konsumen) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)

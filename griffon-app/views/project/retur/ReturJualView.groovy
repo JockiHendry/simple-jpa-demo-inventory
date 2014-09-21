@@ -33,6 +33,7 @@ actions {
     action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Klaim Penukaran Barang...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
+    action(id: 'autoCalculate', name: 'Auto', closure: controller.autoCalculate, mnemonic: KeyEvent.VK_A)
 }
 
 application(title: 'Retur Jual',
@@ -101,7 +102,10 @@ application(title: 'Retur Jual',
             button(action: showBarangRetur, errorPath: 'items')
             errorLabel(path: 'items', constraints: 'wrap')
             label('Klaim:')
-            button(action: showKlaimRetur, errorPath: 'listKlaimRetur')
+            panel {
+                button(action: showKlaimRetur, errorPath: 'listKlaimRetur')
+                button(action: autoCalculate)
+            }
             errorLabel(path: 'listKlaimRetur', constraints: 'wrap')
             panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)

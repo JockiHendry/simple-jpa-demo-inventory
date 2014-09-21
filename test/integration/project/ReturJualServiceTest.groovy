@@ -15,6 +15,8 @@
  */
 package project
 
+import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
 import domain.retur.KlaimRetur
@@ -68,6 +70,36 @@ class ReturJualServiceTest extends DbUnitTestCase {
 
         listTukar = [new KlaimRetur(produk1, 10), new KlaimRetur(produk2, 20)]
         assertEquals(900000, returJualService.hitungPotonganPiutang(listKlaimRetur, listTukar, konsumen))
+    }
+
+    public void testCariBarangYangBisaDitukar() {
+        Produk produk1 = returJualService.findProdukById(-1l)
+        Produk produk2 = returJualService.findProdukById(-2l)
+        Produk produk3 = returJualService.findProdukById(-3l)
+        Produk produk4 = returJualService.findProdukById(-4l)
+        Produk produk5 = returJualService.findProdukById(-5l)
+        def items = [
+            new ItemBarang(produk1, 10),
+            new ItemBarang(produk2, 20),
+            new ItemBarang(produk3, 30)
+        ]
+        Gudang gudang = returJualService.findGudangById(-1l)
+        List hasil = returJualService.cariBarangYangBisaDitukar(items, gudang)
+
+        assertEquals(3, hasil.size())
+        assertEquals(new KlaimRetur(produk1, 10), hasil[0])
+        assertEquals(new KlaimRetur(produk2, 14), hasil[1])
+        assertEquals(new KlaimRetur(produk3, 15), hasil[2])
+
+        items = [
+            new ItemBarang(produk3, 30),
+            new ItemBarang(produk4, 40),
+            new ItemBarang(produk5, 50)
+        ]
+        hasil = returJualService.cariBarangYangBisaDitukar(items, gudang)
+
+        assertEquals(1, hasil.size())
+        assertEquals(new KlaimRetur(produk3, 15), hasil[0])
     }
 
 }
