@@ -20,6 +20,7 @@ import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.pembelian.Supplier
+import domain.retur.KlaimPotongan
 import domain.retur.ReturBeli
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
@@ -171,7 +172,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         p.tambah(fakturBeli)
 
         ReturBeli r1 = new ReturBeli(supplier: supplier)
-        r1.tambahKlaimPotongan(50000)
+        r1.tambah(new KlaimPotongan(50000))
         assertFalse(r1.sudahDiproses)
         p.bayar(r1)
         assertTrue(r1.sudahDiproses)
@@ -180,7 +181,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
         ReturBeli r2 = new ReturBeli(supplier: supplier)
-        r2.tambahKlaimPotongan(70000)
+        r2.tambah(new KlaimPotongan(70000))
         assertFalse(r2.sudahDiproses)
         p.bayar(r2)
         assertTrue(r2.sudahDiproses)
@@ -189,7 +190,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
         ReturBeli r3 = new ReturBeli(supplier: supplier)
-        r3.tambahKlaimPotongan(50000)
+        r3.tambah(new KlaimPotongan(50000))
         assertFalse(r3.sudahDiproses)
         p.bayar(r3)
         assertTrue(r3.sudahDiproses)
@@ -198,7 +199,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
         ReturBeli r4 = new ReturBeli(supplier: new Supplier())
-        r4.tambahKlaimPotongan(10000)
+        r4.tambah(new KlaimPotongan(10000))
         shouldFail(IllegalArgumentException) {
             p.bayar(r4)
         }

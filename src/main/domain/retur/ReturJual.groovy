@@ -15,15 +15,14 @@
  */
 package domain.retur
 
-import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
 import project.user.NomorService
 import simplejpa.DomainClass
-import simplejpa.SimpleJpaUtil
 import griffon.util.*
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -42,7 +41,7 @@ class ReturJual extends Retur {
         if (pengeluaranBarang) {
             throw new DataTidakBolehDiubah(this)
         }
-        List<KlaimRetur> klaimTukar = getKlaimTukar(true)
+        List<KlaimTukar> klaimTukar = getKlaim(KlaimTukar, true)
         if (klaimTukar.empty) {
             throw new UnsupportedOperationException("Tidak ada penukaran yang dapat dilakukan untuk retur jual [$nomor]")
         }
@@ -52,11 +51,9 @@ class ReturJual extends Retur {
             gudang: gudang,
             keterangan: "Retur Jual [$nomor]"
         )
-        getKlaimTukar(true).each {
-            pengeluaranBarang.tambah(new ItemBarang(it.produk, it.jumlah))
-            it.sudahDiproses = true
-        }
-        periksaSelesaiDiproses()
+        DaftarBarangSementara hasil = new DaftarBarangSementara() + klaimTukar.collect { it as ItemBarang }
+        hasil.items.each { pengeluaranBarang.tambah(it) }
+        klaimTukar.each { proses(it) }
         pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama, '[Retur Jual]')
         this.pengeluaranBarang = pengeluaranBarang
         pengeluaranBarang
@@ -66,16 +63,16 @@ class ReturJual extends Retur {
         if (konsumen==null) {
             throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
         }
-        getKlaimPotongan(true).each {
-            konsumen.potongPiutang(it.potongan)
-            it.sudahDiproses = true
+        getKlaim(KlaimPotongan, true).each { KlaimPotongan k ->
+            konsumen.potongPiutang(k.potongan)
+            proses(k)
         }
-        periksaSelesaiDiproses()
     }
 
     @Override
     int faktor() {
         1
     }
+
 }
 

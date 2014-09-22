@@ -28,8 +28,8 @@ actions {
     action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showItemBarang)
-    action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atua Mengisi Klaim Retur...', closure: controller.showKlaimRetur)
+    action(id: 'showItemBarang', name: 'Lihat Seluruh Item...', closure: controller.showItemBarang)
+    action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Kemasan Retur...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
 }
 
@@ -89,12 +89,9 @@ application(title: 'Retur Beli',
             label('Keterangan:')
             textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
             errorLabel(path: 'keterangan', constraints: 'wrap')
-            label('Items:')
-            button(action: showItemBarang, errorPath: 'items')
-            errorLabel(path: 'items', constraints: 'wrap')
-            label('Klaim:')
-            button(action: showKlaimRetur, errorPath: 'listKlaimRetur')
-            errorLabel(path: 'listKlaimRetur', constraints: 'wrap')
+            label('Kemasan:', visible: bind { model.showSave })
+            button(action: showKlaimRetur, errorPath: 'listKlaimRetur', visible: bind { model.showSave })
+            errorLabel(path: 'listKlaimRetur', constraints: 'wrap', visible: bind { model.showSave })
 
             panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
@@ -107,9 +104,10 @@ application(title: 'Retur Beli',
             }
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(action: save, visible: bind{ model.showSave })
+                button(action: save, visible: bind('deleted', source: model, converter: { !it && model.showSave }))
+                button(action: showItemBarang, visible: bind('isRowSelected', source: table))
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
-                button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: delete)
+                button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave && !model.deleted }), action: delete)
                 button(visible: bind{ model.showPenukaran }, action: penukaran)
             }
         }

@@ -90,7 +90,7 @@ class ReturJualController {
         ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen, gudang: model.gudang.selectedItem)
         returJual.listKlaimRetur.addAll(model.listKlaimRetur)
         if (model.potongan > 0) {
-            returJual.tambahKlaimPotongan(model.potongan)
+            returJual.tambah(new KlaimPotongan(model.potongan))
         }
 
         if (!returJualRepository.validate(returJual, Default, model)) return
@@ -236,8 +236,8 @@ class ReturJualController {
                 model.items.clear()
                 model.items.addAll(selected.items)
                 model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(selected.getKlaimTukar())
-                model.potongan = selected.getKlaimPotongan().sum { it.potongan }
+                model.listKlaimRetur.addAll(selected.getKlaim(KlaimTukar))
+                model.potongan = selected.getKlaim(KlaimPotongan).sum { it.potongan }
                 model.konsumen = selected.konsumen
                 model.gudang.selectedItem = selected.gudang
                 model.created = selected.createdDate

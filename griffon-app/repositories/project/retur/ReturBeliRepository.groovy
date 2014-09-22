@@ -29,8 +29,6 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturBeliRepository {
 
-    NomorService nomorService
-
     List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
@@ -69,7 +67,7 @@ class ReturBeliRepository {
         if (findReturBeliByNomor(returBeli.nomor)) {
             throw new DataDuplikat(returBeli)
         }
-        returBeli.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_BELI)
+        returBeli.nomor = ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.RETUR_BELI)
         returBeli.items.each { it.produk = merge(it.produk) }
         persist(returBeli)
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli))
@@ -86,6 +84,11 @@ class ReturBeliRepository {
             tanggal = returBeli.tanggal
             supplier = merge(returBeli.supplier)
             keterangan = returBeli.keterangan
+            listKlaimRetur.clear()
+            items.clear()
+            returBeli.listKlaimRetur.each {
+                tambah(merge(it))
+            }
         }
         mergedRetur
     }

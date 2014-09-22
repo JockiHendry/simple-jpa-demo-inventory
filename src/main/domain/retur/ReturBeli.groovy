@@ -15,14 +15,16 @@
  */
 package domain.retur
 
+import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
 import groovy.transform.*
 import project.user.NomorService
 import simplejpa.DomainClass
-import simplejpa.SimpleJpaUtil
+
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.joda.time.*
@@ -37,6 +39,27 @@ class ReturBeli extends Retur {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PenerimaanBarang penerimaanBarang
 
+    void tambah(KlaimKemasan kemasanRetur) {
+        if (listKlaimRetur.find { (it instanceof KlaimKemasan) && (it.nomor == kemasanRetur.nomor)}) {
+            throw new DataDuplikat(kemasanRetur)
+        }
+        if (kemasanRetur.nomor == null) {
+            kemasanRetur.nomor = listKlaimRetur.size() + 1
+        }
+        listKlaimRetur << kemasanRetur
+        def itemsBaru = (toDaftarBarangSementara() + kemasanRetur.items).items
+        items.clear()
+        items.addAll(itemsBaru)
+    }
+
+    void hapus(KlaimKemasan kemasanRetur) {
+        if (listKlaimRetur.remove(kemasanRetur)) {
+            def itemsBaru = (toDaftarBarangSementara() - kemasanRetur.items).items
+            items.clear()
+            items.addAll(itemsBaru)
+        }
+    }
+
     PenerimaanBarang tukar() {
         if (this.penerimaanBarang) {
             throw new DataTidakBolehDiubah(this)
@@ -47,12 +70,14 @@ class ReturBeli extends Retur {
             gudang: gudang,
             keterangan: "Retur Beli [$nomor]"
         )
-        getKlaimTukar(true).each {
-            penerimaanBarang.tambah(new ItemBarang(it.produk, it.jumlah))
-            it.sudahDiproses = true
+        List<KlaimKemasan> listKlaimKemasan = getKlaim(KlaimKemasan, true)
+        DaftarBarangSementara hasil = new DaftarBarangSementara()
+        listKlaimKemasan.each {
+            hasil = hasil + it.items
+            proses(it)
         }
+        hasil.items.each { penerimaanBarang.tambah(it) }
         this.penerimaanBarang = penerimaanBarang
-        periksaSelesaiDiproses()
         penerimaanBarang
     }
 
@@ -60,5 +85,6 @@ class ReturBeli extends Retur {
     int faktor() {
         -1
     }
+
 }
 

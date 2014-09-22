@@ -25,6 +25,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
 class ReturBeliController {
 
@@ -97,11 +98,11 @@ class ReturBeliController {
                 return
             }
         }
-        ReturBeli returBeli = new ReturBeli(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), supplier: model.supplier.selectedItem)
+        ReturBeli returBeli = new ReturBeli(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, supplier: model.supplier.selectedItem)
         returBeli.gudang = gudangRepository.cariGudangUtama()
-        returBeli.listKlaimRetur.addAll(model.listKlaimRetur)
+        model.listKlaimRetur.each { returBeli.tambah(it) }
         if (model.potongan > 0) {
-            returBeli.tambahKlaimPotongan(model.potongan)
+            returBeli.tambah(new KlaimPotongan(model.potongan))
         }
 
         if (!returBeliRepository.validate(returBeli, Default, model)) return
@@ -154,13 +155,9 @@ class ReturBeliController {
     }
 
     def showItemBarang = {
-        if (model.supplier.selectedItem == null) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih supplier terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
-            return
-        }
         execInsideUISync {
-            def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false, showReturOnly: true, supplierSearch: model.supplier.selectedItem]
-            def props = [title: 'Items']
+            def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false, showReturOnly: true, supplierSearch: model.supplier.selectedItem, editable: false]
+            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
@@ -174,11 +171,14 @@ class ReturBeliController {
             return
         }
         execInsideUISync {
-            def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0], showReturOnly: true, supplierSearch: model.supplier.selectedItem]
-            def props = [title: 'List Klaim Retur']
-            DialogUtils.showMVCGroup('klaimReturAsChild', args, app, view, props) { m, v, c ->
+            def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0], supplierSearch: model.supplier.selectedItem]
+            def props = [title: 'List Klaim Retur', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('kemasanRetur', args, app, view, props) { m, v, c ->
                 model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(m.klaimReturList)
+                model.listKlaimRetur.addAll(m.kemasanReturList)
+                if (m.parent) {
+                    view.table.selectionModel.selected[0] = m.parent
+                }
             }
         }
     }
@@ -197,6 +197,7 @@ class ReturBeliController {
             model.createdBy = null
             model.modified = null
             model.modifiedBy = null
+            model.deleted = false
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -216,13 +217,14 @@ class ReturBeliController {
                 model.items.clear()
                 model.items.addAll(selected.items)
                 model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(selected.getKlaimTukar())
-                model.potongan = selected.getKlaimPotongan().sum { it.potongan }
+                model.listKlaimRetur.addAll(selected.getKlaim(KlaimKemasan))
+                model.potongan = selected.getKlaim(KlaimPotongan).sum { it.potongan }
                 model.supplier.selectedItem = selected.supplier
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
+                model.deleted = (selected.deleted == 'Y')
             }
         }
     }

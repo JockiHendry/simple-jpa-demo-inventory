@@ -25,19 +25,18 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-abstract class KlaimRetur {
+@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
+class KlaimTukar extends KlaimRetur {
 
-    @NotNull
-    Boolean sudahDiproses = false
+    @ManyToOne @NotNull
+    Produk produk
 
-    void proses() {
-        sudahDiproses = true
-    }
+    @Min(0l) @NotNull
+    Integer jumlah
 
     Object asType(Class type) {
         if (type == ItemBarang) {
-            return new ItemBarang(null, null)
+            return new ItemBarang(produk, jumlah)
         }
         super.asType(type)
     }

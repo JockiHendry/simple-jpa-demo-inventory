@@ -16,31 +16,27 @@
 package domain.retur
 
 import domain.inventory.ItemBarang
-import domain.inventory.Produk
-import groovy.transform.*
+import groovy.transform.Canonical
+import groovy.transform.EqualsAndHashCode
+import org.hibernate.validator.constraints.NotEmpty
 import simplejpa.DomainClass
-import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
+import javax.persistence.ElementCollection
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.ManyToOne
+import javax.validation.constraints.NotNull
 
-@DomainClass @Entity @Canonical
-abstract class KlaimRetur {
+@DomainClass @Entity @Canonical(excludes='items') @EqualsAndHashCode(callSuper=true, excludes='items')
+class KlaimKemasan extends KlaimRetur {
 
     @NotNull
-    Boolean sudahDiproses = false
+    Integer nomor
 
-    void proses() {
-        sudahDiproses = true
-    }
+    @ElementCollection(fetch=FetchType.EAGER) @NotEmpty
+    Set<ItemBarang> items = [] as Set
 
-    Object asType(Class type) {
-        if (type == ItemBarang) {
-            return new ItemBarang(null, null)
-        }
-        super.asType(type)
+    void tambah(ItemBarang itemBarang) {
+        items << itemBarang
     }
 
 }
-

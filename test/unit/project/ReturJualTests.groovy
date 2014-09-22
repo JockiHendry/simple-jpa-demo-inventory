@@ -25,7 +25,9 @@ import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.penjualan.Sales
+import domain.retur.KlaimPotongan
 import domain.retur.KlaimRetur
+import domain.retur.KlaimTukar
 import domain.retur.ReturBeli
 import domain.retur.ReturJual
 import griffon.test.GriffonUnitTestCase
@@ -86,11 +88,11 @@ class ReturJualTests extends GriffonUnitTestCase {
         retur.tambah(new ItemBarang(produk1, 1))
         retur.tambah(new ItemBarang(produk2, 3))
         retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambahKlaimTukar(produk1, 1)
-        retur.tambahKlaimTukar(produk2, 3)
+        retur.tambah(new KlaimTukar(produk1, 1))
+        retur.tambah(new KlaimTukar(produk2, 3))
 
         PengeluaranBarang pengeluaranBarang = retur.tukar()
-        assertTrue(retur.getKlaimTukar(true).empty)
+        assertTrue(retur.getKlaim(KlaimTukar, true).empty)
         assertTrue(pengeluaranBarang.sudahDiterima())
         List<ItemBarang> items = pengeluaranBarang.items
         assertEquals(2, items.size())
@@ -109,10 +111,10 @@ class ReturJualTests extends GriffonUnitTestCase {
         retur.tambah(new ItemBarang(produk1, 1))
         retur.tambah(new ItemBarang(produk2, 3))
         retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambahKlaimPotongan(10000)
-        retur.tambahKlaimPotongan(20000)
+        retur.tambah(new KlaimPotongan(10000))
+        retur.tambah(new KlaimPotongan(20000))
 
-        List<KlaimRetur> hasil = retur.getKlaimPotongan()
+        List<KlaimRetur> hasil = retur.getKlaim(KlaimPotongan)
         assertEquals(2, hasil.size())
         assertEquals(10000, hasil[0].potongan)
         assertEquals(20000, hasil[1].potongan)
@@ -127,9 +129,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         retur.tambah(new ItemBarang(produk1, 1))
         retur.tambah(new ItemBarang(produk2, 3))
         retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambahKlaimTukar(produk1, 1)
+        retur.tambah(new KlaimTukar(produk1, 1))
 
-        List<KlaimRetur> hasil = retur.getKlaimTukar()
+        List<KlaimRetur> hasil = retur.getKlaim(KlaimTukar)
         assertEquals(1, hasil.size())
         assertEquals(produk1, hasil[0].produk)
         assertEquals(1, hasil[0].jumlah)
@@ -152,7 +154,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(500000, konsumen.jumlahPiutang())
 
         ReturJual r = new ReturJual(konsumen: konsumen)
-        r.tambahKlaimPotongan(250000)
+        r.tambah(new KlaimPotongan(250000))
         assertEquals(250000, r.sisaPotongan())
         r.potongPiutang()
         assertEquals(0, r.sisaPotongan())

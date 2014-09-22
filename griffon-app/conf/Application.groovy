@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "kemasanRetur"
+    'kemasanRetur' {
+        model      = 'project.retur.KemasanReturModel'
+        view       = 'project.retur.KemasanReturView'
+        controller = 'project.retur.KemasanReturController'
+    }
+
     // MVC Group for "retur"
     'retur' {
         model      = 'project.penjualan.ReturModel'

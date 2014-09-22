@@ -15,8 +15,6 @@
  */
 package domain.retur
 
-import domain.inventory.ItemBarang
-import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -25,22 +23,11 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-abstract class KlaimRetur {
+@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
+class KlaimPotongan extends KlaimRetur {
 
-    @NotNull
-    Boolean sudahDiproses = false
-
-    void proses() {
-        sudahDiproses = true
-    }
-
-    Object asType(Class type) {
-        if (type == ItemBarang) {
-            return new ItemBarang(null, null)
-        }
-        super.asType(type)
-    }
+    @Min(0l) @NotNull
+    BigDecimal potongan
 
 }
 

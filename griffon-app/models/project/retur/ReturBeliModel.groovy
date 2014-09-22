@@ -29,6 +29,7 @@ class ReturBeliModel {
     ReturBeliViewMode mode
     @Bindable boolean showSave
     @Bindable boolean showPenukaran
+    @Bindable boolean deleted
     Supplier forSupplier
 
     @Bindable Long id
@@ -42,7 +43,7 @@ class ReturBeliModel {
     @Bindable LocalDate tanggal
     @Bindable String keterangan
     List<ItemBarang> items = []
-    List<KlaimRetur> listKlaimRetur = []
+    List<KlaimKemasan> listKlaimRetur = []
     @Bindable BigDecimal potongan
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)

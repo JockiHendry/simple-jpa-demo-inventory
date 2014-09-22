@@ -27,47 +27,34 @@ import org.joda.time.*
 @MappedSuperclass @Canonical(excludes='listKlaimRetur')
 abstract class Retur extends DaftarBarang {
 
-    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @OrderColumn
     List<KlaimRetur> listKlaimRetur = []
 
     @NotNull
     Boolean sudahDiproses = false
 
-    void periksaSelesaiDiproses() {
-        if (!sudahDiproses) {
-            sudahDiproses = listKlaimRetur.every { it.sudahDiproses }
-        }
+    void tambah(KlaimRetur klaimRetur) {
+        listKlaimRetur << klaimRetur
     }
 
-    void tambahKlaimPotongan(BigDecimal jumlah) {
-        listKlaimRetur << new KlaimRetur(potongan: jumlah)
-    }
-
-    void tambahKlaimTukar(Produk produk, int jumlah) {
-        listKlaimRetur << new KlaimRetur(produk, jumlah)
-    }
-
-    List<KlaimRetur> getKlaimTukar(boolean hanyaBelumDiproses = false) {
-        List<KlaimRetur> hasil = []
-        hasil.addAll(listKlaimRetur.findAll {it.produk!=null && (hanyaBelumDiproses? it.sudahDiproses==false: true)})
-        hasil
-    }
-
-    List<KlaimRetur> getKlaimPotongan(boolean hanyaBelumDiproses = false) {
-        List<KlaimRetur> hasil = []
-        hasil.addAll(listKlaimRetur.findAll {it.potongan!=null && (hanyaBelumDiproses? it.sudahDiproses==false: true)})
-        hasil
+    List<KlaimRetur> getKlaim(Class jenis, boolean hanyaBelumDiproses = false) {
+        new ArrayList<KlaimRetur>(listKlaimRetur.findAll {
+            (it.class == jenis) && (hanyaBelumDiproses? it.sudahDiproses==false: true)
+        })
     }
 
     BigDecimal sisaPotongan() {
-        getKlaimPotongan(true).sum { it.potongan }?: 0
+        getKlaim(KlaimPotongan, true).sum { KlaimPotongan k -> k.potongan }?: 0
     }
 
     void prosesSisaPotongan() {
-        getKlaimPotongan(true).each { it.sudahDiproses = true }
-        periksaSelesaiDiproses()
+        getKlaim(KlaimPotongan, true).each { proses(it) }
     }
 
+    void proses(KlaimRetur klaimRetur) {
+        klaimRetur.proses()
+        sudahDiproses = listKlaimRetur.every { it.sudahDiproses }
+    }
 
 }
 

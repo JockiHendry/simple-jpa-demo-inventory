@@ -20,14 +20,12 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
+import domain.retur.KlaimKemasan
+import domain.retur.KlaimPotongan
 import domain.retur.KlaimRetur
 import domain.retur.ReturBeli
-import griffon.core.GriffonApplication
-import griffon.core.GriffonService
-import griffon.core.ServiceManager
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
-import griffon.util.ApplicationHolder
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import project.user.NomorService
@@ -82,11 +80,17 @@ class ReturBeliTests extends GriffonUnitTestCase {
         returBeli.tambah(new ItemBarang(produk1, 10))
         returBeli.tambah(new ItemBarang(produk2, 20))
         returBeli.tambah(new ItemBarang(produk3, 30))
-        returBeli.tambahKlaimTukar(produk1, 10)
-        returBeli.tambahKlaimTukar(produk2, 20)
+
+        KlaimKemasan klaimKemasan1 = new KlaimKemasan()
+        klaimKemasan1.tambah(new ItemBarang(produk1, 5))
+        returBeli.tambah(klaimKemasan1)
+        KlaimKemasan klaimKemasan2 = new KlaimKemasan()
+        klaimKemasan2.tambah(new ItemBarang(produk1, 5))
+        klaimKemasan2.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(klaimKemasan2)
 
         PenerimaanBarang penerimaanBarang = returBeli.tukar()
-        assertTrue(returBeli.getKlaimTukar(true).empty)
+        assertTrue(returBeli.getKlaim(KlaimKemasan, true).empty)
         assertEquals(penerimaanBarang, returBeli.penerimaanBarang)
         assertNotNull(penerimaanBarang.nomor)
         assertEquals(LocalDate.now(), penerimaanBarang.tanggal)
@@ -107,12 +111,11 @@ class ReturBeliTests extends GriffonUnitTestCase {
         returBeli.tambah(new ItemBarang(produk1, 10))
         returBeli.tambah(new ItemBarang(produk2, 20))
         returBeli.tambah(new ItemBarang(produk3, 30))
-        returBeli.tambahKlaimPotongan(10000)
-        returBeli.tambahKlaimTukar(produk1, 10)
+        returBeli.tambah(new KlaimPotongan(10000))
         assertEquals(10000, returBeli.sisaPotongan())
 
-        KlaimRetur klaim1 = new KlaimRetur(sudahDiproses: true, potongan: 20000)
-        returBeli.listKlaimRetur << klaim1
+        KlaimPotongan klaim1 = new KlaimPotongan(sudahDiproses: true, potongan: 20000)
+        returBeli.tambah(klaim1)
         assertEquals(10000, returBeli.sisaPotongan())
     }
 
@@ -125,11 +128,79 @@ class ReturBeliTests extends GriffonUnitTestCase {
         returBeli.tambah(new ItemBarang(produk1, 10))
         returBeli.tambah(new ItemBarang(produk2, 20))
         returBeli.tambah(new ItemBarang(produk3, 30))
-        returBeli.tambahKlaimPotongan(10000)
-        returBeli.tambahKlaimTukar(produk1, 10)
+        returBeli.tambah(new KlaimPotongan(10000))
         assertEquals(10000, returBeli.sisaPotongan())
         returBeli.prosesSisaPotongan()
         assertEquals(0, returBeli.sisaPotongan())
     }
+
+    public void testTambahKemasanRetur() {
+        Produk produk1 = new Produk('Produk A')
+        Produk produk2 = new Produk('Produk B')
+        Produk produk3 = new Produk('Produk C')
+        Supplier supplier = new Supplier()
+        ReturBeli returBeli = new ReturBeli(supplier: supplier)
+
+        KlaimKemasan kemasan1 = new KlaimKemasan()
+        kemasan1.tambah(new ItemBarang(produk1, 10))
+        kemasan1.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(kemasan1)
+        assertEquals(1, returBeli.listKlaimRetur.size())
+        assertEquals(1, returBeli.listKlaimRetur[0].nomor)
+        assertEquals(2, returBeli.items.size())
+        assertEquals(new ItemBarang(produk1, 10), returBeli.items[0])
+        assertEquals(new ItemBarang(produk2, 20), returBeli.items[1])
+
+        KlaimKemasan kemasan2 = new KlaimKemasan()
+        kemasan2.tambah(new ItemBarang(produk1, 5))
+        kemasan2.tambah(new ItemBarang(produk2, 6))
+        returBeli.tambah(kemasan2)
+        assertEquals(2, returBeli.listKlaimRetur.size())
+        assertEquals(2, returBeli.listKlaimRetur[1].nomor)
+        assertEquals(2, returBeli.items.size())
+        assertEquals(new ItemBarang(produk1, 15), returBeli.items[0])
+        assertEquals(new ItemBarang(produk2, 26), returBeli.items[1])
+
+        KlaimKemasan kemasan3 = new KlaimKemasan()
+        kemasan3.tambah(new ItemBarang(produk2, 5))
+        kemasan3.tambah(new ItemBarang(produk3, 10))
+        returBeli.tambah(kemasan3)
+        assertEquals(3, returBeli.listKlaimRetur.size())
+        assertEquals(3, returBeli.listKlaimRetur[2].nomor)
+        assertEquals(3, returBeli.items.size())
+        assertEquals(new ItemBarang(produk1, 15), returBeli.items[0])
+        assertEquals(new ItemBarang(produk2, 31), returBeli.items[1])
+        assertEquals(new ItemBarang(produk3, 10), returBeli.items[2])
+    }
+
+    public void testHapusKemasanRetur() {
+        Produk produk1 = new Produk('Produk A')
+        Produk produk2 = new Produk('Produk B')
+        Produk produk3 = new Produk('Produk C')
+        Supplier supplier = new Supplier()
+        ReturBeli returBeli = new ReturBeli(supplier: supplier)
+
+        KlaimKemasan kemasan1 = new KlaimKemasan()
+        kemasan1.tambah(new ItemBarang(produk1, 10))
+        kemasan1.tambah(new ItemBarang(produk2, 20))
+        returBeli.tambah(kemasan1)
+        KlaimKemasan kemasan2 = new KlaimKemasan()
+        kemasan2.tambah(new ItemBarang(produk1, 5))
+        kemasan2.tambah(new ItemBarang(produk2, 6))
+        kemasan2.tambah(new ItemBarang(produk3, 10))
+        returBeli.tambah(kemasan2)
+        KlaimKemasan kemasan3 = new KlaimKemasan()
+        kemasan3.tambah(new ItemBarang(produk2, 5))
+        returBeli.tambah(kemasan3)
+
+        returBeli.hapus(kemasan2)
+        assertEquals(2, returBeli.listKlaimRetur.size())
+        assertEquals(1, returBeli.listKlaimRetur[0].nomor)
+        assertEquals(3, returBeli.listKlaimRetur[1].nomor)
+        assertEquals(2, returBeli.items.size())
+        assertEquals(new ItemBarang(produk1, 10), returBeli.items[0])
+        assertEquals(new ItemBarang(produk2, 25), returBeli.items[1])
+    }
+
 
 }

@@ -21,6 +21,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
 import domain.retur.KlaimRetur
+import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -58,7 +59,7 @@ class ReturJualService {
             Produk produk = findProdukById(itemBarang.produk.id)
             int jumlahTersedia = produk.stok(gudang).jumlah
             if (jumlahTersedia > 0) {
-                hasil << new KlaimRetur(itemBarang.produk, (jumlahTersedia >= itemBarang.jumlah)? itemBarang.jumlah: jumlahTersedia)
+                hasil << new KlaimTukar(itemBarang.produk, (jumlahTersedia >= itemBarang.jumlah)? itemBarang.jumlah: jumlahTersedia)
             }
         }
         hasil

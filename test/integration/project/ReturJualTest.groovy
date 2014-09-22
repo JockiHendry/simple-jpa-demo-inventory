@@ -19,6 +19,7 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
+import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -56,7 +57,7 @@ class ReturJualTest extends DbUnitTestCase {
         returJual.tambah(new ItemBarang(p1, 10))
         returJual.tambah(new ItemBarang(p2, 20))
         returJual.tambah(new ItemBarang(p3, 30))
-        returJual.tambahKlaimTukar(p1, 1)
+        returJual.tambah(new KlaimTukar(p1, 1))
         returJualRepository.buat(returJual)
 
         // Periksa nilai jumlah retur di produk
@@ -87,7 +88,7 @@ class ReturJualTest extends DbUnitTestCase {
             returJual = returJualRepository.tukar(returJual)
 
             assertTrue(returJual.sudahDiproses)
-            assertTrue(returJual.getKlaimTukar(true).empty)
+            assertTrue(returJual.getKlaim(KlaimTukar, true).empty)
             assertNotNull(returJual.pengeluaranBarang)
             assertTrue(returJual.pengeluaranBarang.sudahDiterima())
 
@@ -117,7 +118,7 @@ class ReturJualTest extends DbUnitTestCase {
         ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
         returJual.tambah(new ItemBarang(p1, 10))
         returJual.tambah(new ItemBarang(p2, 20))
-        returJual.tambahKlaimTukar(p1, 20)
+        returJual.tambah(new KlaimTukar(p1, 20))
 
         shouldFail(IllegalStateException) {
             returJualRepository.buat(returJual)

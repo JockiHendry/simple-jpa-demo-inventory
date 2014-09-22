@@ -47,19 +47,19 @@ class KlaimReturAsChildController {
             }
         }
 
-        KlaimRetur klaimRetur = new KlaimRetur(produk: model.produk, jumlah: model.jumlah)
+        KlaimTukar klaimTukar = new KlaimTukar(produk: model.produk, jumlah: model.jumlah)
 
-        if (!returJualRepository.validate(klaimRetur, Default, model)) return
+        if (!returJualRepository.validate(klaimTukar, Default, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             // Insert operation
             execInsideUISync {
-                model.klaimReturList << klaimRetur
+                model.klaimReturList << klaimTukar
                 view.table.changeSelection(model.klaimReturList.size() - 1, 0, false, false)
             }
         } else {
             // Update operation
-            KlaimRetur selectedKlaimRetur = view.table.selectionModel.selected[0]
+            KlaimTukar selectedKlaimRetur = view.table.selectionModel.selected[0]
             selectedKlaimRetur.produk = model.produk
             selectedKlaimRetur.jumlah = model.jumlah
         }
@@ -112,7 +112,7 @@ class KlaimReturAsChildController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                KlaimRetur selected = view.table.selectionModel.selected[0]
+                KlaimTukar selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
 
                 model.produk = selected.produk

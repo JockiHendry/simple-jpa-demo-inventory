@@ -19,6 +19,8 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.Supplier
+import domain.retur.KlaimKemasan
+import domain.retur.KlaimTukar
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -56,7 +58,7 @@ class ReturBeliTest extends DbUnitTestCase {
         returBeli.tambah(new ItemBarang(p1, 10))
         returBeli.tambah(new ItemBarang(p2, 20))
         returBeli.tambah(new ItemBarang(p3, 30))
-        returBeli.tambahKlaimTukar(p1, 1)
+        returBeli.tambah(new KlaimTukar(p1, 1))
         returBeliRepository.buat(returBeli)
 
         // Periksa nilai jumlah retur di produk
@@ -88,7 +90,7 @@ class ReturBeliTest extends DbUnitTestCase {
             returBeli = returBeliRepository.tukar(returBeli)
 
             assertTrue(returBeli.sudahDiproses)
-            assertTrue(returBeli.getKlaimTukar(true).empty)
+            assertTrue(returBeli.getKlaim(KlaimKemasan, true).empty)
             assertNotNull(returBeli.penerimaanBarang)
 
             Gudang g = findGudangById(-1l)
@@ -97,10 +99,8 @@ class ReturBeliTest extends DbUnitTestCase {
             Produk p3 = findProdukById(-3l)
 
             assertEquals(2, returBeli.penerimaanBarang.items.size())
-            assertEquals(p1, returBeli.penerimaanBarang.items[0].produk)
-            assertEquals(5, returBeli.penerimaanBarang.items[0].jumlah)
-            assertEquals(p2, returBeli.penerimaanBarang.items[1].produk)
-            assertEquals(3, returBeli.penerimaanBarang.items[1].jumlah)
+            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p1,5)))
+            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p2,3)))
 
             assertEquals(15, p1.stok(g).jumlah)
             assertEquals(17, p2.stok(g).jumlah)

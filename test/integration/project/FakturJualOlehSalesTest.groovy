@@ -148,7 +148,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         Produk produkA = fakturJualRepository.findProdukById(-1l)
         Produk produkB = fakturJualRepository.findProdukById(-2l)
         Sales sales = fakturJualRepository.findSalesById(-1l)
-        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-4l)
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
         fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
@@ -163,7 +163,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(LocalDate.now().plusDays(30), fakturJualOlehSales.jatuhTempo)
 
         // Periksa apakah faktur ada di konsumen
-        konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-1l)
+        konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-4l)
         assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
 
         // Periksa apakah harga terakhir terubah
