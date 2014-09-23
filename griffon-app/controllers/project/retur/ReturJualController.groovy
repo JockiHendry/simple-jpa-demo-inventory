@@ -200,6 +200,14 @@ class ReturJualController {
             model.potongan = returJualService.hitungPotonganPiutang(model.items, model.listKlaimRetur, model.konsumen)
         }
     }
+
+    def cetak = { e ->
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual.json']
+            def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+        }
+    }
     
     def clear = {
         execInsideUISync {

@@ -34,6 +34,7 @@ actions {
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
     action(id: 'autoCalculate', name: 'Auto', closure: controller.autoCalculate, mnemonic: KeyEvent.VK_A)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Retur Jual',
@@ -119,6 +120,7 @@ application(title: 'Retur Jual',
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(action: save, visible: bind{ model.showSave })
+                button(action: cetak, visible: bind { table.isRowSelected && model.showSave })
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: delete)
                 button(visible: bind{ model.allowPenukaran }, action: penukaran)

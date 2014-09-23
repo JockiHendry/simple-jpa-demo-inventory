@@ -107,7 +107,7 @@ application(title: 'Retur Beli',
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(action: save, visible: bind('showSave', source: model))
                 button(action: showItemBarang, visible: bind('isRowSelected', source: table))
-                button(action: cetak, visible: bind('isRowSelected', source: table))
+                button(action: cetak, visible: bind{ table.isRowSelected && model.showSave })
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave && !model.deleted }), action: delete)
                 button(visible: bind{ model.showPenukaran }, action: penukaran)
