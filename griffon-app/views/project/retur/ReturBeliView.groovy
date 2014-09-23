@@ -31,6 +31,7 @@ actions {
     action(id: 'showItemBarang', name: 'Lihat Seluruh Item...', closure: controller.showItemBarang)
     action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Kemasan Retur...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Retur Beli',
@@ -104,8 +105,9 @@ application(title: 'Retur Beli',
             }
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button(action: save, visible: bind('deleted', source: model, converter: { !it && model.showSave }))
+                button(action: save, visible: bind('showSave', source: model))
                 button(action: showItemBarang, visible: bind('isRowSelected', source: table))
+                button(action: cetak, visible: bind('isRowSelected', source: table))
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave && !model.deleted }), action: delete)
                 button(visible: bind{ model.showPenukaran }, action: penukaran)

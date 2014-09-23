@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "previewFaktur"
+    'previewFaktur' {
+        model      = 'project.laporan.PreviewFakturModel'
+        view       = 'project.laporan.PreviewFakturView'
+        controller = 'project.laporan.PreviewFakturController'
+    }
+
     // MVC Group for "kemasanRetur"
     'kemasanRetur' {
         model      = 'project.retur.KemasanReturModel'

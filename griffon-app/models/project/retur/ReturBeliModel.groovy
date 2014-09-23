@@ -29,7 +29,7 @@ class ReturBeliModel {
     ReturBeliViewMode mode
     @Bindable boolean showSave
     @Bindable boolean showPenukaran
-    @Bindable boolean deleted
+    @Bindable boolean deleted = false
     Supplier forSupplier
 
     @Bindable Long id

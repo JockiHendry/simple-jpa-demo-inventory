@@ -183,6 +183,14 @@ class ReturBeliController {
         }
     }
 
+    def cetak = { e ->
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_retur_beli.jasper']
+            def dialogProps = [title: 'Preview Faktur Retur Beli', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewFaktur', args, app, view, dialogProps)
+        }
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null

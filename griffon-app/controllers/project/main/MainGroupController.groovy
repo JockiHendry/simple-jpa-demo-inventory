@@ -88,7 +88,7 @@ class MainGroupController {
             view.mainPanel.revalidate()
             view.mainPanel.repaint()
             BusyLayerUI.instance.hide()                        
-            view.mainFrame.title = "${app.config.application.title} ${app.metadata.applicationVersion}: ${GriffonNameUtils.getNaturalName(groupId)}"
+            view.mainFrame.title = "${app.config.application.title} ${app.metadata.getApplicationVersion()}: ${GriffonNameUtils.getNaturalName(groupId)}"
         }
     }
 
