@@ -140,6 +140,11 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(new ItemBarang(produkA, 15), hasil.items[0])
         assertEquals(new ItemBarang(produkB, 30), hasil.items[1])
         assertEquals(new ItemBarang(produkC, 20), hasil.items[2])
+
+        // Pastikan bahwa lhs tidak berubah
+        assertEquals(2, d1.items.size())
+        assertEquals(new ItemBarang(produkA, 10), d1.items[0])
+        assertEquals(new ItemBarang(produkB, 20), d1.items[1])
     }
 
     void testMinus() {
@@ -165,6 +170,12 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(produkC, d3.items[1].produk)
         assertEquals(30, d3.items[1].jumlah)
 
+        // Pastikan bahwa lhs tidak berubah
+        assertEquals(3, d1.items.size())
+        assertEquals(new ItemBarang(produkA, 10), d1.items[0])
+        assertEquals(new ItemBarang(produkB, 20), d1.items[1])
+        assertEquals(new ItemBarang(produkC, 30), d1.items[2])
+
         DaftarBarangSementara d4 = d1 - new DaftarBarangSementara([], 1)
         assertEquals(3, d4.items.size())
         assertEquals(produkA, d4.items[0].produk)
@@ -174,12 +185,24 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(produkC, d4.items[2].produk)
         assertEquals(30, d4.items[2].jumlah)
 
+        // Pastikan bahwa lhs tidak berubah
+        assertEquals(3, d1.items.size())
+        assertEquals(new ItemBarang(produkA, 10), d1.items[0])
+        assertEquals(new ItemBarang(produkB, 20), d1.items[1])
+        assertEquals(new ItemBarang(produkC, 30), d1.items[2])
+
         DaftarBarangSementara d5 = d1 - new DaftarBarangSementara([new ItemBarang(produkA, 3), new ItemBarang(produkA, 2), new ItemBarang(produkB, 20)])
         assertEquals(2, d5.items.size())
         assertEquals(produkA, d5.items[0].produk)
         assertEquals(5, d5.items[0].jumlah)
         assertEquals(produkC, d5.items[1].produk)
         assertEquals(30, d5.items[1].jumlah)
+
+        // Pastikan bahwa lhs tidak berubah
+        assertEquals(3, d1.items.size())
+        assertEquals(new ItemBarang(produkA, 10), d1.items[0])
+        assertEquals(new ItemBarang(produkB, 20), d1.items[1])
+        assertEquals(new ItemBarang(produkC, 30), d1.items[2])
     }
 
 }
