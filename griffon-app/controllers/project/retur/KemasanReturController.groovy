@@ -43,7 +43,7 @@ class KemasanReturController {
                 return
             }
         }
-        KlaimKemasan kemasanRetur = new KlaimKemasan(id: model.id, nomor: model.nomor, items: new ArrayList(model.items))
+        KlaimKemasan kemasanRetur = new KlaimKemasan(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items))
 
         if (!returBeliRepository.validate(kemasanRetur, Default, model)) return
 
@@ -90,10 +90,24 @@ class KemasanReturController {
         }
     }
 
+    def cetak = { e ->
+        if (!model.parent) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Tidak dapat mencetak kemasan retur jual yang belum disimpan!', 'Kesalahan Cetak', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        execInsideUISync {
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'kemasan_retur.json', options: ['nomorRetur': model.parent.nomor]]
+            def dialogProps = [title: 'Preview Kemasan Retur Beli', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+        }
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null
             model.nomor = model.kemasanReturList.size() + 1
+            model.tanggal = null
+            model.keterangan = null
             model.items.clear()
             model.created = null
             model.createdBy = null
@@ -113,6 +127,8 @@ class KemasanReturController {
                 model.errors.clear()
                 model.id = selected.id
                 model.nomor = selected.nomor
+                model.tanggal = selected.tanggal
+                model.keterangan = selected.keterangan
                 model.items.clear()
                 model.items.addAll(selected.items)
                 model.created = selected.createdDate

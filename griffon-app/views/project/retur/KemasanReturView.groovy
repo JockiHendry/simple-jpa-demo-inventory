@@ -28,6 +28,7 @@ actions {
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showItemBarang', name: 'Items', closure: controller.showItemBarang)
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
 application(title: 'Kemasan Retur',
@@ -45,6 +46,10 @@ application(title: 'Kemasan Retur',
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.kemasanReturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showItemBarang, enterKeyAction: showItemBarang) {
                 glazedColumn(name: 'Nomor', expression: {String.format("%03d", it.nomor)})
+                glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
+                    templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
+                }
+                glazedColumn(name: 'Keterangan', property: 'keterangan')
                 glazedColumn(name: 'Qty', expression: {it.items.size()})
             }
         }
@@ -53,9 +58,15 @@ application(title: 'Kemasan Retur',
             label('Nomor:')
             numberTextField(id: 'nomor', columns: 20, bindTo: 'nomor', errorPath: 'nomor')
             errorLabel(path: 'nomor', constraints: 'wrap')
+            label('Tanggal Packing:')
+            dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
+            errorLabel(path: 'tanggal', constraints: 'wrap')
             label('Items:')
             button(action: showItemBarang, errorPath: 'items')
             errorLabel(path: 'items', constraints: 'wrap')
+            label('Keterangan:')
+            textField(id: 'keterangan', columns: 60, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
+            errorLabel(path: 'keterangan', constraints: 'wrap')
             panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 label('Created:')
@@ -68,6 +79,7 @@ application(title: 'Kemasan Retur',
             panel(constraints: 'span, growx, wrap') {
                 flowLayout(alignment: FlowLayout.LEADING)
                 button(action: save)
+                button(action: cetak, visible: bind { table.isRowSelected })
                 button(visible: bind { table.isRowSelected }, action: cancel)
                 button(visible: bind { table.isRowSelected }, action: delete)
                 button(action: close)

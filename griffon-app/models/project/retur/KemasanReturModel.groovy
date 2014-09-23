@@ -19,6 +19,7 @@ import domain.pembelian.Supplier
 import domain.retur.*
 import domain.inventory.*
 import ca.odell.glazedlists.*
+import org.joda.time.LocalDate
 
 class KemasanReturModel {
 
@@ -28,6 +29,8 @@ class KemasanReturModel {
     @Bindable Long id
 
     @Bindable Integer nomor
+    @Bindable LocalDate tanggal
+    @Bindable String keterangan
     List<ItemBarang> items = []
     BasicEventList<KlaimKemasan> kemasanReturList = new BasicEventList<>()
 

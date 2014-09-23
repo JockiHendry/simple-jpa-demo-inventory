@@ -1,0 +1,35 @@
+{
+    "pageFormat": {
+        "characterPitch": "12 cpi",
+        "pageWidth": 96,
+        "pageLength": 31,
+        "usePageLengthFromPrinter": true
+    },
+    "template": {
+        "header": [
+           "      %{176 R2}      Kemasan Retur ${companyName:60} Hal: %{PAGE_NO}",
+           "    %{176 R6}    Nomor       : ${nomor:25}                  Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
+           "   %{176 R8}   Nomor Retur : ${nomorRetur:25}",
+           "     %{176 R4}",
+           "      %{176 R2}"
+        ],
+        "detail": [
+            {
+                "table": "items",
+                "border": true,
+                "columns": [
+                    {"source": "row::right", "width": 3, "caption": "No"},
+                    {"source": "produk.nama", "width": 79, "caption": "Nama Produk", "wrap": true},
+                    {"source": "jumlah::right", "width": 5, "caption": "Qty"},
+                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
+                ]
+            },
+            " {{keterangan?'Ket : ' + keterangan:''::94}}",
+            "",
+            "                                                                         Hormat kami,         ",
+            "",
+            "",
+            "                                                                   (${createdBy:21:center})"
+        ]
+    }
+}

@@ -31,7 +31,7 @@ class PreviewEscpController {
     void mvcGroupInit(Map args) {
         JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
         def source = args.'dataSource'
-        Map options = [:]
+        Map options = args.containsKey('options')? args.options: [:]
         options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null)?: SimpleJpaUtil.instance.user.userName
         options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         PrintPreviewPane printPreviewPane = view.printPreviewPane

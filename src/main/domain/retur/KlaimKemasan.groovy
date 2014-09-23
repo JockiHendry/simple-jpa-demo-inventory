@@ -18,7 +18,9 @@ package domain.retur
 import domain.inventory.ItemBarang
 import groovy.transform.Canonical
 import groovy.transform.EqualsAndHashCode
+import org.hibernate.annotations.Type
 import org.hibernate.validator.constraints.NotEmpty
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.ElementCollection
 import javax.persistence.Entity
@@ -31,6 +33,11 @@ class KlaimKemasan extends KlaimRetur {
 
     @NotNull
     Integer nomor
+
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggal
+
+    String keterangan
 
     @ElementCollection(fetch=FetchType.EAGER) @NotEmpty
     Set<ItemBarang> items = [] as Set
