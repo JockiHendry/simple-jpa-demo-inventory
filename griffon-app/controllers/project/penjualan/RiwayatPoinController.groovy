@@ -50,4 +50,19 @@ class RiwayatPoinController {
         execInsideUISync { model.riwayatPoinList.addAll(result) }
     }
 
+    def cetak = {
+        if (model.konsumenSearch == null) {
+            model.errors['konsumenSearch'] = 'Konsumen harus di-isi!'
+            return
+        }
+        List<RiwayatPoin> result = konsumenRepository.cariRiwayatPoin(model.konsumenSearch, model.tanggalMulaiSearch, model.tanggalSelesaiSearch)
+        String konsumen = "${model.konsumenSearch.nama} (${model.konsumenSearch.poinTerkumpul})"
+        execInsideUISync {
+            def args = [dataSource: result, template: 'riwayat_poin.jasper', options:
+                ['konsumen': konsumen, 'tanggalMulai': model.tanggalMulaiSearch, 'tanggalSelesai': model.tanggalSelesaiSearch]]
+            def dialogProps = [title: 'Preview Riwayat Poin', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewFaktur', args, app, view, dialogProps)
+        }
+    }
+
 }

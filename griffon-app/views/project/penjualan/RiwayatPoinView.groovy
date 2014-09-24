@@ -26,6 +26,7 @@ import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
     action(id: 'search', name: 'Lihat Riwayat', closure: controller.search)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
@@ -52,6 +53,7 @@ application(title: 'Riwayat Poin',
             label(' s/d ')
             dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
             button(action: search)
+            button(action: cetak)
         }
 
         scrollPane(constraints: CENTER) {

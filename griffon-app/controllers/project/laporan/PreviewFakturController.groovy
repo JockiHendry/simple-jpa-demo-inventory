@@ -36,13 +36,14 @@ class PreviewFakturController {
         def dataSource = args.'dataSource'
         String fileLaporan = "report/${args.'template'}"
 
-        Map parameters = [:]
+        Map parameters = args.containsKey('options')? args.options: [:]
         parameters.createdBy = (dataSource.hasProperty('createdBy')? dataSource.createdBy: null)?: SimpleJpaUtil.instance.user.userName
         parameters.companyName = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         InputStream logoInputStream = getResourceAsStream('report/logo.png')
         if (logoInputStream) parameters.logo = ImageIO.read(logoInputStream)
 
-        JRBeanCollectionDataSource jrDataSource = new JRBeanCollectionDataSource([dataSource])
+        dataSource = (dataSource instanceof Collection)? dataSource: [dataSource]
+        JRBeanCollectionDataSource jrDataSource = new JRBeanCollectionDataSource(dataSource)
         JasperPrint jasperPrint = JasperFillManager.fillReport(getResourceAsStream(fileLaporan), parameters, jrDataSource)
 
         view.mainPanel.clear()
