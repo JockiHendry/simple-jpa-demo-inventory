@@ -15,14 +15,16 @@
  */
 package project.laporan
 
+import domain.pengaturan.KeyPengaturan
 import net.sf.jasperreports.engine.JRDataSource
 import net.sf.jasperreports.engine.JasperFillManager
 import net.sf.jasperreports.engine.JasperPrint
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
 import net.sf.jasperreports.swing.JRViewer
+import project.pengaturan.PengaturanRepository
 import simplejpa.swing.DialogUtils
 import util.BusyLayerUI
-
+import javax.imageio.ImageIO
 import javax.swing.JOptionPane
 import java.awt.BorderLayout
 
@@ -30,6 +32,7 @@ class LaporanController {
 
     LaporanModel model
     def view
+    PengaturanRepository pengaturanRepository
 
     def search = {
         JenisLaporan jenisLaporan = model.jenisLaporanSearch.selectedItem
@@ -50,7 +53,9 @@ class LaporanController {
 
         if (!batal) {
             JRDataSource dataSource = new JRBeanCollectionDataSource(result)
-
+            params.companyName = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
+            InputStream logoInputStream = getResourceAsStream('report/logo.png')
+            if (logoInputStream) params.logo = ImageIO.read(logoInputStream)
             JasperPrint jasperPrint = JasperFillManager.fillReport(
                     getResourceAsStream("report/${jenisLaporan.namaLaporan}.jasper"), params, dataSource)
 
@@ -61,6 +66,5 @@ class LaporanController {
         }
 
     }
-
 
 }
