@@ -17,6 +17,7 @@ package project.penjualan
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.DaftarBarangSementara
 import domain.penjualan.FakturJualOlehSales
 import project.user.NomorService
 import domain.penjualan.StatusFakturJual
@@ -111,6 +112,15 @@ class PengirimanController {
             }
         } else {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual belum diantar sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    def cetakSummary = {
+        DaftarBarangSementara daftarBarang = fakturJualRepository.hitungBarangYangHarusDikirim()
+        execInsideUISync {
+            def args = [dataSource: daftarBarang, template: 'daftar_barang_kirim.json']
+            def dialogProps = [title: 'Preview Daftar Barang Untuk Dikirim', preferredSize: new Dimension(970, 700)]
+            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
     }
 

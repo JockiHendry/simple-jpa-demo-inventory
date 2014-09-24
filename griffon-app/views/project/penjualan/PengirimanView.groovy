@@ -25,6 +25,7 @@ import static javax.swing.SwingConstants.CENTER
 
 actions {
     action(id: 'showBarangYangHarusDikirim', name: 'Klik Disini Untuk Melihat Item Untuk Dikirim...', closure: controller.showBarangYangHarusDikirim)
+    action(id: 'cetakSummary', name: 'Cetak Summary...', closure: controller.cetakSummary)
 }
 
 application() {
@@ -42,6 +43,7 @@ application() {
             textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
             textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+            button(action: cetakSummary)
         }
 
         scrollPane(constraints: CENTER) {

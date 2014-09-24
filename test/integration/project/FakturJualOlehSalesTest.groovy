@@ -22,6 +22,7 @@ import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
 import domain.pembelian.PenerimaanBarang
@@ -593,4 +594,14 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
     }
 
+    public void testHitungBarangYangHarusDikirim() {
+        DaftarBarangSementara d = fakturJualRepository.hitungBarangYangHarusDikirim()
+        Produk p1 = fakturJualRepository.findProdukById(-1l)
+        Produk p2 = fakturJualRepository.findProdukById(-2l)
+        def items = d.items
+        assertEquals(p1, items[0].produk)
+        assertEquals(4, items[0].jumlah)
+        assertEquals(p2, items[1].produk)
+        assertEquals(3, items[1].jumlah)
+    }
 }

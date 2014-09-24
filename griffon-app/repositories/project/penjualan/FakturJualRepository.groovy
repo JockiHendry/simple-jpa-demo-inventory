@@ -392,6 +392,20 @@ class FakturJualRepository {
         faktur
     }
 
+    DaftarBarangSementara hitungBarangYangHarusDikirim() {
+        DaftarBarangSementara hasil
+        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang {
+            status eq(StatusFakturJual.DIBUAT)
+        }.each { FakturJualOlehSales f ->
+            if (!hasil) {
+                hasil = f.toDaftarBarangSementara()
+            } else {
+                hasil += f.toDaftarBarangSementara()
+            }
+        }
+        new DaftarBarangSementara(hasil?.normalisasi()?:[], 1)
+    }
+
     public enum StatusPiutangSearch {
         SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas')
 
