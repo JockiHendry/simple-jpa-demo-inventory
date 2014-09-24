@@ -149,6 +149,7 @@ class Konsumen implements Comparable {
     }
 
     public void tambahPoin(Integer poin, String referensi = null) {
+        if (poin == 0) return
         RiwayatPoin riwayatPoin = new RiwayatPoin(tanggal: LocalDate.now(), poin: poin, referensi: referensi)
         listRiwayatPoin << riwayatPoin
         this.poinTerkumpul += poin
@@ -159,6 +160,7 @@ class Konsumen implements Comparable {
     }
 
     public void hapusPoin(Integer poin, String referensi = null) {
+        if (poin == 0) return
         RiwayatPoin riwayatPoin = new RiwayatPoin(tanggal: LocalDate.now(), poin: -poin, referensi: referensi)
         listRiwayatPoin << riwayatPoin
         this.poinTerkumpul -= poin
