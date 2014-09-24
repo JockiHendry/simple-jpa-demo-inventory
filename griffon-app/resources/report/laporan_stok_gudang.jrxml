@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_sisa_barang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eec581d2-323c-4755-974a-e959cc6dcde0">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="11"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -63,9 +67,12 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="71" splitType="Stretch">
+		<band height="102" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="17" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<reportElement x="0" y="60" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<box>
+					<bottomPen lineWidth="2.0"/>
+				</box>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -77,11 +84,22 @@
 				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="36" width="555" height="20" uuid="4044e070-97ee-4684-9690-43c3b09c0406"/>
+				<reportElement x="0" y="80" width="555" height="20" uuid="4044e070-97ee-4684-9690-43c3b09c0406"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[org.joda.time.LocalDate.now().toString('dd-MM-yyyy')]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="74" height="60" uuid="42fc7295-b10a-4d11-8ec7-d03e9b8b8e16"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="75" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="1d5f845a-9291-4ca3-9a36-72a4eae6f82d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -133,6 +151,9 @@
 		<band height="17" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="351" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -140,6 +161,9 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="515" y="1" width="40" height="16" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -147,6 +171,9 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="426" y="1" width="89" height="16" uuid="1d40c631-f27f-41d8-89bb-c4c4a7140014"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -154,6 +181,9 @@
 			</textField>
 			<textField>
 				<reportElement x="351" y="1" width="75" height="16" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>

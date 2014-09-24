@@ -3,6 +3,10 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -37,9 +41,12 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="71" splitType="Stretch">
+		<band height="101" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="17" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<reportElement x="0" y="60" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<box>
+					<bottomPen lineWidth="2.0"/>
+				</box>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -51,11 +58,22 @@
 				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="36" width="555" height="20" uuid="4044e070-97ee-4684-9690-43c3b09c0406"/>
+				<reportElement x="0" y="79" width="555" height="20" uuid="4044e070-97ee-4684-9690-43c3b09c0406"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[org.joda.time.LocalDate.now().toString('dd-MM-yyyy')]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="74" height="60" uuid="7c51004f-9bf4-4b98-a5d0-4e90288018a0"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="75" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="8bea564e-99b9-4561-9951-7c78bdcc2eb4"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -158,14 +176,20 @@
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="179" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<reportElement x="0" y="1" width="179" height="16" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="484" y="0" width="37" height="17" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
+				<reportElement x="484" y="1" width="37" height="16" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -173,6 +197,9 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="330" y="1" width="66" height="16" uuid="1d40c631-f27f-41d8-89bb-c4c4a7140014"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -180,6 +207,9 @@
 			</textField>
 			<textField>
 				<reportElement x="290" y="1" width="40" height="16" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -187,20 +217,29 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="396" y="1" width="59" height="16" uuid="b0716144-c16d-45e2-9200-28c61307c26b"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hargaDalamKota}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="179" y="0" width="76" height="16" isPrintWhenDetailOverflows="true" uuid="05349abd-e6af-4658-97fb-870bb69b4a0a"/>
+				<reportElement x="179" y="1" width="76" height="16" isPrintWhenDetailOverflows="true" uuid="05349abd-e6af-4658-97fb-870bb69b4a0a"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{supplier}?.nama]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="255" y="0" width="35" height="16" uuid="b6e65c08-a85f-451c-8b9c-a81a9a5dddf9"/>
+				<reportElement x="255" y="1" width="35" height="16" uuid="b6e65c08-a85f-451c-8b9c-a81a9a5dddf9"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -208,6 +247,9 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="455" y="1" width="29" height="16" uuid="388744c3-9470-4855-9bda-1e076f604350"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
@@ -215,6 +257,9 @@
 			</textField>
 			<textField pattern="#,##0">
 				<reportElement x="521" y="1" width="34" height="16" uuid="66a383be-e423-4ab5-a1ec-c3ed6aa907ee"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>

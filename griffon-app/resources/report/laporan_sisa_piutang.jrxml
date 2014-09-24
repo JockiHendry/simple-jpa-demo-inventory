@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_sisa_piutang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c98f1cd3-55bc-4fc2-8765-c7fb1bd2a89e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="85"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -40,6 +40,10 @@
 			<variableExpression><![CDATA[$F{jumlah}]]></variableExpression>
 		</variable>
 	</subDataset>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -49,37 +53,51 @@
 	<field name="nomorTelepon" class="java.lang.String">
 		<fieldDescription><![CDATA[nomorTelepon]]></fieldDescription>
 	</field>
-	<field name="listFakturBelumLunas" class="java.util.List">
-		<fieldDescription><![CDATA[listFakturBelumLunas]]></fieldDescription>
-	</field>
 	<field name="sales" class="domain.penjualan.Sales"/>
 	<field name="region" class="domain.penjualan.Region"/>
 	<field name="_THIS" class="java.lang.Object">
 		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
 	</field>
+	<field name="listFakturBelumLunas" class="java.util.Set">
+		<fieldDescription><![CDATA[listFakturBelumLunas]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="65">
+		<band height="101">
 			<textField>
 				<reportElement x="455" y="2" width="100" height="17" uuid="e574d9e4-ebfc-46a1-ba4d-1f3d527a02ec"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="19" width="555" height="20" uuid="ec758a23-9648-4af2-b2a6-8d95745f6486"/>
+				<reportElement x="0" y="60" width="555" height="20" uuid="ec758a23-9648-4af2-b2a6-8d95745f6486"/>
+				<box>
+					<bottomPen lineWidth="2.0"/>
+				</box>
 				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Laporan Sisa Piutang]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="38" width="555" height="20" uuid="0efc36d8-cd71-404b-a5e8-6cf34a21692b"/>
+				<reportElement x="0" y="79" width="555" height="20" uuid="0efc36d8-cd71-404b-a5e8-6cf34a21692b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[org.joda.time.LocalDate.now().toString('dd-MM-yyyy')]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="74" height="60" uuid="b87fba14-e17e-42b6-a4a5-bae6d12d51a5"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="74" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="4f0a9327-3e02-4abc-85fe-6e7eee4284e4"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -224,8 +242,12 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</box>
 										<textField>
 											<reportElement x="0" y="0" width="91" height="23" uuid="562a5b9d-e47f-4d06-ab9c-a4ab108d4b21"/>
-											<box leftPadding="3">
-												<leftPen lineWidth="1.0"/>
+											<box>
+												<pen lineStyle="Dotted"/>
+												<topPen lineStyle="Dotted"/>
+												<leftPen lineStyle="Dotted"/>
+												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+												<rightPen lineStyle="Dotted"/>
 											</box>
 											<textElement verticalAlignment="Middle"/>
 											<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
@@ -268,6 +290,13 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</box>
 										<textField pattern="#,##0">
 											<reportElement x="0" y="0" width="124" height="23" uuid="655f825f-6ae1-433a-9767-212969d81e94"/>
+											<box>
+												<pen lineStyle="Dotted"/>
+												<topPen lineStyle="Dotted"/>
+												<leftPen lineStyle="Dotted"/>
+												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+												<rightPen lineStyle="Dotted"/>
+											</box>
 											<textElement textAlignment="Right" verticalAlignment="Middle"/>
 											<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 										</textField>
@@ -306,6 +335,13 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</box>
 										<textField>
 											<reportElement x="0" y="0" width="90" height="23" uuid="1b3c72f7-e756-4542-8bc9-d36885feac6d"/>
+											<box>
+												<pen lineStyle="Dotted"/>
+												<topPen lineStyle="Dotted"/>
+												<leftPen lineStyle="Dotted"/>
+												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+												<rightPen lineStyle="Dotted"/>
+											</box>
 											<textElement textAlignment="Center" verticalAlignment="Middle"/>
 											<textFieldExpression><![CDATA[$F{potongan}? 'Y': '']]></textFieldExpression>
 										</textField>
@@ -344,6 +380,13 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										</box>
 										<textField>
 											<reportElement x="0" y="0" width="90" height="23" uuid="2a93024a-42d1-4036-8bc4-fcb04acd1517"/>
+											<box>
+												<pen lineStyle="Dotted"/>
+												<topPen lineStyle="Dotted"/>
+												<leftPen lineStyle="Dotted"/>
+												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+												<rightPen lineStyle="Dotted"/>
+											</box>
 											<textElement verticalAlignment="Middle"/>
 											<textFieldExpression><![CDATA[$F{bilyetGiro}?.nomorSeri?: '']]></textFieldExpression>
 										</textField>
@@ -379,7 +422,11 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 										<textField>
 											<reportElement x="0" y="0" width="90" height="23" uuid="6536972f-0299-4a59-a0a5-5b825d751461"/>
 											<box>
-												<rightPen lineWidth="1.0"/>
+												<pen lineStyle="Dotted"/>
+												<topPen lineStyle="Dotted"/>
+												<leftPen lineStyle="Dotted"/>
+												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+												<rightPen lineStyle="Dotted"/>
 											</box>
 											<textElement verticalAlignment="Middle"/>
 											<textFieldExpression><![CDATA[$F{bilyetGiro}?.jatuhTempo?.toString('dd-MM-YYYY')?:'']]></textFieldExpression>
