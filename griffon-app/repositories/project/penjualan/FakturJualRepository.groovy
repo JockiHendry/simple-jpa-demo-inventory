@@ -107,7 +107,7 @@ class FakturJualRepository {
     }
 
     List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
-        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
@@ -129,7 +129,7 @@ class FakturJualRepository {
     }
 
     List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch, def statusSearch) {
-        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+        findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
