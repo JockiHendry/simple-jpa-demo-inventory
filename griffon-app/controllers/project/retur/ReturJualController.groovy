@@ -93,24 +93,29 @@ class ReturJualController {
             returJual.tambah(new KlaimPotongan(model.potongan))
         }
 
+        if (!model.potongan && model.listKlaimRetur.empty) {
+            model.errors['listKlaimRetur'] = 'Barang yang di-klaim tidak boleh kosong bila tidak ada potongan piutang!'
+            return
+        }
         if (!returJualRepository.validate(returJual, Default, model)) return
 
         try {
             if (model.id == null) {
                 // Insert operation
-                returJualRepository.buat(returJual)
+                returJual = returJualRepository.buat(returJual)
                 execInsideUISync {
                     model.returJualList << returJual
                     view.table.changeSelection(model.returJualList.size() - 1, 0, false, false)
+                    clear()
+                    cetak(returJual)
                 }
             } else {
                 // Update operation
                 returJual = returJualRepository.update(returJual)
-                execInsideUISync { view.table.selectionModel.selected[0] = returJual }
-            }
-            execInsideUISync {
-                clear()
-                view.form.getFocusTraversalPolicy().getFirstComponent(view.form).requestFocusInWindow()
+                execInsideUISync {
+                    view.table.selectionModel.selected[0] = returJual
+                    clear()
+                }
             }
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
@@ -204,6 +209,7 @@ class ReturJualController {
     def cetak = { e ->
         execInsideUISync {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual.json']
+            if (e instanceof ReturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
