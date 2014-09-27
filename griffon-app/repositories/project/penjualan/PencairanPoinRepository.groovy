@@ -60,7 +60,7 @@ class PencairanPoinRepository {
             throw new PencairanPoinTidakValid(pencairanPoin)
         }
         pencairanPoin.proses()
-        pencairanPoin.konsumen.hapusPoin(pencairanPoin.jumlahPoin)
+        pencairanPoin.konsumen.hapusPoin(pencairanPoin.jumlahPoin, "${pencairanPoin.class.simpleName} ${pencairanPoin.nomor}")
         persist(pencairanPoin)
         pencairanPoin
     }

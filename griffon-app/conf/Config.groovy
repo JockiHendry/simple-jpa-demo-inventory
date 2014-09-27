@@ -34,6 +34,7 @@ log4j = {
                     'simplejpa',
                     'project',
                     'domain',
+                    'com.mchange'
                     //'net.sf.jasperreports',
                     //'org.jboss',
                     //'org.codehaus',

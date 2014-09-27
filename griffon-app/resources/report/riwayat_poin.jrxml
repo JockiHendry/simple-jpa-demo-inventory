@@ -140,7 +140,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="190" y="0" width="365" height="17" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
 				<box leftPadding="5">
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
