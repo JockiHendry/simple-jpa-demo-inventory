@@ -183,14 +183,23 @@ griffon.project.dependency.resolution = {
         mavenLocal()
         mavenCentral()
         mavenRepo "http://jasperreports.sourceforge.net/maven2"
+        mavenRepo "http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts"
         mavenRepo "http://dl.bintray.com/jockihendry/maven"
     }
     dependencies {
-        runtime 'mysql:mysql-connector-java:5.1.20'
+        runtime 'com.mchange:c3p0:0.9.2.1'
+        runtime('org.hibernate:hibernate-c3p0:4.3.6.Final') {
+            exclude 'hibernate-core'
+        }
+        runtime 'mysql:mysql-connector-java:5.1.33'
         runtime 'jockihendry:hibernate-entitymanager:4.3.7-EXPERIMENT'
         compile 'org.hibernate:hibernate-validator:4.3.0.Final'
-        compile('net.sf.jasperreports:jasperreports:5.5.1') {
+        compile('net.sf.jasperreports:jasperreports:5.6.1') {
             exclude 'commons-collections'
+            exclude 'olap4j'
+            exclude 'lucene-queryparser'
+            exclude 'lucene-analyzers-common'
+            exclude 'lucene-core'
         }
         compile 'jockihendry:simple-escp:0.5.2'
     }
