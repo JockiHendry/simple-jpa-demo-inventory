@@ -43,8 +43,12 @@ abstract class Retur extends DaftarBarang {
         })
     }
 
+    BigDecimal jumlahPotongan(boolean hanyaBelumDiproses = false) {
+        getKlaim(KlaimPotongan, hanyaBelumDiproses).sum { KlaimPotongan k -> k.potongan}?: 0
+    }
+
     BigDecimal sisaPotongan() {
-        getKlaim(KlaimPotongan, true).sum { KlaimPotongan k -> k.potongan }?: 0
+        jumlahPotongan(true)
     }
 
     void prosesSisaPotongan() {
