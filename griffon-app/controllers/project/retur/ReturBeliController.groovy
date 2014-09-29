@@ -16,6 +16,7 @@
 package project.retur
 
 import ast.NeedSupervisorPassword
+import domain.exception.DataTidakBolehDiubah
 import domain.retur.*
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
@@ -122,6 +123,8 @@ class ReturBeliController {
             }
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
         execInsideUISync {
             clear()

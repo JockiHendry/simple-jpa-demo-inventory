@@ -79,6 +79,9 @@ class ReturBeliRepository {
         if (!mergedRetur) {
             throw new DataTidakBolehDiubah(returBeli)
         }
+        if (mergedRetur.sudahDiproses) {
+            throw new DataTidakBolehDiubah('Tidak boleh mengubah retur beli karena sudah diproses dan diterima!', returBeli)
+        }
         mergedRetur.with {
             nomor = returBeli.nomor
             tanggal = returBeli.tanggal
