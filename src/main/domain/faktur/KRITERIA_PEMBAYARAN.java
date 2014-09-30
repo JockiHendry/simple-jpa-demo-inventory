@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.faktur
+package domain.faktur;
 
 public enum KRITERIA_PEMBAYARAN {
-    SEMUA, TANPA_GIRO_BELUM_CAIR, TANPA_POTONGAN, HANYA_POTONGAN
+    SEMUA, TANPA_GIRO_BELUM_CAIR, TANPA_POTONGAN, HANYA_POTONGAN;
 }
