@@ -56,8 +56,9 @@ class LaporanController {
             params.companyName = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
             InputStream logoInputStream = getResourceAsStream('report/logo.png')
             if (logoInputStream) params.logo = ImageIO.read(logoInputStream)
-            JasperPrint jasperPrint = JasperFillManager.fillReport(
-                    getResourceAsStream("report/${jenisLaporan.namaLaporan}.jasper"), params, dataSource)
+
+            def fileLaporan = getResourceAsStream(params.fileLaporan?: "report/${jenisLaporan.namaLaporan}.jasper")
+            JasperPrint jasperPrint = JasperFillManager.fillReport(fileLaporan, params, dataSource)
 
             execInsideUISync {
                 view.content.clear()

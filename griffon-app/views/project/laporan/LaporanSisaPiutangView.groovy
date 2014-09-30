@@ -26,6 +26,8 @@ application() {
         label('Nama Konsumen')
         textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
+        checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
+
         panel(constraints: 'span, growx, wrap') {
             button('OK', actionPerformed: controller.tampilkanLaporan)
             button('Batal', actionPerformed: controller.batal)

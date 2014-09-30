@@ -34,6 +34,10 @@ class LaporanSisaPiutangController {
         }
         model.result = konsumenRepository.executeQuery(jpql)
 
+        if (model.cetakFormulir?.booleanValue()) {
+            model.params.fileLaporan = 'report/formulir_sisa_piutang.jasper'
+        }
+
         //
         // TODO: Fix this! Hibernate complain with the following query, it has something to do with named graph.
         //

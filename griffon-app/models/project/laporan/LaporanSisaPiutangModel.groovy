@@ -21,6 +21,7 @@ class LaporanSisaPiutangModel {
 
     @Bindable String salesSearch
     @Bindable String konsumenSearch
+    @Bindable Boolean cetakFormulir
 
     List result
     Map params = [:]
