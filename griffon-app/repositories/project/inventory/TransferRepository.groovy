@@ -57,7 +57,7 @@ class TransferRepository {
             throw new IllegalStateException('Gudang asal dan gudang tujuan tidak boleh sama!')
         }
         transfer.items.each {
-            it.produk = merge(it.produk)
+            it.produk = findProdukById(it.produk.id)
             int jumlahTersedia = it.produk.stok(transfer.gudang).jumlah
             if (jumlahTersedia < it.jumlah) {
                 throw new StokTidakCukup(it.produk.nama, it.jumlah, jumlahTersedia, transfer.gudang)

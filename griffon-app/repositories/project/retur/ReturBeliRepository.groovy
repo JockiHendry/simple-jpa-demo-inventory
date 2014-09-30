@@ -68,7 +68,7 @@ class ReturBeliRepository {
             throw new DataDuplikat(returBeli)
         }
         returBeli.nomor = ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.RETUR_BELI)
-        returBeli.items.each { it.produk = merge(it.produk) }
+        returBeli.items.each { it.produk = findProdukById(it.produk.id) }
         persist(returBeli)
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli))
         returBeli

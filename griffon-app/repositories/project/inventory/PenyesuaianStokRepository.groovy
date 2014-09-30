@@ -49,7 +49,7 @@ class PenyesuaianStokRepository {
             throw new DataDuplikat(penyesuaianStok)
         }
         penyesuaianStok.items.each {
-            it.produk = merge(it.produk)
+            it.produk = findProdukById(it.produk.id)
             if (!penyesuaianStok.bertambah) {
                 int jumlahTersedia = it.produk.stok(penyesuaianStok.gudang).jumlah
                 if (jumlahTersedia < it.jumlah) {

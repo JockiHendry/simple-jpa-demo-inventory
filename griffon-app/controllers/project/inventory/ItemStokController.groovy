@@ -45,7 +45,7 @@ class ItemStokController {
             execInsideUISync { model.itemStokList.clear()}
             List data = []
             produkRepository.withTransaction {
-                PeriodeItemStok p = produkRepository.merge(model.periodeItemStok.selectedItem)
+                PeriodeItemStok p = produkRepository.findPeriodeItemStokById(model.periodeItemStok.selectedItem.id)
                 data.addAll(p.listItem)
             }
             execInsideUISync { model.itemStokList.addAll(data) }

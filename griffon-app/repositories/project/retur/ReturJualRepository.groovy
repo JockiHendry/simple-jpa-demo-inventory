@@ -107,7 +107,7 @@ class ReturJualRepository {
     }
 
     public ReturJual tukar(ReturJual returJual) {
-        returJual = merge(returJual)
+        returJual = findReturJualById(returJual.id)
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         persist(pengeluaranBarang)
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
