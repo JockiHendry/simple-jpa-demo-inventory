@@ -40,7 +40,7 @@ application() {
             borderLayout()
             scrollPane(constraints: CENTER) {
                 glazedTable(id: 'table', list: model.pembayaranList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                    glazedColumn(name: 'Tanggal', property: 'tanggal') {
+                    glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                         templateRenderer(exp: {it.toString('dd-MM-yyyy')})
                     }
                     glazedColumn(name: 'Jumlah', property: 'jumlah', columnClass: Integer) {
@@ -52,6 +52,7 @@ application() {
                     glazedColumn(name: 'Bilyet Giro', property: 'bilyetGiro') {
                         templateRenderer(exp: {!it?'':it.nomorSeri})
                     }
+                    glazedColumn(name: 'Referensi', property: 'referensi')
                 }
             }
         }

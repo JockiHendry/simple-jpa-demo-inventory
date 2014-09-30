@@ -16,6 +16,7 @@
 package domain.retur
 
 import domain.exception.DataTidakBolehDiubah
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.penjualan.Konsumen
@@ -63,8 +64,9 @@ class ReturJual extends Retur {
         if (konsumen==null) {
             throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
         }
+        Referensi referensi = new Referensi(nomor, ReturJual.simpleName)
         getKlaim(KlaimPotongan, true).each { KlaimPotongan k ->
-            konsumen.potongPiutang(k.potongan)
+            konsumen.potongPiutang(k.potongan, referensi)
             proses(k)
         }
     }

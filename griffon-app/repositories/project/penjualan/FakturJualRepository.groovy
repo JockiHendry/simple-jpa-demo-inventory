@@ -180,6 +180,11 @@ class FakturJualRepository {
         }
     }
 
+    public List<FakturJualOlehSales> cariPiutang(String nomorReferensi) {
+        executeQuery("SELECT f FROM FakturJualOlehSales f JOIN FETCH f.piutang.listPembayaran p WHERE p.referensi.nomor = :nomorReferensi",
+            [:], [nomorReferensi: nomorReferensi])
+    }
+
     FakturJual buatFakturJualOlehSales(FakturJualOlehSales fakturJual, boolean tanpaLimit = false, List<ItemBarang> bonus) {
         fakturJual.listItemFaktur.each { it.produk = findProdukById(it.produk.id) }
         bonus.each { it.produk = findProdukById(it.produk.id) }
@@ -273,6 +278,7 @@ class FakturJualRepository {
 
     FakturJualOlehSales bayar(FakturJualOlehSales fakturJualOlehSales, Pembayaran pembayaran, BilyetGiro bilyetGiro = null) {
         fakturJualOlehSales = findFakturJualOlehSalesById(fakturJualOlehSales.id)
+        bilyetGiro = bilyetGiro?: pembayaran.bilyetGiro
         if(bilyetGiro) {
             if (bilyetGiro.id == null) {
                 persist(bilyetGiro)
@@ -287,7 +293,10 @@ class FakturJualRepository {
 
     FakturJualOlehSales hapusPembayaran(FakturJualOlehSales fakturJualOlehSales, Pembayaran pembayaran) {
         fakturJualOlehSales = findFakturJualOlehSalesById(fakturJualOlehSales.id)
-        fakturJualOlehSales.hapus(pembayaran)
+        fakturJualOlehSales.hapusPembayaran(pembayaran)
+        if (pembayaran.bilyetGiro) {
+            softDelete(pembayaran.bilyetGiro)
+        }
         fakturJualOlehSales
     }
 

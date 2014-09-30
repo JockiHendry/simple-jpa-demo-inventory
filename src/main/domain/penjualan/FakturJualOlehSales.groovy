@@ -120,11 +120,21 @@ class FakturJualOlehSales extends FakturJual {
         }
     }
 
-    void hapus(Pembayaran pembayaran) {
-        if (status!=StatusFakturJual.DITERIMA || piutang==null) {
+    void hapusPembayaran(Pembayaran pembayaran) {
+        if (!status.piutangBolehDiubah || piutang==null) {
             throw new DataTidakBolehDiubah(this)
         }
         piutang.hapus(pembayaran)
+        if (status==StatusFakturJual.LUNAS) {
+            status = StatusFakturJual.DITERIMA
+            konsumen.tambahFakturBelumLunas(this)
+        }
+    }
+
+    void hapusPembayaran(String nomorReferensi) {
+        piutang.listPembayaran.find { it.referensi.nomor == nomorReferensi }.each { Pembayaran pembayaran ->
+            hapusPembayaran(pembayaran)
+        }
     }
 
     @Override

@@ -37,6 +37,7 @@ class BilyetGiroEventListenerService {
         fakturBelumLunas.each {
             if (it.piutang.lunas) {
                 it.status = StatusFakturJual.LUNAS
+                it.konsumen.hapusFakturBelumLunas(it)
             }
         }
 

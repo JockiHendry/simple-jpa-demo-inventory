@@ -17,6 +17,7 @@ package domain.penjualan
 
 import domain.exception.PencairanPoinTidakValid
 import domain.faktur.Pembayaran
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Produk
 import groovy.transform.*
@@ -29,11 +30,12 @@ import java.text.NumberFormat
 
 @NamedEntityGraphs([
     @NamedEntityGraph(name='Konsumen.Complete', attributeNodes = [
-        @NamedAttributeNode('listFakturBelumLunas'),
+        @NamedAttributeNode(value='listFakturBelumLunas', subgraph='faktur'),
         @NamedAttributeNode('hargaTerakhir')
     ], subgraphs = [
         @NamedSubgraph(name='faktur', attributeNodes = [
-                @NamedAttributeNode('listItemFaktur')
+            @NamedAttributeNode('listItemFaktur'),
+            @NamedAttributeNode('piutang')
         ])
     ]),
     @NamedEntityGraph(name='Konsumen.FakturBelumLunas', attributeNodes = [
@@ -125,7 +127,7 @@ class Konsumen implements Comparable {
         }
     }
 
-    public void potongPiutang(BigDecimal jumlah) {
+    public void potongPiutang(BigDecimal jumlah, Referensi referensi = null) {
         BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(): 0}?: 0
         if (jumlah > jumlahPiutangYangDapatDibayar) {
             throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
@@ -136,11 +138,11 @@ class Konsumen implements Comparable {
             BigDecimal sisaPiutang = faktur.sisaPiutang()
             if (jumlah >= sisaPiutang) {
                 // Lunasi seluruh piutang untuk faktur ini
-                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: sisaPiutang, potongan: true))
+                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: sisaPiutang, potongan: true, referensi: referensi))
                 jumlah -= sisaPiutang
             } else {
                 // Lunasi hanya sebesar jumlah
-                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true))
+                faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true, referensi: referensi))
                 jumlah = 0
             }
 

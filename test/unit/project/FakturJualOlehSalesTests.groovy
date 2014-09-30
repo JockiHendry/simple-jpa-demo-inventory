@@ -18,9 +18,11 @@ package project
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.pembelian.PenerimaanBarang
+import domain.retur.ReturJual
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -108,7 +110,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         }
     }
 
-    public void testHapusPembayaranGagal() {
+    public void testHapusPembayaran() {
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         Sales showroom = new Sales('Showroom', null, gudangUtama)
@@ -121,14 +123,55 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.kirim('Xtra Street')
         f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
 
-        f.bayar(new Pembayaran(LocalDate.now(), 100000))
+        Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 100000)
+        Pembayaran pembayaran2 = new Pembayaran(LocalDate.now(), 240000)
+        f.bayar(pembayaran1)
         assertEquals(StatusFakturJual.DITERIMA, f.status)
-        f.bayar(new Pembayaran(LocalDate.now(), 240000))
+        assertTrue(k.listFakturBelumLunas.contains(f))
+        f.bayar(pembayaran2)
         assertEquals(StatusFakturJual.LUNAS, f.status)
-        shouldFail(DataTidakBolehDiubah) {
-            f.hapus(new Pembayaran(LocalDate.now(), 10000))
-        }
+        assertFalse(k.listFakturBelumLunas.contains(f))
+
+        // Hapus
+        f.hapusPembayaran(pembayaran2)
+        assertEquals(StatusFakturJual.DITERIMA, f.status)
+        assertTrue(k.listFakturBelumLunas.contains(f))
+        assertEquals(340000, f.jumlahPiutang())
+        assertEquals(100000, f.jumlahDibayar())
+
+        f.hapusPembayaran(pembayaran1)
+        assertEquals(StatusFakturJual.DITERIMA, f.status)
+        assertTrue(k.listFakturBelumLunas.contains(f))
+        assertEquals(340000, f.jumlahPiutang())
+        assertEquals(0, f.jumlahDibayar())
     }
+
+    public void testHapusPembayaranBerdasarkanReferensi() {
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen k = new Konsumen(sales: showroom)
+        FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        k.tambahFakturBelumLunas(f)
+        f.kirim('Xtra Street')
+        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
+        Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 1000, true, null, new Referensi('R-001'))
+        Pembayaran pembayaran2 = new Pembayaran(LocalDate.now(), 240000)
+        f.bayar(pembayaran1)
+        f.bayar(pembayaran2)
+
+        // Hapus
+        f.hapusPembayaran('R-001')
+
+        // Periksa
+        assertEquals(1, f.piutang.listPembayaran.size())
+        assertEquals(pembayaran2, f.piutang.listPembayaran[0])
+        assertEquals(340000, f.jumlahPiutang())
+        assertEquals(240000, f.jumlahDibayar())
+    }
+
 
     public void testSisaPiutang() {
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)

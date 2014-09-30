@@ -360,6 +360,33 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(StatusFakturJual.LUNAS, fakturJualOlehSales.status)
     }
 
+    public void testHapusPembayaran() {
+        FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-7l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-1l)
+        assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
+        assertEquals(90000, konsumen.creditTerpakai)
+        Pembayaran pembayaran = new Pembayaran(LocalDate.now(), 20000)
+        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, pembayaran)
+        assertTrue(fakturJualOlehSales.piutang.lunas)
+        konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-1l)
+        assertFalse(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
+        fakturJualOlehSales = fakturJualRepository.hapusPembayaran(fakturJualOlehSales, pembayaran)
+        assertFalse(fakturJualOlehSales.piutang.lunas)
+        assertEquals(StatusFakturJual.DITERIMA, fakturJualOlehSales.status)
+        assertEquals(0, fakturJualOlehSales.jumlahDibayar())
+        konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(-1l)
+        assertTrue(konsumen.listFakturBelumLunas.contains(fakturJualOlehSales))
+        assertEquals(90000, konsumen.creditTerpakai)
+
+        // Pembayaran dengan menggunakan giro harus menyebabkan giro tersebut dihapus
+        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 20000, jatuhTempo: LocalDate.now().minusDays(1))
+        pembayaran = new Pembayaran(LocalDate.now(), 20000, null, bg)
+        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, pembayaran)
+        fakturJualOlehSales = fakturJualRepository.hapusPembayaran(fakturJualOlehSales, pembayaran)
+        bg = fakturJualRepository.findBilyetGiroByNomorSeri('NX-0001', [excludeDeleted: false])
+        assertEquals('Y', bg.deleted)
+    }
+
     public void testBonus() {
         nomorService.refreshAll()
         Produk produkA = fakturJualRepository.findProdukById(-1l)

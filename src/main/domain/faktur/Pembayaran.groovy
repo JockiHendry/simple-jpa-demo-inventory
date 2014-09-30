@@ -38,6 +38,9 @@ class Pembayaran {
     @ManyToOne
     BilyetGiro bilyetGiro
 
+    @Embedded
+    Referensi referensi
+
     public void melaluiGiro(String nomorSeri, LocalDate tanggalPenerbitan, LocalDate tanggalEfektif) {
         if (bilyetGiro) {
             throw new DataTidakBolehDiubah(this)

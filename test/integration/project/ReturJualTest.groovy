@@ -19,6 +19,7 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
+import domain.retur.KlaimPotongan
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import org.joda.time.LocalDate
@@ -123,6 +124,33 @@ class ReturJualTest extends DbUnitTestCase {
         shouldFail(IllegalStateException) {
             returJualRepository.buat(returJual)
         }
+    }
+
+    public void testHapus() {
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        BigDecimal sisaPiutangAwal = k.jumlahPiutang()
+        ReturJual r = new ReturJual(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        r.tambah(new ItemBarang(p1, 10))
+        r.tambah(new ItemBarang(p2, 20))
+        r.tambah(new KlaimPotongan(10000))
+        r = returJualRepository.buat(r)
+        k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        assertEquals(sisaPiutangAwal - 10000, k.jumlahPiutang())
+
+        // Hapus
+        returJualRepository.hapus(r)
+
+        // Periksa apakah qty retur berkurang di produk
+        p1 = returJualRepository.findProdukById(-1l)
+        p2 = returJualRepository.findProdukById(-2l)
+        assertEquals(10, p1.jumlahRetur)
+        assertEquals(3, p2.jumlahRetur)
+
+        // Periksa apakah jumlah piutang berkurang
+        k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        assertEquals(sisaPiutangAwal, k.jumlahPiutang())
     }
 
 }

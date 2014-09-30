@@ -33,6 +33,7 @@
     <class>domain.faktur.Faktur</class>
     <class>domain.faktur.ItemFaktur</class>
     <class>domain.faktur.Diskon</class>
+    <class>domain.faktur.Referensi</class>
     <class>domain.pembelian.PenerimaanBarang</class>
     <class>domain.pembelian.FakturBeli</class>
     <class>domain.pembelian.Supplier</class>

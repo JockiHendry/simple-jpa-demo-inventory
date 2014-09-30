@@ -56,7 +56,7 @@ class HutangController {
     def showPembayaran = {
         execInsideUISync {
             def args = [purchaseOrder: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranHutang]
-            def dialogProps = [title: 'Pembayaran Hutang', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Pembayaran Hutang', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('pembayaranHutangAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listPembayaranHutang.clear()
                 model.listPembayaranHutang.addAll(m.pembayaranList)

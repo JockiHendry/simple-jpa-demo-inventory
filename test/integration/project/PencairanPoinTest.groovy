@@ -101,7 +101,7 @@ class PencairanPoinTest extends DbUnitTestCase {
         pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
-            assertEquals(90000, konsumen.jumlahPiutang())
+            assertEquals(110000, konsumen.jumlahPiutang())
             assertEquals(2000, pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
 
             // Melakukan penerimaan untuk salah satu faktur sehingga piutangnya bisa dibayar
@@ -121,8 +121,7 @@ class PencairanPoinTest extends DbUnitTestCase {
 
             konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
-            assertEquals(70000, konsumen.jumlahPiutang())
-            assertEquals(50000, konsumen.listFakturBelumLunas[0].sisaPiutang())
+            assertEquals(90000, konsumen.jumlahPiutang())
         }
     }
 

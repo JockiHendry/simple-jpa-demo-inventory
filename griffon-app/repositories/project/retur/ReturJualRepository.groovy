@@ -21,9 +21,11 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
+import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
+import project.penjualan.FakturJualRepository
 import project.user.NomorService
 import simplejpa.transaction.Transaction
 
@@ -31,6 +33,7 @@ import simplejpa.transaction.Transaction
 class ReturJualRepository {
 
     NomorService nomorService
+    FakturJualRepository fakturJualRepository
     
     List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
         findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -67,8 +70,8 @@ class ReturJualRepository {
         }
 
         returJual.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL)
-        returJual.konsumen = merge(returJual.konsumen)
-        returJual.items.each { it.produk = merge(it.produk) }
+        returJual.konsumen = findKonsumenById(returJual.konsumen.id)
+        returJual.items.each { it.produk = findProdukById(it.produk.id) }
 		persist(returJual)
         returJual.potongPiutang()
         ApplicationHolder.application?.event(new PerubahanRetur(returJual))
@@ -95,6 +98,10 @@ class ReturJualRepository {
             throw new DataTidakBolehDiubah(returJual)
         }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
+        returJual.konsumen = findKonsumenById(returJual.konsumen.id)
+        fakturJualRepository.cariPiutang(returJual.nomor).each { FakturJualOlehSales f ->
+            f.hapusPembayaran(returJual.nomor)
+        }
         returJual.deleted = 'Y'
         returJual
     }
