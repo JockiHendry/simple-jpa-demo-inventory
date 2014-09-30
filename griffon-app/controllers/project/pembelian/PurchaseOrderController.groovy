@@ -72,7 +72,7 @@ class PurchaseOrderController {
         List supplier = purchaseOrderRepository.findAllSupplier([orderBy: 'nama'])
         execInsideUISync {
             model.supplierList.addAll(supplier)
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
             model.statusSearch.selectedItem = SwingHelper.SEMUA

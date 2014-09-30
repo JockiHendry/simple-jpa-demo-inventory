@@ -71,7 +71,7 @@ class FakturJualEceranController {
 
     def init = {
         model.nomor = nomorService.getCalonNomorFakturJual()
-        model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+        model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
         model.tanggalSelesaiSearch = LocalDate.now()
     }
 

@@ -39,7 +39,7 @@ class BuktiTerimaController {
     }
 
     def init = {
-        model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+        model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
         model.tanggalSelesaiSearch = LocalDate.now()
         model.statusSearch.selectedItem = StatusFakturJual.DIANTAR
     }

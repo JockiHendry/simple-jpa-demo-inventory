@@ -46,7 +46,7 @@ class PenyesuaianStokController {
         List gudang = penyesuaianStokRepository.findAllGudang([orderBy: 'nama'])
         execInsideUISync {
             model.gudangList.addAll(gudang)
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.gudangSearch = null
             model.nomorSearch = null

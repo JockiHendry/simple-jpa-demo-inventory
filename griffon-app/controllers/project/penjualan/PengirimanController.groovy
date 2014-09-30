@@ -43,7 +43,7 @@ class PengirimanController {
     def init = {
         execInsideUISync {
             model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
         }

@@ -55,7 +55,7 @@ class ReturJualController {
         execInsideUISync {
             model.nomorSearch = null
             model.konsumenSearch = null
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.gudangList.clear()
         }

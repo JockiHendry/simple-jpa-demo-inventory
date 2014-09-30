@@ -38,7 +38,7 @@ class HutangController {
 
     def init = {
         execInsideUISync {
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = PurchaseOrderRepository.StatusHutangSearch.BELUM_LUNAS
         }

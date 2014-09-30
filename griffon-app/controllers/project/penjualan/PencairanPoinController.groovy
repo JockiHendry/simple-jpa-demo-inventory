@@ -44,7 +44,7 @@ class PencairanPoinController {
     def init = {
         nomorService.refreshAll()
         execInsideUISync {
-            model.tanggalMulaiSearch = LocalDate.now().minusMonths(1)
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
         }
     }
