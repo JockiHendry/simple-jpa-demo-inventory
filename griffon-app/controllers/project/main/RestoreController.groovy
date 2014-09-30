@@ -109,12 +109,12 @@ class RestoreController {
                     total += jumlah
                     if (s.jumlah != jumlah) {
                         execInsideUISync { output.append("${p.nama} pada ${g.nama} harus berjumlah ${jumlah} tetapi ${s.jumlah}\n") }
-                        s.jumlah = jumlah
+                        s.jumlah = (jumlah < 0)? 0: jumlah
                     }
                 }
                 if (p.jumlah != total) {
                     execInsideUISync { output.append("${p.nama} harus berjumlah ${total} tetapi ${p.jumlah}\n") }
-                    p.jumlah = total
+                    p.jumlah = (total < 0)? 0: total
                 }
             }
         }
