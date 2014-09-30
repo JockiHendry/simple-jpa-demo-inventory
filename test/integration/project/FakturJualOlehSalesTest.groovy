@@ -293,6 +293,47 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
     }
 
+    public void testPengantaranDenganCetakSuratJalanDahulu() {
+        FakturJualOlehSales f = fakturJualRepository.findFakturJualOlehSalesById(-4l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        f = fakturJualRepository.buatSuratJalan(f, 'Final Destination')
+        assertEquals(StatusFakturJual.DIBUAT, f.status)
+        assertNotNull(f.pengeluaranBarang)
+        assertTrue(f.pengeluaranBarang.isiSamaDengan(f))
+        assertEquals(LocalDate.now(), f.pengeluaranBarang.tanggal)
+        assertEquals('Final Destination', f.pengeluaranBarang.alamatTujuan)
+
+        // Cek stok produk tidak berkurang
+        Produk produkA = fakturJualRepository.findProdukByIdFetchComplete(-1l)
+        Produk produkB = fakturJualRepository.findProdukByIdFetchComplete(-2l)
+        assertEquals(10, produkA.stok(g).jumlah)
+        assertEquals(14, produkB.stok(g).jumlah)
+        assertEquals(10, produkA.jumlahAkanDikirim)
+        assertEquals(10, produkB.jumlahAkanDikirim)
+
+        // Kirim surat jalan
+        f = fakturJualRepository.kirimSuratJalan(f)
+
+        // Cek stok produk berkurang
+        produkA = fakturJualRepository.findProdukByIdFetchComplete(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchComplete(-2l)
+        assertEquals(StatusFakturJual.DIANTAR, f.status)
+        assertEquals(6, produkA.stok(g).jumlah)
+        assertEquals(11, produkB.stok(g).jumlah)
+        assertEquals(6, produkA.jumlahAkanDikirim)
+        assertEquals(7, produkB.jumlahAkanDikirim)
+
+        // Pembatalan
+        f = fakturJualRepository.batalKirim(f)
+        assertEquals(StatusFakturJual.DIBUAT, f.status)
+        produkA = fakturJualRepository.findProdukByIdFetchComplete(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchComplete(-2l)
+        assertEquals(10, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
+        assertEquals(14, produkB.stok(gudangRepository.cariGudangUtama()).jumlah)
+        assertEquals(10, produkA.jumlahAkanDikirim)
+        assertEquals(10, produkB.jumlahAkanDikirim)
+    }
+
     public void testPenerimaan() {
         fakturJualRepository.withTransaction {
             FakturJualOlehSales fakturJualOlehSales = fakturJualRepository.findFakturJualOlehSalesById(-5l)

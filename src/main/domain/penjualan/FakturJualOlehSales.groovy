@@ -81,15 +81,30 @@ class FakturJualOlehSales extends FakturJual {
         if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
             throw new DataTidakBolehDiubah(this)
         }
+        PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
+                nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
+                tanggal: LocalDate.now(), gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
+        )
+        pengeluaranBarang.items = barangYangHarusDikirim().items
+        tambah(pengeluaranBarang)
+        ApplicationHolder.application.event(new PesanStok(this, true))
+    }
 
-        // Buat PengeluaranBarang berdasarkan data yang ada di faktur
+    void buatSuratJalan(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(), gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
+        tambah(pengeluaranBarang, false)
+    }
+
+    void kirimSuratJalan() {
+        if (!pengeluaranBarang || status != StatusFakturJual.DIBUAT) {
+            throw new DataTidakBolehDiubah(this)
+        }
         ApplicationHolder.application.event(new PesanStok(this, true))
-        tambah(pengeluaranBarang)
+        kirim()
     }
 
     Gudang kirimDari() {

@@ -372,6 +372,18 @@ class FakturJualRepository {
         faktur
     }
 
+    FakturJualOlehSales buatSuratJalan(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.buatSuratJalan(alamatTujuan, tanggalKirim, keterangan)
+        faktur
+    }
+
+    FakturJualOlehSales kirimSuratJalan(FakturJualOlehSales faktur) {
+        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur.kirimSuratJalan()
+        faktur
+    }
+
     FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
         faktur = findFakturJualOlehSalesById(faktur.id)
         faktur.hapusPengeluaranBarang()

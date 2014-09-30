@@ -36,14 +36,21 @@ abstract class FakturJual extends Faktur {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PengeluaranBarang pengeluaranBarang
 
-    protected void tambah(PengeluaranBarang pengeluaranBarang) {
-        if (!status.pengeluaranBolehDiubah) {
+    protected void tambah(PengeluaranBarang pengeluaranBarang, boolean langsungDikirim = true) {
+        if (!status.pengeluaranBolehDiubah || this.pengeluaranBarang) {
             throw new DataTidakBolehDiubah(this)
         }
-
         this.pengeluaranBarang = pengeluaranBarang
-        status = StatusFakturJual.DIANTAR
+        if (langsungDikirim) {
+            kirim()
+        }
+    }
 
+    protected void kirim() {
+        if (!status.pengeluaranBolehDiubah && !pengeluaranBarang) {
+            throw new DataTidakBolehDiubah(this)
+        }
+        status = StatusFakturJual.DIANTAR
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this))
     }
 

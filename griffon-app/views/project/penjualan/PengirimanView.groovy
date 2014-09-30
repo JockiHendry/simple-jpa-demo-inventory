@@ -26,6 +26,8 @@ import static javax.swing.SwingConstants.CENTER
 actions {
     action(id: 'showBarangYangHarusDikirim', name: 'Klik Disini Untuk Melihat Item Untuk Dikirim...', closure: controller.showBarangYangHarusDikirim)
     action(id: 'cetakSummary', name: 'Cetak Summary...', closure: controller.cetakSummary)
+    action(id: 'simpanSuratJalan', name: 'Simpan Surat Jalan', closure: controller.simpanSuratJalan)
+    action(id: 'kirimSuratJalan', name: 'Order Di Surat Jalan Sudah Diantar...', closure: controller.kirimSuratJalan)
 }
 
 application() {
@@ -84,7 +86,8 @@ application() {
 
             panel(constraints: PAGE_END) {
                 flowLayout(alignment: FlowLayout.LEADING)
-                button('Proses Pengiriman Barang', actionPerformed: controller.kirim, visible: bind { model.allowKirim })
+                button(action: simpanSuratJalan, visible: bind { model.allowBuatSuratJalan })
+                button(action: kirimSuratJalan, visible: bind { model.allowKirim })
                 button('Hapus Pengiriman', actionPerformed: controller.batalKirim, visible: bind { model.allowBatalKirim})
                 button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
                 button('Cetak', actionPerformed: controller.cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowPrint}))

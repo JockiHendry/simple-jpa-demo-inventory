@@ -58,19 +58,38 @@ class PengirimanController {
         }
     }
 
-    def kirim = {
+    def simpanSuratJalan = {
         if (!fakturJualRepository.validate(model, Default, model)) return
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan melakukan pengiriman barang untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin menyimpan data surat untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.kirim(faktur, model.alamatTujuan, model.tanggal, model.keterangan)
+            faktur = fakturJualRepository.buatSuratJalan(faktur, model.alamatTujuan, model.tanggal, model.keterangan)
+            execInsideUISync {
+                view.table.selectionModel.selected[0] = faktur
+                cetak(faktur)
+            }
+        } catch (DataTidakBolehDiubah ex) {
+            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+        }
+    }
+
+    def kirimSuratJalan = {
+        if (!fakturJualRepository.validate(model, Default, model)) return
+        FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
+        if (faktur.pengeluaranBarang == null) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memproses pengiriman, buat surat jalan terlebih dahulu!', 'Kesalahan', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin order surat jalan telah diantar untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        try {
+            faktur = fakturJualRepository.kirimSuratJalan(faktur)
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
-                cetak(faktur)
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
@@ -104,14 +123,14 @@ class PengirimanController {
 
     def cetak = { e ->
         FakturJualOlehSales selected = e instanceof FakturJualOlehSales? e: view.table.selectionModel.selected[0]
-        if (selected.status == StatusFakturJual.DIANTAR) {
+        if (selected.pengeluaranBarang != null) {
             execInsideUISync {
                 def args = [dataSource: selected, template: 'surat_jalan.json']
                 def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
                 DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
             }
         } else {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual belum diantar sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(view.mainPanel, 'Surat jalan belum dibuat sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -147,10 +166,9 @@ class PengirimanController {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.nomorFakturJual = selected.nomor
                 if (selected.pengeluaranBarang) {
-                    if (selected.deleted != 'Y') {
-                        model.allowKirim = false
-                        model.allowBatalKirim = (selected.status == StatusFakturJual.DIANTAR)
-                    }
+                    model.allowBuatSuratJalan = false
+                    model.allowKirim = (selected.status == StatusFakturJual.DIBUAT) && (selected.deleted != 'Y')
+                    model.allowBatalKirim = (selected.status == StatusFakturJual.DIANTAR)
                     model.nomorSuratJalan = selected.pengeluaranBarang.nomor
                     model.tanggal = selected.pengeluaranBarang.tanggal
                     model.alamatTujuan = selected.pengeluaranBarang.alamatTujuan
@@ -161,7 +179,8 @@ class PengirimanController {
                     model.alamatTujuan = null
                     model.keterangan = null
                     if (selected.status.pengeluaranBolehDiubah && selected.deleted != 'Y') {
-                        model.allowKirim = true
+                        model.allowBuatSuratJalan = true
+                        model.allowKirim = false
                         model.allowBatalKirim = false
                         model.alamatTujuan = selected.konsumen.alamat
                     }

@@ -25,6 +25,7 @@ import org.joda.time.LocalDate
 
 class PengirimanModel {
 
+    @Bindable boolean allowBuatSuratJalan
     @Bindable boolean allowKirim
     @Bindable boolean allowBatalKirim
     @Bindable boolean allowPrint = true
