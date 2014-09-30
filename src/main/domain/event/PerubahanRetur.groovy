@@ -15,6 +15,7 @@
  */
 package domain.event
 
+import domain.inventory.DaftarBarang
 import domain.retur.Retur
 import griffon.core.*
 
@@ -22,11 +23,27 @@ class PerubahanRetur extends Event {
 
     boolean invers
     Retur retur
+    Retur returAwal
 
     PerubahanRetur(Retur retur, boolean invers = false) {
         super(retur)
         this.retur = retur
         this.invers = invers
+    }
+
+    PerubahanRetur(Retur retur, Retur returAwal, boolean invers = false) {
+        super(retur)
+        this.retur = retur
+        this.returAwal = returAwal
+        this.invers = invers
+    }
+
+    DaftarBarang nilai() {
+        if (!returAwal) {
+            return retur
+        } else {
+            return retur.toDaftarBarangSementara() - returAwal
+        }
     }
 
 }

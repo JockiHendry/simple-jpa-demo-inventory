@@ -110,7 +110,7 @@ application(title: 'Retur Beli',
                 button(action: cetak, visible: bind{ table.isRowSelected && model.showSave })
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
                 button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave && !model.deleted }), action: delete)
-                button(visible: bind{ model.showPenukaran }, action: penukaran)
+                button(visible: bind{ table.isRowSelected && model.showPenukaran }, action: penukaran)
             }
         }
     }

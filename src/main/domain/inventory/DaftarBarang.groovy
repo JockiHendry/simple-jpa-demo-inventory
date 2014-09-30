@@ -80,7 +80,7 @@ abstract class DaftarBarang {
     }
 
     DaftarBarangSementara toDaftarBarangSementara() {
-        new DaftarBarangSementara(items)
+        new DaftarBarangSementara(items, faktor())
     }
 
     Integer toPoin() {

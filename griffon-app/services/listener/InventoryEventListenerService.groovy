@@ -37,9 +37,9 @@ class InventoryEventListenerService {
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
         log.info "Event onPerubahanRetur mulai dikerjakan..."
 
-        Retur retur = perubahanRetur.retur
-        retur.items.each { ItemBarang itemBarang ->
-            int pengali = (perubahanRetur.invers? -1: 1) * retur.faktor()
+        DaftarBarang daftarBarang = perubahanRetur.nilai()
+        daftarBarang.items.each { ItemBarang itemBarang ->
+            int pengali = (perubahanRetur.invers? -1: 1) * daftarBarang.faktor()
             int jumlahRetur = pengali * itemBarang.jumlah
             if (itemBarang.produk.jumlahRetur == null) {
                 itemBarang.produk.jumlahRetur = jumlahRetur

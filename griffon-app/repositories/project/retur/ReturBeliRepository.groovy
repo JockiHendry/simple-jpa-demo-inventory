@@ -29,8 +29,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturBeliRepository {
 
-    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch) {
-        findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+        findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
                 and()
@@ -47,8 +47,8 @@ class ReturBeliRepository {
         }
     }
 
-    List<ReturBeli> cariForSupplier(Supplier supplierSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, Boolean sudahDiprosesSearch) {
-        findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+    List<ReturBeli> cariForSupplier(Supplier supplierSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+        findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             supplier eq(supplierSearch)
             and()
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
@@ -82,6 +82,8 @@ class ReturBeliRepository {
         if (mergedRetur.sudahDiproses) {
             throw new DataTidakBolehDiubah('Tidak boleh mengubah retur beli karena sudah diproses dan diterima!', returBeli)
         }
+        returBeli.items.each { it.produk = merge(it.produk) }
+        ApplicationHolder.application?.event(new PerubahanRetur(returBeli, mergedRetur))
         mergedRetur.with {
             nomor = returBeli.nomor
             tanggal = returBeli.tanggal

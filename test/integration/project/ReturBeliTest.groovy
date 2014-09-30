@@ -106,7 +106,43 @@ class ReturBeliTest extends DbUnitTestCase {
             assertEquals(17, p2.stok(g).jumlah)
             assertEquals(15, p3.stok(g).jumlah)
         }
+    }
 
+    public void testTambahDanUpdate() {
+        Produk p1 = returBeliRepository.findProdukById(-1l)
+        Produk p2 = returBeliRepository.findProdukById(-2l)
+        Produk p3 = returBeliRepository.findProdukById(-3l)
+        Supplier s = returBeliRepository.findSupplierById(-1l)
+        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s, gudang: gudangRepository.cariGudangUtama())
+        KlaimKemasan klaimKemasan1 = new KlaimKemasan(1, LocalDate.now())
+        klaimKemasan1.tambah(new ItemBarang(p1, 10))
+        klaimKemasan1.tambah(new ItemBarang(p2, 20))
+        klaimKemasan1.tambah(new ItemBarang(p3, 30))
+        returBeli.tambah(klaimKemasan1)
+        returBeli = returBeliRepository.buat(returBeli)
+
+        // Periksa nilai jumlah retur di produk
+        p1 = returBeliRepository.findProdukById(-1l)
+        assertEquals(40, p1.jumlahRetur)
+        p2 = returBeliRepository.findProdukById(-2l)
+        assertEquals(40, p2.jumlahRetur)
+        p3 = returBeliRepository.findProdukById(-3l)
+        assertEquals(10, p3.jumlahRetur)
+
+        KlaimKemasan klaimKemasan2 = new KlaimKemasan(2, LocalDate.now())
+        klaimKemasan2.tambah(new ItemBarang(p1, 5))
+        klaimKemasan2.tambah(new ItemBarang(p2, 6))
+        klaimKemasan2.tambah(new ItemBarang(p3, 7))
+        returBeli.tambah(klaimKemasan2)
+        returBeliRepository.update(returBeli)
+
+        // Periksa nilai jumlah retur di produk setelah update
+        p1 = returBeliRepository.findProdukById(-1l)
+        assertEquals(35, p1.jumlahRetur)
+        p2 = returBeliRepository.findProdukById(-2l)
+        assertEquals(34, p2.jumlahRetur)
+        p3 = returBeliRepository.findProdukById(-3l)
+        assertEquals(3, p3.jumlahRetur)
     }
 
 }

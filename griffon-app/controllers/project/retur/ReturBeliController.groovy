@@ -83,9 +83,9 @@ class ReturBeliController {
         }
         List result
         if (model.forSupplier) {
-            result = returBeliRepository.cariForSupplier(model.forSupplier, model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, sudahDiproses)
+            result = returBeliRepository.cariForSupplier(model.forSupplier, model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, sudahDiproses, !model.showSave)
         } else {
-            result = returBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch, sudahDiproses)
+            result = returBeliRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.supplierSearch, sudahDiproses, !model.showSave)
         }
         execInsideUISync {
             model.returBeliList.clear()

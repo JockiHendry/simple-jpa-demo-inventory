@@ -50,7 +50,7 @@ application(title: 'Kemasan Retur',
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
-                glazedColumn(name: 'Qty', expression: {it.items.size()})
+                glazedColumn(name: 'Qty', expression: {it.jumlah()})
             }
         }
 

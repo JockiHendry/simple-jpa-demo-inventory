@@ -46,4 +46,8 @@ class KlaimKemasan extends KlaimRetur {
         items << itemBarang
     }
 
+    Integer jumlah() {
+        items.sum { ItemBarang i -> i.jumlah }
+    }
+
 }
