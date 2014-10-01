@@ -29,6 +29,7 @@ public enum JenisLaporan {
     LAPORAN_PENJUALAN_SALES('Laporan Penjualan Per Sales', 'laporan_penjualan_sales', 'laporanPenjualanPerSales'),
     LAPORAN_PENJUALAN_REGION('Laporan Penjualan Per Region', 'laporan_penjualan_region', 'laporanPenjualanPerRegion'),
     LAPORAN_PENJUALAN_KONSUMEN('Laporan Penjualan Per Konsumen', 'laporan_penjualan_konsumen', 'laporanPenjualanPerKonsumen'),
+    LAPORAN_PENJUALAN_PRODUK('Laporan Penjualan Produk', 'laporan_penjualan_produk', 'laporanPenjualanProduk'),
     LAPORAN_SISA_PIUTANG('Laporan Sisa Piutang', 'laporan_sisa_piutang', 'laporanSisaPiutang'),
     LAPORAN_STOK('Laporan Summary Stok', 'laporan_stok', 'laporanStok'),
     LAPORAN_STOK_GUDANG('Laporan Stok Per Gudang', 'laporan_stok_gudang', 'laporanStokGudang'),
