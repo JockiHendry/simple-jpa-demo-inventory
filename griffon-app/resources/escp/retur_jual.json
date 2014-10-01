@@ -26,10 +26,10 @@
             },
             " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
-            "      Kepala Gudang,                                                     Dibuat oleh,         ",
-            "                                                                                ",
+            "         Penerima,                      Kepala Gudang,                   Dibuat oleh,         ",
             "",
-            "  (....................)                                           ({{createdBy::21::center}})"
+            "",
+            "  (....................)          (.......................)        ({{createdBy::21::center}})"
         ]
     }
 }
