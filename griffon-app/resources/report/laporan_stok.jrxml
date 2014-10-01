@@ -175,7 +175,7 @@
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement x="0" y="1" width="179" height="16" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>

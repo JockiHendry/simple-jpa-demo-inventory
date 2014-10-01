@@ -92,7 +92,7 @@
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="1" width="179" height="16" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<reportElement x="0" y="1" width="306" height="16" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -102,7 +102,7 @@
 				<text><![CDATA[Produk]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="252" y="2" width="303" height="15" uuid="96ea8c66-2432-4a6a-b5b0-0c659c895a04"/>
+				<reportElement x="379" y="2" width="176" height="15" uuid="96ea8c66-2432-4a6a-b5b0-0c659c895a04"/>
 				<box leftPadding="10">
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -112,7 +112,7 @@
 				<text><![CDATA[Satuan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="179" y="1" width="73" height="16" uuid="2a611cb5-431e-4b71-a494-1885ca689d0e"/>
+				<reportElement x="306" y="1" width="73" height="16" uuid="2a611cb5-431e-4b71-a494-1885ca689d0e"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -125,8 +125,8 @@
 	</columnHeader>
 	<detail>
 		<band height="18" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="179" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="306" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -136,7 +136,7 @@
 				<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="179" y="1" width="73" height="16" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
+				<reportElement x="306" y="0" width="73" height="17" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -146,7 +146,7 @@
 				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="252" y="1" width="303" height="16" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
+				<reportElement x="379" y="1" width="176" height="16" isPrintWhenDetailOverflows="true" uuid="54152373-5978-46d7-9302-abaf2b27c8a6"/>
 				<box leftPadding="10">
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
