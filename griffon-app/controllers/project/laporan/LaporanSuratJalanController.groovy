@@ -50,7 +50,8 @@ class LaporanSuratJalanController {
             and()
             jumlah gt(0)
         }
-        model.params.platNo = (model.gudang.selectedItem as Gudang).keterangan
+        Gudang gudang = model.gudang.selectedItem
+        model.params.platNo = "${gudang.nama} - ${gudang.keterangan}"
         close()
     }
 
