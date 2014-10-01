@@ -110,68 +110,81 @@
 	<columnHeader>
 		<band height="29">
 			<staticText>
-				<reportElement x="0" y="9" width="85" height="20" uuid="9b381430-14d3-4746-9d06-dc5f80e1e173"/>
+				<reportElement x="0" y="9" width="118" height="20" uuid="9b381430-14d3-4746-9d06-dc5f80e1e173"/>
 				<box>
 					<topPen lineWidth="1.25"/>
+					<leftPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Nomor Faktur]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="85" y="9" width="58" height="20" uuid="0f03a8c0-81ee-41da-84e3-be759d846920"/>
+				<reportElement x="118" y="9" width="58" height="20" uuid="0f03a8c0-81ee-41da-84e3-be759d846920"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Tanggal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="143" y="9" width="95" height="20" uuid="16a67ea9-564f-466d-b00f-acf6ead1de5f"/>
+				<reportElement x="176" y="9" width="79" height="20" uuid="16a67ea9-564f-466d-b00f-acf6ead1de5f"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph rightIndent="5"/>
 				</textElement>
 				<text><![CDATA[Jumlah]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="238" y="9" width="91" height="20" uuid="3c3e6b6e-334e-42df-ba4a-93aede55b0c6"/>
+				<reportElement x="255" y="9" width="85" height="20" uuid="3c3e6b6e-334e-42df-ba4a-93aede55b0c6"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph rightIndent="5"/>
 				</textElement>
 				<text><![CDATA[Sisa Piutang]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="329" y="9" width="73" height="20" uuid="713f08ef-fa4c-48bc-841e-0153fc408658"/>
+				<reportElement x="340" y="9" width="73" height="20" uuid="713f08ef-fa4c-48bc-841e-0153fc408658"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Cash]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="402" y="9" width="84" height="20" uuid="d6710281-cf0e-4bd7-bffb-ab8de8f4b12c"/>
+				<reportElement x="413" y="9" width="73" height="20" uuid="d6710281-cf0e-4bd7-bffb-ab8de8f4b12c"/>
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Cek/BG]]></text>
 			</staticText>
@@ -180,9 +193,11 @@
 				<box>
 					<topPen lineWidth="1.25"/>
 					<bottomPen lineWidth="1.25"/>
+					<rightPen lineWidth="1.25"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
+					<paragraph leftIndent="5"/>
 				</textElement>
 				<text><![CDATA[Keterangan]]></text>
 			</staticText>
@@ -199,39 +214,57 @@ JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
 					</datasetRun>
 					<jr:listContents height="68" width="555">
 						<textField>
-							<reportElement x="0" y="2" width="85" height="20" uuid="eeac942a-77a4-49a3-91a9-24824874104d"/>
+							<reportElement x="0" y="2" width="118" height="20" uuid="eeac942a-77a4-49a3-91a9-24824874104d"/>
 							<box>
-								<topPen lineWidth="0.25" lineStyle="Dashed"/>
-								<bottomPen lineWidth="0.25" lineStyle="Dashed"/>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineWidth="0.25" lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
 							</box>
-							<textElement verticalAlignment="Middle"/>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
 						</textField>
 						<textField>
-							<reportElement x="85" y="2" width="58" height="20" uuid="86f79bce-4bb3-43ab-b39c-9be59329a36a"/>
+							<reportElement x="118" y="2" width="58" height="20" uuid="86f79bce-4bb3-43ab-b39c-9be59329a36a"/>
 							<box>
-								<topPen lineWidth="0.25" lineStyle="Dashed"/>
-								<bottomPen lineWidth="0.25" lineStyle="Dashed"/>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
 							</box>
-							<textElement verticalAlignment="Middle"/>
+							<textElement verticalAlignment="Middle">
+								<paragraph leftIndent="5"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
 						</textField>
 						<textField pattern="#,##0">
-							<reportElement x="143" y="2" width="95" height="20" uuid="4faf7aba-b8f6-4a57-b5c3-b78b92e89e9d"/>
+							<reportElement x="176" y="2" width="79" height="20" uuid="4faf7aba-b8f6-4a57-b5c3-b78b92e89e9d"/>
 							<box>
-								<topPen lineWidth="0.25" lineStyle="Dashed"/>
-								<bottomPen lineWidth="0.25" lineStyle="Dashed"/>
+								<pen lineStyle="Dashed"/>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
 							</box>
-							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<paragraph rightIndent="5"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$F{piutang}.jumlah]]></textFieldExpression>
 						</textField>
 						<textField pattern="#,##0">
-							<reportElement x="238" y="2" width="91" height="20" uuid="e745140d-720e-4c82-bd5b-6ce9e4c63bfa"/>
+							<reportElement x="255" y="2" width="85" height="20" uuid="e745140d-720e-4c82-bd5b-6ce9e4c63bfa"/>
 							<box>
-								<topPen lineWidth="0.25" lineStyle="Dashed"/>
-								<bottomPen lineWidth="0.25" lineStyle="Dashed"/>
+								<pen lineStyle="Dotted"/>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
 							</box>
-							<textElement textAlignment="Right" verticalAlignment="Middle"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<paragraph rightIndent="5"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$F{piutang}.sisa()]]></textFieldExpression>
 						</textField>
 						<componentElement>
@@ -288,7 +321,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 												<rightPen lineWidth="1.0" lineStyle="Solid"/>
 											</box>
-											<textElement verticalAlignment="Middle"/>
+											<textElement verticalAlignment="Middle">
+												<paragraph leftIndent="3"/>
+											</textElement>
 											<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
 										</textField>
 									</jr:detailCell>
@@ -336,7 +371,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 												<rightPen lineStyle="Dotted"/>
 											</box>
-											<textElement textAlignment="Right" verticalAlignment="Middle"/>
+											<textElement textAlignment="Right" verticalAlignment="Middle">
+												<paragraph rightIndent="3"/>
+											</textElement>
 											<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 										</textField>
 									</jr:detailCell>
@@ -426,7 +463,9 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 												<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 												<rightPen lineStyle="Dotted"/>
 											</box>
-											<textElement verticalAlignment="Middle"/>
+											<textElement verticalAlignment="Middle">
+												<paragraph leftIndent="3"/>
+											</textElement>
 											<textFieldExpression><![CDATA[$F{bilyetGiro}?.nomorSeri?: '']]></textFieldExpression>
 										</textField>
 									</jr:detailCell>
@@ -475,10 +514,32 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 							</jr:table>
 						</componentElement>
 						<staticText>
-							<reportElement x="329" y="2" width="226" height="20" uuid="6e6ec62c-36fd-4553-b8b1-1eaf1b8f6dbb"/>
+							<reportElement x="340" y="2" width="73" height="20" uuid="6e6ec62c-36fd-4553-b8b1-1eaf1b8f6dbb"/>
 							<box>
-								<topPen lineWidth="0.25" lineStyle="Dashed"/>
+								<pen lineStyle="Dotted"/>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
+							</box>
+							<text><![CDATA[]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="413" y="2" width="73" height="20" uuid="256fa664-6acf-4121-9766-6c05b4d2e70a"/>
+							<box>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
 								<bottomPen lineWidth="0.25" lineStyle="Dashed"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
+							</box>
+							<text><![CDATA[]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="486" y="2" width="69" height="20" uuid="d67927d0-c574-4c3e-8d4c-2095dc030b4a"/>
+							<box>
+								<topPen lineWidth="0.25" lineStyle="Dotted"/>
+								<leftPen lineStyle="Dotted"/>
+								<bottomPen lineWidth="0.25" lineStyle="Dotted"/>
+								<rightPen lineWidth="0.25" lineStyle="Dotted"/>
 							</box>
 							<text><![CDATA[]]></text>
 						</staticText>
