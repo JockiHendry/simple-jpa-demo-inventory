@@ -44,6 +44,12 @@
 		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="tanggalMulaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tanggalSelesaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -81,13 +87,6 @@
 				</textElement>
 				<text><![CDATA[Laporan Sisa Piutang]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="0" y="79" width="555" height="20" uuid="0efc36d8-cd71-404b-a5e8-6cf34a21692b"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[org.joda.time.LocalDate.now().toString('dd-MM-yyyy')]]></textFieldExpression>
-			</textField>
 			<image>
 				<reportElement x="0" y="0" width="74" height="60" uuid="b87fba14-e17e-42b6-a4a5-bae6d12d51a5"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
@@ -98,6 +97,13 @@
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="81" width="554" height="20" uuid="752b1fe1-dfe1-44c1-9a30-1d81049fe5b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["${$P{tanggalMulaiCari}.toString('dd-MM-yyyy')} s/d ${$P{tanggalSelesaiCari}.toString('dd-MM-yyyy')}"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

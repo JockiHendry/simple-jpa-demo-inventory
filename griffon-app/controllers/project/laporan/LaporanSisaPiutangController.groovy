@@ -15,6 +15,7 @@
  */
 package project.laporan
 
+import org.joda.time.LocalDate
 import project.penjualan.KonsumenRepository
 import javax.swing.SwingUtilities
 
@@ -24,19 +25,36 @@ class LaporanSisaPiutangController {
     def view
     KonsumenRepository konsumenRepository
 
+    void mvcGroupInit(Map args) {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+    }
+
     def tampilkanLaporan = {
-        String jpql = 'SELECT DISTINCT k FROM Konsumen k JOIN FETCH k.listFakturBelumLunas f JOIN FETCH f.piutang WHERE k.listFakturBelumLunas IS NOT EMPTY '
+        String jpql = '''
+    SELECT DISTINCT k FROM Konsumen k JOIN FETCH k.listFakturBelumLunas f JOIN FETCH f.piutang
+    WHERE k.listFakturBelumLunas IS NOT EMPTY
+        AND f.tanggal BETWEEN :tanggalMulaiSearch AND :tanggalSelesaiSearch
+        AND f.deleted != 'Y'
+'''
         if (model.konsumenSearch) {
             jpql += " AND k.nama LIKE '%${model.konsumenSearch}%'"
         }
         if (model.salesSearch) {
             jpql += " AND k.sales.nama LIKE '%${model.salesSearch}%'"
         }
-        model.result = konsumenRepository.executeQuery(jpql)
+        if (model.regionSearch) {
+            jpql += " AND (k.region.nama LIKE '%${model.regionSearch}%' OR k.region.bagianDari.nama LIKE '%${model.regionSearch}%')"
+        }
+
+        model.result = konsumenRepository.executeQuery(jpql, [:], [tanggalMulaiSearch: model.tanggalMulaiCari, tanggalSelesaiSearch: model.tanggalSelesaiCari])
 
         if (model.cetakFormulir?.booleanValue()) {
             model.params.fileLaporan = 'report/formulir_sisa_piutang.jasper'
         }
+
+        model.params.tanggalMulaiCari = model.tanggalMulaiCari
+        model.params.tanggalSelesaiCari = model.tanggalSelesaiCari
 
         //
         // TODO: Fix this! Hibernate complain with the following query, it has something to do with named graph.

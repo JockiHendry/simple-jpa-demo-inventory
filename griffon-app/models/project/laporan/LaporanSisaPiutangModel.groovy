@@ -16,12 +16,16 @@
 package project.laporan
 
 import groovy.beans.Bindable
+import org.joda.time.LocalDate
 
 class LaporanSisaPiutangModel {
 
     @Bindable String salesSearch
     @Bindable String konsumenSearch
+    @Bindable String regionSearch
     @Bindable Boolean cetakFormulir
+    @Bindable LocalDate tanggalMulaiCari
+    @Bindable LocalDate tanggalSelesaiCari
 
     List result
     Map params = [:]
