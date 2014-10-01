@@ -47,6 +47,8 @@ class LaporanSuratJalanController {
         }
         model.result = produkRepository.findAllStokProdukByDsl([orderBy: 'produk__nama']) {
             gudang eq(model.gudang.selectedItem)
+            and()
+            jumlah gt(0)
         }
         model.params.platNo = (model.gudang.selectedItem as Gudang).keterangan
         close()
