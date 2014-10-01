@@ -63,5 +63,5 @@ execOutsideUI {
 SplashScreen.instance.dispose()
 
 execOutsideUI {
-    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Version ${app.metadata.applicationVersion} Startup...")
+    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Version ${app?.metadata?.getApplicationVersion()} Startup...")
 }

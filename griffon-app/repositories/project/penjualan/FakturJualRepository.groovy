@@ -419,9 +419,9 @@ class FakturJualRepository {
             status eq(StatusFakturJual.DIBUAT)
         }.each { FakturJualOlehSales f ->
             if (!hasil) {
-                hasil = f.toDaftarBarangSementara()
+                hasil = f.barangYangHarusDikirim()
             } else {
-                hasil += f.toDaftarBarangSementara()
+                hasil += f.barangYangHarusDikirim()
             }
         }
         new DaftarBarangSementara(hasil?.normalisasi()?:[], 1)
