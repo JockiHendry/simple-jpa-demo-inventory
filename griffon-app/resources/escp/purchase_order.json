@@ -19,11 +19,11 @@
                 "border": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
-                    {"source": "produk.nama", "width": 41, "caption": "Nama Produk", "wrap": true},
-                    {"source": "jumlah::right", "width": 4, "caption": "Qty"},
+                    {"source": "produk.nama", "width": 40, "caption": "Nama Produk", "wrap": true},
+                    {"source": "jumlah::right", "width": 6, "caption": "Qty"},
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"},
                     {"source": "harga::number::right", "width": 15, "caption": "Harga"},
-                    {"source": "diskon", "width": 10, "caption": "Diskon", "wrap": true},
+                    {"source": "diskon", "width": 9, "caption": "Diskon", "wrap": true},
                     {"source": "bean.total()::number::right", "width": 15, "caption": "Total"}
                 ]
             },
