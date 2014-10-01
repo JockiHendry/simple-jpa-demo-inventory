@@ -16,6 +16,7 @@
         "detail": [
             {
                 "table": "items",
+                "lineSeparator": true,
                 "border": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},

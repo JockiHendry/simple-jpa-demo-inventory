@@ -192,7 +192,7 @@ griffon.project.dependency.resolution = {
         compile('net.sf.jasperreports:jasperreports:5.5.1') {
             exclude 'commons-collections'
         }
-        compile 'jockihendry:simple-escp:0.5.1'
+        compile 'jockihendry:simple-escp:0.5.2'
     }
 }
 
