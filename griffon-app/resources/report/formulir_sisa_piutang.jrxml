@@ -208,9 +208,9 @@
 			<componentElement>
 				<reportElement x="0" y="63" width="555" height="68" isRemoveLineWhenBlank="true" uuid="575ca51d-8a95-4bae-8628-744ec8e29e16"/>
 				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
-					<datasetRun subDataset="dsPiutang" uuid="6c28328c-642d-42e8-8000-0d668e201322">
+					<datasetRun subDataset="dsPiutang" uuid="dc675256-039a-4408-b05c-56e2dee0aea0">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
-JRBeanCollectionDataSource($F{listFakturBelumLunas})]]></dataSourceExpression>
+JRBeanCollectionDataSource(($F{listFakturBelumLunas} as List).sort())]]></dataSourceExpression>
 					</datasetRun>
 					<jr:listContents height="68" width="555">
 						<textField>

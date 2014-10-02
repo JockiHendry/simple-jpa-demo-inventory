@@ -36,6 +36,7 @@ class LaporanSisaPiutangController {
     WHERE k.listFakturBelumLunas IS NOT EMPTY
         AND f.tanggal BETWEEN :tanggalMulaiSearch AND :tanggalSelesaiSearch
         AND f.deleted != 'Y'
+    ORDER BY k.nama
 '''
         if (model.konsumenSearch) {
             jpql += " AND k.nama LIKE '%${model.konsumenSearch}%'"

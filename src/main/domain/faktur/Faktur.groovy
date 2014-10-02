@@ -28,7 +28,7 @@ import org.joda.time.*
 import javax.validation.groups.Default
 
 @MappedSuperclass @Canonical(excludes='listItemFaktur')
-abstract class Faktur {
+abstract class Faktur implements Comparable {
 
     @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])
     String nomor
@@ -104,5 +104,15 @@ abstract class Faktur {
         return nomor.hashCode()
     }
 
+    @Override
+    int compareTo(Object o) {
+        if (o == null) return -1
+        if (!(o instanceof Faktur)) return -1
+        if (nomor.compareTo(o.nomor) != 0) {
+            return tanggal.compareTo(o.tanggal)
+        } else {
+            return 0
+        }
+    }
 }
 
