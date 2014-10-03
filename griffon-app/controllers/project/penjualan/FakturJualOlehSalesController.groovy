@@ -70,10 +70,17 @@ class FakturJualOlehSalesController {
 
         try {
             if (fakturJualOlehSales.id == null) {
-                if (!model.listBonus.empty) {
-                    fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false, model.listBonus)
-                } else {
-                    fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false)
+                try {
+                    fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false, !model.listBonus.empty? model.listBonus: [])
+                } catch (MelebihiBatasKredit ex) {
+                    DialogUtils.showMVCGroup('supervisorPassword', [:], app, view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)]) { m, v, c ->
+                        if (m.ok) {
+                            fakturJualOlehSales.bonusPenjualan = null
+                            fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true, (!model.listBonus.empty)? model.listBonus: [])
+                        } else {
+                            throw new MelebihiBatasKredit(fakturJualOlehSales.konsumen)
+                        }
+                    }
                 }
                 execInsideUISync {
                     model.fakturJualOlehSalesList << fakturJualOlehSales
