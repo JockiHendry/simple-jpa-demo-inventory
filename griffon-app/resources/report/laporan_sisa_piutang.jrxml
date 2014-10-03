@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_sisa_piutang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c98f1cd3-55bc-4fc2-8765-c7fb1bd2a89e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="45"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -67,6 +67,10 @@
 	<field name="listFakturBelumLunas" class="java.util.Set">
 		<fieldDescription><![CDATA[listFakturBelumLunas]]></fieldDescription>
 	</field>
+	<variable name="totalPiutang" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{_THIS}.jumlahPiutang()]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -460,4 +464,28 @@ JRBeanCollectionDataSource($F{piutang}.listPembayaran)]]></dataSourceExpression>
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="50">
+			<textField pattern="#,##0.00">
+				<reportElement x="413" y="12" width="142" height="20" uuid="dda19e40-e430-4c25-a8bf-e72fd7afe441"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalPiutang}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="326" y="12" width="87" height="20" uuid="2bbceba8-3c85-4368-8287-bf2fc0a1481f"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Piutang:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="d7337c38-a27f-4154-970f-b103384e9254"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Double"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
 </jasperReport>
