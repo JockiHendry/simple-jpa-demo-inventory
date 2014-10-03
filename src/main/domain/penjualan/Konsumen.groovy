@@ -133,7 +133,10 @@ class Konsumen implements Comparable {
             throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
         }
 
-        for (FakturJualOlehSales faktur: listFakturBelumLunas.toArray()) {
+        // Mengubah daftar faktur menjadi berurut berdasarkan tanggal
+        List daftarFaktur = (listFakturBelumLunas as List).sort { f1, f2 -> (!f1?.tanggal || !f2?.tanggal)? -1: f1.tanggal.compareTo(f2.tanggal)}
+
+        for (FakturJualOlehSales faktur: daftarFaktur) {
             if (!faktur.piutang) continue
             BigDecimal sisaPiutang = faktur.sisaPiutang()
             if (jumlah >= sisaPiutang) {

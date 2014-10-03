@@ -109,6 +109,7 @@ abstract class Faktur implements Comparable {
         if (o == null) return -1
         if (!(o instanceof Faktur)) return -1
         if (nomor.compareTo(o.nomor) != 0) {
+            if (!o.tanggal) return -1
             return tanggal.compareTo(o.tanggal)
         } else {
             return 0

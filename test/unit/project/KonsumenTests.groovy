@@ -153,15 +153,15 @@ class KonsumenTests extends GriffonUnitTestCase {
         Konsumen mrNiceGuy = new Konsumen(sales: sales)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 20000, 20100, 50)
-        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang: 200.000
+        FakturJualOlehSales f1 = new FakturJualOlehSales(nomor: 'F1', tanggal: LocalDate.now().minusDays(3), konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang: 200.000
         f1.tambah(new ItemFaktur(produkA, 10, 10000))
         f1.tambah(new ItemFaktur(produkB, 5, 20000))
         f1.piutang = new KewajibanPembayaran(jumlah: f1.total())
-        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'F2', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  70.000
+        FakturJualOlehSales f2 = new FakturJualOlehSales(nomor: 'F2', tanggal: LocalDate.now().minusDays(2), konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  70.000
         f2.tambah(new ItemFaktur(produkA, 3, 10000))
         f2.tambah(new ItemFaktur(produkB, 2, 20000))
         f2.piutang = new KewajibanPembayaran(jumlah: f2.total())
-        FakturJualOlehSales f3 = new FakturJualOlehSales(nomor: 'F3', konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  30.000
+        FakturJualOlehSales f3 = new FakturJualOlehSales(nomor: 'F3', tanggal: LocalDate.now(), konsumen: mrNiceGuy, status: StatusFakturJual.DITERIMA)  // Piutang:  30.000
         f3.tambah(new ItemFaktur(produkA, 3, 10000))
         f3.piutang = new KewajibanPembayaran(jumlah: f3.total())
         mrNiceGuy.tambahFakturBelumLunas(f1)
@@ -174,16 +174,22 @@ class KonsumenTests extends GriffonUnitTestCase {
         assertEquals(150000, mrNiceGuy.jumlahPiutang())
         assertEquals(300000, mrNiceGuy.creditTerpakai)
         assertEquals(3, mrNiceGuy.listFakturBelumLunas.size())
+        assertEquals(50000, f1.sisaPiutang())
+        assertEquals(70000, f2.sisaPiutang())
+        assertEquals(30000, f3.sisaPiutang())
 
         mrNiceGuy.potongPiutang(50000)
         assertEquals(100000, mrNiceGuy.jumlahPiutang())
         assertEquals(100000, mrNiceGuy.creditTerpakai)
         assertEquals(2, mrNiceGuy.listFakturBelumLunas.size())
+        assertEquals(70000, f2.sisaPiutang())
+        assertEquals(30000, f3.sisaPiutang())
 
         mrNiceGuy.potongPiutang(80000)
         assertEquals(20000, mrNiceGuy.jumlahPiutang())
         assertEquals(30000, mrNiceGuy.creditTerpakai)
         assertEquals(1, mrNiceGuy.listFakturBelumLunas.size())
+        assertEquals(20000, f3.sisaPiutang())
 
         shouldFail { mrNiceGuy.potongPiutang(500000)}
     }
