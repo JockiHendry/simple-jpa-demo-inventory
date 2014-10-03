@@ -17,6 +17,7 @@
             {
                 "table": "items",
                 "border": true,
+                "lineSeparator": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
                     {"source": "produk.nama", "width": 78, "caption": "Nama Produk", "wrap": true},
@@ -26,7 +27,7 @@
             },
             " {{keterangan?'Ket : ' + keterangan:''::94}}",
             "",
-            "         Penerima,                      Kepala Gudang,                   Dibuat oleh,         ",
+            "         Penerima,                    Bagian  Penukaran,                 Dibuat oleh,         ",
             "",
             "",
             "  (....................)          (.......................)        ({{createdBy::21::center}})"
