@@ -27,71 +27,67 @@ actions {
     action(id: 'showBarangYangHarusDikirim', name: 'Klik Disini Untuk Melihat Item Yang Dikirim...', closure: controller.showBarangYangHarusDikirim)
 }
 
-application() {
+panel(id: 'mainPanel') {
+    borderLayout()
 
-    panel(id: 'mainPanel') {
-        borderLayout()
+    panel(constraints: PAGE_START) {
+        flowLayout(alignment: FlowLayout.LEADING)
+        dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
+        label(' s/d ')
+        dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
+        comboBox(id: 'statusSearch', model: model.statusSearch)
+        textField(id: 'nomorFakturSearch', columns: 10, text: bind('nomorFakturSearch', target: model, mutual: true), actionPerformed: controller.search)
+        textField(id: 'nomorSuratJalanSearch', columns: 10, text: bind('nomorSuratJalanSearch', target: model, mutual: true), actionPerformed: controller.search)
+        textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
+        button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+    }
 
-        panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
-            label(' s/d ')
-            dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
-            comboBox(id: 'statusSearch', model: model.statusSearch)
-            textField(id: 'nomorFakturSearch', columns: 10, text: bind('nomorFakturSearch', target: model, mutual: true), actionPerformed: controller.search)
-            textField(id: 'nomorSuratJalanSearch', columns: 10, text: bind('nomorSuratJalanSearch', target: model, mutual: true), actionPerformed: controller.search)
-            textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
-            button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
-        }
-
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
-                    doubleClickAction: showBarangYangHarusDikirim, enterKeyAction: showBarangYangHarusDikirim) {
-                glazedColumn(name: '', property: 'deleted', width: 20) {
-                    templateRenderer(exp: { it == 'Y'? 'D': ''})
-                }
-                glazedColumn(name: 'Nomor Faktur', property: 'nomor')
-                glazedColumn(name: 'Nomor Surat Jalan', expression: { it.pengeluaranBarang?.nomor })
-                glazedColumn(name: 'Tanggal', property: 'tanggal') {
-                    templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
-                }
-                glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
-                glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
-                glazedColumn(name: 'Status', property: 'status')
-                glazedColumn(name: 'Alamat Tujuan', expression: { it.pengeluaranBarang?.alamatTujuan })
-                glazedColumn(name: 'Keterangan', property: 'keterangan')
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+                doubleClickAction: showBarangYangHarusDikirim, enterKeyAction: showBarangYangHarusDikirim) {
+            glazedColumn(name: '', property: 'deleted', width: 20) {
+                templateRenderer(exp: { it == 'Y'? 'D': ''})
             }
-        }
-
-        panel(constraints: PAGE_END) {
-            borderLayout()
-            panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, focusCycleRoot: true) {
-                label('Nomor Faktur:')
-                label(id: 'nomorFaktur', text: bind('nomorFaktur', source: model), constraints: 'wrap')
-                label('Nomor Surat Jalan:')
-                label(id: 'nomorSuratJalan', text: bind('nomorSuratJalan', source: model), errorPath: 'nomorSuratJalan')
-                errorLabel(path: 'nomorSuratJalan', constraints: 'wrap')
-                label('Tanggal Terima:')
-                dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
-                errorLabel(path: 'tanggal', constraints: 'wrap')
-                label('Nama Penerima:')
-                textField(id: 'namaPenerima', columns: 20, text: bind('namaPenerima', target: model, mutual: true), errorPath: 'namaPenerima')
-                errorLabel(path: 'namaPenerima', constraints: 'wrap')
-                label('Nama Supir:')
-                textField(id: 'namaSupir', columns: 20, text: bind('namaSupir', target: model, mutual: true), errorPath: 'namaSupir')
-                errorLabel(path: 'namaSupir', constraints: 'wrap')
+            glazedColumn(name: 'Nomor Faktur', property: 'nomor')
+            glazedColumn(name: 'Nomor Surat Jalan', expression: { it.pengeluaranBarang?.nomor })
+            glazedColumn(name: 'Tanggal', property: 'tanggal') {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
             }
-
-            panel(constraints: PAGE_END) {
-                flowLayout(alignment: FlowLayout.LEADING)
-                button('Simpan Bukti Terima', actionPerformed: controller.save, visible: bind { model.allowSimpan })
-                button('Hapus', actionPerformed: controller.hapus, visible: bind { model.allowHapus})
-                button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
-                button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)
-            }
+            glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
+            glazedColumn(name: 'Sales', expression: { it.konsumen.sales.nama })
+            glazedColumn(name: 'Status', property: 'status')
+            glazedColumn(name: 'Alamat Tujuan', expression: { it.pengeluaranBarang?.alamatTujuan })
+            glazedColumn(name: 'Keterangan', property: 'keterangan')
         }
     }
 
+    panel(constraints: PAGE_END) {
+        borderLayout()
+        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, focusCycleRoot: true) {
+            label('Nomor Faktur:')
+            label(id: 'nomorFaktur', text: bind('nomorFaktur', source: model), constraints: 'wrap')
+            label('Nomor Surat Jalan:')
+            label(id: 'nomorSuratJalan', text: bind('nomorSuratJalan', source: model), errorPath: 'nomorSuratJalan')
+            errorLabel(path: 'nomorSuratJalan', constraints: 'wrap')
+            label('Tanggal Terima:')
+            dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
+            errorLabel(path: 'tanggal', constraints: 'wrap')
+            label('Nama Penerima:')
+            textField(id: 'namaPenerima', columns: 20, text: bind('namaPenerima', target: model, mutual: true), errorPath: 'namaPenerima')
+            errorLabel(path: 'namaPenerima', constraints: 'wrap')
+            label('Nama Supir:')
+            textField(id: 'namaSupir', columns: 20, text: bind('namaSupir', target: model, mutual: true), errorPath: 'namaSupir')
+            errorLabel(path: 'namaSupir', constraints: 'wrap')
+        }
+
+        panel(constraints: PAGE_END) {
+            flowLayout(alignment: FlowLayout.LEADING)
+            button('Simpan Bukti Terima', actionPerformed: controller.save, visible: bind { model.allowSimpan })
+            button('Hapus', actionPerformed: controller.hapus, visible: bind { model.allowHapus})
+            button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
+            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)
+        }
+    }
 }
 
 PromptSupport.setPrompt("Nomor Surat Jalan...", nomorSuratJalanSearch)

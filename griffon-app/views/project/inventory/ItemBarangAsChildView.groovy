@@ -24,66 +24,55 @@ import java.text.NumberFormat
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.RIGHT
 
-application(title: 'simple-jpa-demo-inventory',
-  preferredSize: [320, 240],
-  pack: true,
-  //location: [50,50],
-  locationByPlatform: true,
-  iconImage:   imageIcon('/griffon-icon-48x48.png').image,
-  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-               imageIcon('/griffon-icon-32x32.png').image,
-               imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel') {
+    borderLayout()
 
-    panel(id: 'mainPanel') {
+    panel(constraints: CENTER) {
         borderLayout()
-
-        panel(constraints: CENTER) {
-            borderLayout()
-            scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.itemBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                    glazedColumn(name: 'Produk', property: 'produk') {
-                        templateRenderer('${it.nama}')
-                    }
-                    glazedColumn(name: 'Qty', property: 'jumlah')
-                    glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
+        scrollPane(constraints: CENTER) {
+            glazedTable(id: 'table', list: model.itemBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+                glazedColumn(name: 'Produk', property: 'produk') {
+                    templateRenderer('${it.nama}')
                 }
+                glazedColumn(name: 'Qty', property: 'jumlah')
+                glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
             }
         }
+    }
 
-        taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind { model.editable }, constraints: PAGE_END) {
-            label('Produk:')
-            panel {
-                label(text: bind {model.produk?: '- kosong -'})
-                button('Cari Produk...', id: 'cariProduk', errorPath: 'produk', mnemonic: KeyEvent.VK_P, actionPerformed: controller.showProduk)
-            }
-            errorLabel(path: 'produk', constraints: 'wrap')
-            label('Qty:')
-            numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
-            errorLabel(path: 'jumlah', constraints: 'wrap')
+    taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind { model.editable }, constraints: PAGE_END) {
+        label('Produk:')
+        panel {
+            label(text: bind {model.produk?: '- kosong -'})
+            button('Cari Produk...', id: 'cariProduk', errorPath: 'produk', mnemonic: KeyEvent.VK_P, actionPerformed: controller.showProduk)
+        }
+        errorLabel(path: 'produk', constraints: 'wrap')
+        label('Qty:')
+        numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
+        errorLabel(path: 'jumlah', constraints: 'wrap')
 
-            panel(constraints: 'span, growx, wrap') {
-                flowLayout(alignment: FlowLayout.LEADING)
-                button('Simpan', actionPerformed: {
-                    if (!view.table.selectionModel.selectionEmpty) {
-                        if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                                app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                            return
-                        }
+        panel(constraints: 'span, growx, wrap') {
+            flowLayout(alignment: FlowLayout.LEADING)
+            button('Simpan', actionPerformed: {
+                if (!view.table.selectionModel.selectionEmpty) {
+                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
+                            app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                        return
                     }
-                    controller.save()
-                    cariProduk.requestFocusInWindow()
-                }, visible: bind{model.editable}, mnemonic: KeyEvent.VK_S)
-                button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: controller.clear, mnemonic: KeyEvent.VK_B)
-                button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                            app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                        controller.delete()
-                    }
-                }, mnemonic: KeyEvent.VK_H)
-                button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                    SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-                }, mnemonic: KeyEvent.VK_T)
-            }
+                }
+                controller.save()
+                cariProduk.requestFocusInWindow()
+            }, visible: bind{model.editable}, mnemonic: KeyEvent.VK_S)
+            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: controller.clear, mnemonic: KeyEvent.VK_B)
+            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && model.editable}), actionPerformed: {
+                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
+                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                    controller.delete()
+                }
+            }, mnemonic: KeyEvent.VK_H)
+            button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
+                SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
+            }, mnemonic: KeyEvent.VK_T)
         }
     }
 }

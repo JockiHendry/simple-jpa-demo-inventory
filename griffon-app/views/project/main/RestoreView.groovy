@@ -25,38 +25,25 @@ def fileChooser = fileChooser(fileSelectionMode: JFileChooser.FILES_ONLY,
     fileFilter: new FileNameExtensionFilter("Backup files", 'csv', 'sql', 'xls'),
     currentDirectory: bind('fileRestore', source: model, mutual: true))
 
-application(title: 'simple-jpa-demo-inventory',
-        preferredSize: [320, 240],
-        pack: true,
-        //location: [50,50],
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                imageIcon('/griffon-icon-32x32.png').image,
-                imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
+    borderLayout()
+    panel(layout: new MigLayout('', '[left][left]', ''), constraints: PAGE_START) {
+        label('File Restore: ')
+        label(text: bind('fileRestore', source: model), constraints: 'split 2')
+        button('Pilih Lokasi File Backup', constraints: 'gapleft 10px, wrap', actionPerformed: {
+            if (fileChooser.showOpenDialog(view.mainPanel)==JFileChooser.APPROVE_OPTION) {
+                model.fileRestore = fileChooser.selectedFile
+            }
+        })
 
-    panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
-        borderLayout()
-        panel(layout: new MigLayout('', '[left][left]', ''), constraints: PAGE_START) {
-            label('File Restore: ')
-            label(text: bind('fileRestore', source: model), constraints: 'split 2')
-            button('Pilih Lokasi File Backup', constraints: 'gapleft 10px, wrap', actionPerformed: {
-                if (fileChooser.showOpenDialog(view.mainPanel)==JFileChooser.APPROVE_OPTION) {
-                    model.fileRestore = fileChooser.selectedFile
-                }
-            })
+        label('Password Database: ')
+        passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
 
-            label('Password Database: ')
-            passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
-
-            button('Mulai Restore', actionPerformed: controller.&mulai, constraints: 'gaptop 10px')
-            button('Refresh Stok', actionPerformed: controller.refreshStok, constraints: 'wrap')
-        }
-
-        scrollPane(constraints: CENTER) {
-            textArea(id: 'output', editable: false)
-        }
-
+        button('Mulai Restore', actionPerformed: controller.&mulai, constraints: 'gaptop 10px')
+        button('Refresh Stok', actionPerformed: controller.refreshStok, constraints: 'wrap')
     }
 
+    scrollPane(constraints: CENTER) {
+        textArea(id: 'output', editable: false)
+    }
 }

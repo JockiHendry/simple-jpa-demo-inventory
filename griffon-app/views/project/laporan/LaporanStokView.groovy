@@ -17,18 +17,16 @@ package project.laporan
 
 import net.miginfocom.swing.MigLayout
 
-application() {
-    panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
-        label('Nama Produk')
-        textField(text: bind('produkSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
+    label('Nama Produk')
+    textField(text: bind('produkSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
-        label('Dan', constraints: 'wrap')
-        label('Nama Supplier')
-        textField(text: bind('supplierSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    label('Dan', constraints: 'wrap')
+    label('Nama Supplier')
+    textField(text: bind('supplierSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
-        panel(constraints: 'span, growx, wrap') {
-            button('OK', actionPerformed: controller.tampilkanLaporan)
-            button('Batal', actionPerformed: controller.batal)
-        }
+    panel(constraints: 'span, growx, wrap') {
+        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('Batal', actionPerformed: controller.batal)
     }
 }

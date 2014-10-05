@@ -31,39 +31,29 @@ actions {
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
-application(title: 'Riwayat Poin',
-        preferredSize: [520, 340],
-        pack: true,
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                     imageIcon('/griffon-icon-32x32.png').image,
-                     imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel') {
+    borderLayout()
 
-    panel(id: 'mainPanel') {
-        borderLayout()
+    panel(constraints: PAGE_START) {
+        flowLayout(alignment: FlowLayout.LEADING)
+        label('Konsumen: ')
+        label(text: bind {model.konsumenSearch?: '- kosong -'})
+        button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumenSearch')
+        label('  Tanggal: ')
+        dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
+        label(' s/d ')
+        dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
+        button(action: search)
+        button(action: cetak)
+    }
 
-        panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            label('Konsumen: ')
-            label(text: bind {model.konsumenSearch?: '- kosong -'})
-            button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumenSearch')
-            label('  Tanggal: ')
-            dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
-            label(' s/d ')
-            dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
-            button(action: search)
-            button(action: cetak)
-        }
-
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.riwayatPoinList, sortingStrategy: SINGLE_COLUMN) {
-                glazedColumn(name: 'Tanggal', property: 'tanggal') {
-                    templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
-                }
-                glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer)
-                glazedColumn(name: 'Referensi', property: 'referensi')
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.riwayatPoinList, sortingStrategy: SINGLE_COLUMN) {
+            glazedColumn(name: 'Tanggal', property: 'tanggal') {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
             }
+            glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer)
+            glazedColumn(name: 'Referensi', property: 'referensi')
         }
     }
 }

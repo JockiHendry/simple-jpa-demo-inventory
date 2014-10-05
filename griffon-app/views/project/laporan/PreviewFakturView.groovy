@@ -15,9 +15,7 @@
  */
 package project.laporan
 
-application() {
+panel(id: 'mainPanel', constraints: CENTER) {
     borderLayout()
-    panel(id: 'mainPanel', constraints: CENTER) {
-        borderLayout()
-    }
 }
+

@@ -22,42 +22,31 @@ import javax.swing.JFileChooser
 
 def fileChooser = fileChooser(fileSelectionMode: JFileChooser.DIRECTORIES_ONLY)
 
-application(title: 'simple-jpa-demo-inventory',
-  preferredSize: [320, 240],
-  pack: true,
-  //location: [50,50],
-  locationByPlatform: true,
-  iconImage:   imageIcon('/griffon-icon-48x48.png').image,
-  iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-               imageIcon('/griffon-icon-32x32.png').image,
-               imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
+    borderLayout()
+    panel(layout: new MigLayout('', '[left][left]', ''), constraints: PAGE_START) {
+        label('Lokasi MySQL: ')
+        textField(text: bind('basedir', source: model, mutual: true), columns: 50, constraints: 'wrap')
 
-    panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
-        borderLayout()
-        panel(layout: new MigLayout('', '[left][left]', ''), constraints: PAGE_START) {
-            label('Lokasi MySQL: ')
-            textField(text: bind('basedir', source: model, mutual: true), columns: 50, constraints: 'wrap')
+        label('Password Database: ')
+        passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
 
-            label('Password Database: ')
-            passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
+        label('Lokasi Tujuan: ')
+        label(text: bind('lokasiTujuan', source: model), constraints: 'split 2')
+        button('Pilih Lokasi Tujuan', constraints: 'gapleft 10px, wrap', actionPerformed: {
+            if (fileChooser.showOpenDialog(view.mainPanel)==JFileChooser.APPROVE_OPTION) {
+                model.lokasiTujuan = fileChooser.selectedFile
+            }
+        })
 
-            label('Lokasi Tujuan: ')
-            label(text: bind('lokasiTujuan', source: model), constraints: 'split 2')
-            button('Pilih Lokasi Tujuan', constraints: 'gapleft 10px, wrap', actionPerformed: {
-                if (fileChooser.showOpenDialog(view.mainPanel)==JFileChooser.APPROVE_OPTION) {
-                    model.lokasiTujuan = fileChooser.selectedFile
-                }
-            })
+        label('Arguments: ')
+        textField(text: bind('arguments', source: model, mutual: true), columns: 50, constraints: 'wrap')
 
-            label('Arguments: ')
-            textField(text: bind('arguments', source: model, mutual: true), columns: 50, constraints: 'wrap')
-
-            button('Mulai Backup', actionPerformed: controller.&mulai, constraints: 'gaptop 10px, wrap')
-        }
-
-        scrollPane(constraints: CENTER) {
-            textArea(id: 'output', editable: false)
-        }
-
+        button('Mulai Backup', actionPerformed: controller.&mulai, constraints: 'gaptop 10px, wrap')
     }
+
+    scrollPane(constraints: CENTER) {
+        textArea(id: 'output', editable: false)
+    }
+
 }

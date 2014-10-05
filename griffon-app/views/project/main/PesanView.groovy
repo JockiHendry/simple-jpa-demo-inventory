@@ -18,27 +18,25 @@ package project.main
 import java.awt.FlowLayout
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 
-application() {
-    panel(id: 'mainPanel') {
-        borderLayout()
+panel(id: 'mainPanel') {
+    borderLayout()
 
-        panel(constraints: PAGE_START) {
-            button('Refresh', actionPerformed: controller.refresh)
-        }
+    panel(constraints: PAGE_START) {
+        button('Refresh', actionPerformed: controller.refresh)
+    }
 
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.pesanList, sortingStrategy: SINGLE_COLUMN) {
-                glazedColumn(name: 'Tanggal', property: 'tanggal', width: 140) {
-                    templateRenderer(exp: { it?.toString('dd-MM-yyyy HH:mm:ss') })
-                }
-                glazedColumn(name: 'Prioritas', property: 'prioritas', width: 100)
-                glazedColumn(name: 'Pesan', property: 'pesan')
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.pesanList, sortingStrategy: SINGLE_COLUMN) {
+            glazedColumn(name: 'Tanggal', property: 'tanggal', width: 140) {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy HH:mm:ss') })
             }
+            glazedColumn(name: 'Prioritas', property: 'prioritas', width: 100)
+            glazedColumn(name: 'Pesan', property: 'pesan')
         }
+    }
 
-        panel(constraints: PAGE_END) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            button('Hapus', actionPerformed: controller.hapus, visible: bind{table.isRowSelected})
-        }
+    panel(constraints: PAGE_END) {
+        flowLayout(alignment: FlowLayout.LEADING)
+        button('Hapus', actionPerformed: controller.hapus, visible: bind{table.isRowSelected})
     }
 }

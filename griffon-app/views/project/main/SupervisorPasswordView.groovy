@@ -23,27 +23,14 @@ import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COL
 import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.CENTER
 
-application(title: 'simple-jpa-demo-inventory',
-        preferredSize: [320, 240],
-        pack: true,
-        //location: [50,50],
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                     imageIcon('/griffon-icon-32x32.png').image,
-                     imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left][left,grow]',''), focusCycleRoot: true) {
 
+    label('<html><strong>PENTING:</strong> Untuk melakukan operasi ini, Anda harus menghubungi supervisor untuk memperoleh persetujuan!</html>',
+        constraints: 'span,wrap')
 
-    panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left][left,grow]',''), focusCycleRoot: true) {
-
-        label('<html><strong>PENTING:</strong> Untuk melakukan operasi ini, Anda harus menghubungi supervisor untuk memperoleh persetujuan!</html>',
-            constraints: 'span,wrap')
-
-        label('Password Supervisor:')
-        passwordField(id: 'password', columns: 20, errorPath: 'password', actionPerformed: controller.proses)
-        button('Proses', actionPerformed: controller.proses)
-        errorLabel(path: 'password', constraints: 'wrap')
-
-    }
+    label('Password Supervisor:')
+    passwordField(id: 'password', columns: 20, errorPath: 'password', actionPerformed: controller.proses)
+    button('Proses', actionPerformed: controller.proses)
+    errorLabel(path: 'password', constraints: 'wrap')
 
 }

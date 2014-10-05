@@ -27,42 +27,31 @@ actions {
     action(id: 'showItemStok', name: 'Item Stok...', closure: controller.showItemStok)
 }
 
-application(title: 'simple-jpa-demo-inventory',
-        preferredSize: [320, 240],
-        pack: true,
-        //location: [50,50],
-        locationByPlatform: true,
-        iconImage: imageIcon('/griffon-icon-48x48.png').image,
-        iconImages: [imageIcon('/griffon-icon-48x48.png').image,
-                imageIcon('/griffon-icon-32x32.png').image,
-                imageIcon('/griffon-icon-16x16.png').image]) {
+panel(id: 'mainPanel') {
+    borderLayout()
 
-    panel(id: 'mainPanel') {
+    panel(constraints: CENTER) {
         borderLayout()
-
-        panel(constraints: CENTER) {
-            borderLayout()
-            scrollPane(constraints: CENTER) {
-                glazedTable(id: 'table', list: model.stokProdukList, sortingStrategy: SINGLE_COLUMN,
-                        doubleClickAction: showItemStok, enterKeyAction: showItemStok) {
-                    glazedColumn(name: 'Gudang', property: 'gudang') {
-                        templateRenderer('${it.nama}')
-                    }
-                    glazedColumn(name: 'Jumlah', property: 'jumlah') {
-                        templateRenderer('${numberFormat(it)}')
-                    }
+        scrollPane(constraints: CENTER) {
+            glazedTable(id: 'table', list: model.stokProdukList, sortingStrategy: SINGLE_COLUMN,
+                    doubleClickAction: showItemStok, enterKeyAction: showItemStok) {
+                glazedColumn(name: 'Gudang', property: 'gudang') {
+                    templateRenderer('${it.nama}')
+                }
+                glazedColumn(name: 'Jumlah', property: 'jumlah') {
+                    templateRenderer('${numberFormat(it)}')
                 }
             }
         }
+    }
 
-        taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END) {
-            panel(constraints: 'span, growx, wrap') {
-                flowLayout(alignment: FlowLayout.LEADING)
-                button(id: 'itemStok', action: showItemStok, visible: bind{table.isRowSelected})
-                button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                    SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-                }, mnemonic: KeyEvent.VK_T)
-            }
+    taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END) {
+        panel(constraints: 'span, growx, wrap') {
+            flowLayout(alignment: FlowLayout.LEADING)
+            button(id: 'itemStok', action: showItemStok, visible: bind{table.isRowSelected})
+            button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
+                SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
+            }, mnemonic: KeyEvent.VK_T)
         }
     }
 }

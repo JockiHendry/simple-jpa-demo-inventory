@@ -17,19 +17,17 @@ package project.laporan
 
 import java.awt.FlowLayout
 
-application() {
-    panel(id: 'mainPanel') {
+panel(id: 'mainPanel') {
+    borderLayout()
+
+    panel(constraints: PAGE_START) {
+        flowLayout(alignment: FlowLayout.LEADING)
+        label('Pilih Laporan: ')
+        comboBox(id: 'jenisLaporan', model: model.jenisLaporanSearch)
+        button('Tampilkan Laporan...', actionPerformed: controller.search)
+    }
+
+    panel(id: 'content', constraints: CENTER) {
         borderLayout()
-
-        panel(constraints: PAGE_START) {
-            flowLayout(alignment: FlowLayout.LEADING)
-            label('Pilih Laporan: ')
-            comboBox(id: 'jenisLaporan', model: model.jenisLaporanSearch)
-            button('Tampilkan Laporan...', actionPerformed: controller.search)
-        }
-
-        panel(id: 'content', constraints: CENTER) {
-            borderLayout()
-        }
     }
 }

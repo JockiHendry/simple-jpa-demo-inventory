@@ -17,34 +17,32 @@ package project.laporan
 
 import net.miginfocom.swing.MigLayout
 
-application() {
-    panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
-        label('Periode')
-        panel(constraints: 'wrap') {
-            flowLayout()
-            dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
-                    dateVisible: true, timeVisible: false)
-            label(" s/d ")
-            dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
-                    dateVisible: true, timeVisible: false)
-        }
+panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
+    label('Periode')
+    panel(constraints: 'wrap') {
+        flowLayout()
+        dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
+                dateVisible: true, timeVisible: false)
+        label(" s/d ")
+        dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
+                dateVisible: true, timeVisible: false)
+    }
 
-        label('Nama Sales')
-        textField(text: bind('salesSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    label('Nama Sales')
+    textField(text: bind('salesSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
-        label('Dan', constraints: 'wrap')
-        label('Nama Konsumen')
-        textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    label('Dan', constraints: 'wrap')
+    label('Nama Konsumen')
+    textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
-        label('Dan', constraints: 'wrap')
-        label('Region')
-        textField(text: bind('regionSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    label('Dan', constraints: 'wrap')
+    label('Region')
+    textField(text: bind('regionSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
-        checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
+    checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
 
-        panel(constraints: 'span, growx, wrap') {
-            button('OK', actionPerformed: controller.tampilkanLaporan)
-            button('Batal', actionPerformed: controller.batal)
-        }
+    panel(constraints: 'span, growx, wrap') {
+        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('Batal', actionPerformed: controller.batal)
     }
 }
