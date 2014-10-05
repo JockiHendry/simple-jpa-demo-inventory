@@ -24,7 +24,7 @@ import project.penjualan.FakturEceranViewMode
 import project.retur.ReturBeliViewMode
 import project.retur.ReturJualViewMode
 import util.BusyLayerUI
-
+import util.MainTabbedPane
 import javax.swing.*
 import javax.swing.border.*
 import java.awt.*
@@ -202,50 +202,47 @@ application(id: 'mainFrame',
             borderLayout()
 
             toolBar(id: 'toolbar', constraints: BorderLayout.PAGE_START) {
-                buttonGroup(id: 'buttons')
-                toggleButton(buttonGroup: buttons, action: penerimaanBarang, id: 'penerimaanBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.penerimaanBarangVisible})
-                toggleButton(buttonGroup: buttons, action: pengeluaranBarang, id: 'pengeluaranBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.pengeluaranBarangVisible})
-                toggleButton(buttonGroup: buttons, action: buktiTerima, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.buktiTerimaVisible})
+                button(action: penerimaanBarang, id: 'penerimaanBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.penerimaanBarangVisible})
+                button(action: pengeluaranBarang, id: 'pengeluaranBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.pengeluaranBarangVisible})
+                button(action: buktiTerima, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.buktiTerimaVisible})
                 separator()
-                toggleButton(buttonGroup: buttons, action: purchaseOrder, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.purchaseOrderVisible})
-                toggleButton(buttonGroup: buttons, action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.fakturBeliVisible})
-                toggleButton(buttonGroup: buttons, action: fakturJual, id: 'fakturJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.fakturJualVisible})
-                toggleButton(buttonGroup: buttons, action: hutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.hutangVisible})
-                toggleButton(buttonGroup: buttons, action: piutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.piutangVisible})
-                toggleButton(buttonGroup: buttons, action: bilyetGiro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.giroVisible})
-                toggleButton(buttonGroup: buttons, action: poin, id: 'poinButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.poinVisible})
+                button(action: purchaseOrder, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.purchaseOrderVisible})
+                button(action: fakturBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.fakturBeliVisible})
+                button(action: fakturJual, id: 'fakturJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.fakturJualVisible})
+                button(action: hutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.hutangVisible})
+                button(action: piutang, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.piutangVisible})
+                button(action: bilyetGiro, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.giroVisible})
+                button(action: poin, id: 'poinButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.poinVisible})
                 separator()
-                toggleButton(buttonGroup: buttons, action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.produkVisible})
-                toggleButton(buttonGroup: buttons, action: transfer, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.transferVisible})
-                toggleButton(buttonGroup: buttons, action: penyesuaianStok, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.penyesuaianStokVisible})
+                button(action: produk, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.produkVisible})
+                button(action: transfer, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.transferVisible})
+                button(action: penyesuaianStok, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.penyesuaianStokVisible})
                 separator()
-                toggleButton(buttonGroup: buttons, action: returJual, id: 'returJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.returJualVisible})
-                toggleButton(buttonGroup: buttons, action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.returBeliVisible})
+                button(action: returJual, id: 'returJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.returJualVisible})
+                button(action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.returBeliVisible})
                 separator()
-                toggleButton(buttonGroup: buttons, action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.laporanVisible})
-                toggleButton(buttonGroup: buttons, action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    visible: bind {model.maintenanceVisible})
+                button(action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.laporanVisible})
+                button(action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.maintenanceVisible})
             }
 
-            panel(id: "mainPanel", constraints: BorderLayout.CENTER) {
-                borderLayout()
-            }
+            widget(new MainTabbedPane(), id: "mainTab", constraints: BorderLayout.CENTER)
 
             statusBar(id: 'statusBar', constraints: BorderLayout.PAGE_END, border: BorderFactory.createBevelBorder(BevelBorder.LOWERED)) {
                 label(text:bind {model.status}, constraints: new JXStatusBar.Constraint(JXStatusBar.Constraint.ResizeBehavior.FILL))
