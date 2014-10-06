@@ -41,7 +41,7 @@ panel(id: 'mainPanel') {
         dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
         comboBox(id: 'statusSearch', model: model.statusSearch)
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
-//            textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
+        textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
     }
@@ -148,6 +148,6 @@ panel(id: 'mainPanel') {
     }
 }
 
-//PromptSupport.setPrompt("Sales...", salesSearch)
+PromptSupport.setPrompt("Sales...", salesSearch)
 PromptSupport.setPrompt("Konsumen...", konsumenSearch)
 PromptSupport.setPrompt("Nomor Faktur...", nomorSearch)

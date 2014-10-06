@@ -95,10 +95,10 @@ class FakturJualRepository {
                 and()
                 nomor like("%${nomorSearch}%")
             }
-//            if (salesSearch) {
-//                and()
-//                konsumen__sales__nama like("%${salesSearch}%")
-//            }
+            if (salesSearch) {
+                and()
+                konsumen__sales__nama like("%${salesSearch}%")
+            }
             if (konsumenSearch) {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
