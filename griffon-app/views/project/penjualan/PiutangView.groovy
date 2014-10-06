@@ -26,6 +26,7 @@ import static javax.swing.SwingConstants.RIGHT
 
 actions {
     action(id: 'showPembayaran', name: 'Klik Disini Untuk Melihat Pembayaran Yang Telah Dilakukan...', closure: controller.showPembayaran)
+    action(id: 'showInfoPiutangKonsumen', name: 'Lihat Informasi Piutang Konsumen...', closure: controller.showInfoPiutangKonsumen)
 }
 
 panel(id: 'mainPanel') {
@@ -83,7 +84,8 @@ panel(id: 'mainPanel') {
 
     panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind {table.isRowSelected}, constraints: PAGE_END, focusCycleRoot: true) {
         label('Pembayaran:')
-        button(id: 'listPembayaranHutang', action: showPembayaran, constraints: 'wrap')
+        button(id: 'listPembayaranHutang', action: showPembayaran)
+        button(id: 'showInfoPiutangKonsumen', action: showInfoPiutangKonsumen, constraints: 'wrap')
     }
 }
 

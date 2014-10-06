@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import domain.penjualan.Konsumen
 import project.pembelian.PurchaseOrderRepository
 import domain.penjualan.FakturJualOlehSales
 import org.joda.time.LocalDate
@@ -58,6 +59,17 @@ class PiutangController {
                 model.listPembayaranPiutang.clear()
                 model.listPembayaranPiutang.addAll(m.pembayaranList)
                 view.table.selectionModel.selected[0] = m.faktur
+            }
+        }
+    }
+
+    def showInfoPiutangKonsumen = {
+        if (!view.table.selectionModel.selectionEmpty) {
+            Konsumen konsumen = fakturJualRepository.findKonsumenByIdFetchFakturBelumLunas(view.table.selectionModel.selected[0].konsumen.id)
+            execInsideUISync {
+                def args = [konsumen: konsumen]
+                def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
+                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
             }
         }
     }
