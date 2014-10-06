@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.faktur.Referensi
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -33,7 +34,7 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
 
     @Override
     void proses() {
-        konsumen.potongPiutang(getNominal())
+        konsumen.potongPiutang(getNominal(), new Referensi(nomor, PencairanPoin))
     }
 
     @Override

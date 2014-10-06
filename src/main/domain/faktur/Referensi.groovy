@@ -23,6 +23,18 @@ import javax.persistence.Embeddable
 @Embeddable @Canonical
 class Referensi {
 
+    public Referensi() {}
+
+    public Referensi(String nomor, Class clazz) {
+        this.nomor = nomor
+        this.namaClass = clazz.simpleName
+    }
+
+    public Referensi(String nomor, String namaClass) {
+        this.nomor = nomor
+        this.namaClass = namaClass
+    }
+
     @NotEmpty
     String nomor
 

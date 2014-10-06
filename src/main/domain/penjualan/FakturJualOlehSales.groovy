@@ -24,6 +24,7 @@ import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
@@ -34,7 +35,6 @@ import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
-
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
@@ -253,7 +253,7 @@ class FakturJualOlehSales extends FakturJual {
 
         // Kurangi piutang bila ada
         if (piutang) {
-            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true))
+            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(nomor, FakturJualOlehSales)))
         }
 
         // Kurangi bonus untuk konsumen tersebut

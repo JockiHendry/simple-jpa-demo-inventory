@@ -64,7 +64,7 @@ class ReturJual extends Retur {
         if (konsumen==null) {
             throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
         }
-        Referensi referensi = new Referensi(nomor, ReturJual.simpleName)
+        Referensi referensi = new Referensi(nomor, ReturJual)
         getKlaim(KlaimPotongan, true).each { KlaimPotongan k ->
             konsumen.potongPiutang(k.potongan, referensi)
             proses(k)

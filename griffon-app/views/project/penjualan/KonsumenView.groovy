@@ -15,8 +15,8 @@
  */
 package project.penjualan
 
+import java.awt.event.KeyEvent
 import java.text.NumberFormat
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -37,8 +37,16 @@ panel(id: 'mainPanel') {
                 visible: bind{model.popupMode}, horizontalAlignment: CENTER, constraints: PAGE_START)
         panel(constraints: CENTER) {
             flowLayout(alignment: FlowLayout.LEADING)
-            textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true), actionPerformed: controller.search)
-            textField(id: 'salesSearch', columns: 20, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
+            textField(id: 'namaSearch', columns: 20, text: bind('namaSearch', target: model, mutual: true),
+                actionPerformed: controller.search, keyPressed: { KeyEvent k ->
+                    if (k.keyCode==KeyEvent.VK_DOWN) table.requestFocusInWindow()
+                }
+            )
+            textField(id: 'salesSearch', columns: 20, text: bind('salesSearch', target: model, mutual: true),
+                actionPerformed: controller.search, keyPressed: { KeyEvent k ->
+                    if (k.keyCode==KeyEvent.VK_DOWN) table.requestFocusInWindow()
+                }
+            )
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         }
     }
