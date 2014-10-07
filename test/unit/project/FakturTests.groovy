@@ -79,7 +79,7 @@ class FakturTests extends GriffonUnitTestCase {
         faktur.tambah(new ItemFaktur(produkB, 6))
 
         Set hasil = [new ItemBarang(produkA, 12), new ItemBarang(produkC, 5), new ItemBarang(produkB, 10)]
-        assertEquals(hasil, faktur.normalisasi().toSet())
+        assertEquals(hasil, faktur.toDaftarBarang().items.toSet())
     }
 
     void testDiskon() {
@@ -113,7 +113,7 @@ class FakturTests extends GriffonUnitTestCase {
         faktur.tambah(new ItemFaktur(produkB, 6))
 
         Set hasil = [new ItemBarang(produkA, 12), new ItemBarang(produkC, 5), new ItemBarang(produkB, 10)]
-        DaftarBarangSementara d = faktur.toDaftarBarangSementara()
+        DaftarBarangSementara d = faktur.toDaftarBarang()
         assertEquals(hasil, d.items.toSet())
     }
 

@@ -42,7 +42,7 @@ class PerubahanRetur extends Event {
         if (!returAwal) {
             return retur
         } else {
-            return retur.toDaftarBarangSementara() - returAwal
+            return retur.toDaftarBarang() - returAwal
         }
     }
 

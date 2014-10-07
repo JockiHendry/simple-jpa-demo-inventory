@@ -133,7 +133,7 @@ class PurchaseOrder extends Faktur {
         }
 
         // Memeriksa apakah isi faktur baru sama dengan isi barang yang dipesan
-        if (normalisasi().toSet() != f.normalisasi().toSet()) {
+        if (!toDaftarBarang().isiSamaDengan(f.toDaftarBarang())) {
             throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
         }
         if (strictMode) {
@@ -221,7 +221,7 @@ class PurchaseOrder extends Faktur {
     }
 
     List<ItemBarang> sisaBelumDiterima() {
-        List<ItemBarang> daftarBarang = normalisasi()
+        List<ItemBarang> daftarBarang = toDaftarBarang().items
 
         PenerimaanBarang p
         listPenerimaanBarang.each {

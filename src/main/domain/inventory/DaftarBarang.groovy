@@ -32,7 +32,7 @@ import javax.validation.constraints.Size
 import javax.validation.groups.Default
 
 @MappedSuperclass @Canonical(excludes='items')
-abstract class DaftarBarang {
+abstract class DaftarBarang implements SebuahDaftarBarang {
 
     @NotBlank(groups=[Default,TanpaGudang]) @Size(min=2, max=100, groups=[Default,TanpaGudang])
     String nomor
@@ -76,11 +76,60 @@ abstract class DaftarBarang {
     }
 
     boolean isiSamaDengan(Faktur faktur) {
-        normalisasi().toSet() == faktur.normalisasi().toSet()
+        // faktur.toDaftarBarang() akan menghasilkan daftar barang yang sudah dinormalisasi.
+        normalisasi().toSet() == faktur.toDaftarBarang().items.toSet()
     }
 
-    DaftarBarangSementara toDaftarBarangSementara() {
-        new DaftarBarangSementara(items, faktor())
+    @Override
+    DaftarBarang toDaftarBarang() {
+        this
+    }
+
+    DaftarBarangSementara plus(SebuahDaftarBarang sebuahDaftarBarang) {
+        DaftarBarang daftarBarang = sebuahDaftarBarang.toDaftarBarang()
+        DaftarBarang hasil = plus(daftarBarang.items)
+        hasil.nomor = daftarBarang.nomor
+        hasil.tanggal = daftarBarang.tanggal
+        hasil.keterangan = daftarBarang.keterangan
+        hasil.gudang = daftarBarang.gudang
+        hasil
+    }
+
+    DaftarBarangSementara plus(Collection<ItemBarang> daftarLain) {
+        List<ItemBarang> hasil = new ArrayList<>(items.collect { new ItemBarang(it.produk, it.jumlah)})
+        daftarLain.each { ItemBarang itemLain ->
+            ItemBarang itemBarang = hasil.find {it.produk == itemLain.produk}
+            if (itemBarang) {
+                itemBarang.jumlah += itemLain.jumlah
+            } else {
+                hasil << itemLain
+            }
+        }
+        new DaftarBarangSementara(hasil, faktor())
+    }
+
+    DaftarBarangSementara minus(SebuahDaftarBarang sebuahDaftarBarang) {
+        DaftarBarang daftarBarang = sebuahDaftarBarang.toDaftarBarang()
+        DaftarBarang hasil = minus(daftarBarang.items)
+        hasil.nomor = daftarBarang.nomor
+        hasil.tanggal = daftarBarang.tanggal
+        hasil.keterangan = daftarBarang.keterangan
+        hasil.gudang = daftarBarang.gudang
+        hasil
+    }
+
+    DaftarBarangSementara minus(Collection<ItemBarang> daftarLain) {
+        List<ItemBarang> hasil = new ArrayList<>(normalisasi())
+        daftarLain.each { ItemBarang itemBarang ->
+            ItemBarang lhs = hasil.find { it.produk == itemBarang.produk }
+            if (lhs) {
+                lhs.jumlah -= itemBarang.jumlah
+                if (lhs.jumlah == 0) {
+                    hasil.remove(lhs)
+                }
+            }
+        }
+        new DaftarBarangSementara(hasil, faktor())
     }
 
     Integer toPoin() {

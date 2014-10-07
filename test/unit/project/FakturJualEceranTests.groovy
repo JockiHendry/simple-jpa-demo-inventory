@@ -71,8 +71,8 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
 
     public void testAntar() {
         FakturJualEceran f = new FakturJualEceran(tanggal: LocalDate.now())
-        Produk produkA = new Produk('Produk A', 10000, 11000, 50)
-        Produk produkB = new Produk('Produk B',  9000, 91000, 50)
+        Produk produkA = new Produk(nama: 'Produk A', hargaDalamKota: 10000, hargaLuarKota: 11000, jumlah: 50)
+        Produk produkB = new Produk(nama: 'Produk B', hargaDalamKota: 9000, hargaLuarKota: 91000, jumlah: 50)
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
 

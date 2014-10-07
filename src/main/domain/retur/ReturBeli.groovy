@@ -47,14 +47,14 @@ class ReturBeli extends Retur {
             kemasanRetur.nomor = listKlaimRetur.size() + 1
         }
         listKlaimRetur << kemasanRetur
-        def itemsBaru = (toDaftarBarangSementara() + kemasanRetur.items).items
+        def itemsBaru = (toDaftarBarang() + kemasanRetur.items).items
         items.clear()
         items.addAll(itemsBaru)
     }
 
     void hapus(KlaimKemasan kemasanRetur) {
         if (listKlaimRetur.remove(kemasanRetur)) {
-            def itemsBaru = (toDaftarBarangSementara() - kemasanRetur.items).items
+            def itemsBaru = (toDaftarBarang() - kemasanRetur.items).items
             items.clear()
             items.addAll(itemsBaru)
         }

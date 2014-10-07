@@ -25,6 +25,7 @@ import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
+import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
@@ -217,7 +218,7 @@ class FakturJualOlehSales extends FakturJual {
     }
 
     DaftarBarangSementara barangYangHarusDikirim() {
-        DaftarBarangSementara hasil = toDaftarBarangSementara()
+        DaftarBarang hasil = toDaftarBarang()
         if (bonusPenjualan) {
             hasil += bonusPenjualan
         }

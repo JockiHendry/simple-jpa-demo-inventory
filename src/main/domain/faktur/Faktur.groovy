@@ -16,8 +16,10 @@
 
 package domain.faktur
 
+import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
+import domain.inventory.SebuahDaftarBarang
 import domain.validation.InputPurchaseOrder
 import groovy.transform.*
 import javax.persistence.*
@@ -28,7 +30,7 @@ import org.joda.time.*
 import javax.validation.groups.Default
 
 @MappedSuperclass @Canonical(excludes='listItemFaktur')
-abstract class Faktur implements Comparable {
+abstract class Faktur implements Comparable, SebuahDaftarBarang {
 
     @NotEmpty(groups=[Default]) @Size(min=2, max=100, groups=[Default])
     String nomor
@@ -77,16 +79,13 @@ abstract class Faktur implements Comparable {
         jumlahDiskonItem() + jumlahDiskonTanpaDiskonItem()
     }
 
-    public List<ItemBarang> normalisasi() {
-        List hasil = []
-        listItemFaktur.groupBy { it.produk }.each { k, v ->
-            hasil << new ItemBarang(k, v.sum {it.jumlah})
-        }
+    @Override
+    DaftarBarang toDaftarBarang() {
+        def items = listItemFaktur.collect { new ItemBarang(it.produk, it.jumlah) }
+        DaftarBarangSementara hasil = new DaftarBarangSementara(items)
+        hasil.nomor = nomor
+        hasil.tanggal = tanggal
         hasil
-    }
-
-    public DaftarBarangSementara toDaftarBarangSementara() {
-        new DaftarBarangSementara(normalisasi())
     }
 
     boolean equals(o) {

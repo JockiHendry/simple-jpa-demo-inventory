@@ -72,9 +72,9 @@ class ReturBeliTests extends GriffonUnitTestCase {
     }
 
     public void testTukarBaru() {
-        Produk produk1 = new Produk()
-        Produk produk2 = new Produk()
-        Produk produk3 = new Produk()
+        Produk produk1 = new Produk(nama: 'Produk A')
+        Produk produk2 = new Produk(nama: 'Produk B')
+        Produk produk3 = new Produk(nama: 'Produk C')
         Supplier supplier = new Supplier()
         ReturBeli returBeli = new ReturBeli(supplier: supplier, gudang: gudangUtama)
         returBeli.tambah(new ItemBarang(produk1, 10))

@@ -424,7 +424,8 @@ class FakturJualRepository {
                 hasil += f.barangYangHarusDikirim()
             }
         }
-        new DaftarBarangSementara(hasil?.normalisasi()?:[], 1)
+        def items = (hasil?.normalisasi()?:[]).sort {it.produk.nama}
+        new DaftarBarangSementara(items, 1)
     }
 
     public enum StatusPiutangSearch {

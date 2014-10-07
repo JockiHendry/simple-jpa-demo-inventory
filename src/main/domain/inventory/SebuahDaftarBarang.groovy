@@ -15,30 +15,8 @@
  */
 package domain.inventory
 
-import groovy.transform.Canonical
+public interface SebuahDaftarBarang {
 
-@Canonical
-class DaftarBarangSementara extends DaftarBarang {
-
-    int nilaiFaktor
-
-    public DaftarBarangSementara() {
-        this.nilaiFaktor = 1
-    }
-
-    public DaftarBarangSementara(List items, int nilaiFaktor = 1, boolean normalisasi = true) {
-        if (!items.empty) {
-            this.items = items.collect { it as ItemBarang }
-        }
-        if (normalisasi) {
-            this.items = super.normalisasi()
-        }
-        this.nilaiFaktor = nilaiFaktor
-    }
-
-    @Override
-    int faktor() {
-        nilaiFaktor
-    }
+    public DaftarBarang toDaftarBarang();
 
 }

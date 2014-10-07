@@ -80,9 +80,9 @@ class ReturJualTests extends GriffonUnitTestCase {
 
     public void testTukar() {
         Supplier supplier = new Supplier()
-        Produk produk1 = new Produk(supplier: supplier)
-        Produk produk2 = new Produk(supplier: supplier)
-        Produk produk3 = new Produk(supplier: supplier)
+        Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
+        Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
+        Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
         Konsumen konsumen = new Konsumen()
         ReturJual retur = new ReturJual(konsumen: konsumen)
         retur.tambah(new ItemBarang(produk1, 1))
