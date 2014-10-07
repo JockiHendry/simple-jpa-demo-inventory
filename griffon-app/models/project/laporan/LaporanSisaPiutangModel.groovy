@@ -17,15 +17,16 @@ package project.laporan
 
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
+import simplejpa.swing.TagChooserModel
 
 class LaporanSisaPiutangModel {
 
     @Bindable String salesSearch
-    @Bindable String konsumenSearch
     @Bindable String regionSearch
     @Bindable Boolean cetakFormulir
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari
+    TagChooserModel konsumenSearch = new TagChooserModel()
 
     List result
     Map params = [:]

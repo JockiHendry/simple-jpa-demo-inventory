@@ -17,9 +17,9 @@ package project.laporan
 
 import net.miginfocom.swing.MigLayout
 
-panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
+panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''), preferredSize: [800,300]) {
     label('Periode')
-    panel(constraints: 'wrap') {
+    panel(constraints: 'grow 0, wrap') {
         flowLayout()
         dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
                 dateVisible: true, timeVisible: false)
@@ -29,15 +29,17 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     }
 
     label('Nama Sales')
-    textField(text: bind('salesSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    textField(text: bind('salesSearch', target: model, mutual: true), columns: 20, constraints: 'grow 0, wrap')
 
     label('Dan', constraints: 'wrap')
+
     label('Nama Konsumen')
-    textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    tagChooser(model: model.konsumenSearch, templateString: '${it.nama}', constraints: 'height 70, wrap')
 
     label('Dan', constraints: 'wrap')
+
     label('Region')
-    textField(text: bind('regionSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    textField(text: bind('regionSearch', target: model, mutual: true), columns: 20, constraints: 'grow 0, wrap')
 
     checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
 

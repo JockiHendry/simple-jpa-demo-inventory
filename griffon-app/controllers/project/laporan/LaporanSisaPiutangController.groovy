@@ -15,6 +15,7 @@
  */
 package project.laporan
 
+import domain.penjualan.Konsumen
 import org.joda.time.LocalDate
 import project.penjualan.KonsumenRepository
 import javax.swing.SwingUtilities
@@ -28,6 +29,10 @@ class LaporanSisaPiutangController {
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        List<Konsumen> daftarKonsumen = konsumenRepository.findAllKonsumen([orderBy: 'nama'])
+        execInsideUISync {
+            model.konsumenSearch.values = daftarKonsumen
+        }
     }
 
     def tampilkanLaporan = {
@@ -37,15 +42,19 @@ class LaporanSisaPiutangController {
         AND f.tanggal BETWEEN :tanggalMulaiSearch AND :tanggalSelesaiSearch
         AND f.deleted != 'Y'
 '''
-        if (model.konsumenSearch) {
-            jpql += " AND k.nama LIKE '%${model.konsumenSearch}%'"
+        if (model.konsumenSearch.selectedValues?.size() > 0) {
+            String ids = model.konsumenSearch.selectedValues.collect { it.id }.join(',')
+            jpql += " AND k.id IN ($ids)"
         }
+
         if (model.salesSearch) {
             jpql += " AND k.sales.nama LIKE '%${model.salesSearch}%'"
         }
+
         if (model.regionSearch) {
             jpql += " AND (k.region.nama LIKE '%${model.regionSearch}%' OR k.region.bagianDari.nama LIKE '%${model.regionSearch}%')"
         }
+
         jpql += " ORDER BY k.nama "
 
         model.result = konsumenRepository.executeQuery(jpql, [:], [tanggalMulaiSearch: model.tanggalMulaiCari, tanggalSelesaiSearch: model.tanggalSelesaiCari])
@@ -57,20 +66,6 @@ class LaporanSisaPiutangController {
         model.params.tanggalMulaiCari = model.tanggalMulaiCari
         model.params.tanggalSelesaiCari = model.tanggalSelesaiCari
 
-        //
-        // TODO: Fix this! Hibernate complain with the following query, it has something to do with named graph.
-        //
-//        model.result = konsumenRepository.findAllKonsumenByDslFetchFakturBelumLunas {
-//            listFakturBelumLunas isNotEmpty()
-//            if (model.konsumenSearch) {
-//                and()
-//                nama like("%${model.konsumenSearch}%")
-//            }
-//            if (model.salesSearch) {
-//                and()
-//                sales__nama like("%${model.salesSearch}%")
-//            }
-//        }
         close()
     }
 
