@@ -17,28 +17,27 @@ package domain.pengaturan;
 
 public enum KeyPengaturan {
 
-    SUPERVISOR_PASSWORD("Supervisor Password", JenisNilai.PASSWORD, new byte[] {-126, 124, -53, 14, -22, -118, 112, 108, 76, 52, -95, 104, -111, -8, 78, 123}),
+    SUPERVISOR_PASSWORD("Supervisor Password", JenisNilai.PASSWORD, [-126, 124, -53, 14, -22, -118, 112, 108, 76, 52, -95, 104, -111, -8, 78, 123] as byte[]),
     MASA_JATUH_TEMPO("Jatuh Tempo (Hari)", JenisNilai.INTEGER, 30),
     UKURAN_HURUF_TABEL("Ukuran Huruf Tabel", JenisNilai.INTEGER, 0),
     BONUS_POINT_RATE("Bonus Point Rate", JenisNilai.INTEGER, 2000),
     LEVEL_MINIMUM_STOK("Level Minimum Untuk Stok", JenisNilai.INTEGER, 0),
     CREDIT_LIMIT_DEFAULT("Credit Limit Default", JenisNilai.INTEGER, 10000000),
     NAMA_PERUSAHAAN("Nama Perusahaan", JenisNilai.STRING, "[Company Name]")
-    ;
 
-    public String description;
-    public JenisNilai jenisNilai;
-    public Object defaultValue;
+    String description
+    JenisNilai jenisNilai
+    Object defaultValue
 
     KeyPengaturan(String description, JenisNilai jenisNilai, Object defaultValue) {
-        this.description = description;
-        this.jenisNilai = jenisNilai;
-        this.defaultValue = defaultValue;
+        this.description = description
+        this.jenisNilai = jenisNilai
+        this.defaultValue = defaultValue
     }
 
     @Override
     public String toString() {
-        return description;
+        description
     }
 
 }

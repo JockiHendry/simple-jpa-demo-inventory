@@ -26,7 +26,6 @@
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-core/jars/jackson-core-2.1.4.jar!/" />
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-databind/jars/jackson-databind-2.1.4.jar!/" />
           <root url="jar://$IVY_CACHE$/com.fasterxml.jackson.core/jackson-annotations/jars/jackson-annotations-2.1.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/jockihendry/simple-escp/jars/simple-escp-0.5.1.jar!/" />
           <root url="jar://$IVY_CACHE$/org.glassfish/javax.json/bundles/javax.json-1.0.4.jar!/" />
           <root url="jar://$IVY_CACHE$/javax.json/javax.json-api/bundles/javax.json-api-1.0.jar!/" />
           <root url="jar://$IVY_CACHE$/mysql/mysql-connector-java/jars/mysql-connector-java-5.1.20.jar!/" />
@@ -41,7 +40,6 @@
           <root url="jar://$IVY_CACHE$/org.javassist/javassist/bundles/javassist-3.18.1-GA.jar!/" />
           <root url="jar://$IVY_CACHE$/antlr/antlr/jars/antlr-2.7.7.jar!/" />
           <root url="jar://$IVY_CACHE$/org.jboss/jandex/jars/jandex-1.1.0.Final.jar!/" />
-          <root url="jar://$MODULE_DIR$/lib/servlet-api-2.4.jar!/" />
           <root url="jar://$IVY_CACHE$/org.swinglabs/jxlayer/jars/jxlayer-3.0.4.jar!/" />
           <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-jxlayer-runtime/jars/griffon-jxlayer-runtime-1.0.0.jar!/" />
           <root url="jar://$IVY_CACHE$/com.miglayout/miglayout-swing/jars/miglayout-swing-4.2.jar!/" />

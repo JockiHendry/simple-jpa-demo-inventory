@@ -33,17 +33,17 @@ public enum Menu {
     RETUR_BELI("Retur Beli"),
     LAPORAN("Laporan"),
     MAINTENANCE("Maintenance"),
-    PESAN("Pesan");
+    PESAN("Pesan")
 
-    public String naturalName;
+    String naturalName
 
     Menu(String naturalName) {
-        this.naturalName = naturalName;
+        this.naturalName = naturalName
     }
 
     @Override
     public String toString() {
-        return naturalName;
+        naturalName
     }
 
 

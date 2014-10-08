@@ -13,10 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pengaturan;
+package laporan
 
-public enum JenisNilai {
+import domain.inventory.Gudang
+import domain.inventory.Produk
+import groovy.transform.Canonical
 
-    STRING, PASSWORD, INTEGER;
+@Canonical
+public class PenjualanProduk {
+
+    Produk produk
+    Gudang gudang
+    long jumlahPenjualan
+
+    PenjualanProduk(Produk produk, Gudang gudang, long jumlahPenjualan) {
+        this.produk = produk
+        this.gudang = gudang
+        this.jumlahPenjualan = jumlahPenjualan
+    }
+
+    PenjualanProduk(Produk produk, long jumlahPenjualan) {
+        this.produk = produk
+        this.jumlahPenjualan = jumlahPenjualan
+    }
 
 }

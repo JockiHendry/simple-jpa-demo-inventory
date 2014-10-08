@@ -19,12 +19,12 @@ import domain.inventory.Gudang;
 
 class StokTidakCukup extends RuntimeException {
 
-    int jumlahYangDibutuhkan
-    int jumlahTersedia
+    Integer jumlahYangDibutuhkan
+    Integer jumlahTersedia
     String namaProduk
     Gudang gudang
 
-    StokTidakCukup(String namaProduk, int jumlahYangDibutuhkan, int jumlahTersedia, Gudang gudang = null) {
+    StokTidakCukup(String namaProduk, Integer jumlahYangDibutuhkan, Integer jumlahTersedia, Gudang gudang = null) {
         super("${namaProduk} sejumlah ${jumlahYangDibutuhkan} tidak tersedia di gudang [${gudang?.nama}]; yang tersedia adalah ${jumlahTersedia}")
         this.namaProduk = namaProduk
         this.jumlahYangDibutuhkan = jumlahYangDibutuhkan

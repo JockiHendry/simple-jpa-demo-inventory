@@ -21,23 +21,23 @@ public enum StatusPurchaseOrder {
     FAKTUR_DITERIMA("Hanya Terima Faktur", false, true, true),
     BARANG_DITERIMA("Hanya Terima Barang", false, true, true),
     OK("Diterima Penuh", false, false, false),
-    LUNAS("Lunas", false, false, false);
+    LUNAS("Lunas", false, false, false)
 
-    public String desc;
-    public boolean bolehDiubah;
-    public boolean fakturBolehDiubah;
-    public boolean penerimaanBolehDiubah;
+    String desc
+    boolean bolehDiubah;
+    boolean fakturBolehDiubah;
+    boolean penerimaanBolehDiubah;
 
     StatusPurchaseOrder(String desc, boolean bolehDiubah, boolean fakturBolehDiubah, boolean penerimaanBolehDiubah) {
-        this.desc = desc;
-        this.bolehDiubah = bolehDiubah;
-        this.fakturBolehDiubah = fakturBolehDiubah;
-        this.penerimaanBolehDiubah = penerimaanBolehDiubah;
+        this.desc = desc
+        this.bolehDiubah = bolehDiubah
+        this.fakturBolehDiubah = fakturBolehDiubah
+        this.penerimaanBolehDiubah = penerimaanBolehDiubah
     }
 
     @Override
     public String toString() {
-        return desc;
+        return desc
     }
 
 }
