@@ -15,28 +15,30 @@
  */
 package project.retur
 
-import domain.pembelian.Supplier
+import domain.penjualan.Konsumen
 import domain.retur.*
 import domain.inventory.*
 import ca.odell.glazedlists.*
-import org.joda.time.LocalDate
+import ca.odell.glazedlists.swing.*
+import groovy.beans.Bindable
+import org.joda.time.*
+import javax.swing.event.*
+import simplejpa.swing.*
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-class KemasanReturModel {
+class ItemReturAsChildModel {
 
-    ReturBeli parent
-    Supplier supplierSearch
+    ReturJual parent
+    Gudang parentGudang
+    Konsumen parentKonsumen
+
+    @Bindable Boolean editable = true
+    @Bindable Boolean showPiutang = true
 
     @Bindable Long id
-
-    @Bindable Integer nomor
-    @Bindable LocalDate tanggal
-    @Bindable String keterangan
-    List<ItemBarang> items = []
-    BasicEventList<Kemasan> kemasanReturList = new BasicEventList<>()
-
-    @Bindable String created
-    @Bindable String modified
-    @Bindable String createdBy
-    @Bindable String modifiedBy
+    @Bindable Produk produk
+    @Bindable Integer jumlah
+    Set<Klaim> klaims = []
+    BasicEventList<ItemRetur> itemReturList = new BasicEventList<>()
 
 }

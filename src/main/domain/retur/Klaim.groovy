@@ -26,20 +26,13 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-abstract class KlaimRetur {
+abstract class Klaim {
 
     @NotNull
     Boolean sudahDiproses = false
 
     void proses() {
         sudahDiproses = true
-    }
-
-    Object asType(Class type) {
-        if (type == ItemBarang) {
-            return new ItemBarang(null, null)
-        }
-        super.asType(type)
     }
 
 }

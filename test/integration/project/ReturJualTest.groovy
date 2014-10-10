@@ -19,7 +19,8 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
-import domain.retur.KlaimPotongan
+import domain.retur.ItemRetur
+import domain.retur.KlaimPotongPiutang
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import org.joda.time.LocalDate
@@ -55,10 +56,9 @@ class ReturJualTest extends DbUnitTestCase {
         Produk p3 = returJualRepository.findProdukById(-3l)
         Konsumen k = returJualRepository.findKonsumenById(-1l)
         ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
-        returJual.tambah(new ItemBarang(p1, 10))
-        returJual.tambah(new ItemBarang(p2, 20))
-        returJual.tambah(new ItemBarang(p3, 30))
-        returJual.tambah(new KlaimTukar(p1, 1))
+        returJual.tambah(new ItemRetur(p1, 10, [new KlaimTukar(p1, 1)] as Set))
+        returJual.tambah(new ItemRetur(p2, 20, [new KlaimPotongPiutang(1)] as Set))
+        returJual.tambah(new ItemRetur(p3, 30, [new KlaimPotongPiutang(1)] as Set))
         returJualRepository.buat(returJual)
 
         // Periksa nilai jumlah retur di produk
@@ -89,7 +89,7 @@ class ReturJualTest extends DbUnitTestCase {
             returJual = returJualRepository.tukar(returJual)
 
             assertTrue(returJual.sudahDiproses)
-            assertTrue(returJual.getKlaim(KlaimTukar, true).empty)
+            assertTrue(returJual.getKlaimsTukar(true).empty)
             assertNotNull(returJual.pengeluaranBarang)
             assertTrue(returJual.pengeluaranBarang.sudahDiterima())
 
@@ -112,29 +112,14 @@ class ReturJualTest extends DbUnitTestCase {
         }
     }
 
-    public void testBuat() {
-        Produk p1 = returJualRepository.findProdukById(-1l)
-        Produk p2 = returJualRepository.findProdukById(-2l)
-        Konsumen k = returJualRepository.findKonsumenById(-1l)
-        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
-        returJual.tambah(new ItemBarang(p1, 10))
-        returJual.tambah(new ItemBarang(p2, 20))
-        returJual.tambah(new KlaimTukar(p1, 20))
-
-        shouldFail(IllegalStateException) {
-            returJualRepository.buat(returJual)
-        }
-    }
-
     public void testHapus() {
         Produk p1 = returJualRepository.findProdukById(-1l)
         Produk p2 = returJualRepository.findProdukById(-2l)
         Konsumen k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         BigDecimal sisaPiutangAwal = k.jumlahPiutang()
         ReturJual r = new ReturJual(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
-        r.tambah(new ItemBarang(p1, 10))
-        r.tambah(new ItemBarang(p2, 20))
-        r.tambah(new KlaimPotongan(10000))
+        r.tambah(new ItemRetur(p1, 10, [new KlaimPotongPiutang(10000)] as Set))
+        r.tambah(new ItemRetur(p2, 20, [new KlaimTukar(p2, 1)] as Set))
         r = returJualRepository.buat(r)
         k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         assertEquals(sisaPiutangAwal - 10000, k.jumlahPiutang())

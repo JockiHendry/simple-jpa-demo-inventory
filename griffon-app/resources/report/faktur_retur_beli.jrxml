@@ -71,6 +71,9 @@
 	<field name="supplier" class="domain.pembelian.Supplier">
 		<fieldDescription><![CDATA[supplier]]></fieldDescription>
 	</field>
+	<field name="_THIS" class="java.lang.Object">
+		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -147,9 +150,9 @@
 			<componentElement>
 				<reportElement key="table 1" style="label" x="0" y="0" width="554" height="84" uuid="97be5254-0866-49fe-b48c-77598a02da26"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="itemBarangDataset" uuid="ba1c5788-7eeb-463a-9ae9-fe2958de2f48">
+					<datasetRun subDataset="itemBarangDataset" uuid="ce9e7dda-1fc8-4245-b692-c645af31908a">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
-JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
+JRBeanCollectionDataSource($F{_THIS}.toDaftarBarang().items)]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="28" uuid="acb46bf0-6a69-46f9-a4e0-b957054727c5">
 						<jr:tableFooter height="17" rowSpan="1">

@@ -16,6 +16,7 @@
 package project
 
 import domain.faktur.ItemFaktur
+import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -25,14 +26,14 @@ import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.penjualan.Sales
-import domain.retur.KlaimPotongan
-import domain.retur.KlaimRetur
+import domain.retur.ItemRetur
+import domain.retur.KlaimPotongPiutang
+import domain.retur.Klaim
 import domain.retur.KlaimTukar
-import domain.retur.ReturBeli
 import domain.retur.ReturJual
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
-import griffon.util.ApplicationHolder
+import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
@@ -85,14 +86,12 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
         Konsumen konsumen = new Konsumen()
         ReturJual retur = new ReturJual(konsumen: konsumen)
-        retur.tambah(new ItemBarang(produk1, 1))
-        retur.tambah(new ItemBarang(produk2, 3))
-        retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambah(new KlaimTukar(produk1, 1))
-        retur.tambah(new KlaimTukar(produk2, 3))
+        retur.tambah(new ItemRetur(produk1, 1, [new KlaimTukar(produk1, 1)] as Set))
+        retur.tambah(new ItemRetur(produk2, 3, [new KlaimTukar(produk2, 3)] as Set))
+        retur.tambah(new ItemRetur(produk3, 5, [new KlaimPotongPiutang(1000)] as Set))
 
         PengeluaranBarang pengeluaranBarang = retur.tukar()
-        assertTrue(retur.getKlaim(KlaimTukar, true).empty)
+        assertTrue(retur.getKlaimsTukar(true).empty)
         assertTrue(pengeluaranBarang.sudahDiterima())
         List<ItemBarang> items = pengeluaranBarang.items
         assertEquals(2, items.size())
@@ -108,16 +107,14 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk2 = new Produk(supplier: supplier)
         Produk produk3 = new Produk(supplier: supplier)
         ReturJual retur = new ReturJual()
-        retur.tambah(new ItemBarang(produk1, 1))
-        retur.tambah(new ItemBarang(produk2, 3))
-        retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambah(new KlaimPotongan(10000))
-        retur.tambah(new KlaimPotongan(20000))
+        retur.tambah(new ItemRetur(produk1, 1, [new KlaimPotongPiutang(10000)] as Set))
+        retur.tambah(new ItemRetur(produk2, 3, [new KlaimPotongPiutang(20000)] as Set))
+        retur.tambah(new ItemRetur(produk3, 5, [new KlaimTukar(produk1, 1)] as Set))
 
-        List<KlaimRetur> hasil = retur.getKlaim(KlaimPotongan)
+        Set<Klaim> hasil = retur.getKlaimsPotongPiutang()
         assertEquals(2, hasil.size())
-        assertEquals(10000, hasil[0].potongan)
-        assertEquals(20000, hasil[1].potongan)
+        assertEquals(10000, hasil[0].jumlah)
+        assertEquals(20000, hasil[1].jumlah)
     }
 
     public void testGetKlaimTukar() {
@@ -126,12 +123,11 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk2 = new Produk(supplier: supplier)
         Produk produk3 = new Produk(supplier: supplier)
         ReturJual retur = new ReturJual()
-        retur.tambah(new ItemBarang(produk1, 1))
-        retur.tambah(new ItemBarang(produk2, 3))
-        retur.tambah(new ItemBarang(produk3, 5))
-        retur.tambah(new KlaimTukar(produk1, 1))
+        retur.tambah(new ItemRetur(produk1, 1, [new KlaimTukar(produk1, 1)] as Set))
+        retur.tambah(new ItemRetur(produk2, 3, [new KlaimPotongPiutang(1000)] as Set))
+        retur.tambah(new ItemRetur(produk3, 5, [new KlaimPotongPiutang(1000)] as Set))
 
-        List<KlaimRetur> hasil = retur.getKlaim(KlaimTukar)
+        Set<Klaim> hasil = retur.getKlaimsTukar()
         assertEquals(1, hasil.size())
         assertEquals(produk1, hasil[0].produk)
         assertEquals(1, hasil[0].jumlah)
@@ -154,11 +150,124 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(500000, konsumen.jumlahPiutang())
 
         ReturJual r = new ReturJual(konsumen: konsumen)
-        r.tambah(new KlaimPotongan(250000))
-        assertEquals(250000, r.sisaPotongan())
+        r.tambah(new ItemRetur(produk1, 10, [new KlaimPotongPiutang(250000)] as Set))
+        assertEquals(250000, r.sisaPotongPiutang())
         r.potongPiutang()
-        assertEquals(0, r.sisaPotongan())
+        assertEquals(0, r.sisaPotongPiutang())
         assertEquals(250000, konsumen.jumlahPiutang())
     }
-    
+
+    public void testToDaftarBarang() {
+        Produk produkA = new Produk('Produk A')
+        Produk produkB = new Produk('Produk B')
+        Produk produkC = new Produk('Produk C')
+        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+        r.tambah(new ItemRetur(produkA, 10, [new KlaimPotongPiutang(id: 1, jumlah: 1000)] as Set))
+        r.tambah(new ItemRetur(produkA, 20, [new KlaimPotongPiutang(id: 2, jumlah: 1000)] as Set))
+        r.tambah(new ItemRetur(produkB, 30, [new KlaimPotongPiutang(id: 3, jumlah: 1000)] as Set))
+        r.tambah(new ItemRetur(produkB, 10, [new KlaimPotongPiutang(id: 4, jumlah: 1000)] as Set))
+        r.tambah(new ItemRetur(produkC, 10, [new KlaimPotongPiutang(id: 5, jumlah: 1000)] as Set))
+        assertEquals(5000, r.jumlahPotongPiutang())
+        assertEquals(5000, r.sisaPotongPiutang())
+
+        DaftarBarang d = r.toDaftarBarang()
+        assertEquals('R-01', d.nomor)
+        assertEquals(LocalDate.now().minusDays(1), d.tanggal)
+        assertEquals('TEST', d.keterangan)
+        assertEquals(3, d.items.size())
+        assertEquals(produkA, d.items[0].produk)
+        assertEquals(30, d.items[0].jumlah)
+        assertEquals(produkB, d.items[1].produk)
+        assertEquals(40, d.items[1].jumlah)
+        assertEquals(produkC, d.items[2].produk)
+        assertEquals(10, d.items[2].jumlah)
+    }
+
+    public void testItemReturGetKlaims() {
+        Produk produkA = new Produk('Produk A')
+        Produk produkB = new Produk('Produk B')
+        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+
+        def klaimPotongPiutang = new KlaimPotongPiutang(id: 1, jumlah: 1000)
+        def klaimTukar1 = new KlaimTukar(id: 2, produk: produkA, jumlah: 5)
+        def klaimTukar2 = new KlaimTukar(id: 3, produk: produkB, jumlah: 1, sudahDiproses: true)
+
+        r.tambah(new ItemRetur(produkA, 10, [klaimPotongPiutang, klaimTukar1, klaimTukar2] as Set))
+
+        def hasil = r.items[0].getKlaims(KlaimPotongPiutang)
+        assertEquals(1, hasil.size())
+        assertTrue(hasil.contains(klaimPotongPiutang))
+
+        hasil = r.items[0].getKlaims(KlaimTukar)
+        assertEquals(2, hasil.size())
+        assertTrue(hasil.contains(klaimTukar2))
+        assertTrue(hasil.contains(klaimTukar1))
+
+        hasil = r.items[0].getKlaims(KlaimTukar, true)
+        assertEquals(1, hasil.size())
+        assertTrue(hasil.contains(klaimTukar1))
+    }
+
+    public void testItemReturJumlahBarangDitukar() {
+        Produk produkA = new Produk('Produk A')
+        Produk produkB = new Produk('Produk B')
+        Produk produkC = new Produk('Produk C')
+        def klaimTukar1 = new KlaimTukar(produk: produkA, jumlah: 5)
+        def klaimTukar2 = new KlaimTukar(produk: produkB, jumlah: 1, sudahDiproses: true)
+        def klaimTukar3 = new KlaimTukar(produk: produkB, jumlah: 19)
+
+        ItemRetur itemRetur1 = new ItemRetur(produkA, 10, [klaimTukar1] as Set)
+        assertEquals(5, itemRetur1.jumlahBarangDitukar())
+
+        ItemRetur itemRetur2 = new ItemRetur(produkB, 10, [klaimTukar2, klaimTukar3] as Set)
+        assertEquals(20, itemRetur2.jumlahBarangDitukar())
+
+        ItemRetur itemRetur3 = new ItemRetur(produkC, 10)
+        assertEquals(0, itemRetur3.jumlahBarangDitukar())
+    }
+
+    public void testGetKlaim() {
+        Produk produkA = new Produk('Produk A')
+        Produk produkB = new Produk('Produk B')
+        Produk produkC = new Produk('Produk C')
+        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+
+        def potongPiutang1 = new KlaimPotongPiutang(id: 1, jumlah: 1000)
+        def potongPiutang2 = new KlaimPotongPiutang(id: 2, jumlah: 1000)
+        def potongPiutang3 = new KlaimPotongPiutang(id: 3, jumlah: 1000)
+        def klaimTukar1 = new KlaimTukar(id: 4, produk: produkA, jumlah: 5)
+        def klaimTukar2 = new KlaimTukar(id: 5, produk: produkB, jumlah: 1, sudahDiproses: true)
+        def klaimTukar3 = new KlaimTukar(id: 6, produk: produkB, jumlah: 19)
+        def klaimTukar4 = new KlaimTukar(id: 7, produk: produkA, jumlah: 10)
+        def klaimTukar5 = new KlaimTukar(id: 8, produk: produkB, jumlah: 10)
+        def klaimTukar6 = new KlaimTukar(id: 9, produk: produkC, jumlah: 10)
+
+        r.tambah(new ItemRetur(produkA, 10, [potongPiutang1, klaimTukar1, klaimTukar2] as Set))
+        r.tambah(new ItemRetur(produkB, 20, [potongPiutang2, klaimTukar3] as Set))
+        r.tambah(new ItemRetur(produkC, 30, [potongPiutang3, klaimTukar4, klaimTukar5, klaimTukar6] as Set))
+
+        def hasil = r.getKlaimsPotongPiutang()
+        assertEquals(3, hasil.size())
+        assertTrue(hasil.contains(potongPiutang1))
+        assertTrue(hasil.contains(potongPiutang2))
+        assertTrue(hasil.contains(potongPiutang3))
+
+        hasil = r.getKlaimsTukar()
+        assertEquals(6, hasil.size())
+        assertTrue(hasil.contains(klaimTukar1))
+        assertTrue(hasil.contains(klaimTukar2))
+        assertTrue(hasil.contains(klaimTukar3))
+        assertTrue(hasil.contains(klaimTukar4))
+        assertTrue(hasil.contains(klaimTukar5))
+        assertTrue(hasil.contains(klaimTukar6))
+
+        hasil = r.getKlaimsTukar(true)
+        assertEquals(5, hasil.size())
+        assertTrue(hasil.contains(klaimTukar1))
+        assertTrue(hasil.contains(klaimTukar3))
+        assertTrue(hasil.contains(klaimTukar4))
+        assertTrue(hasil.contains(klaimTukar5))
+        assertTrue(hasil.contains(klaimTukar6))
+
+    }
 }

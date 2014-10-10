@@ -19,23 +19,23 @@ public enum StatusFakturJual {
     DIBUAT("Dibuat", true, false, true),
     DIANTAR("Diantar", false, false, true),
     DITERIMA("Diterima", false, true, false),
-    LUNAS("Lunas", false, true, false);
+    LUNAS("Lunas", false, true, false)
 
     StatusFakturJual(String desc, boolean bolehDiubah, boolean piutangBolehDiubah, boolean pengeluaranBolehDiUbah) {
-        this.desc = desc;
-        this.bolehDiubah = bolehDiubah;
-        this.piutangBolehDiubah = piutangBolehDiubah;
-        this.pengeluaranBolehDiubah = pengeluaranBolehDiUbah;
+        this.desc = desc
+        this.bolehDiubah = bolehDiubah
+        this.piutangBolehDiubah = piutangBolehDiubah
+        this.pengeluaranBolehDiubah = pengeluaranBolehDiUbah
     }
 
-    public String desc;
-    public boolean bolehDiubah;
-    public boolean piutangBolehDiubah;
-    public boolean pengeluaranBolehDiubah;
+    String desc
+    boolean bolehDiubah
+    boolean piutangBolehDiubah
+    boolean pengeluaranBolehDiubah
 
     @Override
     public String toString() {
-        return desc;
+        desc
     }
 
 }

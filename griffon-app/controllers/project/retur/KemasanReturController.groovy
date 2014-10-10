@@ -33,6 +33,7 @@ class KemasanReturController {
     void mvcGroupInit(Map args) {
         model.parent = args.parent
         model.supplierSearch = args.supplierSearch
+        model.kemasanReturList.clear()
         model.kemasanReturList.addAll(args.parentList)
         model.nomor = model.kemasanReturList.size() + 1
     }
@@ -43,7 +44,7 @@ class KemasanReturController {
                 return
             }
         }
-        KlaimKemasan kemasanRetur = new KlaimKemasan(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items))
+        Kemasan kemasanRetur = new Kemasan(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items))
 
         if (!returBeliRepository.validate(kemasanRetur, Default, model)) return
 
@@ -71,7 +72,7 @@ class KemasanReturController {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-        KlaimKemasan kemasanRetur = view.table.selectionModel.selected[0]
+        Kemasan kemasanRetur = view.table.selectionModel.selected[0]
         execInsideUISync {
             model.kemasanReturList.remove(kemasanRetur)
             clear()
@@ -123,7 +124,7 @@ class KemasanReturController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                KlaimKemasan selected = view.table.selectionModel.selected[0]
+                Kemasan selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
                 model.nomor = selected.nomor

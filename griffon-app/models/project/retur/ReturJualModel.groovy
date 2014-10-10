@@ -19,14 +19,9 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.retur.*
 import domain.penjualan.*
-import domain.penjualan.*
 import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
-import groovy.beans.Bindable
-import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.*
-import javax.swing.event.*
-import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class ReturJualModel {
@@ -34,6 +29,9 @@ class ReturJualModel {
     ReturJualViewMode mode
     @Bindable boolean showSave
     @Bindable boolean allowPenukaran
+    @Bindable boolean showPiutang
+    @Bindable boolean deleted = false
+    boolean excludeDeleted = false
 
     @Bindable Long id
 
@@ -48,9 +46,7 @@ class ReturJualModel {
     @Bindable String nomor
     @Bindable LocalDate tanggal
     @Bindable String keterangan
-    List<ItemBarang> items = []
-    List<KlaimRetur> listKlaimRetur = []
-    @Bindable BigDecimal potongan
+    List<ItemRetur> items = []
     @Bindable Konsumen konsumen
 
     BasicEventList<ReturJual> returJualList = new BasicEventList<>()

@@ -20,7 +20,6 @@ import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.pembelian.Supplier
-import domain.retur.KlaimPotongan
 import domain.retur.ReturBeli
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
@@ -171,35 +170,31 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         fakturBeli.tambah(new ItemFaktur(produkC,  8,  5000))
         p.tambah(fakturBeli)
 
-        ReturBeli r1 = new ReturBeli(supplier: supplier)
-        r1.tambah(new KlaimPotongan(50000))
-        assertFalse(r1.sudahDiproses)
+        ReturBeli r1 = new ReturBeli(supplier: supplier, nilaiPotonganHutang: 50000)
+        assertFalse(r1.sudahDiterima)
         p.bayar(r1)
-        assertTrue(r1.sudahDiproses)
+        assertTrue(r1.sudahDiterima)
         assertEquals(135000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        ReturBeli r2 = new ReturBeli(supplier: supplier)
-        r2.tambah(new KlaimPotongan(70000))
-        assertFalse(r2.sudahDiproses)
+        ReturBeli r2 = new ReturBeli(supplier: supplier, nilaiPotonganHutang: 70000)
+        assertFalse(r2.sudahDiterima)
         p.bayar(r2)
-        assertTrue(r2.sudahDiproses)
+        assertTrue(r2.sudahDiterima)
         assertEquals(65000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        ReturBeli r3 = new ReturBeli(supplier: supplier)
-        r3.tambah(new KlaimPotongan(50000))
-        assertFalse(r3.sudahDiproses)
+        ReturBeli r3 = new ReturBeli(supplier: supplier, nilaiPotonganHutang: 50000)
+        assertFalse(r3.sudahDiterima)
         p.bayar(r3)
-        assertTrue(r3.sudahDiproses)
+        assertTrue(r3.sudahDiterima)
         assertEquals(15000, p.sisaHutang())
         assertFalse(p.fakturBeli.hutang.lunas)
         assertFalse(p.status == StatusPurchaseOrder.LUNAS)
 
-        ReturBeli r4 = new ReturBeli(supplier: new Supplier())
-        r4.tambah(new KlaimPotongan(10000))
+        ReturBeli r4 = new ReturBeli(supplier: new Supplier(), nilaiPotonganHutang: 10000)
         shouldFail(IllegalArgumentException) {
             p.bayar(r4)
         }

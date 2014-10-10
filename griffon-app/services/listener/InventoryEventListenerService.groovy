@@ -26,7 +26,6 @@ import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJualOlehSales
-import domain.retur.Retur
 import domain.user.PesanLevelMinimum
 import project.user.PesanRepository
 

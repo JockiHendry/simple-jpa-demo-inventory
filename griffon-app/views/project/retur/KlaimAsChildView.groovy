@@ -15,6 +15,9 @@
  */
 package project.retur
 
+import domain.retur.KlaimPotongPiutang
+import domain.retur.KlaimTukar
+
 import java.awt.event.KeyEvent
 
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
@@ -24,7 +27,7 @@ import org.joda.time.*
 import java.awt.*
 
 actions {
-    action(id: 'save', name: app.getMessage('simplejpa.dialog.update.button'), closure: controller.save)
+    action(id: 'save', name: 'Simpan', closure: controller.save)
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
@@ -33,31 +36,33 @@ actions {
 panel(id: 'mainPanel') {
     borderLayout()
 
-    panel(constraints: CENTER) {
-        borderLayout()
-        panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
-            label(text: bind('searchMessage', source: model))
-        }
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.klaimReturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                glazedColumn(name: 'Produk', property: 'produk')
-                glazedColumn(name: 'Jumlah', property: 'jumlah')
-                glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
-                    templateRenderer(exp: {it? 'Y': ''})
-                }
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.klaimList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+            glazedColumn(name: 'Jenis', expression: { griffon.util.GriffonNameUtils.getNaturalName(it?.class?.simpleName)})
+            glazedColumn(name: 'Tukar Dengan', expression: { (it instanceof KlaimTukar)? it.produk.nama: '' })
+            glazedColumn(name: 'Qty Ditukar', expression: { (it instanceof KlaimTukar)? it.jumlah: '' })
+            glazedColumn(name: 'Potongan Piutang', expression: { (it instanceof KlaimPotongPiutang)? it.jumlah: null}, columnClass: Integer) {
+                templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
+            }
+            glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
+                templateRenderer("\${it? 'Y': ''}", horizontalAlignment: RIGHT)
             }
         }
     }
 
-    panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), visible: bind { model.editable }, constraints: PAGE_END, focusCycleRoot: true) {
-        label('Produk:')
-        panel {
+    panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left,grow]', ''), visible: bind {model.editable}, constraints: PAGE_END, focusCycleRoot: true) {
+        label('Jenis Klaim:')
+        comboBox(id: 'jenisKlaim', model: model.jenisKlaim, actionPerformed: controller.onPerubahanJenisKlaim)
+        errorLabel(path: 'jenisKlaim', constraints: 'wrap')
+
+        label('Produk:', visible: bind {model.produkVisible})
+        panel(visible: bind {model.produkVisible}) {
             label(text: bind {model.produk?: '- kosong -'})
             button('Cari Produk...', id: 'cariProduk', errorPath: 'produk', mnemonic: KeyEvent.VK_P, actionPerformed: controller.showProduk)
         }
-        errorLabel(path: 'produk', constraints: 'wrap')
+        errorLabel(path: 'produk', visible: bind {model.produkVisible}, constraints: 'wrap')
         label('Jumlah:')
-        numberTextField(id: 'jumlah', columns: 20, bindTo: 'jumlah', errorPath: 'jumlah')
+        decimalTextField(id: 'jumlah', columns: 20, bindTo: 'jumlah', nfParseBigDecimal: true, errorPath: 'jumlah')
         errorLabel(path: 'jumlah', constraints: 'wrap')
 
         panel(constraints: 'span, growx, wrap') {

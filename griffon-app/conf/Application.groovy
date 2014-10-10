@@ -23,6 +23,20 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "klaimAsChild"
+    'klaimAsChild' {
+        model      = 'project.retur.KlaimAsChildModel'
+        view       = 'project.retur.KlaimAsChildView'
+        controller = 'project.retur.KlaimAsChildController'
+    }
+
+    // MVC Group for "itemReturAsChild"
+    'itemReturAsChild' {
+        model      = 'project.retur.ItemReturAsChildModel'
+        view       = 'project.retur.ItemReturAsChildView'
+        controller = 'project.retur.ItemReturAsChildController'
+    }
+
     // MVC Group for "laporanPenjualanProduk"
     'laporanPenjualanProduk' {
         model      = 'project.laporan.LaporanPenjualanProdukModel'
@@ -84,13 +98,6 @@ mvcGroups {
         model      = 'project.retur.ReturBeliModel'
         view       = 'project.retur.ReturBeliView'
         controller = 'project.retur.ReturBeliController'
-    }
-
-    // MVC Group for "klaimReturAsChild"
-    'klaimReturAsChild' {
-        model      = 'project.retur.KlaimReturAsChildModel'
-        view       = 'project.retur.KlaimReturAsChildView'
-        controller = 'project.retur.KlaimReturAsChildController'
     }
 
     // MVC Group for "returJual"

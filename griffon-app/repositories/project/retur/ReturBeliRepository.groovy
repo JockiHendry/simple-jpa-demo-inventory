@@ -21,6 +21,7 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
+import domain.retur.Kemasan
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import project.user.NomorService
@@ -68,7 +69,7 @@ class ReturBeliRepository {
             throw new DataDuplikat(returBeli)
         }
         returBeli.nomor = ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.RETUR_BELI)
-        returBeli.items.each { it.produk = findProdukById(it.produk.id) }
+        returBeli.items.each { Kemasan k -> k.items.each { it.produk = findProdukById(it.produk.id) } }
         persist(returBeli)
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli))
         returBeli
@@ -79,19 +80,18 @@ class ReturBeliRepository {
         if (!mergedRetur) {
             throw new DataTidakBolehDiubah(returBeli)
         }
-        if (mergedRetur.sudahDiproses) {
+        if (mergedRetur.sudahDiterima) {
             throw new DataTidakBolehDiubah('Tidak boleh mengubah retur beli karena sudah diproses dan diterima!', returBeli)
         }
-        returBeli.items.each { it.produk = merge(it.produk) }
+        returBeli.items.each { Kemasan k -> k.items.each {it.produk = findProdukById(it.produk.id)} }
         ApplicationHolder.application?.event(new PerubahanRetur(returBeli, mergedRetur))
         mergedRetur.with {
             nomor = returBeli.nomor
             tanggal = returBeli.tanggal
             supplier = merge(returBeli.supplier)
             keterangan = returBeli.keterangan
-            listKlaimRetur.clear()
             items.clear()
-            returBeli.listKlaimRetur.each {
+            returBeli.items.each {
                 tambah(merge(it))
             }
         }
@@ -109,9 +109,9 @@ class ReturBeliRepository {
         returBeli
     }
 
-    public ReturBeli tukar(ReturBeli returBeli) {
+    public ReturBeli terima(ReturBeli returBeli) {
         returBeli = findReturBeliById(returBeli.id)
-        PenerimaanBarang penerimaanBarang = returBeli.tukar()
+        PenerimaanBarang penerimaanBarang = returBeli.terima()
         persist(penerimaanBarang)
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, null))
         returBeli

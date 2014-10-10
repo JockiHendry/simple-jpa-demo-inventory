@@ -17,24 +17,29 @@ package project.retur
 
 import domain.retur.*
 import domain.inventory.*
+import domain.validation.InputReturJual
+import project.retur.*
 import simplejpa.swing.DialogUtils
+import simplejpa.transaction.Transaction
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
-class KlaimReturAsChildController {
+class ItemReturAsChildController {
 
-    KlaimReturAsChildModel model
+    ItemReturAsChildModel model
     def view
     ReturJualRepository returJualRepository
+    ReturJualService returJualService
 
     void mvcGroupInit(Map args) {
+        model.itemReturList.addAll(args.'parentList' ?: [])
         model.parent = args.parent
-        model.editable = args.containsKey('editable')? args.'editable': (model.parent?.id == null)
-        model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
-        model.supplierSearch = args.containsKey('supplierSearch')? args.'supplierSearch': null
-        model.klaimReturList.addAll(args.'parentList' ?: [])
+        if (model.parent) model.editable = false
+        model.parentGudang = args.parentGudang
+        model.parentKonsumen = args.parentKonsumen
+        model.showPiutang = args.containsKey('showPiutang')? args.showPiutang: true
     }
 
     void mvcGroupDestroy() {
@@ -47,21 +52,23 @@ class KlaimReturAsChildController {
             }
         }
 
-        KlaimTukar klaimTukar = new KlaimTukar(produk: model.produk, jumlah: model.jumlah)
+        ItemRetur itemRetur = new ItemRetur(id: model.id, produk: model.produk, jumlah: model.jumlah, klaims: new HashSet(model.klaims))
 
-        if (!returJualRepository.validate(klaimTukar, Default, model)) return
+        if (!returJualRepository.validate(itemRetur, InputReturJual, model)) return
 
         if (view.table.selectionModel.selectionEmpty) {
             // Insert operation
             execInsideUISync {
-                model.klaimReturList << klaimTukar
-                view.table.changeSelection(model.klaimReturList.size() - 1, 0, false, false)
+                model.itemReturList << itemRetur
+                view.table.changeSelection(model.itemReturList.size() - 1, 0, false, false)
             }
         } else {
             // Update operation
-            KlaimTukar selectedKlaimRetur = view.table.selectionModel.selected[0]
-            selectedKlaimRetur.produk = model.produk
-            selectedKlaimRetur.jumlah = model.jumlah
+            ItemRetur selectedItemRetur = view.table.selectionModel.selected[0]
+            selectedItemRetur.produk = model.produk
+            selectedItemRetur.jumlah = model.jumlah
+            selectedItemRetur.klaims.clear()
+            selectedItemRetur.klaims.addAll(model.klaims)
         }
         execInsideUISync {
             clear()
@@ -73,16 +80,28 @@ class KlaimReturAsChildController {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-        KlaimRetur klaimRetur = view.table.selectionModel.selected[0]
+        ItemRetur itemRetur = view.table.selectionModel.selected[0]
         execInsideUISync {
-            model.klaimReturList.remove(klaimRetur)
+            model.itemReturList.remove(itemRetur)
             clear()
+        }
+    }
+
+    def showKlaim = {
+        if (!model.showPiutang) return
+        execInsideUISync {
+            def args = [parentList: model.klaims, parent: view.table.selectionModel.selected[0]]
+            def props = [title: 'Klaims', preferredSize: new Dimension(900, 300)]
+            DialogUtils.showMVCGroup('klaimAsChild', args, app, view, props) { m, v, c ->
+                model.klaims.clear()
+                model.klaims.addAll(m.klaimList)
+            }
         }
     }
 
     def showProduk = {
         execInsideUISync {
-            def args = [popup: true, allowTambahProduk: false, showReturOnly: model.showReturOnly, supplierSearch: model.supplierSearch]
+            def args = [popup: true, allowTambahProduk: false]
             def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
             Produk produk = null
             DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
@@ -97,11 +116,32 @@ class KlaimReturAsChildController {
         }
     }
 
+    def autoKlaim = {
+        if (!model.parent && (!model.parentGudang || !model.parentKonsumen)) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        ReturJual r = new ReturJual(gudang: model.parent? model.parent.gudang: model.parentGudang, konsumen: model.parent? model.parent.konsumen: model.parentKonsumen)
+        model.itemReturList.each { r.tambah(it) }
+        returJualService.autoKlaim(r)
+        view.table.repaint()
+        JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+    }
+
+    def resetKlaim = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin menghapus rencana klaim retur yang sudah dibuat?', 'Konfirmasi Reset', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        model.itemReturList.each { it.klaims.clear() }
+        view.table.repaint()
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null
             model.produk = null
             model.jumlah = null
+            model.klaims.clear()
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -112,11 +152,13 @@ class KlaimReturAsChildController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                KlaimTukar selected = view.table.selectionModel.selected[0]
+                ItemRetur selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
-
+                model.id = selected.id
                 model.produk = selected.produk
                 model.jumlah = selected.jumlah
+                model.klaims.clear()
+                model.klaims.addAll(selected.klaims)
             }
         }
     }

@@ -13,24 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.user
+package domain.validation;
 
-import java.security.MessageDigest
-
-class PasswordService {
-
-    public byte[] plainTextToEncrypted(char[] plain) {
-        MessageDigest digester = MessageDigest.getInstance('MD5')
-        digester.update(plain as byte[])
-        digester.digest()
-    }
-
-    public byte[] plainTextToEncrypted(String plain) {
-        plainTextToEncrypted((char[])plain.getBytes())
-    }
-
-    public boolean periksaPassword(def diharapkan, def inputPassword) {
-        Arrays.equals(diharapkan as byte[], plainTextToEncrypted(inputPassword))
-    }
-
+public interface InputReturJual {
 }

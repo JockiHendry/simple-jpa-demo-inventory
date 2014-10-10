@@ -17,13 +17,17 @@ package domain.retur
 
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
-import domain.inventory.ItemBarang
+import domain.inventory.SebuahDaftarBarang
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
 import groovy.transform.*
+import org.hibernate.annotations.Type
+import org.hibernate.validator.constraints.NotBlank
 import project.user.NomorService
 import simplejpa.DomainClass
+import simplejpa.SimpleJpaUtil
 
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -31,7 +35,19 @@ import org.joda.time.*
 import griffon.util.*
 
 @DomainClass @Entity @Canonical(excludes='penerimaanBarang')
-class ReturBeli extends Retur {
+class ReturBeli implements SebuahDaftarBarang {
+
+    @NotBlank @Size(min=2, max=100)
+    String nomor
+
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggal
+
+    @Size(min=2, max=200)
+    String keterangan
+
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @OrderColumn
+    List<Kemasan> items = []
 
     @NotNull @ManyToOne
     Supplier supplier
@@ -39,51 +55,50 @@ class ReturBeli extends Retur {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PenerimaanBarang penerimaanBarang
 
-    void tambah(KlaimKemasan kemasanRetur) {
-        if (listKlaimRetur.find { (it instanceof KlaimKemasan) && (it.nomor == kemasanRetur.nomor)}) {
-            throw new DataDuplikat(kemasanRetur)
+    @Min(0l)
+    BigDecimal nilaiPotonganHutang
+
+    @NotNull
+    Boolean sudahDiterima = false
+
+    void tambah(Kemasan kemasan) {
+        if (items.find { (it instanceof Kemasan) && (it.nomor == kemasan.nomor)}) {
+            throw new DataDuplikat(kemasan)
         }
-        if (kemasanRetur.nomor == null) {
-            kemasanRetur.nomor = listKlaimRetur.size() + 1
+        if (kemasan.nomor == null) {
+            kemasan.nomor = items.size() + 1
         }
-        listKlaimRetur << kemasanRetur
-        def itemsBaru = (toDaftarBarang() + kemasanRetur.items).items
-        items.clear()
-        items.addAll(itemsBaru)
+        items << kemasan
     }
 
-    void hapus(KlaimKemasan kemasanRetur) {
-        if (listKlaimRetur.remove(kemasanRetur)) {
-            def itemsBaru = (toDaftarBarang() - kemasanRetur.items).items
-            items.clear()
-            items.addAll(itemsBaru)
-        }
+    void hapus(Kemasan kemasan) {
+        items.remove(kemasan)
     }
 
-    PenerimaanBarang tukar() {
+    PenerimaanBarang terima() {
         if (this.penerimaanBarang) {
             throw new DataTidakBolehDiubah(this)
         }
         PenerimaanBarang penerimaanBarang = new PenerimaanBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),
-            gudang: gudang,
+            gudang: SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').cariGudangUtama(),
             keterangan: "Retur Beli [$nomor]"
         )
-        List<KlaimKemasan> listKlaimKemasan = getKlaim(KlaimKemasan, true)
-        DaftarBarangSementara hasil = new DaftarBarangSementara()
-        listKlaimKemasan.each {
-            hasil = hasil + it.items
-            proses(it)
-        }
-        hasil.items.each { penerimaanBarang.tambah(it) }
+        toDaftarBarang().items.each { penerimaanBarang.tambah(it) }
         this.penerimaanBarang = penerimaanBarang
+        sudahDiterima = true
         penerimaanBarang
     }
 
     @Override
-    int faktor() {
-        -1
+    DaftarBarang toDaftarBarang() {
+        DaftarBarangSementara tmp = items.sum { Kemasan k -> k.toDaftarBarang() }?: new DaftarBarangSementara()
+        DaftarBarangSementara hasil = new DaftarBarangSementara(tmp.normalisasi().sort { it.produk.nama }, -1)
+        hasil.nomor = nomor
+        hasil.tanggal = tanggal
+        hasil.keterangan = keterangan
+        hasil
     }
 
 }

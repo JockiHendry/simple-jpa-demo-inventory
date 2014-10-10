@@ -15,9 +15,9 @@
  */
 package project.retur
 
-import domain.pembelian.Supplier
+import domain.inventory.ItemBarang
+import domain.inventory.Produk
 import domain.retur.*
-import domain.inventory.*
 import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
 import groovy.beans.Bindable
@@ -26,19 +26,37 @@ import javax.swing.event.*
 import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-class KlaimReturAsChildModel {
+class KlaimAsChildModel {
+
+    ItemRetur parent
+
+    @Bindable Boolean editable = true
 
     @Bindable Long id
-
-    def parent
-
     @Bindable Produk produk
-    @Bindable Integer jumlah
+    @Bindable BigDecimal jumlah
+    BasicEventList<Klaim> klaimList = new BasicEventList<>()
 
-    BasicEventList<KlaimRetur> klaimReturList = new BasicEventList<>()
+    @Bindable Boolean produkVisible
 
-    @Bindable boolean editable
-    @Bindable boolean showReturOnly
-    Supplier supplierSearch
+    EnumComboBoxModel<JenisKlaim> jenisKlaim = new EnumComboBoxModel<JenisKlaim>(JenisKlaim)
+
+}
+
+enum JenisKlaim {
+
+    TUKAR_BARANG('Tukar Barang'),
+    POTONG_PIUTANG('Potong Piutang')
+
+    String desc
+
+    JenisKlaim(String desc) {
+        this.desc = desc
+    }
+
+    @Override
+    String toString() {
+        desc
+    }
 
 }

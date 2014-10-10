@@ -35,8 +35,8 @@ class ReturJualRepository {
     NomorService nomorService
     FakturJualRepository fakturJualRepository
     
-    List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
-        findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
+    List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+        findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
                 and()
@@ -58,17 +58,6 @@ class ReturJualRepository {
 			throw new DataDuplikat(returJual)
 		}
 
-        // Validasi barang yang ditukar harus sama atau kurang dari barang yang diretur
-        List<ItemBarang> items = returJual.normalisasi()
-        List<ItemBarang> klaims = new DaftarBarangSementara(returJual.listKlaimRetur).normalisasi()
-        klaims.each { ItemBarang itemKlaim ->
-            if (itemKlaim.produk) {
-                if (items.find { (it.produk == itemKlaim.produk) && (it.jumlah >= itemKlaim.jumlah) } == null) {
-                    throw new IllegalStateException("Tidak dapat menukar lebih dari yang di-retur: ${itemKlaim.produk.nama} sejumlah ${itemKlaim.jumlah}")
-                }
-            }
-        }
-
         returJual.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL)
         returJual.konsumen = findKonsumenById(returJual.konsumen.id)
         returJual.items.each { it.produk = findProdukById(it.produk.id) }
@@ -87,7 +76,6 @@ class ReturJualRepository {
 			nomor = returJual.nomor
 			tanggal = returJual.tanggal
 			keterangan = returJual.keterangan
-            gudang = returJual.gudang
 		}
 		mergedRetur
 	}
@@ -111,7 +99,6 @@ class ReturJualRepository {
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         persist(pengeluaranBarang)
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
-        returJual.sudahDiproses = true
         returJual
     }
 

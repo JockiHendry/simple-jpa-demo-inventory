@@ -28,7 +28,7 @@ actions {
     action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'showItemBarang', name: 'Lihat Seluruh Item...', closure: controller.showItemBarang)
+    action(id: 'showSeluruhItem', name: 'Lihat Seluruh Item...', closure: controller.showSeluruhItem)
     action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Kemasan Retur...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
@@ -49,7 +49,7 @@ panel(id: 'mainPanel') {
     }
 
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.returBeliList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showItemBarang, enterKeyAction: showItemBarang) {
+        glazedTable(id: 'table', list: model.returBeliList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showSeluruhItem, enterKeyAction: showSeluruhItem) {
             glazedColumn(name: '', property: 'deleted', width: 20) {
                 templateRenderer(exp: { it == 'Y'? 'D': ''})
             }
@@ -58,7 +58,7 @@ panel(id: 'mainPanel') {
                 templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
             }
             glazedColumn(name: 'Supplier', expression: { it.supplier.nama })
-            glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
+            glazedColumn(name: 'Sudah Diterima', property: 'sudahDiterima') {
                 templateRenderer(exp: { it? 'Y': ''})
             }
             glazedColumn(name: 'Keterangan', property: 'keterangan')
@@ -94,10 +94,10 @@ panel(id: 'mainPanel') {
             label(text: bind { model.modified })
             label(text: bind { model.modifiedBy })
         }
-        panel(constraints: 'span, growx, wrap') {
+        panel(visible: bind { !model.deleted }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save, visible: bind('showSave', source: model))
-            button(action: showItemBarang, visible: bind('isRowSelected', source: table))
+            button(action: showSeluruhItem, visible: bind('isRowSelected', source: table))
             button(action: cetak, visible: bind{ table.isRowSelected && model.showSave })
             button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
             button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave && !model.deleted }), action: delete)

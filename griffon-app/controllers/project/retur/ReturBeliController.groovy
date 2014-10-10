@@ -100,11 +100,8 @@ class ReturBeliController {
             }
         }
         ReturBeli returBeli = new ReturBeli(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, supplier: model.supplier.selectedItem)
-        returBeli.gudang = gudangRepository.cariGudangUtama()
-        model.listKlaimRetur.each { returBeli.tambah(it) }
-        if (model.potongan > 0) {
-            returBeli.tambah(new KlaimPotongan(model.potongan))
-        }
+        model.items.each { returBeli.tambah(it) }
+        returBeli.nilaiPotonganHutang = model.potongan?: 0
 
         if (!returBeliRepository.validate(returBeli, Default, model)) return
 
@@ -137,7 +134,7 @@ class ReturBeliController {
             return
         }
         ReturBeli returBeli = view.table.selectionModel.selected[0]
-        returBeli = returBeliRepository.tukar(returBeli)
+        returBeli = returBeliRepository.terima(returBeli)
         execInsideUISync {
             view.table.selectionModel.selected[0] = returBeli
             clear()
@@ -157,13 +154,13 @@ class ReturBeliController {
         }
     }
 
-    def showItemBarang = {
-        execInsideUISync {
-            def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false, showReturOnly: true, supplierSearch: model.supplier.selectedItem, editable: false]
-            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
-                model.items.clear()
-                model.items.addAll(m.itemBarangList)
+    def showSeluruhItem = {
+        ReturBeli returBeli = view.table.selectionModel.selected[0]
+        if (returBeli) {
+            execInsideUISync {
+                def args = [listItemBarang: returBeli.toDaftarBarang().items, parent: returBeli, editable: false]
+                def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
+                DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props)
             }
         }
     }
@@ -174,11 +171,11 @@ class ReturBeliController {
             return
         }
         execInsideUISync {
-            def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0], supplierSearch: model.supplier.selectedItem]
+            def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], supplierSearch: model.supplier.selectedItem]
             def props = [title: 'List Klaim Retur', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('kemasanRetur', args, app, view, props) { m, v, c ->
-                model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(m.kemasanReturList)
+                model.items.clear()
+                model.items.addAll(m.kemasanReturList)
                 if (m.parent) {
                     view.table.selectionModel.selected[0] = m.parent
                 }
@@ -201,7 +198,6 @@ class ReturBeliController {
             model.tanggal = null
             model.keterangan = null
             model.items.clear()
-            model.listKlaimRetur.clear()
             model.potongan = null
             model.supplier.selectedItem = null
             model.created = null
@@ -227,15 +223,13 @@ class ReturBeliController {
                 model.keterangan = selected.keterangan
                 model.items.clear()
                 model.items.addAll(selected.items)
-                model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(selected.getKlaim(KlaimKemasan))
-                model.potongan = selected.getKlaim(KlaimPotongan).sum { it.potongan }
+                model.potongan = selected.nilaiPotonganHutang
                 model.supplier.selectedItem = selected.supplier
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
-                model.deleted = (selected.deleted == 'Y')
+                model.deleted = (selected.deleted != 'N')
             }
         }
     }

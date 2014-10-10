@@ -15,7 +15,7 @@
  */
 package project.laporan
 
-panel(id: 'mainPanel', constraints: CENTER) {
+panel(id: 'mainPanel') {
     borderLayout()
 }
 

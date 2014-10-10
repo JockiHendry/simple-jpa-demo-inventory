@@ -19,8 +19,7 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.Supplier
-import domain.retur.KlaimKemasan
-import domain.retur.KlaimTukar
+import domain.retur.Kemasan
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -54,11 +53,14 @@ class ReturBeliTest extends DbUnitTestCase {
         Produk p2 = returBeliRepository.findProdukById(-2l)
         Produk p3 = returBeliRepository.findProdukById(-3l)
         Supplier s = returBeliRepository.findSupplierById(-1l)
-        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s, gudang: gudangRepository.cariGudangUtama())
-        returBeli.tambah(new ItemBarang(p1, 10))
-        returBeli.tambah(new ItemBarang(p2, 20))
-        returBeli.tambah(new ItemBarang(p3, 30))
-        returBeli.tambah(new KlaimTukar(p1, 1))
+        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s)
+
+        Kemasan k = new Kemasan(1, LocalDate.now())
+        k.tambah(new ItemBarang(p1, 10))
+        k.tambah(new ItemBarang(p2, 20))
+        k.tambah(new ItemBarang(p3, 30))
+        returBeli.tambah(k)
+
         returBeliRepository.buat(returBeli)
 
         // Periksa nilai jumlah retur di produk
@@ -87,10 +89,9 @@ class ReturBeliTest extends DbUnitTestCase {
     public void testTukarBaru() {
         returBeliRepository.withTransaction {
             ReturBeli returBeli = returBeliRepository.findReturBeliById(-1l)
-            returBeli = returBeliRepository.tukar(returBeli)
+            returBeli = returBeliRepository.terima(returBeli)
 
-            assertTrue(returBeli.sudahDiproses)
-            assertTrue(returBeli.getKlaim(KlaimKemasan, true).empty)
+            assertTrue(returBeli.sudahDiterima)
             assertNotNull(returBeli.penerimaanBarang)
 
             Gudang g = findGudangById(-1l)
@@ -98,13 +99,14 @@ class ReturBeliTest extends DbUnitTestCase {
             Produk p2 = findProdukById(-2l)
             Produk p3 = findProdukById(-3l)
 
-            assertEquals(2, returBeli.penerimaanBarang.items.size())
-            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p1,5)))
-            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p2,3)))
+            assertEquals(3, returBeli.penerimaanBarang.items.size())
+            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p1, 5)))
+            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p2, 3)))
+            assertTrue(returBeli.penerimaanBarang.items.contains(new ItemBarang(p3, 2)))
 
             assertEquals(15, p1.stok(g).jumlah)
             assertEquals(17, p2.stok(g).jumlah)
-            assertEquals(15, p3.stok(g).jumlah)
+            assertEquals(17, p3.stok(g).jumlah)
         }
     }
 
@@ -113,12 +115,12 @@ class ReturBeliTest extends DbUnitTestCase {
         Produk p2 = returBeliRepository.findProdukById(-2l)
         Produk p3 = returBeliRepository.findProdukById(-3l)
         Supplier s = returBeliRepository.findSupplierById(-1l)
-        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s, gudang: gudangRepository.cariGudangUtama())
-        KlaimKemasan klaimKemasan1 = new KlaimKemasan(1, LocalDate.now())
-        klaimKemasan1.tambah(new ItemBarang(p1, 10))
-        klaimKemasan1.tambah(new ItemBarang(p2, 20))
-        klaimKemasan1.tambah(new ItemBarang(p3, 30))
-        returBeli.tambah(klaimKemasan1)
+        ReturBeli returBeli = new ReturBeli(tanggal: LocalDate.now(), nomor: 'TEST-1', supplier: s)
+        Kemasan k1 = new Kemasan(1, LocalDate.now())
+        k1.tambah(new ItemBarang(p1, 10))
+        k1.tambah(new ItemBarang(p2, 20))
+        k1.tambah(new ItemBarang(p3, 30))
+        returBeli.tambah(k1)
         returBeli = returBeliRepository.buat(returBeli)
 
         // Periksa nilai jumlah retur di produk
@@ -129,11 +131,11 @@ class ReturBeliTest extends DbUnitTestCase {
         p3 = returBeliRepository.findProdukById(-3l)
         assertEquals(10, p3.jumlahRetur)
 
-        KlaimKemasan klaimKemasan2 = new KlaimKemasan(2, LocalDate.now())
-        klaimKemasan2.tambah(new ItemBarang(p1, 5))
-        klaimKemasan2.tambah(new ItemBarang(p2, 6))
-        klaimKemasan2.tambah(new ItemBarang(p3, 7))
-        returBeli.tambah(klaimKemasan2)
+        Kemasan k2 = new Kemasan(2, LocalDate.now())
+        k2.tambah(new ItemBarang(p1, 5))
+        k2.tambah(new ItemBarang(p2, 6))
+        k2.tambah(new ItemBarang(p3, 7))
+        returBeli.tambah(k2)
         returBeliRepository.update(returBeli)
 
         // Periksa nilai jumlah retur di produk setelah update

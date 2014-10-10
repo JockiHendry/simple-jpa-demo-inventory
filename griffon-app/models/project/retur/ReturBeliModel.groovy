@@ -20,7 +20,6 @@ import domain.inventory.*
 import domain.pembelian.*
 import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
-import groovy.beans.Bindable
 import org.joda.time.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
@@ -42,8 +41,7 @@ class ReturBeliModel {
     @Bindable String nomor
     @Bindable LocalDate tanggal
     @Bindable String keterangan
-    List<ItemBarang> items = []
-    List<KlaimKemasan> listKlaimRetur = []
+    List<Kemasan> items = []
     @Bindable BigDecimal potongan
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)

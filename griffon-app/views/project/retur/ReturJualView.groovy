@@ -30,10 +30,8 @@ actions {
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
-    action(id: 'showKlaimRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Klaim Penukaran Barang...', closure: controller.showKlaimRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
-    action(id: 'autoCalculate', name: 'Auto', closure: controller.autoCalculate, mnemonic: KeyEvent.VK_A)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
 }
 
@@ -61,6 +59,10 @@ panel(id: 'mainPanel') {
                 templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
             }
             glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
+            glazedColumn(name: 'Qty Ditukar', expression: { it.jumlahDitukar() }, columnClass: Integer)
+            glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind {model.showPiutang}) {
+                templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
+            }
             glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
                 templateRenderer(exp: { it? 'Y': ''})
             }
@@ -84,21 +86,12 @@ panel(id: 'mainPanel') {
             button(action: cariKonsumen, id: 'cariKonsumen', errorPath: 'konsumen')
         }
         errorLabel(path: 'konsumen', constraints: 'wrap')
-        label('Potongan Piutang:')
-        decimalTextField(id: 'potongan', columns: 20, bindTo: 'potongan', errorPath: 'potongan')
-        errorLabel(path: 'potongan', constraints: 'wrap')
         label('Keterangan:')
         textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
         errorLabel(path: 'keterangan', constraints: 'wrap')
         label('Items:')
         button(action: showBarangRetur, errorPath: 'items')
         errorLabel(path: 'items', constraints: 'wrap')
-        label('Klaim:')
-        panel {
-            button(action: showKlaimRetur, errorPath: 'listKlaimRetur')
-            button(action: autoCalculate)
-        }
-        errorLabel(path: 'listKlaimRetur', constraints: 'wrap')
         panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             label('Dibuat:')
@@ -108,7 +101,7 @@ panel(id: 'mainPanel') {
             label(text: bind { model.modified })
             label(text: bind { model.modifiedBy })
         }
-        panel(constraints: 'span, growx, wrap') {
+        panel(visible: bind { !model.deleted }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save, visible: bind{ model.showSave })
             button(action: cetak, visible: bind { table.isRowSelected && model.showSave })

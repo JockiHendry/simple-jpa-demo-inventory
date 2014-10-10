@@ -15,7 +15,10 @@
  */
 package domain.retur
 
+import domain.inventory.DaftarBarang
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
+import domain.inventory.SebuahDaftarBarang
 import groovy.transform.Canonical
 import groovy.transform.EqualsAndHashCode
 import org.hibernate.annotations.Type
@@ -25,11 +28,11 @@ import simplejpa.DomainClass
 import javax.persistence.ElementCollection
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.ManyToOne
+import javax.persistence.OrderColumn
 import javax.validation.constraints.NotNull
 
-@DomainClass @Entity @Canonical(excludes='items') @EqualsAndHashCode(callSuper=true, excludes='items')
-class KlaimKemasan extends KlaimRetur {
+@DomainClass @Entity @Canonical(excludes='items')
+class Kemasan implements SebuahDaftarBarang {
 
     @NotNull
     Integer nomor
@@ -39,15 +42,24 @@ class KlaimKemasan extends KlaimRetur {
 
     String keterangan
 
-    @ElementCollection(fetch=FetchType.EAGER) @NotEmpty
-    Set<ItemBarang> items = [] as Set
+    @ElementCollection(fetch=FetchType.EAGER) @NotEmpty @OrderColumn
+    List<ItemBarang> items = []
 
     void tambah(ItemBarang itemBarang) {
         items << itemBarang
     }
 
     Integer jumlah() {
-        items.sum { ItemBarang i -> i.jumlah }
+        items.sum { ItemBarang i -> i.jumlah }?: 0
+    }
+
+    @Override
+    DaftarBarang toDaftarBarang() {
+        def itemBarangs = items.collect { new ItemBarang(it.produk, it.jumlah) }
+        DaftarBarangSementara hasil = new DaftarBarangSementara(itemBarangs)
+        hasil.nomor = nomor
+        hasil.tanggal = tanggal
+        hasil
     }
 
 }

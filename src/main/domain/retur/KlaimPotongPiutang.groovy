@@ -22,12 +22,23 @@ import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
+import java.text.NumberFormat
 
-@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
-class KlaimPotongan extends KlaimRetur {
+@DomainClass @Entity @Canonical
+class KlaimPotongPiutang extends Klaim {
 
     @Min(0l) @NotNull
-    BigDecimal potongan
+    BigDecimal jumlah
 
+    @Override
+    boolean equals(Object o) {
+        if ((o instanceof KlaimPotongPiutang) && (id == o.id)) return true
+        false
+    }
+
+    @Override
+    String toString() {
+        "Potong Piutang: ${jumlah? NumberFormat.currencyInstance.format(jumlah): 0}"
+    }
 }
 

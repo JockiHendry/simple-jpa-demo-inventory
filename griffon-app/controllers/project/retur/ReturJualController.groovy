@@ -18,7 +18,6 @@ package project.retur
 import ast.NeedSupervisorPassword
 import domain.retur.*
 import org.joda.time.LocalDate
-import project.inventory.GudangRepository
 import project.user.NomorService
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
@@ -40,18 +39,22 @@ class ReturJualController {
         if (model.mode == ReturJualViewMode.INPUT) {
             model.showSave = true
             model.statusSearch.selectedItem = StatusReturJual.SEMUA
+            model.showPiutang = true
+            model.excludeDeleted = false
         } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
             model.showSave = false
             model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
+            model.showPiutang = false
+            model.excludeDeleted = true
         }
-        listAll()
+        init()
         search()
     }
 
     void mvcGroupDestroy() {
     }
 
-    def listAll = {
+    def init = {
         execInsideUISync {
             model.nomorSearch = null
             model.konsumenSearch = null
@@ -73,7 +76,7 @@ class ReturJualController {
         } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
             sudahDiproses = false
         }
-        List result = returJualRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses)
+        List result = returJualRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
         execInsideUISync {
             model.returJualList.clear()
             model.returJualList.addAll(result)
@@ -87,16 +90,8 @@ class ReturJualController {
             }
         }
 
-        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, items: new ArrayList(model.items), konsumen: model.konsumen, gudang: model.gudang.selectedItem)
-        returJual.listKlaimRetur.addAll(model.listKlaimRetur)
-        if (model.potongan > 0) {
-            returJual.tambah(new KlaimPotongan(model.potongan))
-        }
-
-        if (!model.potongan && model.listKlaimRetur.empty) {
-            model.errors['listKlaimRetur'] = 'Barang yang di-klaim tidak boleh kosong bila tidak ada potongan piutang!'
-            return
-        }
+        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, konsumen: model.konsumen, gudang: model.gudang.selectedItem)
+        model.items.each { returJual.tambah(it) }
         if (!returJualRepository.validate(returJual, Default, model)) return
 
         try {
@@ -165,44 +160,12 @@ class ReturJualController {
 
     def showBarangRetur = {
         execInsideUISync {
-            def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false]
+            def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], parentGudang: model.gudang.selectedItem, parentKonsumen: model.konsumen, showPiutang: model.showPiutang]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('itemReturAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
-                model.items.addAll(m.itemBarangList)
+                model.items.addAll(m.itemReturList)
             }
-        }
-    }
-
-    def autoCalculate = {
-        if (!model.gudang.selectedItem) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih gudang terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
-            return
-        }
-        if (model.items.empty) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus mengisi item retur terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
-            return
-        }
-        model.listKlaimRetur.clear()
-        model.listKlaimRetur.addAll(returJualService.cariBarangYangBisaDitukar(model.items, model.gudang.selectedItem))
-        model.potongan = returJualService.hitungPotonganPiutang(model.items, model.listKlaimRetur, model.konsumen)
-    }
-
-    def showKlaimRetur = {
-        if (!model.konsumen) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
-            return
-        }
-        execInsideUISync {
-            def args = [parentList: model.listKlaimRetur, parent: view.table.selectionModel.selected[0]]
-            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('klaimReturAsChild', args, app, view, props) { m, v, c ->
-                model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(m.klaimReturList)
-            }
-        }
-        if (view.table.selectionModel.isSelectionEmpty()) {
-            model.potongan = returJualService.hitungPotonganPiutang(model.items, model.listKlaimRetur, model.konsumen)
         }
     }
 
@@ -222,14 +185,13 @@ class ReturJualController {
             model.tanggal = null
             model.keterangan = null
             model.items.clear()
-            model.listKlaimRetur.clear()
-            model.potongan = null
             model.konsumen = null
             model.gudang.selectedItem = null
             model.created = null
             model.createdBy = null
             model.modified = null
             model.modifiedBy = null
+            model.deleted = false
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -249,18 +211,16 @@ class ReturJualController {
                 model.keterangan = selected.keterangan
                 model.items.clear()
                 model.items.addAll(selected.items)
-                model.listKlaimRetur.clear()
-                model.listKlaimRetur.addAll(selected.getKlaim(KlaimTukar))
-                model.potongan = selected.getKlaim(KlaimPotongan).sum { it.potongan }
                 model.konsumen = selected.konsumen
                 model.gudang.selectedItem = selected.gudang
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate
                 model.modifiedBy = selected.modifiedBy ? '(' + selected.modifiedBy + ')' : null
-                if (model.mode == ReturJualViewMode.PENGELUARAN && selected.deleted != 'Y') {
+                if (model.mode == ReturJualViewMode.PENGELUARAN && selected.deleted == 'N') {
                     model.allowPenukaran = true
                 }
+                model.deleted = (selected.deleted != 'N')
             }
         }
     }

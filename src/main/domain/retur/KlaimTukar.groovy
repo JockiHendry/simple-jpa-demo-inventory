@@ -25,8 +25,8 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
-class KlaimTukar extends KlaimRetur {
+@DomainClass @Entity @Canonical
+class KlaimTukar extends Klaim {
 
     @ManyToOne @NotNull
     Produk produk
@@ -41,5 +41,15 @@ class KlaimTukar extends KlaimRetur {
         super.asType(type)
     }
 
+    @Override
+    boolean equals(Object o) {
+        if ((o instanceof KlaimTukar) && (id == o.id)) return true
+        false
+    }
+
+    @Override
+    String toString() {
+        "Tukar ${produk?.nama}: ${jumlah}"
+    }
 }
 
