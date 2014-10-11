@@ -23,6 +23,7 @@ import domain.retur.ItemRetur
 import domain.retur.KlaimPotongPiutang
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
+import domain.retur.ReturJualOlehSales
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -55,7 +56,7 @@ class ReturJualTest extends DbUnitTestCase {
         Produk p2 = returJualRepository.findProdukById(-2l)
         Produk p3 = returJualRepository.findProdukById(-3l)
         Konsumen k = returJualRepository.findKonsumenById(-1l)
-        ReturJual returJual = new ReturJual(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        ReturJual returJual = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
         returJual.tambah(new ItemRetur(p1, 10, [new KlaimTukar(p1, 1)] as Set))
         returJual.tambah(new ItemRetur(p2, 20, [new KlaimPotongPiutang(1)] as Set))
         returJual.tambah(new ItemRetur(p3, 30, [new KlaimPotongPiutang(1)] as Set))
@@ -71,7 +72,7 @@ class ReturJualTest extends DbUnitTestCase {
     }
 
     public void testJumlahReturDiProdukSetelahHapus() {
-        ReturJual returJual = returJualRepository.findReturJualById(-1l)
+        ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-1l)
         returJualRepository.hapus(returJual)
 
         // Periksa nilai jumlah retur di produk
@@ -85,7 +86,7 @@ class ReturJualTest extends DbUnitTestCase {
 
     public void testTukarBaru() {
         returJualRepository.withTransaction {
-            ReturJual returJual = returJualRepository.findReturJualById(-1l)
+            ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-1l)
             returJual = returJualRepository.tukar(returJual)
 
             assertTrue(returJual.sudahDiproses)
@@ -117,7 +118,7 @@ class ReturJualTest extends DbUnitTestCase {
         Produk p2 = returJualRepository.findProdukById(-2l)
         Konsumen k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         BigDecimal sisaPiutangAwal = k.jumlahPiutang()
-        ReturJual r = new ReturJual(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        ReturJual r = new ReturJualOlehSales(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
         r.tambah(new ItemRetur(p1, 10, [new KlaimPotongPiutang(10000)] as Set))
         r.tambah(new ItemRetur(p2, 20, [new KlaimTukar(p2, 1)] as Set))
         r = returJualRepository.buat(r)

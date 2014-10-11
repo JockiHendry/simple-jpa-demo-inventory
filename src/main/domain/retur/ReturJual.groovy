@@ -38,7 +38,7 @@ import javax.validation.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical(excludes='pengeluaranBarang')
-class ReturJual implements SebuahDaftarBarang {
+abstract class ReturJual implements SebuahDaftarBarang {
 
     @NotBlank @Size(min=2, max=100)
     String nomor
@@ -46,14 +46,8 @@ class ReturJual implements SebuahDaftarBarang {
     @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggal
 
-    @NotNull @ManyToOne
-    Gudang gudang
-
     @Size(min=2, max=200)
     String keterangan
-
-    @NotNull @ManyToOne
-    Konsumen konsumen
 
     @NotNull
     Boolean sudahDiproses = false
@@ -82,24 +76,8 @@ class ReturJual implements SebuahDaftarBarang {
         getKlaims(KlaimTukar, hanyaBelumDiproses)
     }
 
-    Set<KlaimPotongPiutang> getKlaimsPotongPiutang(boolean hanyaBelumDiproses = false) {
-        getKlaims(KlaimPotongPiutang, hanyaBelumDiproses)
-    }
-
-    BigDecimal jumlahPotongPiutang() {
-        getKlaimsPotongPiutang().sum { KlaimPotongPiutang k -> k.jumlah }?: 0
-    }
-
     Integer jumlahDitukar() {
         items.sum { ItemRetur i -> i.jumlahBarangDitukar() }?: 0
-    }
-
-    BigDecimal sisaPotongPiutang() {
-        getKlaimsPotongPiutang(true).sum { KlaimPotongPiutang k -> k.jumlah }?: 0
-    }
-
-    void prosesKlaimPotongPiutang() {
-        getKlaimsPotongPiutang(true).each { it.proses() }
     }
 
     void proses(Klaim klaim) {
@@ -107,7 +85,7 @@ class ReturJual implements SebuahDaftarBarang {
         sudahDiproses = items.every { it.isSudahDiproses() }?: false
     }
 
-    PengeluaranBarang tukar() {
+    PengeluaranBarang tukar(Gudang gudang, String namaKonsumen) {
         if (pengeluaranBarang) {
             throw new DataTidakBolehDiubah(this)
         }
@@ -124,21 +102,12 @@ class ReturJual implements SebuahDaftarBarang {
         DaftarBarangSementara hasilNormalisasi = new DaftarBarangSementara(klaimTukar)
         hasilNormalisasi.items.each { pengeluaranBarang.tambah(it) }
         klaimTukar.each { proses(it) }
-        pengeluaranBarang.diterima(LocalDate.now(), konsumen.nama, '[Retur Jual]')
+        pengeluaranBarang.diterima(LocalDate.now(), namaKonsumen, '[Retur Jual]')
         this.pengeluaranBarang = pengeluaranBarang
         pengeluaranBarang
     }
 
-    void potongPiutang() {
-        if (konsumen==null) {
-            throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
-        }
-        Referensi referensi = new Referensi(nomor, ReturJual)
-        getKlaimsPotongPiutang(true).each { KlaimPotongPiutang k ->
-            konsumen.potongPiutang(k.jumlah, referensi)
-            proses(k)
-        }
-    }
+    abstract PengeluaranBarang tukar()
 
     @Override
     DaftarBarang toDaftarBarang() {

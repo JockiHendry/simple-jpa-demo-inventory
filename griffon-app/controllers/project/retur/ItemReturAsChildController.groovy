@@ -40,6 +40,7 @@ class ItemReturAsChildController {
         model.parentGudang = args.parentGudang
         model.parentKonsumen = args.parentKonsumen
         model.showPiutang = args.containsKey('showPiutang')? args.showPiutang: true
+        model.modusEceran = args.containsKey('modusEceran')? args.modusEceran: false
     }
 
     void mvcGroupDestroy() {
@@ -117,13 +118,18 @@ class ItemReturAsChildController {
     }
 
     def autoKlaim = {
-        if (!model.parent && (!model.parentGudang || !model.parentKonsumen)) {
+        if (!model.modusEceran && !model.parent && (!model.parentGudang || !model.parentKonsumen)) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
             return
         }
-        ReturJual r = new ReturJual(gudang: model.parent? model.parent.gudang: model.parentGudang, konsumen: model.parent? model.parent.konsumen: model.parentKonsumen)
-        model.itemReturList.each { r.tambah(it) }
-        returJualService.autoKlaim(r)
+        ReturJual returJual
+        if (model.modusEceran) {
+            returJual = new ReturJualEceran()
+        } else {
+            returJual = new ReturJualOlehSales(gudang: model.parent ? model.parent.gudang : model.parentGudang, konsumen: model.parent ? model.parent.konsumen : model.parentKonsumen)
+        }
+        model.itemReturList.each { returJual.tambah(it) }
+        returJualService.autoKlaim(returJual)
         view.table.repaint()
         JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
     }

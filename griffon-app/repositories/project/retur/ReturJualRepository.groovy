@@ -19,8 +19,6 @@ import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.inventory.DaftarBarangSementara
-import domain.inventory.ItemBarang
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
@@ -35,8 +33,8 @@ class ReturJualRepository {
     NomorService nomorService
     FakturJualRepository fakturJualRepository
     
-    List<ReturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
-        findAllReturJualByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
+    List<ReturJual> cariReturOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+        findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
                 and()
@@ -53,19 +51,52 @@ class ReturJualRepository {
         }
     }
 
+    List<ReturJual> cariReturEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+        findAllReturJualEceranByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
+            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (nomorSearch) {
+                and()
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                namaKonsumen like("%${konsumenSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
 	public ReturJual buat(ReturJual returJual) {
 		if (findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
-
-        returJual.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL)
-        returJual.konsumen = findKonsumenById(returJual.konsumen.id)
-        returJual.items.each { it.produk = findProdukById(it.produk.id) }
-		persist(returJual)
-        returJual.potongPiutang()
+        if (returJual instanceof ReturJualOlehSales) {
+            returJual = buatReturOlehSales(returJual)
+        } else if (returJual instanceof ReturJualEceran) {
+            returJual = buatReturEceran(returJual)
+        }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual))
-		returJual
+        returJual
 	}
+
+    public ReturJualOlehSales buatReturOlehSales(ReturJualOlehSales returJualOlehSales) {
+        returJualOlehSales.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL_SALES)
+        returJualOlehSales.konsumen = findKonsumenById(returJualOlehSales.konsumen.id)
+        returJualOlehSales.items.each { it.produk = findProdukById(it.produk.id) }
+        persist(returJualOlehSales)
+        returJualOlehSales.potongPiutang()
+        returJualOlehSales
+    }
+
+    public ReturJualEceran buatReturEceran(ReturJualEceran returJualEceran) {
+        returJualEceran.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL_ECERAN)
+        returJualEceran.items.each { it.produk = findProdukById(it.produk.id) }
+        persist(returJualEceran)
+        returJualEceran
+    }
 
 	public ReturJual update(ReturJual returJual) {
 		ReturJual mergedRetur = findReturJualById(returJual.id)
@@ -86,9 +117,12 @@ class ReturJualRepository {
             throw new DataTidakBolehDiubah(returJual)
         }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
-        returJual.konsumen = findKonsumenById(returJual.konsumen.id)
-        fakturJualRepository.cariPiutang(returJual.nomor).each { FakturJualOlehSales f ->
-            f.hapusPembayaran(returJual.nomor)
+        if (returJual instanceof ReturJualOlehSales) {
+            // Hapus piutang khusus untuk retur jual oleh sales
+            returJual.konsumen = findKonsumenById(returJual.konsumen.id)
+            fakturJualRepository.cariPiutang(returJual.nomor).each { FakturJualOlehSales f ->
+                f.hapusPembayaran(returJual.nomor)
+            }
         }
         returJual.deleted = 'Y'
         returJual

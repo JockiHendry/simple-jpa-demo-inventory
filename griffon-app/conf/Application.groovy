@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "returJualEceran"
+    'returJualEceran' {
+        model      = 'project.retur.ReturJualEceranModel'
+        view       = 'project.retur.ReturJualEceranView'
+        controller = 'project.retur.ReturJualEceranController'
+    }
+
     // MVC Group for "klaimAsChild"
     'klaimAsChild' {
         model      = 'project.retur.KlaimAsChildModel'
@@ -100,11 +107,11 @@ mvcGroups {
         controller = 'project.retur.ReturBeliController'
     }
 
-    // MVC Group for "returJual"
-    'returJual' {
-        model      = 'project.retur.ReturJualModel'
-        view       = 'project.retur.ReturJualView'
-        controller = 'project.retur.ReturJualController'
+    // MVC Group for "returJualOlehSales"
+    'returJualOlehSales' {
+        model      = 'project.retur.ReturJualOlehSalesModel'
+        view       = 'project.retur.ReturJualOlehSalesView'
+        controller = 'project.retur.ReturJualOlehSalesController'
     }
 
     // MVC Group for "previewEscp"

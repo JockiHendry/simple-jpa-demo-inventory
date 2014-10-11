@@ -43,8 +43,11 @@ class KlaimTukar extends Klaim {
 
     @Override
     boolean equals(Object o) {
-        if (id == null || o.id == null) return false
-        if ((o instanceof KlaimTukar) && (id == o.id)) return true
+        if (id == null || o.id == null) {
+            return (produk == o.produk) && (jumlah == o.jumlah)
+        } else if ((o instanceof KlaimTukar) && (id == o.id)) {
+            return true
+        }
         false
     }
 

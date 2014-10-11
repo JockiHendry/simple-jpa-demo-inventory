@@ -31,6 +31,7 @@ class ItemReturAsChildModel {
     ReturJual parent
     Gudang parentGudang
     Konsumen parentKonsumen
+    boolean modusEceran
 
     @Bindable Boolean editable = true
     @Bindable Boolean showPiutang = true

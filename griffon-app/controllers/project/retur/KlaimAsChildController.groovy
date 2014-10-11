@@ -34,7 +34,7 @@ class KlaimAsChildController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.parent
-        if (model.parent) model.editable = false
+        if (model.parent?.id) model.editable = false
         model.klaimList.addAll(args.'parentList' ?: [])
         model.jenisKlaim.selectedItem = JenisKlaim.POTONG_PIUTANG
         model.produkVisible = false

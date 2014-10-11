@@ -16,19 +16,20 @@
 package project.retur
 
 import ast.NeedSupervisorPassword
-import domain.retur.*
+import domain.retur.ReturJualEceran
 import org.joda.time.LocalDate
 import project.user.NomorService
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
-import javax.swing.*
+
+import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
-class ReturJualController {
+class ReturJualEceranController {
 
-    ReturJualModel model
+    ReturJualEceranModel model
     def view
     ReturJualRepository returJualRepository
     NomorService nomorService
@@ -39,12 +40,10 @@ class ReturJualController {
         if (model.mode == ReturJualViewMode.INPUT) {
             model.showSave = true
             model.statusSearch.selectedItem = StatusReturJual.SEMUA
-            model.showPiutang = true
             model.excludeDeleted = false
         } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
             model.showSave = false
             model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
-            model.showPiutang = false
             model.excludeDeleted = true
         }
         init()
@@ -60,13 +59,8 @@ class ReturJualController {
             model.konsumenSearch = null
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.gudangList.clear()
         }
-        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL)
-        List gudangResult = returJualRepository.findAllGudang([orderBy: 'nama'])
-        execInsideUISync {
-            model.gudangList.addAll(gudangResult)
-        }
+        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
     }
 
     def search = {
@@ -76,7 +70,7 @@ class ReturJualController {
         } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
             sudahDiproses = false
         }
-        List result = returJualRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
+        List result = returJualRepository.cariReturEceran(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
         execInsideUISync {
             model.returJualList.clear()
             model.returJualList.addAll(result)
@@ -90,7 +84,7 @@ class ReturJualController {
             }
         }
 
-        ReturJual returJual = new ReturJual(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, konsumen: model.konsumen, gudang: model.gudang.selectedItem)
+        ReturJualEceran returJual = new ReturJualEceran(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, namaKonsumen: model.namaKonsumen)
         model.items.each { returJual.tambah(it) }
         if (!returJualRepository.validate(returJual, Default, model)) return
 
@@ -123,7 +117,7 @@ class ReturJualController {
         if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-        ReturJual returJual = view.table.selectionModel.selected[0]
+        ReturJualEceran returJual = view.table.selectionModel.selected[0]
         returJual = returJualRepository.tukar(returJual)
         execInsideUISync {
             view.table.selectionModel.selected[0] = returJual
@@ -136,7 +130,7 @@ class ReturJualController {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-        ReturJual returJual = view.table.selectionModel.selected[0]
+        ReturJualEceran returJual = view.table.selectionModel.selected[0]
         returJual = returJualRepository.hapus(returJual)
         execInsideUISync {
             view.table.selectionModel.selected[0] = returJual
@@ -144,23 +138,9 @@ class ReturJualController {
         }
     }
 
-    def cariKonsumen = {
-        execInsideUISync {
-            def args = [popup: true]
-            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
-                if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
-                } else {
-                    model.konsumen = v.view.table.selectionModel.selected[0]
-                }
-            }
-        }
-    }
-
     def showBarangRetur = {
         execInsideUISync {
-            def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], parentGudang: model.gudang.selectedItem, parentKonsumen: model.konsumen, showPiutang: model.showPiutang]
+            def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], showPiutang: false, modusEceran: true]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('itemReturAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
@@ -171,22 +151,21 @@ class ReturJualController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual.json']
-            if (e instanceof ReturJual) args.dataSource = e
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual_eceran.json']
+            if (e instanceof ReturJualEceran) args.dataSource = e
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
         }
     }
-    
+
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
             model.tanggal = null
             model.keterangan = null
             model.items.clear()
-            model.konsumen = null
-            model.gudang.selectedItem = null
+            model.namaKonsumen = null
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -203,7 +182,7 @@ class ReturJualController {
                 clear()
                 model.allowPenukaran = false
             } else {
-                ReturJual selected = view.table.selectionModel.selected[0]
+                ReturJualEceran selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
                 model.nomor = selected.nomor
@@ -211,8 +190,7 @@ class ReturJualController {
                 model.keterangan = selected.keterangan
                 model.items.clear()
                 model.items.addAll(selected.items)
-                model.konsumen = selected.konsumen
-                model.gudang.selectedItem = selected.gudang
+                model.namaKonsumen = selected.namaKonsumen
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate

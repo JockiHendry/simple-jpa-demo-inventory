@@ -15,34 +15,35 @@
  */
 package domain.retur
 
+import domain.inventory.Gudang
+import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
+import project.inventory.GudangRepository
 import simplejpa.DomainClass
+import simplejpa.SimpleJpaUtil
+
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
-import java.text.NumberFormat
 
 @DomainClass @Entity @Canonical
-class KlaimPotongPiutang extends Klaim {
+class ReturJualEceran extends ReturJual {
 
-    @Min(0l) @NotNull
-    BigDecimal jumlah
+    @NotEmpty @Size(min=2, max=100)
+    String namaKonsumen
 
     @Override
-    boolean equals(Object o) {
-        if (id == null || o.id == null) {
-            return jumlah == o.jumlah
-        } else if ((o instanceof KlaimPotongPiutang) && (id == o.id)) {
-            return true
+    void tambah(ItemRetur itemRetur) {
+        if (itemRetur.klaims.find { !(it instanceof KlaimTukar) }) {
+            throw new IllegalArgumentException('Retur jual eceran tidak boleh memiliki klaim selain klaim tukar!')
         }
-        false
+        super.tambah(itemRetur)
     }
 
-    @Override
-    String toString() {
-        "Potong Piutang: ${jumlah? NumberFormat.currencyInstance.format(jumlah): 0}"
+    PengeluaranBarang tukar() {
+        super.tukar((SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang') as GudangRepository).cariGudangUtama(), namaKonsumen)
     }
 }
 

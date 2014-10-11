@@ -41,8 +41,9 @@ class NomorService {
         PENYESUAIAN_STOK('PenyesuaianStok', '%06d-PS-KB-%s'),
         PENCAIRAN_POIN('PencairanPoin', '%06d-PP-KB-%s'),
         RETUR_BELI('ReturBeli', '%06d-RB-KB-%s'),
-        RETUR_JUAL('ReturJual', '%06d-RJ-KB-%s'),
-        PENERIMAAN_BARANG('PenerimaanBarang', '%06d-RV-KB-%s')
+        RETUR_JUAL_SALES('ReturJualOlehSales', '%06d-RS-KB-%s'),
+        PENERIMAAN_BARANG('PenerimaanBarang', '%06d-RV-KB-%s'),
+        RETUR_JUAL_ECERAN('ReturJualEceran', '%06d-RE-KB-%s')
 
         String format;
         String desc;

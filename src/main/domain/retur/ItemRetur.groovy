@@ -88,4 +88,8 @@ class ItemRetur {
         merge(itemReturLain)
     }
 
+    void hapusSemuaKlaimPotongPiutang() {
+        klaims.toArray().findAll { it instanceof KlaimPotongPiutang }.each { klaims.remove(it) }
+    }
+
 }

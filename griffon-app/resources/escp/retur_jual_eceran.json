@@ -1,0 +1,36 @@
+{
+    "pageFormat": {
+        "characterPitch": "12 cpi",
+        "pageWidth": 96,
+        "pageLength": 31,
+        "usePageLengthFromPrinter": true
+    },
+    "template": {
+        "header": [
+           "      %{176 R2}      Retur Jual  ${companyName:62} Hal: %{PAGE_NO}",
+           "    %{176 R6}    Nomor            : ${nomor:25}                    Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
+           "   %{176 R8}   Konsumen         : ${konsumen.nama:40}",
+           "     %{176 R4}",
+           "      %{176 R2}"
+        ],
+        "detail": [
+            {
+                "table": "bean.normalisasi()",
+                "border": true,
+                "lineSeparator": true,
+                "columns": [
+                    {"source": "row::right", "width": 3, "caption": "No"},
+                    {"source": "produk.nama", "width": 78, "caption": "Nama Produk", "wrap": true},
+                    {"source": "jumlah::right", "width": 6, "caption": "Qty"},
+                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
+                ]
+            },
+            " {{keterangan?'Ket : ' + keterangan:''::94}}",
+            "",
+            "         Penerima,                    Bagian  Penukaran,                 Dibuat oleh,         ",
+            "",
+            "",
+            "  (....................)          (.......................)        ({{createdBy::21::center}})"
+        ]
+    }
+}

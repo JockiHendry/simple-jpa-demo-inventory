@@ -31,6 +31,7 @@ import domain.retur.KlaimPotongPiutang
 import domain.retur.Klaim
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
+import domain.retur.ReturJualOlehSales
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
 import org.joda.time.LocalDate
@@ -85,7 +86,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
         Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
         Konsumen konsumen = new Konsumen()
-        ReturJual retur = new ReturJual(konsumen: konsumen)
+        ReturJual retur = new ReturJualOlehSales(konsumen: konsumen)
         retur.tambah(new ItemRetur(produk1, 1, [new KlaimTukar(produk1, 1)] as Set))
         retur.tambah(new ItemRetur(produk2, 3, [new KlaimTukar(produk2, 3)] as Set))
         retur.tambah(new ItemRetur(produk3, 5, [new KlaimPotongPiutang(1000)] as Set))
@@ -106,7 +107,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk1 = new Produk(supplier: supplier)
         Produk produk2 = new Produk(supplier: supplier)
         Produk produk3 = new Produk(supplier: supplier)
-        ReturJual retur = new ReturJual()
+        ReturJual retur = new ReturJualOlehSales()
         retur.tambah(new ItemRetur(produk1, 1, [new KlaimPotongPiutang(10000)] as Set))
         retur.tambah(new ItemRetur(produk2, 3, [new KlaimPotongPiutang(20000)] as Set))
         retur.tambah(new ItemRetur(produk3, 5, [new KlaimTukar(produk1, 1)] as Set))
@@ -122,7 +123,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk1 = new Produk(supplier: supplier)
         Produk produk2 = new Produk(supplier: supplier)
         Produk produk3 = new Produk(supplier: supplier)
-        ReturJual retur = new ReturJual()
+        ReturJual retur = new ReturJualOlehSales()
         retur.tambah(new ItemRetur(produk1, 1, [new KlaimTukar(produk1, 1)] as Set))
         retur.tambah(new ItemRetur(produk2, 3, [new KlaimPotongPiutang(1000)] as Set))
         retur.tambah(new ItemRetur(produk3, 5, [new KlaimPotongPiutang(1000)] as Set))
@@ -149,7 +150,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(500000, f.total())
         assertEquals(500000, konsumen.jumlahPiutang())
 
-        ReturJual r = new ReturJual(konsumen: konsumen)
+        ReturJual r = new ReturJualOlehSales(konsumen: konsumen)
         r.tambah(new ItemRetur(produk1, 10, [new KlaimPotongPiutang(250000)] as Set))
         assertEquals(250000, r.sisaPotongPiutang())
         r.potongPiutang()
@@ -161,7 +162,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A')
         Produk produkB = new Produk('Produk B')
         Produk produkC = new Produk('Produk C')
-        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+        ReturJual r = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
         r.tambah(new ItemRetur(produkA, 10, [new KlaimPotongPiutang(1000)] as Set))
         r.tambah(new ItemRetur(produkA, 20, [new KlaimPotongPiutang(1000)] as Set))
         r.tambah(new ItemRetur(produkB, 30, [new KlaimPotongPiutang(1000)] as Set))
@@ -186,7 +187,7 @@ class ReturJualTests extends GriffonUnitTestCase {
     public void testItemReturGetKlaims() {
         Produk produkA = new Produk('Produk A')
         Produk produkB = new Produk('Produk B')
-        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+        ReturJual r = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
 
         def klaimPotongPiutang = new KlaimPotongPiutang(jumlah: 1000)
         def klaimTukar1 = new KlaimTukar(id: 2, produk: produkA, jumlah: 5)
@@ -230,7 +231,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A')
         Produk produkB = new Produk('Produk B')
         Produk produkC = new Produk('Produk C')
-        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+        ReturJual r = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
 
         def potongPiutang1 = new KlaimPotongPiutang(1000)
         def potongPiutang2 = new KlaimPotongPiutang(1000)
@@ -304,7 +305,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produkA = new Produk('Produk A')
         Produk produkB = new Produk('Produk B')
         Produk produkC = new Produk('Produk C')
-        ReturJual r = new ReturJual(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
+        ReturJual r = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now().minusDays(1), keterangan: 'TEST')
         def potongPiutang1 = new KlaimPotongPiutang(1000)
         def potongPiutang2 = new KlaimPotongPiutang(1000)
         def potongPiutang3 = new KlaimPotongPiutang(1000)
@@ -334,4 +335,16 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(30, hasil[2].jumlah)
         assertTrue(hasil[2].klaims.containsAll([klaimTukar4]))
     }
+
+    void testHapusSemuaKlaimPotongPiutang() {
+        ItemRetur i = new ItemRetur()
+        i.tambahKlaim(new KlaimPotongPiutang(1000))
+        i.tambahKlaim(new KlaimPotongPiutang(1000))
+        i.tambahKlaim(new KlaimPotongPiutang(2000))
+        i.hapusSemuaKlaimPotongPiutang()
+
+        assertTrue(i.getKlaims(KlaimPotongPiutang).empty)
+        assertEquals(0, i.jumlahPotongPiutang())
+    }
+
 }

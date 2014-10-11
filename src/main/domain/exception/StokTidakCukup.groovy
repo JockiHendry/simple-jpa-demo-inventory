@@ -25,7 +25,7 @@ class StokTidakCukup extends RuntimeException {
     Gudang gudang
 
     StokTidakCukup(String namaProduk, Integer jumlahYangDibutuhkan, Integer jumlahTersedia, Gudang gudang = null) {
-        super("${namaProduk} sejumlah ${jumlahYangDibutuhkan} tidak tersedia di gudang [${gudang?.nama}]; yang tersedia adalah ${jumlahTersedia}")
+        super("${namaProduk} sejumlah ${jumlahYangDibutuhkan} tidak tersedia di gudang [${gudang?.nama?:'-'}]; yang tersedia adalah ${jumlahTersedia}")
         this.namaProduk = namaProduk
         this.jumlahYangDibutuhkan = jumlahYangDibutuhkan
         this.jumlahTersedia = jumlahTersedia

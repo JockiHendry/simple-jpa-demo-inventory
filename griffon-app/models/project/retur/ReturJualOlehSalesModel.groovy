@@ -24,7 +24,7 @@ import ca.odell.glazedlists.swing.*
 import org.joda.time.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-class ReturJualModel {
+class ReturJualOlehSalesModel {
 
     ReturJualViewMode mode
     @Bindable boolean showSave
@@ -49,27 +49,11 @@ class ReturJualModel {
     List<ItemRetur> items = []
     @Bindable Konsumen konsumen
 
-    BasicEventList<ReturJual> returJualList = new BasicEventList<>()
+    BasicEventList<ReturJualOlehSales> returJualList = new BasicEventList<>()
 
     @Bindable String created
     @Bindable String modified
     @Bindable String createdBy
     @Bindable String modifiedBy
-
-}
-
-enum StatusReturJual {
-    SEMUA("Semua"), SUDAH_DIPROSES("Sudah Diproses"), BELUM_DIPROSES("Belum Diproses")
-
-    String text
-
-    StatusReturJual(String text) {
-        this.text = text
-    }
-
-    @Override
-    String toString() {
-        text
-    }
 
 }

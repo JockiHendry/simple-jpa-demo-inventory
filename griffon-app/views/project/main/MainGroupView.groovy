@@ -50,6 +50,10 @@ def popupPoin = {
     poinPopup.show(poinButton, 0, poinButton.getHeight())
 }
 
+def popupReturJual = {
+    returJualPopup.show(returJualButton, 0, returJualButton.getHeight())
+}
+
 def switchPageWithArguments = { Map arguments ->
     return { ActionEvent event ->
         controller.switchPage(event, arguments)
@@ -68,8 +72,10 @@ actions {
         smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.PENGELUARAN]))
     action(id: 'pengiriman', name: 'Kirim Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
-    action(id: 'pengeluaranReturJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_pengeluaran_retur_jual.png'), closure: switchPageWithArguments([mode: ReturJualViewMode.PENGELUARAN]))
+    action(id: 'pengeluaranReturJualEceran', name: 'Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_C,
+        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_sales.png'), closure: switchPageWithArguments([mode: ReturJualViewMode.PENGELUARAN]))
+    action(id: 'pengeluaranReturJualSales', name: 'Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_R,
+        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_eceran.png'), closure: switchPageWithArguments([mode: ReturJualViewMode.PENGELUARAN]))
     action(id: 'buktiTerima', name: 'Bukti Terima', actionCommandKey: 'buktiTerima', mnemonic: KeyEvent.VK_T,
         smallIcon: imageIcon('/menu_bukti_terima.png'), closure: controller.switchPage)
 
@@ -103,7 +109,11 @@ actions {
         smallIcon: imageIcon('/menu_penyesuaianstok.png'), closure: controller.switchPage)
 
     action(id: 'returJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_U,
-        smallIcon: imageIcon('/menu_retur_jual.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_retur_jual.png'), closure: popupReturJual)
+    action(id: 'returJualEceran', name: 'Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_E,
+            smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage)
+    action(id: 'returJualOlehSales', name: 'Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_S,
+            smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
     action(id: 'returBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_retur_beli.png'), closure: controller.switchPage)
 
@@ -167,12 +177,18 @@ application(id: 'mainFrame',
     popupMenu(id: 'pengeluaranBarangPopup') {
         menuItem(action: pengeluaranBarangEceran)
         menuItem(action: pengiriman)
-        menuItem(action: pengeluaranReturJual)
+        menuItem(action: pengeluaranReturJualSales)
+        menuItem(action: pengeluaranReturJualEceran)
     }
 
     popupMenu(id: 'penjualanPopup') {
         menuItem(action: fakturJualEceran)
         menuItem(action: fakturJualOlehSales)
+    }
+
+    popupMenu(id: 'returJualPopup') {
+        menuItem(action: returJualEceran)
+        menuItem(action: returJualOlehSales)
     }
 
     popupMenu(id: 'poinPopup') {
@@ -216,7 +232,7 @@ application(id: 'mainFrame',
                 toggleButton(buttonGroup: buttons, action: penyesuaianStok, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.penyesuaianStokVisible})
                 separator()
-                toggleButton(buttonGroup: buttons, action: returJual, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                toggleButton(buttonGroup: buttons, action: returJual, id: 'returJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.returJualVisible})
                 toggleButton(buttonGroup: buttons, action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     visible: bind {model.returBeliVisible})
