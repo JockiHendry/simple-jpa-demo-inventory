@@ -88,7 +88,7 @@ class ReturBeliRepository {
         mergedRetur.with {
             nomor = returBeli.nomor
             tanggal = returBeli.tanggal
-            supplier = merge(returBeli.supplier)
+            supplier = findSupplierById(returBeli.supplier.id)
             keterangan = returBeli.keterangan
             items.clear()
             returBeli.items.each {

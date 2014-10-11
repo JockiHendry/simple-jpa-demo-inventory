@@ -86,8 +86,8 @@ class HutangController {
             return
         }
         purchaseOrderRepository.withTransaction {
-            purchaseOrder = merge(purchaseOrder)
-            returBeli = merge(returBeli)
+            purchaseOrder = purchaseOrderRepository.findPurchaseOrderById(purchaseOrder.id)
+            returBeli = purchaseOrderRepository.findReturBeliById(returBeli.id)
             purchaseOrder.bayar(returBeli)
         }
         execInsideUISync {

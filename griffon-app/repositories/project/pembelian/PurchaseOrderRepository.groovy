@@ -173,9 +173,9 @@ class PurchaseOrderRepository {
         if (listItemBarang.isEmpty()) {
             throw new DataTidakLengkap('Daftar barang yang diterima tidak boleh kosong!')
         }
-        purchaseOrder = merge(purchaseOrder)
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
         listItemBarang.each {
-            it.produk = merge(it.produk)
+            it.produk = findProdukById(it.produk.id)
             penerimaanBarang.tambah(it)
         }
         purchaseOrder.tambah(penerimaanBarang)
@@ -189,22 +189,22 @@ class PurchaseOrderRepository {
         if (fakturBeli.id != null) {
             throw new DataTidakBolehDiubah(fakturBeli)
         }
-        purchaseOrder = merge(purchaseOrder)
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
         purchaseOrder.tambah(fakturBeli, strictMode)
         persist(fakturBeli)
         purchaseOrder
     }
 
     public List hapus(PurchaseOrder purchaseOrder, PenerimaanBarang penerimaanBarang) {
-        purchaseOrder = merge(purchaseOrder)
-        penerimaanBarang = merge(penerimaanBarang)
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        penerimaanBarang = findPenerimaanBarangById(penerimaanBarang.id)
         purchaseOrder.hapus(penerimaanBarang)
         [purchaseOrder, penerimaanBarang]
     }
 
     public PurchaseOrder hapus(PurchaseOrder purchaseOrder, FakturBeli fakturBeli) {
-        purchaseOrder = merge(purchaseOrder)
-        fakturBeli = merge(fakturBeli)
+        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        //fakturBeli = findFakturBeliById(fakturBeli.id)
         purchaseOrder.hapusFaktur()
         purchaseOrder
     }
@@ -230,7 +230,7 @@ class PurchaseOrderRepository {
             if (bilyetGiro.id == null) {
                 persist(bilyetGiro)
             } else {
-                bilyetGiro = merge(bilyetGiro)
+                bilyetGiro = findBilyetGiroById(bilyetGiro.id)
             }
             pembayaran.bilyetGiro = bilyetGiro
         }

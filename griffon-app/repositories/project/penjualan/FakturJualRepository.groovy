@@ -202,7 +202,7 @@ class FakturJualRepository {
         stokYangDibutuhkan.items.each { ItemBarang itemBarang ->
             Produk produk = findProdukById(itemBarang.produk.id)
             Gudang gudang = fakturJual.kirimDariGudangUtama? gudangRepository.cariGudangUtama(): fakturJual.konsumen.sales.gudang
-            int jumlahTersedia = produk.stok(gudang).jumlah
+            int jumlahTersedia = gudang.utama? produk.jumlahReadyGudangUtama(): produk.stok(gudang).jumlah
             if (jumlahTersedia < itemBarang.jumlah) {
                 throw new StokTidakCukup(produk.nama, itemBarang.jumlah, jumlahTersedia, gudang)
             }
@@ -247,7 +247,7 @@ class FakturJualRepository {
         fakturJualEceran.listItemFaktur.each {
             it.produk = findProdukById(it.produk.id)
             int jumlahTersedia = it.produk.stok(gudangUtama).jumlah
-            if (jumlahTersedia < it.jumlah) {
+            if (it.produk.jumlahReadyGudangUtama() < it.jumlah) {
                 throw new StokTidakCukup(it.produk.nama, it.jumlah, jumlahTersedia, gudangUtama)
             }
         }
@@ -283,7 +283,7 @@ class FakturJualRepository {
             if (bilyetGiro.id == null) {
                 persist(bilyetGiro)
             } else {
-                bilyetGiro = merge(bilyetGiro)
+                bilyetGiro = findBilyetGiroById(bilyetGiro.id)
             }
             pembayaran.bilyetGiro = bilyetGiro
         }

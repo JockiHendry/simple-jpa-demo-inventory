@@ -51,7 +51,7 @@ class PencairanPoinRepository {
             throw new IllegalArgumentException("Jumlah poin konsumen [${pencairanPoin.konsumen.poinTerkumpul}] tidak mencukupi!")
         }
         if (pencairanPoin instanceof PencairanPoinTukarBarang) {
-            pencairanPoin.listItemBarang.each { it.produk = merge(it.produk) }
+            pencairanPoin.listItemBarang.each { it.produk = findProdukById(it.produk.id) }
         }
         pencairanPoin.nomor = nomorService.buatNomor(NomorService.TIPE.PENCAIRAN_POIN)
         BigDecimal rate = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan').getValue(KeyPengaturan.BONUS_POINT_RATE)
