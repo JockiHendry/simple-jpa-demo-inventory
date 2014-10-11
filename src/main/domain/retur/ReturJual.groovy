@@ -150,5 +150,18 @@ class ReturJual implements SebuahDaftarBarang {
         hasil
     }
 
+    List<ItemRetur> normalisasi() {
+        List<ItemRetur> hasil = []
+        items.each { ItemRetur i ->
+            ItemRetur itemReturSama = hasil.find { it.produk == i.produk }
+            if (itemReturSama) {
+                itemReturSama << i
+            } else {
+                hasil << new ItemRetur(i.produk, i.jumlah, new HashSet<Klaim>(i.klaims))
+            }
+        }
+        hasil
+    }
+
 }
 

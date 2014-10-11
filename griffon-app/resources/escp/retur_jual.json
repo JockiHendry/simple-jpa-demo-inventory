@@ -15,7 +15,7 @@
         ],
         "detail": [
             {
-                "table": "items",
+                "table": "bean.normalisasi()",
                 "border": true,
                 "lineSeparator": true,
                 "columns": [

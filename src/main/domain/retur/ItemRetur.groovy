@@ -74,4 +74,18 @@ class ItemRetur {
         klaims << klaim
     }
 
+    void merge(ItemRetur itemReturLain) {
+        if (itemReturLain?.produk != produk) {
+            throw new IllegalArgumentException("Item untuk produk ${produk.nama} tidak dapat digabung dengan item untuk produk ${itemReturLain?.produk?.nama}")
+        }
+        jumlah += itemReturLain.jumlah
+        if (!itemReturLain.klaims.empty) {
+            klaims.addAll(itemReturLain.klaims)
+        }
+    }
+
+    void leftShift(ItemRetur itemReturLain) {
+        merge(itemReturLain)
+    }
+
 }

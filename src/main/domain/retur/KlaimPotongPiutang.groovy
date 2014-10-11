@@ -32,6 +32,7 @@ class KlaimPotongPiutang extends Klaim {
 
     @Override
     boolean equals(Object o) {
+        if (id == null || o.id == null) return false
         if ((o instanceof KlaimPotongPiutang) && (id == o.id)) return true
         false
     }
