@@ -205,4 +205,47 @@ class DaftarBarangTests extends GriffonUnitTestCase {
         assertEquals(new ItemBarang(produkC, 30), d1.items[2])
     }
 
+    void testBagianDari() {
+        Produk produkA = new Produk(nama: 'Produk A')
+        Produk produkB = new Produk(nama: 'Produk B')
+        Produk produkC = new Produk(nama: 'Produk C')
+
+        DaftarBarangSementara d1, d2
+
+        // d1 mengandung barang yang jumlahnya lebih banyak dari d2
+        d1 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 10),
+            new ItemBarang(produkB, 20)
+        ])
+
+        d2 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 5),
+            new ItemBarang(produkB, 20)
+        ])
+        assertFalse(d1.bagianDari(d2))
+
+        // d1 mengandung barang yang tidak ada di d2
+        d1 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 10),
+            new ItemBarang(produkB, 20),
+            new ItemBarang(produkC, 30)
+        ])
+
+        d2 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 5),
+        ])
+        assertFalse(d1.bagianDari(d2))
+
+        // d1 mengandung barang di daftar yang kosong (d2)
+        d1 = new DaftarBarangSementara([
+            new ItemBarang(produkA, 10),
+            new ItemBarang(produkB, 20),
+            new ItemBarang(produkC, 30)
+        ])
+
+        d2 = new DaftarBarangSementara([])
+        assertFalse(d1.bagianDari(d2))
+
+    }
+
 }

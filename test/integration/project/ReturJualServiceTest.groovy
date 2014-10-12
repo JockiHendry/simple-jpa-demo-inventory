@@ -39,7 +39,7 @@ class ReturJualServiceTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("returJual", "/project/data_penjualan.xls")
+        setUpDatabase("returJual", "/project/data_retur_jual.xls")
         returJualService = app.serviceManager.findService('ReturJual')
     }
 
@@ -60,18 +60,18 @@ class ReturJualServiceTest extends DbUnitTestCase {
         r1.tambah(new ItemRetur(produk2, 20))
         r1.tambah(new ItemRetur(produk3, 30))
         returJualService.potongPiutang(r1)
-        assertEquals(100000, r1.items[0].jumlahPotongPiutang())
-        assertEquals(400000, r1.items[1].jumlahPotongPiutang())
-        assertEquals(900000, r1.items[2].jumlahPotongPiutang())
+        assertEquals(1000, r1.items[0].jumlahPotongPiutang())
+        assertEquals(4000, r1.items[1].jumlahPotongPiutang())
+        assertEquals(9000, r1.items[2].jumlahPotongPiutang())
 
         ReturJual r2 = new ReturJualOlehSales(nomor: 'R-02', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
         r2.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 5)] as Set))
         r2.tambah(new ItemRetur(produk2, 20))
         r2.tambah(new ItemRetur(produk3, 30))
         returJualService.potongPiutang(r2)
-        assertEquals( 50000, r2.items[0].jumlahPotongPiutang())
-        assertEquals(400000, r2.items[1].jumlahPotongPiutang())
-        assertEquals(900000, r2.items[2].jumlahPotongPiutang())
+        assertEquals( 500, r2.items[0].jumlahPotongPiutang())
+        assertEquals(4000, r2.items[1].jumlahPotongPiutang())
+        assertEquals(9000, r2.items[2].jumlahPotongPiutang())
 
         ReturJual r3 = new ReturJualOlehSales(nomor: 'R-03', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
         r3.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(id: 1, produk: produk1, jumlah: 5), new KlaimTukar(id: 2, produk: produk1, jumlah: 5)] as Set))
@@ -79,8 +79,8 @@ class ReturJualServiceTest extends DbUnitTestCase {
         r3.tambah(new ItemRetur(produk3, 30))
         returJualService.potongPiutang(r3)
         assertEquals(0, r3.items[0].jumlahPotongPiutang())
-        assertEquals(400000, r3.items[1].jumlahPotongPiutang())
-        assertEquals(900000, r3.items[2].jumlahPotongPiutang())
+        assertEquals(4000, r3.items[1].jumlahPotongPiutang())
+        assertEquals(9000, r3.items[2].jumlahPotongPiutang())
 
         ReturJual r4 = new ReturJualOlehSales(nomor: 'R-04', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
         r4.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 10)] as Set))
@@ -88,17 +88,17 @@ class ReturJualServiceTest extends DbUnitTestCase {
         r4.tambah(new ItemRetur(produk3, 30))
         returJualService.potongPiutang(r4)
         assertEquals(0, r4.items[0].jumlahPotongPiutang())
-        assertEquals(400000, r4.items[1].jumlahPotongPiutang())
-        assertEquals(900000, r4.items[2].jumlahPotongPiutang())
+        assertEquals(4000, r4.items[1].jumlahPotongPiutang())
+        assertEquals(9000, r4.items[2].jumlahPotongPiutang())
 
         ReturJual r5 = new ReturJualOlehSales(nomor: 'R-05', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
         r5.tambah(new ItemRetur(produk1, 10))
         r5.tambah(new ItemRetur(produk2, 20, [new KlaimTukar(produk2, 5)] as Set))
         r5.tambah(new ItemRetur(produk3, 30, [new KlaimTukar(produk3, 5)] as Set))
         returJualService.potongPiutang(r5)
-        assertEquals(100000, r5.items[0].jumlahPotongPiutang())
-        assertEquals(300000, r5.items[1].jumlahPotongPiutang())
-        assertEquals(750000, r5.items[2].jumlahPotongPiutang())
+        assertEquals(1000, r5.items[0].jumlahPotongPiutang())
+        assertEquals(3000, r5.items[1].jumlahPotongPiutang())
+        assertEquals(7500, r5.items[2].jumlahPotongPiutang())
     }
 
     public void testAutoKlaimReturJualOlehSales() {
@@ -120,21 +120,21 @@ class ReturJualServiceTest extends DbUnitTestCase {
         assertEquals(10, r1.items[0].getKlaims(KlaimTukar).toList()[0].jumlah)
         assertEquals(produk2, r1.items[1].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(14, r1.items[1].getKlaims(KlaimTukar).toList()[0].jumlah)
-        assertEquals(120000, r1.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(1200, r1.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
         assertEquals(produk3, r1.items[2].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(15, r1.items[2].getKlaims(KlaimTukar).toList()[0].jumlah)
-        assertEquals(450000, r1.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(4500, r1.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
 
         ReturJual r2 = new ReturJualOlehSales(nomor: 'R-02', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
-        r2.tambah(new ItemRetur(produk3, 30))
-        r2.tambah(new ItemRetur(produk4, 40))
-        r2.tambah(new ItemRetur(produk5, 50))
+        r2.tambah(new ItemRetur(produk3, 16))
+        r2.tambah(new ItemRetur(produk4, 2))
+        r2.tambah(new ItemRetur(produk5, 2))
         returJualService.autoKlaim(r2)
         assertEquals(produk3, r2.items[0].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(15, r2.items[0].getKlaims(KlaimTukar).toList()[0].jumlah)
-        assertEquals(450000, r2.items[0].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
-        assertEquals(520000, r2.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
-        assertEquals(25000, r2.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(300, r2.items[0].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(26000, r2.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(1000, r2.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
     }
 
     public void testAutoKlaimReturJualEceran() {

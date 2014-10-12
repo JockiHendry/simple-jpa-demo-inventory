@@ -113,7 +113,7 @@ class ReturJualRepository {
 
     public ReturJual hapus(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
-        if (!returJual || returJual.pengeluaranBarang) {
+        if (!returJual) {
             throw new DataTidakBolehDiubah(returJual)
         }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
@@ -131,9 +131,19 @@ class ReturJualRepository {
     public ReturJual tukar(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
+        pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
         returJual
+    }
+
+    public ReturJualOlehSales tukar(ReturJualOlehSales returJualOlehSales, PengeluaranBarang pengeluaranBarang) {
+        returJualOlehSales = findReturJualOlehSalesById(returJualOlehSales.id)
+        pengeluaranBarang = returJualOlehSales.tukar(pengeluaranBarang)
+        pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
+        persist(pengeluaranBarang)
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
+        returJualOlehSales
     }
 
 }

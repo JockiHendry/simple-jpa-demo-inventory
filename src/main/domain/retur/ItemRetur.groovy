@@ -56,8 +56,8 @@ class ItemRetur {
         klaims.every { it.sudahDiproses }
     }
 
-    Set<Klaim> getKlaims(Class clazz, boolean hanyaBelumDiproses = false) {
-        new HashSet<Klaim>(
+    List<Klaim> getKlaims(Class clazz, boolean hanyaBelumDiproses = false) {
+        new ArrayList<Klaim>(
             klaims.findAll { (it.getClass() == clazz) && (hanyaBelumDiproses? !it.sudahDiproses: true) }
         )
     }

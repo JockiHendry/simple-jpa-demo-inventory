@@ -66,5 +66,11 @@ class PengeluaranBarang extends DaftarBarang {
         hasil
     }
 
+    @Override
+    boolean equals(Object obj) {
+        if ((obj == null) || (obj?.nomor == null)) return false
+        nomor?.equals(obj.nomor)?: false
+    }
+
 }
 

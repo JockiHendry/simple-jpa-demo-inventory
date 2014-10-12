@@ -135,4 +135,17 @@ abstract class DaftarBarang implements SebuahDaftarBarang {
     Integer toPoin() {
         items.sum { it.jumlah * (it.produk.poin?:0) }?: 0
     }
+
+    boolean bagianDari(DaftarBarang daftarBarang) {
+        List<ItemBarang> lhs = normalisasi()
+        List<ItemBarang> rhs = daftarBarang.normalisasi()
+
+        // Periksa apakah seluruh item daftar barang ini ada di daftar barang lain
+        if (!lhs.every { ItemBarang i -> rhs.find { (it.produk == i.produk) && (it.jumlah >= i.jumlah) }}) {
+            return false
+        }
+
+        true
+    }
+
 }

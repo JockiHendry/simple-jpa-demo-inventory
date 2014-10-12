@@ -31,6 +31,7 @@ import domain.retur.ReturJualOlehSales
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.transaction.Transaction
+import java.text.NumberFormat
 
 @Transaction
 class ReturJualService {
@@ -43,6 +44,9 @@ class ReturJualService {
             if (sisaBelumDitukar > 0) {
                 Konsumen konsumen = findKonsumenById(returJual.konsumen.id)
                 BigDecimal jumlahPiutang = sisaBelumDitukar * konsumen.hargaTerakhir(i.produk)
+                if (jumlahPiutang > konsumen.jumlahPiutang()) {
+                    throw new IllegalArgumentException("Jumlah piutang konsumen (${NumberFormat.currencyInstance.format(konsumen.jumlahPiutang())}) tidak cukup untuk potongan sebesar ${NumberFormat.currencyInstance.format(jumlahPiutang)}!")
+                }
                 i.hapusSemuaKlaimPotongPiutang()
                 i.tambahKlaim(new KlaimPotongPiutang(jumlahPiutang))
             }
@@ -52,6 +56,7 @@ class ReturJualService {
     void autoKlaim(ReturJualOlehSales returJual) {
         // Tentukan produk yang bisa ditukar (semaksimal mungkin)
         returJual.items.each { ItemRetur i ->
+            i.klaims.clear()
             Produk produk = findProdukById(i.produk.id)
             int jumlahTersedia = returJual.gudang.utama? produk.jumlahReadyGudangUtama(): produk.stok(returJual.gudang).jumlah
             int jumlahPerluDitukar = i.jumlah - i.jumlahBarangDitukar(true)
@@ -66,6 +71,7 @@ class ReturJualService {
 
     void autoKlaim(ReturJualEceran returJual) {
         returJual.items.each { ItemRetur i ->
+            i.klaims.clear()
             Produk produk = findProdukById(i.produk.id)
             int jumlahPerluDitukar = i.jumlah - i.jumlahBarangDitukar(true)
             if (produk.jumlahReadyGudangUtama() >= jumlahPerluDitukar) {

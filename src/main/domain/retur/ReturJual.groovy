@@ -52,8 +52,8 @@ abstract class ReturJual implements SebuahDaftarBarang {
     @NotNull
     Boolean sudahDiproses = false
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
-    PengeluaranBarang pengeluaranBarang
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    Set<PengeluaranBarang> pengeluaranBarang = [] as Set
 
     @NotEmpty @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true) @OrderColumn @Valid
     List<ItemRetur> items = []
@@ -66,13 +66,13 @@ abstract class ReturJual implements SebuahDaftarBarang {
         items << itemRetur
     }
 
-    Set<Klaim> getKlaims(Class clazz, boolean hanyaBelumDiproses = false) {
-        Set<Klaim> hasil = [] as Set
+    List<Klaim> getKlaims(Class clazz, boolean hanyaBelumDiproses = false) {
+        def hasil = []
         items.each { hasil.addAll(it.getKlaims(clazz, hanyaBelumDiproses)) }
         hasil
     }
 
-    Set<KlaimTukar> getKlaimsTukar(boolean hanyaBelumDiproses = false) {
+    List<KlaimTukar> getKlaimsTukar(boolean hanyaBelumDiproses = false) {
         getKlaims(KlaimTukar, hanyaBelumDiproses)
     }
 
@@ -86,11 +86,8 @@ abstract class ReturJual implements SebuahDaftarBarang {
     }
 
     PengeluaranBarang tukar(Gudang gudang, String namaKonsumen) {
-        if (pengeluaranBarang) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        Set<KlaimTukar> klaimTukar = getKlaimsTukar(true)
-        if (klaimTukar.empty) {
+        DaftarBarangSementara daftarYangHarusDitukar = yangHarusDitukar()
+        if (daftarYangHarusDitukar.items.empty) {
             throw new UnsupportedOperationException("Tidak ada penukaran yang dapat dilakukan untuk retur jual [$nomor]")
         }
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
@@ -99,11 +96,13 @@ abstract class ReturJual implements SebuahDaftarBarang {
             gudang: gudang,
             keterangan: "Retur Jual [$nomor]"
         )
-        DaftarBarangSementara hasilNormalisasi = new DaftarBarangSementara(klaimTukar)
-        hasilNormalisasi.items.each { pengeluaranBarang.tambah(it) }
-        klaimTukar.each { proses(it) }
+        daftarYangHarusDitukar.items.each { pengeluaranBarang.tambah(it) }
         pengeluaranBarang.diterima(LocalDate.now(), namaKonsumen, '[Retur Jual]')
-        this.pengeluaranBarang = pengeluaranBarang
+        this.pengeluaranBarang << pengeluaranBarang
+
+        // Semua klaim ditukar sudah diproses
+        getKlaimsTukar(true).each { proses(it) }
+
         pengeluaranBarang
     }
 
@@ -130,6 +129,10 @@ abstract class ReturJual implements SebuahDaftarBarang {
             }
         }
         hasil
+    }
+
+    DaftarBarang yangHarusDitukar() {
+        new DaftarBarangSementara(getKlaimsTukar(true).collect { new ItemBarang(it.produk, it.jumlah) })
     }
 
 }

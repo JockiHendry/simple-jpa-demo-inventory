@@ -118,6 +118,14 @@ class ItemReturAsChildController {
     }
 
     def autoKlaim = {
+        prosesAutoKlaim()
+    }
+
+    def autoKlaimPiutang = {
+        prosesAutoKlaim(true)
+    }
+
+    def prosesAutoKlaim = { boolean hanyaPiutang = false ->
         if (!model.modusEceran && !model.parent && (!model.parentGudang || !model.parentKonsumen)) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
             return
@@ -129,7 +137,11 @@ class ItemReturAsChildController {
             returJual = new ReturJualOlehSales(gudang: model.parent ? model.parent.gudang : model.parentGudang, konsumen: model.parent ? model.parent.konsumen : model.parentKonsumen)
         }
         model.itemReturList.each { returJual.tambah(it) }
-        returJualService.autoKlaim(returJual)
+        if (hanyaPiutang) {
+            returJualService.potongPiutang(returJual)
+        } else {
+            returJualService.autoKlaim(returJual)
+        }
         view.table.repaint()
         JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
     }

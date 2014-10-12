@@ -29,7 +29,8 @@ actions {
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
     action(id: 'showKlaim', name: 'Klaims', closure: controller.showKlaim)
-    action(id: 'autoKlaim', name: 'Auto Klaim', closure: controller.autoKlaim)
+    action(id: 'autoKlaim', name: 'Auto Klaim (Tukar + Piutang)', closure: controller.autoKlaim)
+    action(id: 'autoKlaimPiutang', name: 'Auto Klaim (Piutang)', closure: controller.autoKlaimPiutang)
     action(id: 'resetKlaim', name: 'Reset Klaim', closure: controller.resetKlaim)
 }
 
@@ -41,6 +42,7 @@ panel(id: 'mainPanel') {
         panel(visible: bind {model.editable}, constraints: PAGE_START) {
             flowLayout(alignment: FlowLayout.LEFT)
             button(action: autoKlaim)
+            button(action: autoKlaimPiutang)
             button(action: resetKlaim)
         }
         scrollPane(constraints: CENTER) {

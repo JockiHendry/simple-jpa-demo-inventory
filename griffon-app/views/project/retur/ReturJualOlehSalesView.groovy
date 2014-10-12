@@ -30,9 +30,10 @@ actions {
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
-    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'showPengiriman', name: 'Pengiriman Barang...', closure: controller.showPengiriman, mnemonic: KeyEvent.VK_R)
+    action(id: 'showBarangYangHarusDikirim', name: 'Barang Yang Belum Dikirim...', closure: controller.showBarangYangHarusDikirim)
 }
 
 panel(id: 'mainPanel') {
@@ -105,9 +106,11 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save, visible: bind{ model.showSave })
             button(action: cetak, visible: bind { table.isRowSelected && model.showSave })
+            button(action: showBarangYangHarusDikirim, visible: bind{model.allowPenukaran})
+            button(action: showPengiriman, visible: bind{model.allowPenukaran})
             button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: cancel)
             button(visible: bind('isRowSelected', source: table, converter: { it && model.showSave }), action: delete)
-            button(visible: bind{ model.allowPenukaran }, action: penukaran)
+
         }
     }
 }

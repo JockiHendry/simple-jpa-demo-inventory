@@ -65,15 +65,15 @@ class FakturJualEceranTest extends DbUnitTestCase {
         // Periksa jumlah pemesanan di produk
         produkA = fakturJualRepository.findProdukById(-1)
         produkB = fakturJualRepository.findProdukById(-2)
-        assertEquals(20, produkA.jumlahAkanDikirim)
-        assertEquals(15, produkB.jumlahAkanDikirim)
+        assertEquals(10, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
 
         // Hapus
         fakturJualRepository.hapus(fakturJualEceran)
         produkA = fakturJualRepository.findProdukById(-1)
         produkB = fakturJualRepository.findProdukById(-2)
-        assertEquals(10, produkA.jumlahAkanDikirim)
-        assertEquals(10, produkB.jumlahAkanDikirim)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
     }
 
     public void testAntar() {
@@ -81,6 +81,10 @@ class FakturJualEceranTest extends DbUnitTestCase {
         fakturJualRepository.withTransaction {
             fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-1l)
             assertEquals(StatusFakturJual.DIBUAT, fakturJualEceran.status)
+            Produk produkA = fakturJualRepository.findProdukById(-1)
+            Produk produkB = fakturJualRepository.findProdukById(-2)
+            produkA.jumlahAkanDikirim = 10
+            produkB.jumlahAkanDikirim = 10
             fakturJualEceran.antar()
             assertEquals(StatusFakturJual.DIANTAR, fakturJualEceran.status)
         }
@@ -116,8 +120,8 @@ class FakturJualEceranTest extends DbUnitTestCase {
         fakturJualRepository.withTransaction {
             Produk produkA = fakturJualRepository.findProdukById(-1)
             Produk produkB = fakturJualRepository.findProdukById(-2)
-            assertEquals(10, produkA.jumlahAkanDikirim)
-            assertEquals(10, produkB.jumlahAkanDikirim)
+            assertEquals(0, produkA.jumlahAkanDikirim)
+            assertEquals(0, produkB.jumlahAkanDikirim)
             assertEquals(45, produkA.jumlah)
             assertEquals(35, produkB.jumlah)
             assertEquals(18, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
