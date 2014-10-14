@@ -17,6 +17,7 @@
             {
                 "table": "items",
                 "border": true,
+                "underlineSeparator": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
                     {"source": "produk.nama", "width": 78, "caption": "Nama Produk", "wrap": true},
@@ -24,7 +25,9 @@
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
                 ]
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}",
+            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+        ],
+        "lastPageFooter": [
             "",
             "      Kepala Gudang,                                                     Dibuat oleh,         ",
             "                                                                                ",

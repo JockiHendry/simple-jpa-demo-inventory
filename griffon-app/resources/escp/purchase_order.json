@@ -27,7 +27,9 @@
                     {"source": "bean.total()::number::right", "width": 15, "caption": "Total"}
                 ]
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}",
+            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+        ],
+        "lastPageFooter": [
             "",
             "        Hormat kami,                                       Total Diskon : ${@jumlahDiskonItem:currency:20:right}",
             "                                                              Sub Total : ${@subtotal:currency:20:right}",

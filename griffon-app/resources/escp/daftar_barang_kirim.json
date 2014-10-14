@@ -16,7 +16,7 @@
         "detail": [
             {
                 "table": "items",
-                "lineSeparator": true,
+                "underlineSeparator": true,
                 "border": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
@@ -25,7 +25,9 @@
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
                 ]
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}",
+            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+        ],
+        "lastPageFooter": [
             "",
             "                                                                         Hormat kami,         ",
             "",

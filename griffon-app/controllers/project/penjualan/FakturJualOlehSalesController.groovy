@@ -145,7 +145,7 @@ class FakturJualOlehSalesController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
                         konsumen: model.konsumen, allowTambahProduk: false, showHarga: model.showFakturJual]
-            def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 420)]
+            def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 620)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)

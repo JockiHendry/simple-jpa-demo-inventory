@@ -201,7 +201,7 @@ griffon.project.dependency.resolution = {
             exclude 'lucene-analyzers-common'
             exclude 'lucene-core'
         }
-        compile 'jockihendry:simple-escp:0.5.2'
+        compile 'jockihendry:simple-escp:0.6'
     }
 }
 

@@ -30,16 +30,16 @@ panel(id: 'mainPanel') {
         borderLayout()
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.itemFakturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                glazedColumn(name: 'Produk', property: 'produk') {
+                glazedColumn(name: 'Produk', property: 'produk', width: [200, 200, 400]) {
                     templateRenderer('${it.nama}')
                 }
-                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: [80, 80, 200])
-                glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
+                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
+                glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan }, width: 40)
                 glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer, visible: bind { model.showHarga }) {
                     templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Keterangan', property: 'keterangan')
-                glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showHarga })
+                glazedColumn(name: 'Keterangan', property: 'keterangan', width: [40, 40, 100])
+                glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showHarga }, width: [40, 100, 100])
                 glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.harga)?.multiply(it.jumlah)},
                         columnClass: Integer, visible: bind { model.showHarga }) {
                     templateRenderer("\${it==null?'-':currencyFormat(it)}", horizontalAlignment: RIGHT)

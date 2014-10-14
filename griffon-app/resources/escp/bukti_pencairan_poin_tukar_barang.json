@@ -5,12 +5,15 @@
         "pageLength": 31,
         "usePageLengthFromPrinter": true
     },
-    "template": [
+    "template": {
+        "header": [
            "      %{176 R2}      Bukti Penukaran Barang ${companyName:51} Hal: %{PAGE_NO}",
            "    %{176 R6}    Nomor     : ${nomor:25}",
            "   %{176 R8}   Tanggal   : {{ tanggal.toString('dd-MM-YYYY') }}",
            "     %{176 R4}     Nama      : ${konsumen.nama:50}",
-           "      %{176 R2}      Poin      : ${jumlahPoin:number:5}",
+           "      %{176 R2}      Poin      : ${jumlahPoin:number:5}"
+        ],
+        "detail": [
            "              Sisa Poin : {{konsumen.getPoinTerkumpul()?:0::number::5}}",
            "",
            {
@@ -26,12 +29,15 @@
                 ]
            },
            "",
-           " {{keterangan?'Ket : ' + keterangan:''::94}}",
+           " {{keterangan?'Ket : ' + keterangan:''::94}}"
+        ],
+        "lastPageFooter": [
            "",
            "        Hormat kami,                                                        Penerima,           ",
            "",
            "",
            "",
            "  (${createdBy:21:center})                                               (...............)       "
-    ]
+        ]
+    }
 }
