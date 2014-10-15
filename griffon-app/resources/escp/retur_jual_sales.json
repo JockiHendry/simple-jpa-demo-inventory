@@ -25,7 +25,7 @@
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
                 ]
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+            " %{UNDERLINE}%{BOLD}{{keterangan?'Ket : ' + keterangan:''::94}}%{BOLD}%{UNDERLINE}"
         ],
         "lastPageFooter": [
             "",

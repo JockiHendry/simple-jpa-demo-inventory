@@ -32,7 +32,7 @@
                 "header": [" Bonus:"],
                 "line": " ${produk.nama:41} x ${jumlah:3:right} ${produk.satuan.singkatan:5}"
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+            " %{UNDERLINE}%{BOLD}{{keterangan?'Ket : ' + keterangan:''::94}}%{BOLD}%{UNDERLINE}"
         ],
         "lastPageFooter": [
             "",

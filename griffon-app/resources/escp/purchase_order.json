@@ -27,7 +27,7 @@
                     {"source": "bean.total()::number::right", "width": 15, "caption": "Total"}
                 ]
             },
-            " {{keterangan?'Ket : ' + keterangan:''::94}}"
+            " %{UNDERLINE}%{BOLD}{{keterangan?'Ket : ' + keterangan:''::94}}%{BOLD}%{UNDERLINE}"
         ],
         "lastPageFooter": [
             "",
