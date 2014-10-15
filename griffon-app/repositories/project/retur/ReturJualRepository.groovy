@@ -124,6 +124,7 @@ class ReturJualRepository {
                 f.hapusPembayaran(returJual.nomor)
             }
         }
+        returJual.pengeluaranBarang.each { hapusPengeluaranBarang(returJual, it) }
         returJual.deleted = 'Y'
         returJual
     }

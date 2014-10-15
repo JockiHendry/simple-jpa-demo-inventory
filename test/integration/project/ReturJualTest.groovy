@@ -122,10 +122,12 @@ class ReturJualTest extends DbUnitTestCase {
         Produk p2 = returJualRepository.findProdukById(-2l)
         Konsumen k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         BigDecimal sisaPiutangAwal = k.jumlahPiutang()
-        ReturJual r = new ReturJualOlehSales(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        ReturJualOlehSales r = new ReturJualOlehSales(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
         r.tambah(new ItemRetur(p1, 10, [new KlaimPotongPiutang(10000)] as Set))
         r.tambah(new ItemRetur(p2, 20, [new KlaimTukar(p2, 1)] as Set))
         r = returJualRepository.buat(r)
+        Gudang g = gudangRepository.cariGudangUtama()
+        r.tukar(g, 'A Test')
         k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         assertEquals(sisaPiutangAwal - 10000, k.jumlahPiutang())
 
@@ -133,10 +135,13 @@ class ReturJualTest extends DbUnitTestCase {
         returJualRepository.hapus(r)
 
         // Periksa apakah qty retur berkurang di produk
-        p1 = returJualRepository.findProdukById(-1l)
-        p2 = returJualRepository.findProdukById(-2l)
+        p1 = returJualRepository.findProdukByIdFetchStokProduk(-1l)
+        p2 = returJualRepository.findProdukByIdFetchStokProduk(-2l)
         assertEquals(10, p1.jumlahRetur)
         assertEquals(3, p2.jumlahRetur)
+
+        // Periksa apakah qty stok untuk barang yang ditukar bertambah kembali
+        assertEquals(14, p2.stok(g).jumlah)
 
         // Periksa apakah jumlah piutang berkurang
         k = returJualRepository.findKonsumenByIdFetchComplete(-1l)

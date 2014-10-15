@@ -42,7 +42,7 @@ panel(id: 'mainPanel') {
         panel(visible: bind {model.editable}, constraints: PAGE_START) {
             flowLayout(alignment: FlowLayout.LEFT)
             button(action: autoKlaim)
-            button(action: autoKlaimPiutang)
+            button(action: autoKlaimPiutang, visible: bind {!model.modusEceran})
             button(action: resetKlaim)
         }
         scrollPane(constraints: CENTER) {
