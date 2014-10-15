@@ -106,6 +106,22 @@ abstract class ReturJual implements SebuahDaftarBarang {
         pengeluaranBarang
     }
 
+    void hapus(PengeluaranBarang pengeluaranBarangDihapus) {
+        if (!pengeluaranBarang.contains(pengeluaranBarangDihapus)) {
+            throw IllegalArgumentException("Tidak ada pengeluaran barang yang bisa dihapus: ${pengeluaranBarangDihapus.nomor}")
+        }
+        pengeluaranBarangDihapus.items.each { ItemBarang i ->
+            for (KlaimTukar k : getKlaimsTukar()) {
+                if ((k.produk == i.produk) && (i.jumlah == i.jumlah) && (k.sudahDiproses)) {
+                    k.sudahDiproses = false
+                    break
+                }
+            }
+        }
+        sudahDiproses = false
+        pengeluaranBarang.remove(pengeluaranBarangDihapus)
+    }
+
     abstract PengeluaranBarang tukar()
 
     @Override

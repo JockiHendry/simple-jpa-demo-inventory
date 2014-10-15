@@ -20,7 +20,7 @@ import domain.penjualan.PengeluaranBarang
 import domain.validation.PenjualanOlehSales
 import project.user.NomorService
 import simplejpa.swing.DialogUtils
-
+import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
@@ -70,6 +70,20 @@ class PengirimanReturController {
                 model.listItemBarang.clear()
                 model.listItemBarang.addAll(m.itemBarangList)
             }
+        }
+    }
+
+    def delete = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        PengeluaranBarang pengeluaranBarang = view.table.selectionModel.selected[0]
+        if (model.parent) {
+            model.parent = returJualRepository.hapusPengeluaranBarang(model.parent, pengeluaranBarang)
+        }
+        execInsideUISync {
+            model.pengeluaranBarangList.remove(pengeluaranBarang)
+            clear()
         }
     }
 

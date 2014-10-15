@@ -128,6 +128,14 @@ class ReturJualRepository {
         returJual
     }
 
+    public ReturJual hapusPengeluaranBarang(ReturJual returJual, PengeluaranBarang pengeluaranBarang) {
+        returJual = findReturJualById(returJual.id)
+        pengeluaranBarang = findPengeluaranBarangById(pengeluaranBarang.id)
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, true))
+        returJual.hapus(pengeluaranBarang)
+        returJual
+    }
+
     public ReturJual tukar(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
         PengeluaranBarang pengeluaranBarang = returJual.tukar()

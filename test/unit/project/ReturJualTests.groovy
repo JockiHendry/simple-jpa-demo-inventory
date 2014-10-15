@@ -397,4 +397,51 @@ class ReturJualTests extends GriffonUnitTestCase {
         }
     }
 
+    void testHapusPengeluaranBarang() {
+        Supplier supplier = new Supplier()
+        Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
+        Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
+        Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
+        Konsumen konsumen = new Konsumen()
+        ReturJualOlehSales retur = new ReturJualOlehSales(konsumen: konsumen)
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 3), new KlaimTukar(produk1, 7)] as Set))
+        retur.tambah(new ItemRetur(produk2, 20, [new KlaimTukar(produk2, 20)] as Set))
+        retur.tambah(new ItemRetur(produk3, 30, [new KlaimTukar(produk3, 25)] as Set))
+
+        PengeluaranBarang p1 = new PengeluaranBarang(nomor: 'P-01')
+        p1.tambah(new ItemBarang(produk1, 3))
+        p1.tambah(new ItemBarang(produk1, 7))
+        retur.tukar(p1)
+
+        PengeluaranBarang p2 = new PengeluaranBarang(nomor: 'P-03')
+        p2.tambah(new ItemBarang(produk2, 20))
+        p2.tambah(new ItemBarang(produk3, 25))
+        retur.tukar(p2)
+
+        // Hapus p2
+        retur.hapus(p2)
+        assertFalse(retur.sudahDiproses)
+        assertEquals(1, retur.pengeluaranBarang.size())
+        assertFalse(retur.pengeluaranBarang.contains(p2))
+        DaftarBarang d = retur.yangHarusDitukar()
+        assertEquals(2, d.items.size())
+        assertEquals(new ItemBarang(produk2, 20), d.items[0])
+        assertEquals(new ItemBarang(produk3, 25), d.items[1])
+        assertTrue(retur.items[0].klaims.every { it.sudahDiproses })
+        assertTrue(retur.items[1].klaims.every { !it.sudahDiproses })
+        assertTrue(retur.items[2].klaims.every { !it.sudahDiproses })
+
+        // Hapus p1
+        retur.hapus(p1)
+        assertEquals(0, retur.pengeluaranBarang.size())
+        d = retur.yangHarusDitukar()
+        assertEquals(3, d.items.size())
+        assertEquals(new ItemBarang(produk1, 10), d.items[0])
+        assertEquals(new ItemBarang(produk2, 20), d.items[1])
+        assertEquals(new ItemBarang(produk3, 25), d.items[2])
+        assertTrue(retur.items[0].klaims.every { !it.sudahDiproses })
+        assertTrue(retur.items[1].klaims.every { !it.sudahDiproses })
+        assertTrue(retur.items[2].klaims.every { !it.sudahDiproses })
+    }
+
 }

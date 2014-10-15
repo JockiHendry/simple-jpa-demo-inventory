@@ -74,7 +74,7 @@ class ReturJualServiceTest extends DbUnitTestCase {
         assertEquals(9000, r2.items[2].jumlahPotongPiutang())
 
         ReturJual r3 = new ReturJualOlehSales(nomor: 'R-03', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
-        r3.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(id: 1, produk: produk1, jumlah: 5), new KlaimTukar(id: 2, produk: produk1, jumlah: 5)] as Set))
+        r3.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(id: 1, produk: produk1, jumlah: 3), new KlaimTukar(id: 2, produk: produk1, jumlah: 7)] as Set))
         r3.tambah(new ItemRetur(produk2, 20))
         r3.tambah(new ItemRetur(produk3, 30))
         returJualService.potongPiutang(r3)

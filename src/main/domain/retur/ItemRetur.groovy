@@ -71,6 +71,9 @@ class ItemRetur {
     }
 
     void tambahKlaim(Klaim klaim) {
+        if (klaims.contains(klaim)) {
+            throw new IllegalArgumentException("Sudah ada klaim yang sama untuk ${klaim}")
+        }
         klaims << klaim
     }
 

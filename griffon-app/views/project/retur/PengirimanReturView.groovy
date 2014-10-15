@@ -27,6 +27,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...', closure: controller.showItemBarang)
+    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
 }
 
 panel(id: 'mainPanel') {
@@ -38,7 +39,7 @@ panel(id: 'mainPanel') {
             glazedColumn(name: '', property: 'deleted', width: 20) {
                 templateRenderer(exp: { it=='Y'?'D':''})
             }
-            glazedColumn(name: 'Nomor', property: 'nomor', width: 120)
+            glazedColumn(name: 'Nomor', property: 'nomor')
             glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                 templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
             }
@@ -71,12 +72,7 @@ panel(id: 'mainPanel') {
                 form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
             })
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {table.isRowSelected}, actionPerformed: controller.clear)
-//            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {table.isRowSelected}, actionPerformed: {
-//                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-//                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-//                    controller.delete()
-//                }
-//            })
+            button(action: delete, visible: bind {table.isRowSelected})
         }
     }
 }

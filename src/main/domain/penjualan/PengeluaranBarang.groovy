@@ -72,5 +72,9 @@ class PengeluaranBarang extends DaftarBarang {
         nomor?.equals(obj.nomor)?: false
     }
 
+    @Override
+    int hashCode() {
+        return nomor?.hashCode()?: 0
+    }
 }
 
