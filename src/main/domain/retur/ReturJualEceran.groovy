@@ -15,7 +15,9 @@
  */
 package domain.retur
 
+import domain.inventory.BolehPesanStok
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
 import project.inventory.GudangRepository
@@ -29,7 +31,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-class ReturJualEceran extends ReturJual {
+class ReturJualEceran extends ReturJual implements BolehPesanStok {
 
     @NotEmpty @Size(min=2, max=100)
     String namaKonsumen
@@ -45,5 +47,16 @@ class ReturJualEceran extends ReturJual {
     PengeluaranBarang tukar() {
         super.tukar((SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang') as GudangRepository).cariGudangUtama(), namaKonsumen)
     }
+
+    @Override
+    boolean isValid() {
+        true
+    }
+
+    @Override
+    List<ItemBarang> yangDipesan() {
+        yangHarusDitukar().items
+    }
+
 }
 

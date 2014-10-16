@@ -27,6 +27,7 @@ import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
 import domain.pembelian.PenerimaanBarang
 import domain.pengaturan.Pengaturan
+import domain.penjualan.FakturJualEceran
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -708,6 +709,134 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen2, kirimDariGudangUtama: true)
         fakturJualOlehSales.tambah(new ItemFaktur(produkA1, 10, 8000))
         fakturJualRepository.buat(fakturJualOlehSales, true)
+    }
+
+    public void testQtyReadyFakturJualOlehSales1() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-4l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur dibuat.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.buatSuratJalan(fakturJualOlehSales, 'Test')
+        // Pastikan jumlah akan dikirim tidak berubah setelah surat jalan dibuat.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.kirimSuratJalan(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim berkurang setelah barang dikirim.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.batalKirim(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim bertambah setelah pengiriman dihapus.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.buatSuratJalan(fakturJualOlehSales, 'Test')
+        fakturJualOlehSales = fakturJualRepository.kirimSuratJalan(fakturJualOlehSales)
+        PenerimaanBarang p = new PenerimaanBarang(nomor: 'TEST', tanggal: LocalDate.now())
+        p.tambah(new ItemBarang(produkA, 3))
+        fakturJualOlehSales = fakturJualRepository.retur(fakturJualOlehSales, p)
+        // Pastikan jumlah akan dikirim tidak berubah setelah retur dilakukan.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyFakturJualOlehSales2() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Sales sales = fakturJualRepository.findSalesById(-1l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-4l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur dibuat.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.hapus(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim berkurang setelah faktur dihapus.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyFakturJualEceran1() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        FakturJualEceran fakturJualEceran = new FakturJualEceran(tanggal: LocalDate.now(), namaPembeli: 'Test')
+        fakturJualEceran.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualEceran.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualEceran = fakturJualRepository.buat(fakturJualEceran, true)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur dibuat.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualEceran = fakturJualRepository.antar(fakturJualEceran)
+        // Pastikan jumlah akan dikirim berkurang setelah barang di atnar.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualEceran = fakturJualRepository.batalAntar(fakturJualEceran)
+        // Pastikan jumlah akan dikirim berkurang setelah barang dikirim.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyFakturJualEceran2() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        FakturJualEceran fakturJualEceran = new FakturJualEceran(tanggal: LocalDate.now(), namaPembeli: 'Test')
+        fakturJualEceran.tambah(new ItemFaktur(produkA, 8, 8000))
+        fakturJualEceran.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualEceran = fakturJualRepository.buat(fakturJualEceran, true)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur dibuat.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(8, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualEceran = fakturJualRepository.hapus(fakturJualEceran)
+        // Pastikan jumlah akan dikirim berkurang setelah faktur dihapus.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
     }
 
 }

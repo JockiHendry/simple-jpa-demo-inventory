@@ -17,6 +17,7 @@ package domain.retur
 
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Referensi
+import domain.inventory.BolehPesanStok
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.penjualan.Konsumen
@@ -37,7 +38,7 @@ import griffon.util.*
     ])
 ])
 @DomainClass @Entity @Canonical
-class ReturJualOlehSales extends ReturJual {
+class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
 
     @NotNull @ManyToOne
     Gudang gudang
@@ -108,6 +109,16 @@ class ReturJualOlehSales extends ReturJual {
         yangDiKlaim.each { proses(it) }
 
         pengeluaranBarang
+    }
+
+    @Override
+    boolean isValid() {
+        gudang.utama
+    }
+
+    @Override
+    List<ItemBarang> yangDipesan() {
+        yangHarusDitukar().items
     }
 
 }

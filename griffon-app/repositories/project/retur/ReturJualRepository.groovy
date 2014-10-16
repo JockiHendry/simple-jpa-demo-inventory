@@ -17,6 +17,7 @@ package project.retur
 
 import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
+import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.FakturJualOlehSales
@@ -79,6 +80,7 @@ class ReturJualRepository {
             returJual = buatReturEceran(returJual)
         }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual))
+        ApplicationHolder.application?.event(new PesanStok(returJual))
         returJual
 	}
 
@@ -116,6 +118,9 @@ class ReturJualRepository {
         if (!returJual) {
             throw new DataTidakBolehDiubah(returJual)
         }
+        if (!returJual.pengeluaranBarang.empty) {
+            throw new DataTidakBolehDiubah(returJual)
+        }
         ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
         if (returJual instanceof ReturJualOlehSales) {
             // Hapus piutang khusus untuk retur jual oleh sales
@@ -124,7 +129,7 @@ class ReturJualRepository {
                 f.hapusPembayaran(returJual.nomor)
             }
         }
-        returJual.pengeluaranBarang.each { hapusPengeluaranBarang(returJual, it) }
+        ApplicationHolder.application?.event(new PesanStok(returJual, true))
         returJual.deleted = 'Y'
         returJual
     }
@@ -132,7 +137,7 @@ class ReturJualRepository {
     public ReturJual hapusPengeluaranBarang(ReturJual returJual, PengeluaranBarang pengeluaranBarang) {
         returJual = findReturJualById(returJual.id)
         pengeluaranBarang = findPengeluaranBarangById(pengeluaranBarang.id)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, true))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, true, true))
         returJual.hapus(pengeluaranBarang)
         returJual
     }
@@ -142,7 +147,7 @@ class ReturJualRepository {
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, false, true))
         returJual
     }
 
@@ -151,7 +156,7 @@ class ReturJualRepository {
         pengeluaranBarang = returJualOlehSales.tukar(pengeluaranBarang)
         pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, false, true))
         returJualOlehSales
     }
 

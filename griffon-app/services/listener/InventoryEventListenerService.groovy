@@ -20,6 +20,7 @@ import domain.event.PerubahanStok
 import domain.event.PesanStok
 import domain.event.TransferStok
 import domain.faktur.Faktur
+import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -28,6 +29,7 @@ import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJualOlehSales
 import domain.user.PesanLevelMinimum
 import project.user.PesanRepository
+import simplejpa.transaction.Transaction
 
 class InventoryEventListenerService {
 
@@ -50,26 +52,17 @@ class InventoryEventListenerService {
         log.info "Event onPerubahanRetur selesai dikerjakan!"
     }
 
+    @Transaction
     void onPesanStok(PesanStok pesanStok) {
         log.info "Event onPesanStok mulai dikerjakan..."
 
-        // Pemesanan luar kota akan langsung mengurangi stok sehingga tidak perlu di-'pesan' terlebih dahulu.
-        if (pesanStok.faktur instanceof FakturJualOlehSales && !pesanStok.faktur.konsumen.sales.dalamKota() && !pesanStok.faktur.kirimDariGudangUtama) {
-            return
-        }
+        BolehPesanStok source = pesanStok.source
+        if (!source.valid) return
 
         int pengali = pesanStok.invers? -1: 1
-
-        pesanStok.faktur.listItemFaktur.each {
-            Produk produk = it.produk
+        source.yangDipesan().each {
+            Produk produk = findProdukById(it.produk.id)
             produk.jumlahAkanDikirim = (produk.jumlahAkanDikirim?:0) + (pengali * (it.jumlah?:0))
-        }
-
-        if (pesanStok.faktur instanceof FakturJualOlehSales && pesanStok.faktur.bonusPenjualan != null) {
-            (pesanStok.faktur as FakturJualOlehSales).bonusPenjualan.items.each {
-                Produk produk = it.produk
-                produk.jumlahAkanDikirim += pengali * it.jumlah
-            }
         }
 
         log.info "Event onPesanStok selesai dikerjakan!"
@@ -95,6 +88,9 @@ class InventoryEventListenerService {
                 keterangan = faktur?.keterangan?: daftarBarang.keterangan
             }
             i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
+            if (perubahanStok.pakaiYangSudahDipesan) {
+                i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
+            }
 
             // Mengisi supplier untuk produk (dengan asumsi bahwa 1 produk 1 supplier)
             if (faktur instanceof PurchaseOrder) {

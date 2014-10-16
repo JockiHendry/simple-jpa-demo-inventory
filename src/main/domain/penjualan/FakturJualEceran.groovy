@@ -18,6 +18,7 @@ package domain.penjualan
 import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
+import domain.inventory.BolehPesanStok
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import project.user.NomorService
@@ -34,7 +35,7 @@ import griffon.util.*
     @NamedAttributeNode('pengeluaranBarang')
 ])
 @DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
-class FakturJualEceran extends FakturJual {
+class FakturJualEceran extends FakturJual implements BolehPesanStok {
 
     @NotEmpty @Size(min=2, max=100)
     String namaPembeli
@@ -52,7 +53,6 @@ class FakturJualEceran extends FakturJual {
             pengeluaranBarang.tambah(new ItemBarang(produk: it.produk, jumlah: it.jumlah))
         }
         tambah(pengeluaranBarang)
-        ApplicationHolder.application.event(new PesanStok(this, true))
     }
 
     public void batalAntar() {
@@ -67,6 +67,16 @@ class FakturJualEceran extends FakturJual {
             throw new DataTidakBolehDiubah(this)
         }
         status = StatusFakturJual.LUNAS
+    }
+
+    @Override
+    boolean isValid() {
+        true
+    }
+
+    @Override
+    List<ItemBarang> yangDipesan() {
+        toDaftarBarang().items
     }
 
     boolean equals(o) {

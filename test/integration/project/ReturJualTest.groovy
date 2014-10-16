@@ -27,6 +27,7 @@ import domain.retur.ItemRetur
 import domain.retur.KlaimPotongPiutang
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
+import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -253,6 +254,116 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(10, produk1.stok(g).jumlah)
         assertEquals(14, produk2.stok(g).jumlah)
         assertEquals(15, produk3.stok(g).jumlah)
+    }
+
+    public void testQtyReadyReturJualOlehSales1() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 8, [new KlaimTukar(produk1, 8)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+
+        retur = returJualRepository.buat(retur)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur retur dibuat.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+
+        PengeluaranBarang p = new PengeluaranBarang(nomor: 'P-01', tanggal: LocalDate.now(), alamatTujuan:  'test')
+        p.tambah(new ItemBarang(produk1, 8))
+        retur = returJualRepository.tukar(retur, p)
+        // Pastikan jumlah akan dikirim berkurang setelah penukaran dilakukan.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+
+        retur = returJualRepository.hapusPengeluaranBarang(retur, p)
+        // Pastikan jumlah akan dikirim bertambah kembali setelah penukaran dihapus.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyReturJualOlehSales2() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 8, [new KlaimTukar(produk1, 8)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+
+        retur = returJualRepository.buat(retur)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur retur dibuat.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+
+        retur = returJualRepository.hapus(retur)
+        // Pastikan jumlah akan dikirim berkurang setelah retur dihapus.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyReturJualEceran1() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        ReturJualEceran retur = new ReturJualEceran(nomor: 'R-01', tanggal: LocalDate.now(), namaKonsumen: 'Anonym')
+        retur.tambah(new ItemRetur(produk1, 8, [new KlaimTukar(produk1, 8)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+
+        retur = returJualRepository.buat(retur)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur retur dibuat.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+
+        retur = returJualRepository.tukar(retur)
+        // Pastikan jumlah akan dikirim berkurang setelah penukaran dilakukan.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+
+        retur = returJualRepository.hapusPengeluaranBarang(retur, retur.pengeluaranBarang[0])
+        // Pastikan jumlah akan dikirim bertambah kembali setelah penukaran dihapus.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyReturJualEceran2() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualEceran retur = new ReturJualEceran(tanggal: LocalDate.now(), nomor: 'TEST-1', namaKonsumen: 'Anonym')
+        retur.tambah(new ItemRetur(produk1, 8, [new KlaimTukar(produk1, 8)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+
+        retur = returJualRepository.buat(retur)
+        // Pastikan jumlah akan dikirim bertambah setelah faktur retur dibuat.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(8, produk1.jumlahAkanDikirim)
+        assertEquals(10, produk2.jumlahAkanDikirim)
+
+        retur = returJualRepository.hapus(retur)
+        // Pastikan jumlah akan dikirim berkurang setelah retur dihapus.
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
     }
 
 }

@@ -25,6 +25,7 @@ import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
+import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
@@ -59,7 +60,7 @@ import javax.validation.groups.Default
     ])
 ])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan,retur') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan,retur')
-class FakturJualOlehSales extends FakturJual {
+class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
 
     @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Konsumen konsumen
@@ -88,7 +89,6 @@ class FakturJualOlehSales extends FakturJual {
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
         tambah(pengeluaranBarang)
-        ApplicationHolder.application.event(new PesanStok(this, true))
     }
 
     void buatSuratJalan(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
@@ -104,7 +104,6 @@ class FakturJualOlehSales extends FakturJual {
         if (!pengeluaranBarang || status != StatusFakturJual.DIBUAT) {
             throw new DataTidakBolehDiubah(this)
         }
-        ApplicationHolder.application.event(new PesanStok(this, true))
         kirim()
     }
 
@@ -156,7 +155,6 @@ class FakturJualOlehSales extends FakturJual {
     @Override
     void hapusPengeluaranBarang() {
         super.hapusPengeluaranBarang()
-        ApplicationHolder.application.event(new PesanStok(this))
     }
 
     @Override
@@ -284,6 +282,19 @@ class FakturJualOlehSales extends FakturJual {
 
     BigDecimal totalSetelahRetur() {
         total() - totalRetur()
+    }
+
+    @Override
+    boolean isValid() {
+        if (!konsumen.sales.dalamKota() && !kirimDariGudangUtama) {
+            return false
+        }
+        true
+    }
+
+    @Override
+    List<ItemBarang> yangDipesan() {
+        barangYangHarusDikirim().items
     }
 
     boolean equals(o) {

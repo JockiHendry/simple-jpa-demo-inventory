@@ -24,6 +24,7 @@ import groovy.transform.Canonical
 class PerubahanStok extends Event {
 
     boolean invers
+    boolean pakaiYangSudahDipesan
     Faktur faktur
 
     PerubahanStok(DaftarBarang daftarBarang, Faktur faktur) {
@@ -31,9 +32,14 @@ class PerubahanStok extends Event {
     }
 
     PerubahanStok(DaftarBarang daftarBarang, Faktur faktur, boolean invers) {
+        this(daftarBarang, faktur, invers, false)
+    }
+
+    PerubahanStok(DaftarBarang daftarBarang, Faktur faktur, boolean invers, boolean pakaiYangSudahDipesan) {
         super(daftarBarang)
         this.invers = invers
         this.faktur = faktur
+        this.pakaiYangSudahDipesan = pakaiYangSudahDipesan
     }
 
 }

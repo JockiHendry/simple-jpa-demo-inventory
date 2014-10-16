@@ -51,7 +51,7 @@ abstract class FakturJual extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         status = StatusFakturJual.DIANTAR
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this, false, true))
     }
 
     public void tambah(BuktiTerima buktiTerima) {
@@ -80,7 +80,7 @@ abstract class FakturJual extends Faktur {
         if (pengeluaranBarang == null) {
             throw new DataTidakKonsisten(this)
         }
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this, true))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this, true, true))
         pengeluaranBarang = null
         status = StatusFakturJual.DIBUAT
     }

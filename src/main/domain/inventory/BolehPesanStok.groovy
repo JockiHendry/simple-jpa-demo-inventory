@@ -13,20 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.event
+package domain.inventory
 
-import domain.inventory.BolehPesanStok
-import groovy.transform.Canonical
-import griffon.core.*
 
-@Canonical
-class PesanStok extends Event {
+public interface BolehPesanStok {
 
-    boolean invers
+    public boolean isValid();
 
-    PesanStok(BolehPesanStok source, boolean invers = false) {
-        super(source)
-        this.invers = invers
-    }
+    public List<ItemBarang> yangDipesan();
 
 }
