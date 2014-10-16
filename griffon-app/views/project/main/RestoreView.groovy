@@ -39,8 +39,11 @@ panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
         label('Password Database: ')
         passwordField(id: 'databasePassword', columns: 20, constraints: 'wrap')
 
-        button('Mulai Restore', actionPerformed: controller.&mulai, constraints: 'gaptop 10px')
-        button('Refresh Stok', actionPerformed: controller.refreshStok, constraints: 'wrap')
+        panel(constraints: 'gaptop 10px, span 2, wrap') {
+            button('Mulai Restore', actionPerformed: controller.&mulai)
+            button('Refresh Stok', actionPerformed: controller.refreshStok)
+            button('Refresh Jumlah Akan Dikirim', actionPerformed: controller.refreshJumlahAkanDikirim)
+        }
     }
 
     scrollPane(constraints: CENTER) {

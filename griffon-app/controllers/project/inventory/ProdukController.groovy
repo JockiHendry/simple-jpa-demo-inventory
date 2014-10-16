@@ -100,12 +100,6 @@ class ProdukController {
         }
     }
 
-    def refreshJumlahAkanDikirim = {
-        produkRepository.refreshJumlahAkanDikirim()
-        search()
-        JOptionPane.showMessageDialog(view.mainPanel, 'Jumlah akan dikirim untuk seluruh produk sudah diperbaharui!', 'Sukses', JOptionPane.INFORMATION_MESSAGE)
-    }
-    
     @NeedSupervisorPassword
     def showUbahJumlahRetur = {
         String input = JOptionPane.showInputDialog(view.mainPanel, 'Masukkan nilai qty retur baru:', 'Input Qty Retur', JOptionPane.QUESTION_MESSAGE)

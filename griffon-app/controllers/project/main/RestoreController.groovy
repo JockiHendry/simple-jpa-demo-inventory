@@ -26,9 +26,8 @@ import org.dbunit.dataset.excel.XlsDataSet
 import org.dbunit.operation.DatabaseOperation
 import org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
 import project.inventory.ProdukRepository
-import project.main.RestoreModel
 import simplejpa.SimpleJpaUtil
-
+import javax.swing.JOptionPane
 import javax.swing.JTextArea
 import java.nio.file.Paths
 import java.sql.Connection
@@ -119,6 +118,11 @@ class RestoreController {
             }
         }
         execInsideUISync { output.append("\nSelesai!\n\n") }
+    }
+
+    def refreshJumlahAkanDikirim = {
+        produkRepository.refreshJumlahAkanDikirim()
+        JOptionPane.showMessageDialog(view.mainPanel, 'Jumlah akan dikirim untuk seluruh produk sudah diperbaharui!', 'Sukses', JOptionPane.INFORMATION_MESSAGE)
     }
 
 

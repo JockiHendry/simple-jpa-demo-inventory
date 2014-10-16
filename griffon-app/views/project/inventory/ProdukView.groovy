@@ -42,7 +42,6 @@ actions {
     })
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
     action(id: 'showUbahJumlahRetur', name: 'Ubah Qty Retur...', closure: controller.showUbahJumlahRetur)
-    action(id: 'refreshJumlahAkanDikirim', name: 'Refresh Jumlah Akan Dikirim', closure: controller.refreshJumlahAkanDikirim)
 }
 
 panel(id: 'mainPanel') {
@@ -60,7 +59,6 @@ panel(id: 'mainPanel') {
                 }
             )
             button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
-            button(action: refreshJumlahAkanDikirim)
         }
     }
 

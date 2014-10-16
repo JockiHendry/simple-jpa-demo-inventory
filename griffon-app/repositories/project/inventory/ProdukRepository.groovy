@@ -19,12 +19,15 @@ package project.inventory
 import domain.exception.DataDuplikat
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.pembelian.Supplier
+import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
+import domain.retur.ReturJual
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -91,8 +94,17 @@ class ProdukRepository {
 
     public void refreshJumlahAkanDikirim() {
         def pengiriman = [:]
-        findAllFakturJualOlehSalesByStatus(StatusFakturJual.DIBUAT).each { FakturJualOlehSales f ->
+        findAllFakturJualByStatus(StatusFakturJual.DIBUAT).each { FakturJual f ->
             f.listItemFaktur.each { ItemFaktur i ->
+                if (pengiriman.containsKey(i.produk)) {
+                    pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
+                } else {
+                    pengiriman[i.produk] = i.jumlah
+                }
+            }
+        }
+        findAllReturJualBySudahDiproses(false).each { ReturJual r ->
+            r.yangHarusDitukar().items.each { ItemBarang i ->
                 if (pengiriman.containsKey(i.produk)) {
                     pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
                 } else {
