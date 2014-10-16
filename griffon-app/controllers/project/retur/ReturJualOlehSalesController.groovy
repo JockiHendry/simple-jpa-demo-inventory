@@ -16,6 +16,7 @@
 package project.retur
 
 import ast.NeedSupervisorPassword
+import domain.exception.StokTidakCukup
 import domain.retur.*
 import org.joda.time.LocalDate
 import project.user.NomorService
@@ -114,8 +115,8 @@ class ReturJualOlehSalesController {
             }
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
-        } catch (IllegalStateException ex) {
-            model.errors['listKlaimRetur'] = ex.message
+        } catch (StokTidakCukup ex) {
+            model.errors['items'] = ex.message
         }
     }
 

@@ -505,8 +505,8 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         Produk produk10 = produkRepository.findProdukById(-10l)
         Produk produk11 = produkRepository.findProdukById(-11l)
 
-        assertEquals(4, produk1.jumlahAkanDikirim)
-        assertEquals(3, produk2.jumlahAkanDikirim)
+        assertEquals(17, produk1.jumlahAkanDikirim)
+        assertEquals(14, produk2.jumlahAkanDikirim)
         assertEquals(0, produk3.jumlahAkanDikirim)
         assertEquals(0, produk4.jumlahAkanDikirim)
         assertEquals(0, produk5.jumlahAkanDikirim)

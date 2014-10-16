@@ -20,6 +20,9 @@ import domain.event.PerubahanStok
 import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.DataTidakKonsisten
+import domain.exception.StokTidakCukup
+import domain.inventory.Produk
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
@@ -85,6 +88,20 @@ class ReturJualRepository {
 	}
 
     public ReturJualOlehSales buatReturOlehSales(ReturJualOlehSales returJualOlehSales) {
+        // Periksa apakah barang yang di-klaim tersedia
+        returJualOlehSales.getKlaimsTukar().each { KlaimTukar k ->
+            Produk produk = findProdukById(k.produk.id)
+            if (returJualOlehSales.gudang.utama) {
+                if (!produk.tersediaUntuk(k.jumlah)) {
+                    throw new StokTidakCukup(produk.nama, k.jumlah, produk.jumlahReadyGudangUtama(), returJualOlehSales.gudang)
+                }
+            } else {
+                int jumlahStokGudang = produk.stok(returJualOlehSales.gudang).jumlah
+                if (k.jumlah > jumlahStokGudang) {
+                    throw new StokTidakCukup(produk.nama, k.jumlah, jumlahStokGudang, returJualOlehSales.gudang)
+                }
+            }
+        }
         returJualOlehSales.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL_SALES)
         returJualOlehSales.konsumen = findKonsumenById(returJualOlehSales.konsumen.id)
         returJualOlehSales.items.each { it.produk = findProdukById(it.produk.id) }
@@ -94,6 +111,17 @@ class ReturJualRepository {
     }
 
     public ReturJualEceran buatReturEceran(ReturJualEceran returJualEceran) {
+        // Periksa apakah ada retur jual eceran yang di-klaim selain tukar
+        if (!returJualEceran.items.every { ItemRetur i -> i.klaims.every { it instanceof KlaimTukar }}) {
+            throw new DataTidakKonsisten('Tidak ada klaim selain tukar di retur jual eceran!', returJualEceran)
+        }
+        // Periksa apakah barang yang di-klaim tersedia
+        returJualEceran.getKlaimsTukar().each { KlaimTukar k ->
+            Produk produk = findProdukById(k.produk.id)
+            if (!produk.tersediaUntuk(k.jumlah)) {
+                throw new StokTidakCukup(produk.nama, k.jumlah, produk.jumlahReadyGudangUtama(), null)
+            }
+        }
         returJualEceran.nomor = nomorService.buatNomor(NomorService.TIPE.RETUR_JUAL_ECERAN)
         returJualEceran.items.each { it.produk = findProdukById(it.produk.id) }
         persist(returJualEceran)

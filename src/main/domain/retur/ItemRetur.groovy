@@ -95,4 +95,13 @@ class ItemRetur {
         klaims.toArray().findAll { it instanceof KlaimPotongPiutang }.each { klaims.remove(it) }
     }
 
+    String getDescription() {
+        List barangDitukar = getKlaims(KlaimTukar).findAll { KlaimTukar k -> k.produk != produk }
+        if (barangDitukar.empty) {
+            return produk.nama
+        } else {
+            return "${produk.nama} (TUKAR: ${barangDitukar.collect{ KlaimTukar k -> k.produk.nama }.join(',')})"
+        }
+    }
+
 }

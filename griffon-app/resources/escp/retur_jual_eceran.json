@@ -20,7 +20,7 @@
                 "underlineSeparator": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
-                    {"source": "produk.nama", "width": 78, "caption": "Nama Produk", "wrap": true},
+                    {"source": "bean.getDescription()", "width": 78, "caption": "Nama Produk", "wrap": true},
                     {"source": "jumlah::right", "width": 6, "caption": "Qty"},
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
                 ]

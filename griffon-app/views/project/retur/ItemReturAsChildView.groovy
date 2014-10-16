@@ -47,9 +47,9 @@ panel(id: 'mainPanel') {
         }
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.itemReturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showKlaim, enterKeyAction: showKlaim) {
-                glazedColumn(name: 'Produk', property: 'produk')
-                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer)
-                glazedColumn(name: 'Qty Ditukar', expression: { it.jumlahBarangDitukar() }, columnClass: Integer)
+                glazedColumn(name: 'Produk', expression: { it.getDescription() })
+                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 50)
+                glazedColumn(name: 'Qty Ditukar', expression: { it.jumlahBarangDitukar() }, columnClass: Integer, width: 70)
                 glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind{model.showPiutang}) {
                     templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
                 }

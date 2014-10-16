@@ -89,7 +89,6 @@ class ItemReturAsChildController {
     }
 
     def showKlaim = {
-        if (!model.showPiutang) return
         execInsideUISync {
             def args = [parentList: model.klaims, parent: view.table.selectionModel.selected[0]]
             def props = [title: 'Klaims', preferredSize: new Dimension(900, 300)]
@@ -142,8 +141,11 @@ class ItemReturAsChildController {
         } else {
             returJualService.autoKlaim(returJual)
         }
-        view.table.repaint()
-        JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+        execInsideUISync {
+            view.table.repaint()
+            clear()
+            JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+        }
     }
 
     def resetKlaim = {
@@ -151,7 +153,11 @@ class ItemReturAsChildController {
             return
         }
         model.itemReturList.each { it.klaims.clear() }
-        view.table.repaint()
+        execInsideUISync {
+            view.table.repaint()
+            clear()
+            JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim yang ada sudah dihapus semua!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+        }
     }
 
     def clear = {

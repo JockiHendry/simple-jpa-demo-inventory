@@ -120,8 +120,8 @@ class FakturJualEceranTest extends DbUnitTestCase {
         fakturJualRepository.withTransaction {
             Produk produkA = fakturJualRepository.findProdukById(-1)
             Produk produkB = fakturJualRepository.findProdukById(-2)
-            assertEquals(0, produkA.jumlahAkanDikirim)
-            assertEquals(0, produkB.jumlahAkanDikirim)
+            assertEquals(8, produkA.jumlahAkanDikirim)
+            assertEquals(8, produkB.jumlahAkanDikirim)
             assertEquals(45, produkA.jumlah)
             assertEquals(35, produkB.jumlah)
             assertEquals(18, produkA.stok(gudangRepository.cariGudangUtama()).jumlah)
