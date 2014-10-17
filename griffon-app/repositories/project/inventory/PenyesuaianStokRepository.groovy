@@ -20,6 +20,8 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.StokTidakCukup
 import domain.inventory.PenyesuaianStok
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
@@ -59,7 +61,8 @@ class PenyesuaianStokRepository {
         }
         if (!penyesuaianStok.keterangan) penyesuaianStok.keterangan = 'Penyesuaian Stok'
         persist(penyesuaianStok)
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, null))
+        ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, ref))
         penyesuaianStok
     }
 
@@ -82,7 +85,8 @@ class PenyesuaianStokRepository {
             throw new DataTidakBolehDiubah(penyesuaianStok)
         }
         penyesuaianStok.deleted = 'Y'
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, null, true))
+        ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, ref, true))
         penyesuaianStok
     }
 

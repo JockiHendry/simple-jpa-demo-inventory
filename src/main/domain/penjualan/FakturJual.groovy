@@ -21,6 +21,8 @@ import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -51,7 +53,8 @@ abstract class FakturJual extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         status = StatusFakturJual.DIANTAR
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this, false, true))
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, true))
     }
 
     public void tambah(BuktiTerima buktiTerima) {
@@ -80,7 +83,8 @@ abstract class FakturJual extends Faktur {
         if (pengeluaranBarang == null) {
             throw new DataTidakKonsisten(this)
         }
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, this, true, true))
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, true))
         pengeluaranBarang = null
         status = StatusFakturJual.DIBUAT
     }

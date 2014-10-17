@@ -19,6 +19,8 @@ import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
 import domain.retur.Kemasan
@@ -30,7 +32,7 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturBeliRepository {
 
-    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+    List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiterimaSearch, boolean excludeDeleted = false) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             if (nomorSearch) {
@@ -41,9 +43,9 @@ class ReturBeliRepository {
                 and()
                 supplier__nama like("%${supplierSearch}%")
             }
-            if (sudahDiprosesSearch != null) {
+            if (sudahDiterimaSearch != null) {
                 and()
-                sudahDiproses eq(sudahDiprosesSearch)
+                sudahDiterima eq(sudahDiterimaSearch)
             }
         }
     }
@@ -113,7 +115,8 @@ class ReturBeliRepository {
         returBeli = findReturBeliById(returBeli.id)
         PenerimaanBarang penerimaanBarang = returBeli.terima()
         persist(penerimaanBarang)
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, null))
+        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, returBeli).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
         returBeli
     }
 

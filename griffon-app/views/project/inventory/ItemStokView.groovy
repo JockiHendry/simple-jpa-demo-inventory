@@ -43,11 +43,12 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                     templateRenderer("\${it.toString('dd-MM-yyyy')}")
                 }
-                glazedColumn(name: 'Jumlah', property: 'jumlah') {
-                    templateRenderer('${numberFormat(it)}')
-                }
-                glazedColumn(name: 'Nomor Referensi', property: 'nomorReferensi')
-                glazedColumn(name: 'Jenis', property: 'jenisReferensi')
+                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
+                glazedColumn(name: 'Referensi Finance', expression: {it.referensiStok?.deskripsiFinance()?: ''})
+                glazedColumn(name: 'Referensi Gudang', expression: {it.referensiStok?.deskripsiGudang()?: ''})
+                glazedColumn(name: 'Pihak Terkait', expression: {it.referensiStok?.pihakTerkait?: ''})
+                glazedColumn(name: 'Dibuat', expression: {it.referensiStok?.dibuatOleh?:''})
+                glazedColumn(name: 'Diubah', expression: {it.referensiStok?.diubahOleh?:''})
                 glazedColumn(name: 'Keterangan', property: 'keterangan')
             }
         }

@@ -67,6 +67,9 @@ class NomorService {
                 } catch (NumberFormatException nfe) {
                     log.warn "Tidak dapat membaca nomor faktur terakhir!"
                     nomorUrutTerakhir[tipe] = 0
+                } catch (StringIndexOutOfBoundsException ex) {
+                    log.warn "Ada faktur dengan format nomor yang salah!"
+                    nomorUrutTerakhir[tipe] = 0
                 }
             }
         }

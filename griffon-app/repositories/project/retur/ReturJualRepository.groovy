@@ -23,6 +23,8 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.inventory.Produk
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
@@ -165,7 +167,8 @@ class ReturJualRepository {
     public ReturJual hapusPengeluaranBarang(ReturJual returJual, PengeluaranBarang pengeluaranBarang) {
         returJual = findReturJualById(returJual.id)
         pengeluaranBarang = findPengeluaranBarangById(pengeluaranBarang.id)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, true, true))
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, true))
         returJual.hapus(pengeluaranBarang)
         returJual
     }
@@ -175,7 +178,8 @@ class ReturJualRepository {
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, false, true))
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, true))
         returJual
     }
 
@@ -184,7 +188,8 @@ class ReturJualRepository {
         pengeluaranBarang = returJualOlehSales.tukar(pengeluaranBarang)
         pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, null, false, true))
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJualOlehSales).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, true))
         returJualOlehSales
     }
 

@@ -176,6 +176,7 @@ class PurchaseOrderRepository {
         purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
         listItemBarang.each {
             it.produk = findProdukById(it.produk.id)
+            it.produk.supplier = purchaseOrder.supplier
             penerimaanBarang.tambah(it)
         }
         purchaseOrder.tambah(penerimaanBarang)

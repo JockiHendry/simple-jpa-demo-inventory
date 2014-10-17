@@ -551,7 +551,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals(-2, pis.jumlah)
             assertEquals(-2, pis.listItem[0].jumlah)
             assertEquals(LocalDate.now(), pis.listItem[0].tanggal)
-            assertNotNull(pis.listItem[0].nomorReferensi)
+            assertNotNull(pis.listItem[0].referensiStok)
+            assertEquals('FakturJualOlehSales', pis.listItem[0].referensiStok.classFinance)
+            assertEquals(f.nomor, pis.listItem[0].referensiStok.nomorFinance)
+            assertEquals(k.nama, pis.listItem[0].referensiStok.pihakTerkait)
 
             p2 = findProdukById(-2l)
             assertEquals(22, p2.jumlah)
@@ -561,7 +564,10 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertEquals(-5, pis.jumlah)
             assertEquals(-5, pis.listItem[0].jumlah)
             assertEquals(LocalDate.now(), pis.listItem[0].tanggal)
-            assertNotNull(pis.listItem[0].nomorReferensi)
+            assertNotNull(pis.listItem[0].referensiStok)
+            assertEquals('FakturJualOlehSales', pis.listItem[0].referensiStok.classFinance)
+            assertEquals(f.nomor, pis.listItem[0].referensiStok.nomorFinance)
+            assertEquals(k.nama, pis.listItem[0].referensiStok.pihakTerkait)
         }
     }
 

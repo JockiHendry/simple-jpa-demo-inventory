@@ -23,11 +23,15 @@ import domain.faktur.Faktur
 import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
+import domain.inventory.ItemStok
 import domain.inventory.Produk
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJualOlehSales
 import domain.user.PesanLevelMinimum
+import org.joda.time.LocalDate
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
@@ -72,7 +76,7 @@ class InventoryEventListenerService {
         log.info "Event onPerubahanStok mulai dikerjakan..."
 
         DaftarBarang daftarBarang = perubahanStok.source
-        Faktur faktur = perubahanStok.faktur
+        ReferensiStok referensiStok = perubahanStok.referensiStok
 
         daftarBarang.normalisasi().each { ItemBarang i ->
             log.info "Memproses item $i..."
@@ -80,21 +84,13 @@ class InventoryEventListenerService {
             String keterangan = null
             if (perubahanStok.invers) {
                 pengali *= -1
-                keterangan = 'Invers akibat penghapusan'
+                keterangan = 'Invers Hapus'
                 log.info "Item ini adalah item negasi dengan pengali [${pengali}]"
             }
-
-            if (keterangan==null) {
-                keterangan = faktur?.keterangan?: daftarBarang.keterangan
-            }
-            i.produk.perubahanStok(pengali * i.jumlah, faktur, daftarBarang.gudang, keterangan)
+            ItemStok itemStok = new ItemStok(LocalDate.now(), referensiStok, pengali * i.jumlah, keterangan)
+            i.produk.perubahanStok(daftarBarang.gudang, itemStok)
             if (perubahanStok.pakaiYangSudahDipesan) {
                 i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
-            }
-
-            // Mengisi supplier untuk produk (dengan asumsi bahwa 1 produk 1 supplier)
-            if (faktur instanceof PurchaseOrder) {
-                i.produk.supplier = faktur.supplier
             }
 
             periksaLevelMinimum(i.produk)
@@ -112,13 +108,22 @@ class InventoryEventListenerService {
         transfer.normalisasi().each { ItemBarang i ->
             log.info "Memproses item $i..."
 
-            int pengali = transferStok.invers? 1: -1
+            int pengali = -1
+            String keterangan
+            if (transferStok.invers) {
+                pengali = 1
+                keterangan = 'Invers Hapus'
+            }
 
             // Mengurangi gudang asal
-            i.produk.perubahanStok(pengali * i.jumlah, transfer, transfer.gudang, transfer.keterangan)
+            ItemStok itemStokAsal = new ItemStok(LocalDate.now(), new ReferensiStokBuilder(transfer).buat(),
+                pengali * i.jumlah, keterangan)
+            i.produk.perubahanStok(transfer.gudang, itemStokAsal)
 
             // Menambah gudang tujuan
-            i.produk.perubahanStok(-pengali * i.jumlah, transfer, transfer.tujuan, transfer.keterangan)
+            ItemStok itemStokTujuan = new ItemStok(LocalDate.now(), new ReferensiStokBuilder(transfer).buat(),
+                -pengali * i.jumlah, keterangan)
+            i.produk.perubahanStok(transfer.tujuan, itemStokTujuan)
 
             log.info "Selesai memproses item $i!"
         }

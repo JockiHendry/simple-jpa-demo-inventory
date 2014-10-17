@@ -30,6 +30,8 @@ import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.pembelian.PenerimaanBarang
 import project.inventory.GudangRepository
 import project.user.NomorService
@@ -261,7 +263,8 @@ class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
         }
 
         // Lakukan Perubahan stok (bertambah)
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this))
+        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
     }
 
     BigDecimal totalRetur() {

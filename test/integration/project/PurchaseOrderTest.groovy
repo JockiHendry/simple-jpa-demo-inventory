@@ -60,31 +60,26 @@ class PurchaseOrderTest extends DbUnitTestCase {
     }
 
     public void testPerubahanStokPadaTambahPenerimaanBarang() {
-        purchaseOrderRepository.withTransaction {
-            PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-1l)
-            assertEquals(37, p.listItemFaktur[0].produk.jumlah)
-            assertEquals(27, p.listItemFaktur[1].produk.jumlah)
-            assertEquals(28, p.listItemFaktur[2].produk.jumlah)
+        PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderByIdFetchComplete(-1l)
+        assertEquals(37, p.listItemFaktur[0].produk.jumlah)
+        assertEquals(27, p.listItemFaktur[1].produk.jumlah)
+        assertEquals(28, p.listItemFaktur[2].produk.jumlah)
 
-            PenerimaanBarang penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
-            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-1), 5))
-            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-2), 3))
-            p.tambah(penerimaanBarang)
-            Produk produk1 = purchaseOrderRepository.findProdukById(-1l)
-            Produk produk2 = purchaseOrderRepository.findProdukById(-2l)
-            assertEquals(p.supplier, produk1.supplier)
-            assertEquals(p.supplier, produk2.supplier)
-            assertEquals(42, produk1.jumlah)
-            assertEquals(30, produk2.jumlah)
-            penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING 2!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
-            penerimaanBarang.tambah(new ItemBarang(purchaseOrderRepository.findProdukById(-3), 4))
-            p.tambah(penerimaanBarang)
-            Produk produk3 = purchaseOrderRepository.findProdukById(-3l)
-            assertEquals(p.supplier, produk3.supplier)
-            assertEquals(32, produk3.jumlah)
-            assertTrue(p.diterimaPenuh())
-        }
+        PenerimaanBarang penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
+        p = purchaseOrderRepository.tambah(p, penerimaanBarang, [new ItemBarang(purchaseOrderRepository.findProdukById(-1), 5), new ItemBarang(purchaseOrderRepository.findProdukById(-2), 3)])
+        Produk produk1 = purchaseOrderRepository.findProdukById(-1l)
+        Produk produk2 = purchaseOrderRepository.findProdukById(-2l)
+        assertEquals(p.supplier, produk1.supplier)
+        assertEquals(p.supplier, produk2.supplier)
+        assertEquals(42, produk1.jumlah)
+        assertEquals(30, produk2.jumlah)
 
+        penerimaanBarang = new PenerimaanBarang(nomor: 'TESTING 2!!', tanggal: LocalDate.now(), gudang: purchaseOrderRepository.findGudangById(-1l))
+        p = purchaseOrderRepository.tambah(p, penerimaanBarang, [new ItemBarang(purchaseOrderRepository.findProdukById(-3), 4)])
+        Produk produk3 = purchaseOrderRepository.findProdukById(-3l)
+        assertEquals(p.supplier, produk3.supplier)
+        assertEquals(32, produk3.jumlah)
+        assertTrue(p.diterimaPenuh())
     }
 
     public void testPerubahanStokPadaHapusPenerimaanBarang() {

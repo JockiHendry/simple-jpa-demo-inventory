@@ -33,7 +33,7 @@ class StokProdukController {
     def showItemStok = {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Item Stok', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Item Stok', preferredSize: new Dimension(900, 620)]
             DialogUtils.showMVCGroup('itemStok', args, app, view, dialogProps)
         }
     }

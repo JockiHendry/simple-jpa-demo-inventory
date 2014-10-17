@@ -19,6 +19,8 @@ import domain.event.PerubahanStok
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.validation.InputPencairanPoin
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -48,7 +50,8 @@ class PencairanPoinTukarBarang extends PencairanPoin {
         DaftarBarangSementara daftarBarangSementara = new DaftarBarangSementara(listItemBarang, -1)
         daftarBarangSementara.gudang = konsumen.sales.gudang
         daftarBarangSementara.keterangan = 'Penukaran Poin'
-        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, null))
+        ReferensiStok ref = new ReferensiStokBuilder(daftarBarangSementara, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, ref))
     }
 
     @Override
@@ -56,7 +59,8 @@ class PencairanPoinTukarBarang extends PencairanPoin {
         DaftarBarangSementara daftarBarangSementara = new DaftarBarangSementara(listItemBarang, -1)
         daftarBarangSementara.gudang = konsumen.sales.gudang
         daftarBarangSementara.keterangan = 'Pembatalan Penukaran Poin'
-        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, null, true))
+        ReferensiStok ref = new ReferensiStokBuilder(daftarBarangSementara, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(daftarBarangSementara, ref, true))
     }
 
     Integer getJumlahPoin() {

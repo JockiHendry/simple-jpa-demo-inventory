@@ -29,9 +29,8 @@ class ItemStok {
     @Column(name='tanggalItemStok')
     LocalDate tanggal
 
-    String nomorReferensi
-
-    String jenisReferensi
+    @NotNull
+    ReferensiStok referensiStok
 
     @NotNull
     Integer jumlah

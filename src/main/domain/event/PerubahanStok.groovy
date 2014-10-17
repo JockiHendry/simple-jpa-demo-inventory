@@ -16,6 +16,7 @@
 package domain.event
 
 import domain.faktur.Faktur
+import domain.inventory.ReferensiStok
 import griffon.core.Event
 import domain.inventory.DaftarBarang
 import groovy.transform.Canonical
@@ -25,20 +26,12 @@ class PerubahanStok extends Event {
 
     boolean invers
     boolean pakaiYangSudahDipesan
-    Faktur faktur
+    ReferensiStok referensiStok
 
-    PerubahanStok(DaftarBarang daftarBarang, Faktur faktur) {
-        this(daftarBarang, faktur, false)
-    }
-
-    PerubahanStok(DaftarBarang daftarBarang, Faktur faktur, boolean invers) {
-        this(daftarBarang, faktur, invers, false)
-    }
-
-    PerubahanStok(DaftarBarang daftarBarang, Faktur faktur, boolean invers, boolean pakaiYangSudahDipesan) {
+    PerubahanStok(DaftarBarang daftarBarang, ReferensiStok referensiStok, boolean invers = false, boolean pakaiYangSudahDipesan = false) {
         super(daftarBarang)
         this.invers = invers
-        this.faktur = faktur
+        this.referensiStok = referensiStok
         this.pakaiYangSudahDipesan = pakaiYangSudahDipesan
     }
 

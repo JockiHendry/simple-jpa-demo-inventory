@@ -21,6 +21,8 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
@@ -37,11 +39,7 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testTambahPengeluaranBarang() {
-        FakturJual f = new FakturJual() {
-            public void tambah(PengeluaranBarang p) {
-                super.tambah(p)
-            }
-        }
+        FakturJual f = new FakturJualOlehSales()
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
@@ -80,11 +78,7 @@ class FakturJualTests extends GriffonUnitTestCase {
 //    }
 
     public void testHapusPengeluaranBarang() {
-        FakturJual f = new FakturJual() {
-            public void tambah(PengeluaranBarang p) {
-                super.tambah(p)
-            }
-        }
+        FakturJual f = new FakturJualOlehSales()
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
@@ -103,15 +97,12 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testTambahBuktiTerima() {
-        FakturJual f = new FakturJual() {
-            public void tambah(PengeluaranBarang p) {
-                super.tambah(p)
-            }
-        }
+        Konsumen k = new Konsumen()
+        FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
-        f.tambah(new ItemFaktur(produkA, 10))
-        f.tambah(new ItemFaktur(produkB, 7))
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 7, 12000))
 
         PengeluaranBarang p = new PengeluaranBarang()
         p.tambah(new ItemBarang(produkA, 10))
@@ -125,11 +116,8 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testHapusBuktiTerima() {
-        FakturJual f = new FakturJual() {
-            public void tambah(PengeluaranBarang p) {
-                super.tambah(p)
-            }
-        }
+        Konsumen k = new Konsumen()
+        FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
@@ -148,7 +136,7 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testStokTidakCukup() {
-        FakturJual f = new FakturJual() {}
+        FakturJual f = new FakturJualOlehSales()
         Produk produkA = new Produk(nama: 'Produk A', hargaDalamKota: 10000, jumlah: 50)
         Produk produkB = new Produk(nama: 'Produk B', hargaDalamKota: 12000, jumlah: 30)
         f.tambah(new ItemFaktur(produkB, 20))

@@ -21,6 +21,8 @@ import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
@@ -98,7 +100,8 @@ class PurchaseOrder extends Faktur {
             status = StatusPurchaseOrder.BARANG_DITERIMA
         }
 
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this))
+        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
     }
 
     void hapus(PenerimaanBarang penerimaanBarang) {
@@ -113,7 +116,8 @@ class PurchaseOrder extends Faktur {
                 status = StatusPurchaseOrder.DIBUAT
             }
         }
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, this, true))
+        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref, true))
     }
 
     void hapus(Pembayaran pembayaranHutang) {
