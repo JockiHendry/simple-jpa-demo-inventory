@@ -85,12 +85,19 @@ class ReturJualRepository {
         } else if (returJual instanceof ReturJualEceran) {
             returJual = buatReturEceran(returJual)
         }
-        ApplicationHolder.application?.event(new PerubahanRetur(returJual))
+
+        // Khusus untuk retur jual yang bukan kirim dari gudang utama, barang yang ditukar dianggap langsung dikirim.
+        if (returJual instanceof ReturJualOlehSales && !returJual.gudang.utama && !returJual.getKlaimsTukar().empty) {
+            tukar(returJual)
+        } else {
+            ApplicationHolder.application?.event(new PerubahanRetur(returJual))
+        }
+
         ApplicationHolder.application?.event(new PesanStok(returJual))
         returJual
 	}
 
-    public ReturJualOlehSales buatReturOlehSales(ReturJualOlehSales returJualOlehSales) {
+    private ReturJualOlehSales buatReturOlehSales(ReturJualOlehSales returJualOlehSales) {
         // Periksa apakah barang yang di-klaim tersedia
         returJualOlehSales.getKlaimsTukar().each { KlaimTukar k ->
             Produk produk = findProdukById(k.produk.id)
@@ -113,7 +120,7 @@ class ReturJualRepository {
         returJualOlehSales
     }
 
-    public ReturJualEceran buatReturEceran(ReturJualEceran returJualEceran) {
+    private ReturJualEceran buatReturEceran(ReturJualEceran returJualEceran) {
         // Periksa apakah ada retur jual eceran yang di-klaim selain tukar
         if (!returJualEceran.items.every { ItemRetur i -> i.klaims.every { it instanceof KlaimTukar }}) {
             throw new DataTidakKonsisten('Tidak ada klaim selain tukar di retur jual eceran!', returJualEceran)
@@ -177,11 +184,9 @@ class ReturJualRepository {
 
     public ReturJual tukar(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
+        returJual.getKlaimsTukar(true).each { it.produk = findProdukById(it.produk.id) }
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
-        pengeluaranBarang.items.each { it.produk = findProdukById(it.produk.id) }
         persist(pengeluaranBarang)
-        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, true))
         returJual
     }
 

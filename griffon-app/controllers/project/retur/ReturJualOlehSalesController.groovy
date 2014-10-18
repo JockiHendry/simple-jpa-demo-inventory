@@ -125,6 +125,10 @@ class ReturJualOlehSalesController {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
+        if (returJual.pengeluaranBarang != null) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Pengantaran sebelumnya telah dilakukan untuk retur ini!', 'Pesan kesalahan', JOptionPane.ERROR_MESSAGE)
+            return
+        }
         returJual = returJualRepository.tukar(returJual)
         execInsideUISync {
             view.table.selectionModel.selected[0] = returJual
@@ -184,7 +188,7 @@ class ReturJualOlehSalesController {
     }
 
     def showBarangYangHarusDikirim = {
-        ReturJualOlehSales retur = returJualRepository.findReturJualOlehSalesByIdFetchPengeluaranBarang(view.table.selectionModel.selected[0].id)
+        ReturJualOlehSales retur = returJualRepository.findReturJualOlehSalesById(view.table.selectionModel.selected[0].id)
         execInsideUISync {
             def args = [listItemBarang: retur.yangHarusDitukar().items, editable: false]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]

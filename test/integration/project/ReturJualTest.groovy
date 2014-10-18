@@ -24,6 +24,7 @@ import domain.pembelian.Supplier
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.retur.ItemRetur
+import domain.retur.Klaim
 import domain.retur.KlaimPotongPiutang
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
@@ -128,7 +129,6 @@ class ReturJualTest extends DbUnitTestCase {
         r.tambah(new ItemRetur(p2, 20, [new KlaimTukar(p2, 1)] as Set))
         r = returJualRepository.buat(r)
         Gudang g = gudangRepository.cariGudangUtama()
-        r.tukar(g, 'A Test')
         k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
         assertEquals(sisaPiutangAwal - 10000, k.jumlahPiutang())
 
@@ -162,7 +162,7 @@ class ReturJualTest extends DbUnitTestCase {
         retur = returJualRepository.buat(retur)
         returJualRepository.tukar(retur)
 
-        retur = returJualRepository.findReturJualOlehSalesByNomorFetchPengeluaranBarang(retur.nomor)
+        retur = returJualRepository.findReturJualOlehSalesByNomor(retur.nomor)
         assertNotNull(retur.pengeluaranBarang)
         assertTrue(retur.items[0].getKlaims(KlaimTukar).find { it.produk == produk1 }.sudahDiproses)
         assertTrue(retur.items[1].getKlaims(KlaimTukar).find { it.produk == produk2 }.sudahDiproses)
@@ -196,7 +196,7 @@ class ReturJualTest extends DbUnitTestCase {
 
         // Hapus
         returJualRepository.hapusPengeluaranBarang(retur)
-        retur = returJualRepository.findReturJualOlehSalesByNomorFetchPengeluaranBarang(retur.nomor)
+        retur = returJualRepository.findReturJualOlehSalesByNomor(retur.nomor)
         assertFalse(retur.sudahDiproses)
         assertNull(retur.pengeluaranBarang)
         produk1 = returJualRepository.findProdukByIdFetchStokProduk(-1l)
@@ -304,6 +304,30 @@ class ReturJualTest extends DbUnitTestCase {
         // Pastikan jumlah akan dikirim berkurang setelah retur dihapus.
         produk1 = returJualRepository.findProdukById(-1l)
         produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+    }
+
+    void testBuatReturLuarKota() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-2l)
+        Gudang g = returJualRepository.findGudangById(-2l)
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 4, [new KlaimTukar(produk1, 4)] as Set))
+        retur.tambah(new ItemRetur(produk2, 6, [new KlaimTukar(produk2, 6)] as Set))
+        retur = returJualRepository.buat(retur)
+
+        // Pastikan bahwa penukaran telah dilakukan
+        assertNotNull(retur.pengeluaranBarang)
+        assertTrue(retur.yangHarusDitukar().items.empty)
+        assertTrue(retur.items.every { ItemRetur i -> i.klaims.every { Klaim klaim -> klaim.sudahDiproses }})
+
+        // Pastikan stok barang sudah berkurang
+        produk1 = returJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produk2 = returJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(0, produk1.stok(g).jumlah)
+        assertEquals(0, produk2.stok(g).jumlah)
         assertEquals(0, produk1.jumlahAkanDikirim)
         assertEquals(0, produk2.jumlahAkanDikirim)
     }

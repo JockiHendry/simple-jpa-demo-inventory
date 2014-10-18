@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Referensi
@@ -22,6 +23,8 @@ import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.inventory.SebuahDaftarBarang
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
@@ -52,7 +55,7 @@ abstract class ReturJual implements SebuahDaftarBarang {
     @NotNull
     Boolean sudahDiproses = false
 
-    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
     PengeluaranBarang pengeluaranBarang
 
     @NotEmpty @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true) @OrderColumn @Valid
@@ -85,7 +88,10 @@ abstract class ReturJual implements SebuahDaftarBarang {
         sudahDiproses = items.every { it.isSudahDiproses() }?: false
     }
 
-    PengeluaranBarang tukar(Gudang gudang, String namaKonsumen) {
+    PengeluaranBarang tukar(Gudang gudang, String namaKonsumen, boolean pakaiYangSudahDipesan = true) {
+        if (this.pengeluaranBarang != null) {
+            throw new DataTidakBolehDiubah('Penukaran telah dilakukan!', this)
+        }
         DaftarBarangSementara daftarYangHarusDitukar = yangHarusDitukar()
         if (daftarYangHarusDitukar.items.empty) {
             throw new UnsupportedOperationException("Tidak ada penukaran yang dapat dilakukan untuk retur jual [$nomor]")
@@ -102,6 +108,10 @@ abstract class ReturJual implements SebuahDaftarBarang {
 
         // Semua klaim ditukar sudah diproses
         getKlaimsTukar(true).each { proses(it) }
+
+        // Event perubahan stok
+        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, pakaiYangSudahDipesan))
 
         pengeluaranBarang
     }

@@ -31,11 +31,6 @@ import javax.validation.constraints.*
 import org.joda.time.*
 import griffon.util.*
 
-@NamedEntityGraphs([
-    @NamedEntityGraph(name='ReturJualOlehSales.PengeluaranBarang', attributeNodes=[
-        @NamedAttributeNode('pengeluaranBarang'),
-    ])
-])
 @DomainClass @Entity @Canonical
 class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
 
@@ -81,7 +76,7 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
     }
 
     PengeluaranBarang tukar() {
-        super.tukar(gudang, konsumen.nama)
+        super.tukar(gudang, konsumen.nama, gudang.utama)
     }
 
     @Override
