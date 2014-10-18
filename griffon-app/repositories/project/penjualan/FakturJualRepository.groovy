@@ -170,9 +170,10 @@ class FakturJualRepository {
                 jatuhTempo eq(tanggalJatuhTempo)
             }
             List statusSearch = []
-            if (statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS || statusPiutangSearch == StatusPiutangSearch.SEMUA) {
+            if ((statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
                 statusSearch << StatusFakturJual.DITERIMA
-            } else if (statusPiutangSearch == StatusPiutangSearch.LUNAS || statusPiutangSearch == StatusPiutangSearch.SEMUA) {
+            }
+            if ((statusPiutangSearch == StatusPiutangSearch.LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
                 statusSearch << StatusFakturJual.LUNAS
             }
             and()
