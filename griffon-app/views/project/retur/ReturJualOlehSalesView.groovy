@@ -64,6 +64,7 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind {model.showPiutang}) {
                 templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
             }
+            glazedColumn(name: 'Ref Faktur', expression: {it.fakturPotongPiutang.collect{it.nomor}.join(',')})
             glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
                 templateRenderer(exp: { it? 'Y': ''})
             }

@@ -10,7 +10,7 @@
            "      %{176 R2}      Retur Jual  ${companyName:62} Hal: %{PAGE_NO}",
            "    %{176 R6}    Nomor            : ${nomor:25}                 Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
            "   %{176 R8}   Konsumen         : ${konsumen.nama:40}",
-           "     %{176 R4}     Potongan Piutang : {{bean.jumlahPotongPiutang()::currency}}",
+           "     %{176 R4}     Potongan Piutang : {{bean.jumlahPotongPiutang()::currency}}  {{bean.fakturPotongPiutang.collect{it.nomor}.join(',')}}",
            "      %{176 R2}      Qty Ditukar      : {{bean.jumlahDitukar()}}"
         ],
         "detail": [
@@ -20,9 +20,11 @@
                 "underlineSeparator": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
-                    {"source": "bean.getDescription()", "width": 78, "caption": "Nama Produk", "wrap": true},
-                    {"source": "jumlah::right", "width": 6, "caption": "Qty"},
-                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"}
+                    {"source": "bean.getDescription()", "width": 64, "caption": "Nama Produk", "wrap": true},
+                    {"source": "bean.jumlahBarangDitukar()::right", "width": 8, "caption": "Qty Tkr"},
+                    {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"},
+                    {"source": "bean.jumlahPotongPiutang()==0?null:bean.jumlahPotongPiutang()::number::right",
+                     "width": 15, "caption": "Potong Piutang"}
                 ]
             },
             " %{UNDERLINE}%{BOLD}{{keterangan?'Ket : ' + keterangan:''::94}}%{BOLD}%{UNDERLINE}"

@@ -22,7 +22,6 @@ import domain.faktur.Referensi
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.pembelian.PenerimaanBarang
-import domain.retur.ReturJual
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -157,7 +156,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         k.tambahFakturBelumLunas(f)
         f.kirim('Xtra Street')
         f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
-        Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 1000, true, null, new Referensi('R-001', FakturJualOlehSales))
+        Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 1000, true, null, new Referensi(FakturJualOlehSales, 'R-001'))
         Pembayaran pembayaran2 = new Pembayaran(LocalDate.now(), 240000)
         f.bayar(pembayaran1)
         f.bayar(pembayaran2)

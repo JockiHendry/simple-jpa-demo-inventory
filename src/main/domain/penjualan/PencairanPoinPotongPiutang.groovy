@@ -19,10 +19,6 @@ import domain.faktur.Referensi
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
 class PencairanPoinPotongPiutang extends PencairanPoin {
@@ -34,7 +30,7 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
 
     @Override
     void proses() {
-        konsumen.potongPiutang(getNominal(), new Referensi(nomor, PencairanPoin))
+        konsumen.potongPiutang(getNominal(), new Referensi(PencairanPoin, nomor))
     }
 
     @Override

@@ -15,7 +15,6 @@
  */
 package domain.penjualan
 
-import domain.exception.PencairanPoinTidakValid
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
@@ -127,7 +126,8 @@ class Konsumen implements Comparable {
         }
     }
 
-    public void potongPiutang(BigDecimal jumlah, Referensi referensi = null) {
+    public Set<Referensi> potongPiutang(BigDecimal jumlah, Referensi referensi = null) {
+        Set<Referensi> hasil = [] as Set
         BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(): 0}?: 0
         if (jumlah > jumlahPiutangYangDapatDibayar) {
             throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
@@ -148,9 +148,10 @@ class Konsumen implements Comparable {
                 faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true, referensi: referensi))
                 jumlah = 0
             }
-
+            hasil << new Referensi(FakturJualOlehSales, faktur.nomor)
             if (jumlah==0) break
         }
+        hasil
     }
 
     public void tambahPoin(Integer poin, String referensi = null) {

@@ -25,12 +25,12 @@ class Referensi {
 
     public Referensi() {}
 
-    public Referensi(String nomor, Class clazz) {
+    public Referensi(Class clazz, String nomor) {
         this.nomor = nomor
         this.namaClass = clazz.simpleName
     }
 
-    public Referensi(String nomor, String namaClass) {
+    public Referensi(String namaClass, String nomor) {
         this.nomor = nomor
         this.namaClass = namaClass
     }

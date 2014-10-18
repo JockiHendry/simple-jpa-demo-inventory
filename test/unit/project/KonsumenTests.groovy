@@ -15,9 +15,9 @@
  */
 package project
 
-import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.faktur.KewajibanPembayaran
+import domain.faktur.Referensi
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -170,26 +170,33 @@ class KonsumenTests extends GriffonUnitTestCase {
         assertEquals(300000, mrNiceGuy.jumlahPiutang())
         assertEquals(300000, mrNiceGuy.creditTerpakai)
 
-        mrNiceGuy.potongPiutang(150000)
+        Set hasil = mrNiceGuy.potongPiutang(150000)
         assertEquals(150000, mrNiceGuy.jumlahPiutang())
         assertEquals(300000, mrNiceGuy.creditTerpakai)
         assertEquals(3, mrNiceGuy.listFakturBelumLunas.size())
         assertEquals(50000, f1.sisaPiutang())
         assertEquals(70000, f2.sisaPiutang())
         assertEquals(30000, f3.sisaPiutang())
+        assertEquals(1, hasil.size())
+        assertTrue(hasil.contains(new Referensi(FakturJualOlehSales, 'F1')))
 
-        mrNiceGuy.potongPiutang(50000)
+        hasil = mrNiceGuy.potongPiutang(50000)
         assertEquals(100000, mrNiceGuy.jumlahPiutang())
         assertEquals(100000, mrNiceGuy.creditTerpakai)
         assertEquals(2, mrNiceGuy.listFakturBelumLunas.size())
         assertEquals(70000, f2.sisaPiutang())
         assertEquals(30000, f3.sisaPiutang())
+        assertEquals(1, hasil.size())
+        assertTrue(hasil.contains(new Referensi(FakturJualOlehSales, 'F1')))
 
-        mrNiceGuy.potongPiutang(80000)
+        hasil = mrNiceGuy.potongPiutang(80000)
         assertEquals(20000, mrNiceGuy.jumlahPiutang())
         assertEquals(30000, mrNiceGuy.creditTerpakai)
         assertEquals(1, mrNiceGuy.listFakturBelumLunas.size())
         assertEquals(20000, f3.sisaPiutang())
+        assertEquals(2, hasil.size())
+        assertTrue(hasil.contains(new Referensi(FakturJualOlehSales, 'F2')))
+        assertTrue(hasil.contains(new Referensi(FakturJualOlehSales, 'F3')))
 
         shouldFail { mrNiceGuy.potongPiutang(500000)}
     }

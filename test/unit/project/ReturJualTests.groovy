@@ -17,6 +17,7 @@ package project
 
 import domain.exception.DataTidakKonsisten
 import domain.faktur.ItemFaktur
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
@@ -142,7 +143,7 @@ class ReturJualTests extends GriffonUnitTestCase {
         Konsumen konsumen = new Konsumen(sales: sales)
         Produk produk1 = new Produk(jumlah: 10)
         Produk produk2 = new Produk(jumlah: 20)
-        FakturJualOlehSales f = new FakturJualOlehSales(konsumen)
+        FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F-01', konsumen: konsumen)
         f.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
         f.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
         f.kirim("test")
@@ -157,6 +158,8 @@ class ReturJualTests extends GriffonUnitTestCase {
         r.potongPiutang()
         assertEquals(0, r.sisaPotongPiutang())
         assertEquals(250000, konsumen.jumlahPiutang())
+        assertEquals(1, r.fakturPotongPiutang.size())
+        assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-01')))
     }
 
     public void testToDaftarBarang() {

@@ -26,9 +26,8 @@ import groovy.transform.*
 import project.user.NomorService
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
+
 import org.joda.time.*
 import griffon.util.*
 
@@ -50,6 +49,13 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
         getKlaims(KlaimPotongPiutang, hanyaBelumDiproses)
     }
 
+    @ElementCollection(fetch=FetchType.EAGER) @CollectionTable(name='returjual_fakturs')
+    Set<Referensi> fakturPotongPiutang = [] as Set
+
+    void tambah(Referensi referensi) {
+        fakturPotongPiutang << referensi
+    }
+
     BigDecimal jumlahPotongPiutang() {
         getKlaimsPotongPiutang().sum { KlaimPotongPiutang k -> k.jumlah }?: 0
     }
@@ -58,9 +64,10 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
         if (konsumen==null) {
             throw new UnsupportedOperationException("Konsumen untuk [$this] harus di-isi sebelum melakukan pemotongan piutang!")
         }
-        Referensi referensi = new Referensi(nomor, ReturJual)
+        Referensi referensi = new Referensi(ReturJual, nomor)
         getKlaimsPotongPiutang(true).each { KlaimPotongPiutang k ->
-            konsumen.potongPiutang(k.jumlah, referensi)
+            Set daftarFaktur = konsumen.potongPiutang(k.jumlah, referensi)
+            fakturPotongPiutang.addAll(daftarFaktur)
             proses(k)
         }
     }

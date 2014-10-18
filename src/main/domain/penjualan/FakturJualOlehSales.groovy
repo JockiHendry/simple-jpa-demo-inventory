@@ -16,7 +16,6 @@
 package domain.penjualan
 
 import domain.event.PerubahanStok
-import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
@@ -176,7 +175,7 @@ class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
     }
 
     BigDecimal jumlahPiutang() {
-        piutang.jumlah
+        piutang?.jumlah?: 0
     }
 
     BigDecimal jumlahDibayar() {
@@ -254,7 +253,7 @@ class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
 
         // Kurangi piutang bila ada
         if (piutang) {
-            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(nomor, FakturJualOlehSales)))
+            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(FakturJualOlehSales, nomor)))
         }
 
         // Kurangi bonus untuk konsumen tersebut
