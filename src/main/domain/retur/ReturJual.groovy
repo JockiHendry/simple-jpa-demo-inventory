@@ -52,8 +52,8 @@ abstract class ReturJual implements SebuahDaftarBarang {
     @NotNull
     Boolean sudahDiproses = false
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
-    Set<PengeluaranBarang> pengeluaranBarang = [] as Set
+    @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+    PengeluaranBarang pengeluaranBarang
 
     @NotEmpty @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true) @OrderColumn @Valid
     List<ItemRetur> items = []
@@ -98,7 +98,7 @@ abstract class ReturJual implements SebuahDaftarBarang {
         )
         daftarYangHarusDitukar.items.each { pengeluaranBarang.tambah(it) }
         pengeluaranBarang.diterima(LocalDate.now(), namaKonsumen, '[Retur Jual]')
-        this.pengeluaranBarang << pengeluaranBarang
+        this.pengeluaranBarang = pengeluaranBarang
 
         // Semua klaim ditukar sudah diproses
         getKlaimsTukar(true).each { proses(it) }
@@ -106,20 +106,19 @@ abstract class ReturJual implements SebuahDaftarBarang {
         pengeluaranBarang
     }
 
-    void hapus(PengeluaranBarang pengeluaranBarangDihapus) {
-        if (!pengeluaranBarang.contains(pengeluaranBarangDihapus)) {
-            throw IllegalArgumentException("Tidak ada pengeluaran barang yang bisa dihapus: ${pengeluaranBarangDihapus.nomor}")
+    void hapusPenukaran() {
+        if (!pengeluaranBarang) {
+            throw IllegalArgumentException("Tidak ada pengeluaran barang yang bisa dihapus!")
         }
-        pengeluaranBarangDihapus.items.each { ItemBarang i ->
+        pengeluaranBarang.items.each { ItemBarang i ->
             for (KlaimTukar k : getKlaimsTukar()) {
                 if ((k.produk == i.produk) && (i.jumlah == i.jumlah) && (k.sudahDiproses)) {
                     k.sudahDiproses = false
-                    break
                 }
             }
         }
         sudahDiproses = false
-        pengeluaranBarang.remove(pengeluaranBarangDihapus)
+        pengeluaranBarang = null
     }
 
     abstract PengeluaranBarang tukar()

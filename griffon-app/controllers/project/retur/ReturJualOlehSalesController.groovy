@@ -120,6 +120,31 @@ class ReturJualOlehSalesController {
         }
     }
 
+    def prosesTukar = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        ReturJual returJual = view.table.selectionModel.selected[0]
+        returJual = returJualRepository.tukar(returJual)
+        execInsideUISync {
+            view.table.selectionModel.selected[0] = returJual
+            clear()
+        }
+    }
+
+    @NeedSupervisorPassword
+    def hapusPengeluaran = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        ReturJual returJual = view.table.selectionModel.selected[0]
+        returJual = returJualRepository.hapusPengeluaranBarang(returJual)
+        execInsideUISync {
+            view.table.selectionModel.selected[0] = returJual
+            clear()
+        }
+    }
+
     @NeedSupervisorPassword
     def delete = {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
@@ -154,17 +179,6 @@ class ReturJualOlehSalesController {
             DialogUtils.showMVCGroup('itemReturAsChild', args, app, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemReturList)
-            }
-        }
-    }
-
-    def showPengiriman = {
-        ReturJualOlehSales retur = returJualRepository.findReturJualOlehSalesByIdFetchPengeluaranBarang(view.table.selectionModel.selected[0].id)
-        execInsideUISync {
-            def args = [parent: retur]
-            def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('pengirimanRetur', args, app, view, props) { m, v, c ->
-                view.table.selectionModel.selected[0] = m.parent
             }
         }
     }

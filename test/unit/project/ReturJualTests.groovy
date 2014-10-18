@@ -351,55 +351,6 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(0, i.jumlahPotongPiutang())
     }
 
-    void testTukarPengeluaranBarang() {
-        Supplier supplier = new Supplier()
-        Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
-        Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
-        Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
-        Konsumen konsumen = new Konsumen()
-        ReturJualOlehSales retur = new ReturJualOlehSales(konsumen: konsumen)
-        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 10)] as Set))
-        retur.tambah(new ItemRetur(produk2, 20, [new KlaimTukar(produk2, 20)] as Set))
-        retur.tambah(new ItemRetur(produk3, 30, [new KlaimTukar(produk3, 25)] as Set))
-
-        PengeluaranBarang p1 = new PengeluaranBarang(nomor: 'P-01')
-        p1.tambah(new ItemBarang(produk1, 10))
-        retur.tukar(p1)
-        assertEquals(1, retur.pengeluaranBarang.size())
-        assertTrue(retur.items[0].getKlaims(KlaimTukar).find { it.produk == produk1 }.sudahDiproses)
-        assertFalse(retur.items[1].getKlaims(KlaimTukar).find { it.produk == produk2 }.sudahDiproses)
-        assertFalse(retur.items[2].getKlaims(KlaimTukar).find { it.produk == produk3 }.sudahDiproses)
-        DaftarBarang d = retur.yangHarusDitukar()
-        assertEquals(2, d.items.size())
-        assertTrue(d.items.containsAll([new ItemBarang(produk2, 20), new ItemBarang(produk3, 25)]))
-        assertFalse(retur.sudahDiproses)
-
-        PengeluaranBarang p2 = new PengeluaranBarang(nomor: 'P-02')
-        p2.tambah(new ItemBarang(produk2, 30))
-        p2.tambah(new ItemBarang(produk3, 35))
-        shouldFail(DataTidakKonsisten) {
-            retur.tukar(p2)
-        }
-
-        PengeluaranBarang p3 = new PengeluaranBarang(nomor: 'P-03')
-        p3.tambah(new ItemBarang(produk2, 20))
-        p3.tambah(new ItemBarang(produk3, 25))
-        retur.tukar(p3)
-        assertEquals(2, retur.pengeluaranBarang.size())
-        assertTrue(retur.items[0].getKlaims(KlaimTukar).find { it.produk == produk1 }.sudahDiproses)
-        assertTrue(retur.items[1].getKlaims(KlaimTukar).find { it.produk == produk2 }.sudahDiproses)
-        assertTrue(retur.items[2].getKlaims(KlaimTukar).find { it.produk == produk3 }.sudahDiproses)
-        d = retur.yangHarusDitukar()
-        assertEquals(0, d.items.size())
-        assertEquals(2, retur.pengeluaranBarang.size())
-        assertTrue(retur.pengeluaranBarang*.nomor.containsAll('P-01', 'P-03'))
-        assertTrue(retur.sudahDiproses)
-
-        shouldFail(DataTidakKonsisten) {
-            retur.tukar(p3)
-        }
-    }
-
     void testHapusPengeluaranBarang() {
         Supplier supplier = new Supplier()
         Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
@@ -410,34 +361,13 @@ class ReturJualTests extends GriffonUnitTestCase {
         retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 3), new KlaimTukar(produk1, 7)] as Set))
         retur.tambah(new ItemRetur(produk2, 20, [new KlaimTukar(produk2, 20)] as Set))
         retur.tambah(new ItemRetur(produk3, 30, [new KlaimTukar(produk3, 25)] as Set))
+        retur.tukar()
 
-        PengeluaranBarang p1 = new PengeluaranBarang(nomor: 'P-01')
-        p1.tambah(new ItemBarang(produk1, 3))
-        p1.tambah(new ItemBarang(produk1, 7))
-        retur.tukar(p1)
-
-        PengeluaranBarang p2 = new PengeluaranBarang(nomor: 'P-03')
-        p2.tambah(new ItemBarang(produk2, 20))
-        p2.tambah(new ItemBarang(produk3, 25))
-        retur.tukar(p2)
-
-        // Hapus p2
-        retur.hapus(p2)
+        // Hapus
+        retur.hapusPenukaran()
         assertFalse(retur.sudahDiproses)
-        assertEquals(1, retur.pengeluaranBarang.size())
-        assertFalse(retur.pengeluaranBarang.contains(p2))
+        assertNull(retur.pengeluaranBarang)
         DaftarBarang d = retur.yangHarusDitukar()
-        assertEquals(2, d.items.size())
-        assertEquals(new ItemBarang(produk2, 20), d.items[0])
-        assertEquals(new ItemBarang(produk3, 25), d.items[1])
-        assertTrue(retur.items[0].klaims.every { it.sudahDiproses })
-        assertTrue(retur.items[1].klaims.every { !it.sudahDiproses })
-        assertTrue(retur.items[2].klaims.every { !it.sudahDiproses })
-
-        // Hapus p1
-        retur.hapus(p1)
-        assertEquals(0, retur.pengeluaranBarang.size())
-        d = retur.yangHarusDitukar()
         assertEquals(3, d.items.size())
         assertEquals(new ItemBarang(produk1, 10), d.items[0])
         assertEquals(new ItemBarang(produk2, 20), d.items[1])
