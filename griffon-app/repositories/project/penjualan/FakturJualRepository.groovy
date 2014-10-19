@@ -211,8 +211,9 @@ class FakturJualRepository {
 
         // Periksa limit bila perlu
         if (!tanpaLimit) {
-            if (!konsumen.bolehKredit(fakturJual.total())) {
-                throw new MelebihiBatasKredit(konsumen)
+            List<String> pesanKesalahan = []
+            if (!konsumen.bolehKredit(fakturJual.total(), pesanKesalahan)) {
+                throw new MelebihiBatasKredit(konsumen, pesanKesalahan)
             }
         }
 
@@ -321,8 +322,9 @@ class FakturJualRepository {
                 // Periksa limit bila mengubah konsumen
                 if (konsumen != nilaiFakturBaru.konsumen) {
                     konsumen = findKonsumenById(nilaiFakturBaru.konsumen.id)
-                    if (!konsumen.bolehKredit(mergedFakturJual.total())) {
-                        throw new MelebihiBatasKredit(konsumen)
+                    List<String> pesanKesalahan = []
+                    if (!konsumen.bolehKredit(mergedFakturJual.total(), pesanKesalahan)) {
+                        throw new MelebihiBatasKredit(konsumen, pesanKesalahan)
                     }
                 }
             }

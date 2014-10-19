@@ -20,5 +20,6 @@ import groovy.beans.Bindable
 class SupervisorPasswordModel {
 
     boolean ok = false
+    String pesan
 
 }

@@ -15,15 +15,28 @@
  */
 package domain.exception;
 
-import domain.penjualan.Konsumen;
+import domain.penjualan.Konsumen
+import griffon.util.GriffonNameUtils
 
 class MelebihiBatasKredit extends RuntimeException {
 
     Konsumen konsumen
+    List<String> pesanKesalahan
 
-    MelebihiBatasKredit(Konsumen konsumen) {
-        super("Konsumen " + konsumen.getNama() + " tidak boleh melakukan kredit lagi!")
+    MelebihiBatasKredit(Konsumen konsumen, List<String> pesanKesalahan = []) {
+        super("${konsumen.nama} tidak boleh melakukan kredit lagi!")
         this.konsumen = konsumen
+        this.pesanKesalahan = pesanKesalahan
     }
 
+    String getHTMLMessage() {
+        StringBuilder result = new StringBuilder("<html>${konsumen.nama} tidak boleh melakukan kredit lagi!")
+        if (!pesanKesalahan.empty) {
+            result.append('<br><ul>')
+            pesanKesalahan.each { result.append('<li>' + GriffonNameUtils.capitalize(it)) }
+            result.append('</ul>')
+        }
+        result.append('</html>')
+        result.toString()
+    }
 }

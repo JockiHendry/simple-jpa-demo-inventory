@@ -17,17 +17,10 @@ package project.main
 
 import net.miginfocom.swing.MigLayout
 
-import java.awt.FlowLayout
-
-import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
-import static javax.swing.SwingConstants.CENTER
-import static javax.swing.SwingConstants.CENTER
-
-panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left][left,grow]',''), focusCycleRoot: true) {
-
+panel(id: 'mainPanel', layout: new MigLayout('', '[left][left][left][left,grow]',''), focusCycleRoot: true) {
+    label(text: bind {model.pesan}, constraints: 'span,wrap')
     label('<html><strong>PENTING:</strong> Untuk melakukan operasi ini, Anda harus menghubungi supervisor untuk memperoleh persetujuan!</html>',
         constraints: 'span,wrap')
-
     label('Password Supervisor:')
     passwordField(id: 'password', columns: 20, errorPath: 'password', actionPerformed: controller.proses)
     button('Proses', actionPerformed: controller.proses)

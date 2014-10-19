@@ -23,10 +23,16 @@ import javax.swing.SwingUtilities
 
 class SupervisorPasswordController {
 
-    def model
+    SupervisorPasswordModel model
     def view
     PengaturanRepository pengaturanRepository
     PasswordService passwordService
+
+    void mvcGroupInit(Map args) {
+        if (args.containsKey('pesan')) {
+            model.pesan = args.pesan
+        }
+    }
 
     def proses = {
 

@@ -92,10 +92,14 @@ class Konsumen implements Comparable {
         listFakturBelumLunas.any { it.sudahJatuhTempo() }
     }
 
-    public boolean bolehKredit(BigDecimal pengajuan) {
-        if (adaTagihanJatuhTempo()) return false
-        if ((jumlahPiutang() + pengajuan) > creditLimit) return false
-        true
+    public boolean bolehKredit(BigDecimal pengajuan, List<String> pesanKesalahan = []) {
+        if (adaTagihanJatuhTempo()) {
+            pesanKesalahan << 'ada tagihan jatuh tempo'
+        }
+        if ((jumlahPiutang() + pengajuan) > creditLimit) {
+            pesanKesalahan << "melebihi batas kredit ${NumberFormat.currencyInstance.format(creditLimit)}"
+        }
+        pesanKesalahan.empty
     }
 
     public void tambahFakturBelumLunas(FakturJualOlehSales faktur) {
