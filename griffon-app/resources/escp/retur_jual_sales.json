@@ -20,7 +20,7 @@
                 "underlineSeparator": true,
                 "columns": [
                     {"source": "row::right", "width": 3, "caption": "No"},
-                    {"source": "bean.getDescription()", "width": 64, "caption": "Nama Produk", "wrap": true},
+                    {"source": "bean.getDescription()", "width": 61, "caption": "Nama Produk", "wrap": true},
                     {"source": "bean.jumlahBarangDitukar()::right", "width": 8, "caption": "Qty Tkr"},
                     {"source": "produk.satuan.singkatan", "width": 6, "caption": "Unit"},
                     {"source": "bean.jumlahPotongPiutang()==0?null:bean.jumlahPotongPiutang()::number::right",
