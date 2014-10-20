@@ -27,7 +27,7 @@
                      "width": 15, "caption": "Potong Piutang"}
                 ]
             },
-            " %{UNDERLINE}%{BOLD}{{keterangan?'Ket : ' + keterangan:''::94}}%{BOLD}%{UNDERLINE}"
+            " %{BOLD}%{UNDERLINE}{{keterangan?'Ket : ' + keterangan:''::94::trim}}%{UNDERLINE}%{BOLD}"
         ],
         "lastPageFooter": [
             "",
