@@ -78,6 +78,14 @@ class ReturJualTest extends DbUnitTestCase {
     }
 
     public void testJumlahReturDiProdukSetelahHapus() {
+        returJualRepository.withTransaction {
+            Produk p1 = findProdukById(-1l)
+            Produk p2 = findProdukById(-2l)
+            Produk p3 = findProdukById(-3l)
+            p1.jumlahAkanDikirim = 100
+            p2.jumlahAkanDikirim = 100
+            p3.jumlahAkanDikirim = 100
+        }
         ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-1l)
         returJualRepository.hapus(returJual)
 
@@ -92,6 +100,12 @@ class ReturJualTest extends DbUnitTestCase {
 
     public void testTukarBaru() {
         returJualRepository.withTransaction {
+            Produk p1 = findProdukById(-1l)
+            Produk p2 = findProdukById(-2l)
+            Produk p3 = findProdukById(-3l)
+            p1.jumlahAkanDikirim = 100
+            p2.jumlahAkanDikirim = 100
+            p3.jumlahAkanDikirim = 100
             ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-1l)
             returJual = returJualRepository.tukar(returJual)
 
@@ -101,9 +115,9 @@ class ReturJualTest extends DbUnitTestCase {
             assertTrue(returJual.pengeluaranBarang.sudahDiterima())
 
             Gudang g = findGudangById(-1l)
-            Produk p1 = findProdukById(-1l)
-            Produk p2 = findProdukById(-2l)
-            Produk p3 = findProdukById(-3l)
+            p1 = findProdukById(-1l)
+            p2 = findProdukById(-2l)
+            p3 = findProdukById(-3l)
 
             assertEquals('Mr. Nice Guy', returJual.pengeluaranBarang.buktiTerima.namaPenerima)
             assertEquals(LocalDate.now(), returJual.pengeluaranBarang.buktiTerima.tanggalTerima)

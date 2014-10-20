@@ -49,7 +49,7 @@ class ReturJualEceran extends ReturJual implements BolehPesanStok {
     }
 
     @Override
-    boolean isValid() {
+    boolean isBolehPesanStok() {
         true
     }
 

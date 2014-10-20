@@ -19,7 +19,6 @@ import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.event.PesanStok
 import domain.event.TransferStok
-import domain.faktur.Faktur
 import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
@@ -28,8 +27,6 @@ import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
-import domain.pembelian.PurchaseOrder
-import domain.penjualan.FakturJualOlehSales
 import domain.user.PesanLevelMinimum
 import org.joda.time.LocalDate
 import project.user.PesanRepository
@@ -61,7 +58,7 @@ class InventoryEventListenerService {
         log.info "Event onPesanStok mulai dikerjakan..."
 
         BolehPesanStok source = pesanStok.source
-        if (!source.valid) return
+        if (!source.bolehPesanStok) return
 
         int pengali = pesanStok.invers? -1: 1
         source.yangDipesan().each {

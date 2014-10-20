@@ -15,10 +15,15 @@
  */
 package project.main
 
+import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
+import domain.inventory.ItemBarang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
+import domain.penjualan.FakturJual
+import domain.penjualan.StatusFakturJual
+import domain.retur.ReturJual
 import org.dbunit.database.DatabaseConnection
 import org.dbunit.dataset.IDataSet
 import org.dbunit.dataset.csv.CsvDataSet
@@ -27,7 +32,6 @@ import org.dbunit.operation.DatabaseOperation
 import org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
 import project.inventory.ProdukRepository
 import simplejpa.SimpleJpaUtil
-import javax.swing.JOptionPane
 import javax.swing.JTextArea
 import java.nio.file.Paths
 import java.sql.Connection
@@ -121,9 +125,39 @@ class RestoreController {
     }
 
     def refreshJumlahAkanDikirim = {
-        produkRepository.refreshJumlahAkanDikirim()
-        JOptionPane.showMessageDialog(view.mainPanel, 'Jumlah akan dikirim untuk seluruh produk sudah diperbaharui!', 'Sukses', JOptionPane.INFORMATION_MESSAGE)
+        JTextArea output = view.output
+        execInsideUISync { output.append("Mulai...\n\n") }
+        def pengiriman = [:]
+        produkRepository.withTransaction {
+            findAllFakturJualByStatus(StatusFakturJual.DIBUAT).each { FakturJual f ->
+                if (f.isBolehPesanStok()) {
+                    f.listItemFaktur.each { ItemFaktur i ->
+                        if (pengiriman.containsKey(i.produk)) {
+                            pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
+                        } else {
+                            pengiriman[i.produk] = i.jumlah
+                        }
+                    }
+                }
+            }
+            findAllReturJualBySudahDiproses(false).each { ReturJual r ->
+                r.yangHarusDitukar().items.each { ItemBarang i ->
+                    if (pengiriman.containsKey(i.produk)) {
+                        pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
+                    } else {
+                        pengiriman[i.produk] = i.jumlah
+                    }
+                }
+            }
+            findAllProduk().each { Produk p ->
+                int nilaiSeharusnya = pengiriman[p]?: 0
+                if (p.jumlahAkanDikirim != nilaiSeharusnya) {
+                    execInsideUISync { output.append("${p.nama} seharusnya memiliki jumlah akan dikirim $nilaiSeharusnya tetapi ${p.jumlahAkanDikirim}\n")}
+                    p.jumlahAkanDikirim = nilaiSeharusnya
+                }
+            }
+        }
+        execInsideUISync { output.append("\nSelesai!\n\n") }
     }
-
 
 }

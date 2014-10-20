@@ -61,7 +61,7 @@ import javax.validation.groups.Default
     ])
 ])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan,retur') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan,retur')
-class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
+class FakturJualOlehSales extends FakturJual {
 
     @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Konsumen konsumen
@@ -287,11 +287,8 @@ class FakturJualOlehSales extends FakturJual implements BolehPesanStok {
     }
 
     @Override
-    boolean isValid() {
-        if (!konsumen.sales.dalamKota() && !kirimDariGudangUtama) {
-            return false
-        }
-        true
+    boolean isBolehPesanStok() {
+        kirimDari().utama
     }
 
     @Override

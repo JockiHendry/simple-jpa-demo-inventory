@@ -35,7 +35,7 @@ import griffon.util.*
     @NamedAttributeNode('pengeluaranBarang')
 ])
 @DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
-class FakturJualEceran extends FakturJual implements BolehPesanStok {
+class FakturJualEceran extends FakturJual {
 
     @NotEmpty @Size(min=2, max=100)
     String namaPembeli
@@ -70,7 +70,7 @@ class FakturJualEceran extends FakturJual implements BolehPesanStok {
     }
 
     @Override
-    boolean isValid() {
+    boolean isBolehPesanStok() {
         true
     }
 

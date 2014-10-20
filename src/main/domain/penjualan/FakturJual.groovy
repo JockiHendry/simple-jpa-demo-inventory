@@ -21,6 +21,7 @@ import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
+import domain.inventory.BolehPesanStok
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import groovy.transform.*
@@ -30,7 +31,7 @@ import javax.validation.constraints.*
 import griffon.util.*
 
 @DomainClass @Entity @Canonical(excludes='pengeluaranBarang')
-abstract class FakturJual extends Faktur {
+abstract class FakturJual extends Faktur implements BolehPesanStok {
 
     @NotNull @Enumerated
     StatusFakturJual status = StatusFakturJual.DIBUAT
@@ -54,7 +55,7 @@ abstract class FakturJual extends Faktur {
         }
         status = StatusFakturJual.DIANTAR
         ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, true))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, isBolehPesanStok()))
     }
 
     public void tambah(BuktiTerima buktiTerima) {
@@ -84,7 +85,7 @@ abstract class FakturJual extends Faktur {
             throw new DataTidakKonsisten(this)
         }
         ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, true))
+        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, isBolehPesanStok()))
         pengeluaranBarang = null
         status = StatusFakturJual.DIBUAT
     }

@@ -80,7 +80,7 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
     }
 
     @Override
-    boolean isValid() {
+    boolean isBolehPesanStok() {
         gudang.utama
     }
 

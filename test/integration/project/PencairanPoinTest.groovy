@@ -99,6 +99,10 @@ class PencairanPoinTest extends DbUnitTestCase {
 
     public void testCairkanPoinPotongPiutang() {
         pencairanPoinRepository.withTransaction {
+            Produk p1 = findProdukById(-1l)
+            Produk p2 = findProdukById(-2l)
+            p1.jumlahAkanDikirim = 100
+            p2.jumlahAkanDikirim = 100
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
             assertEquals(110000, konsumen.jumlahPiutang())

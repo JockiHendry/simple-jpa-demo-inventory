@@ -18,7 +18,7 @@ package domain.inventory
 
 public interface BolehPesanStok {
 
-    public boolean isValid();
+    public boolean isBolehPesanStok();
 
     public List<ItemBarang> yangDipesan();
 

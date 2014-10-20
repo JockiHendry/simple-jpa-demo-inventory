@@ -491,33 +491,6 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         }
     }
 
-    public void testRefreshJumlahAkanDikirim() {
-        produkRepository.refreshJumlahAkanDikirim()
-        Produk produk1 = produkRepository.findProdukById(-1l)
-        Produk produk2 = produkRepository.findProdukById(-2l)
-        Produk produk3 = produkRepository.findProdukById(-3l)
-        Produk produk4 = produkRepository.findProdukById(-4l)
-        Produk produk5 = produkRepository.findProdukById(-5l)
-        Produk produk6 = produkRepository.findProdukById(-6l)
-        Produk produk7 = produkRepository.findProdukById(-7l)
-        Produk produk8 = produkRepository.findProdukById(-8l)
-        Produk produk9 = produkRepository.findProdukById(-9l)
-        Produk produk10 = produkRepository.findProdukById(-10l)
-        Produk produk11 = produkRepository.findProdukById(-11l)
-
-        assertEquals(17, produk1.jumlahAkanDikirim)
-        assertEquals(14, produk2.jumlahAkanDikirim)
-        assertEquals(0, produk3.jumlahAkanDikirim)
-        assertEquals(0, produk4.jumlahAkanDikirim)
-        assertEquals(0, produk5.jumlahAkanDikirim)
-        assertEquals(0, produk6.jumlahAkanDikirim)
-        assertEquals(0, produk7.jumlahAkanDikirim)
-        assertEquals(0, produk8.jumlahAkanDikirim)
-        assertEquals(0, produk9.jumlahAkanDikirim)
-        assertEquals(0, produk10.jumlahAkanDikirim)
-        assertEquals(0, produk11.jumlahAkanDikirim)
-    }
-
     public void testPeriksaJumlahStok() {
         Konsumen k = produkRepository.findKonsumenById(-1)
         Gudang g = gudangRepository.cariGudangUtama()
@@ -786,6 +759,78 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
         fakturJualOlehSales = fakturJualRepository.hapus(fakturJualOlehSales)
         // Pastikan jumlah akan dikirim berkurang setelah faktur dihapus.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyFakturLuarKota() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-2l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 3, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
+        // Pastikan jumlah akan dikirim tidak bertambah setelah faktur dibuat karena ini penjualan luar kota.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.hapusBuktiTerima(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim tidak berkurang setelah pengeluaran faktur ini dhapus karena ini penjualan luar kota.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.batalKirim(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim tidak berkurang setelah pengeluaran faktur ini dhapus karena ini penjualan luar kota.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.hapus(fakturJualOlehSales)
+        // Pastikan jumlah akan dikirim tidak berkurang setelah faktur dihapus karena ini adalah penjualan luar kota.
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+    }
+
+    public void testQtyReadyFakturLuarKotaKirimDariGudangUtama() {
+        nomorService.refreshAll()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-2l)
+        FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(tanggal: LocalDate.now(), konsumen: konsumen, kirimDariGudangUtama: true)
+        fakturJualOlehSales.tambah(new ItemFaktur(produkA, 3, 8000))
+        fakturJualOlehSales.tambah(new ItemFaktur(produkB, 5, 1000))
+
+        fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true)
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(3, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.kirim(fakturJualOlehSales, 'test')
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.batalKirim(fakturJualOlehSales)
+        produkA = fakturJualRepository.findProdukById(-1l)
+        produkB = fakturJualRepository.findProdukById(-2l)
+        assertEquals(3, produkA.jumlahAkanDikirim)
+        assertEquals(5, produkB.jumlahAkanDikirim)
+
+        fakturJualOlehSales = fakturJualRepository.hapus(fakturJualOlehSales)
         produkA = fakturJualRepository.findProdukById(-1l)
         produkB = fakturJualRepository.findProdukById(-2l)
         assertEquals(0, produkA.jumlahAkanDikirim)

@@ -17,6 +17,7 @@ package project
 
 import domain.exception.StokTidakCukup
 import domain.faktur.ItemFaktur
+import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.BuktiTerima
@@ -24,14 +25,49 @@ import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
+import domain.penjualan.Sales
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
+import griffon.test.mock.MockGriffonApplication
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
+import project.user.NomorService
+import simplejpa.SimpleJpaUtil
 
 class FakturJualTests extends GriffonUnitTestCase {
 
+    private Gudang gudangUtama = new Gudang(utama: true)
+
     protected void setUp() {
         super.setUp()
+        super.registerMetaClass(GudangRepository)
+        GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
+        SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
+        MockGriffonApplication app = new MockGriffonApplication()
+        app.serviceManager = new ServiceManager() {
+
+            NomorService nomorService = new NomorService()
+
+            @Override
+            Map<String, GriffonService> getServices() {
+                [:]
+            }
+
+            @Override
+            GriffonService findService(String name) {
+                if (name == 'Nomor') {
+                    return nomorService
+                }
+                null
+            }
+
+            @Override
+            GriffonApplication getApp() {
+                return null
+            }
+        }
+        ApplicationHolder.application = app
     }
 
     protected void tearDown() {
@@ -39,7 +75,9 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testTambahPengeluaranBarang() {
-        FakturJual f = new FakturJualOlehSales()
+        Sales s = new Sales(gudang: gudangUtama)
+        Konsumen k = new Konsumen(sales: s)
+        FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
@@ -78,7 +116,9 @@ class FakturJualTests extends GriffonUnitTestCase {
 //    }
 
     public void testHapusPengeluaranBarang() {
-        FakturJual f = new FakturJualOlehSales()
+        Sales s = new Sales(gudang: gudangUtama)
+        Konsumen k = new Konsumen(sales: s)
+        FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
         f.tambah(new ItemFaktur(produkA, 10))
@@ -97,7 +137,8 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testTambahBuktiTerima() {
-        Konsumen k = new Konsumen()
+        Sales s = new Sales(gudang: gudangUtama)
+        Konsumen k = new Konsumen(sales: s)
         FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
@@ -116,7 +157,8 @@ class FakturJualTests extends GriffonUnitTestCase {
     }
 
     public void testHapusBuktiTerima() {
-        Konsumen k = new Konsumen()
+        Sales s = new Sales(gudang: gudangUtama)
+        Konsumen k = new Konsumen(sales: s)
         FakturJual f = new FakturJualOlehSales(konsumen: k)
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)

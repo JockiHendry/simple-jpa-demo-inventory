@@ -92,31 +92,6 @@ class ProdukRepository {
         p
     }
 
-    public void refreshJumlahAkanDikirim() {
-        def pengiriman = [:]
-        findAllFakturJualByStatus(StatusFakturJual.DIBUAT).each { FakturJual f ->
-            f.listItemFaktur.each { ItemFaktur i ->
-                if (pengiriman.containsKey(i.produk)) {
-                    pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
-                } else {
-                    pengiriman[i.produk] = i.jumlah
-                }
-            }
-        }
-        findAllReturJualBySudahDiproses(false).each { ReturJual r ->
-            r.yangHarusDitukar().items.each { ItemBarang i ->
-                if (pengiriman.containsKey(i.produk)) {
-                    pengiriman[i.produk] = pengiriman[i.produk] + i.jumlah
-                } else {
-                    pengiriman[i.produk] = i.jumlah
-                }
-            }
-        }
-        findAllProduk().each { Produk p ->
-            p.jumlahAkanDikirim = pengiriman[p]?: 0
-        }
-    }
-
     public Produk aturJumlahRetur(Produk produk, Integer jumlahRetur) {
         Produk p = findProdukByIdFetchComplete(produk.id)
         p.jumlahRetur = jumlahRetur
