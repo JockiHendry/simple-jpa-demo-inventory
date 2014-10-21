@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.event.BayarPiutang
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
@@ -134,6 +135,7 @@ class FakturJualOlehSales extends FakturJual {
             status = StatusFakturJual.LUNAS
             konsumen.hapusFakturBelumLunas(this)
         }
+        ApplicationHolder.application?.event(new BayarPiutang(this, pembayaran))
     }
 
     void hapusPembayaran(Pembayaran pembayaran) {
@@ -145,6 +147,7 @@ class FakturJualOlehSales extends FakturJual {
             status = StatusFakturJual.DITERIMA
             konsumen.tambahFakturBelumLunas(this)
         }
+        ApplicationHolder.application?.event(new BayarPiutang(this, pembayaran, true))
     }
 
     void hapusPembayaran(String nomorReferensi) {

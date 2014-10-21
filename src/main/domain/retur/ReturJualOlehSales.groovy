@@ -16,6 +16,7 @@
 package domain.retur
 
 import domain.exception.DataTidakKonsisten
+import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
 import domain.inventory.BolehPesanStok
 import domain.inventory.Gudang
@@ -87,6 +88,14 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
     @Override
     List<ItemBarang> yangDipesan() {
         yangHarusDitukar().items
+    }
+
+    void hapusReferensiFaktur(String nomor) {
+        Referensi referensi = fakturPotongPiutang.find { it.nomor == nomor }
+        if (!referensi) {
+            throw new FakturTidakDitemukan(nomor)
+        }
+        fakturPotongPiutang.remove(referensi)
     }
 
 }

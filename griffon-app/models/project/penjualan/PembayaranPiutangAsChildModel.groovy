@@ -19,7 +19,9 @@ import ca.odell.glazedlists.BasicEventList
 import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.penjualan.FakturJualOlehSales
+import domain.retur.ReturJual
 import groovy.beans.Bindable
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 
 class PembayaranPiutangAsChildModel {
@@ -30,9 +32,30 @@ class PembayaranPiutangAsChildModel {
     @Bindable BigDecimal jumlah
     @Bindable BilyetGiro bilyetGiro
     @Bindable Boolean potongan
+    EnumComboBoxModel<JenisReferensi> jenisReferensi = new EnumComboBoxModel<>(JenisReferensi)
+    @Bindable String nomorReferensi
 
     BasicEventList<Pembayaran> pembayaranList = new BasicEventList<>()
 
     @Bindable boolean editable
+
+}
+
+enum JenisReferensi {
+
+    FAKTUR_JUAL('Retur Jual', ReturJual)
+
+    String desc
+    Class clazz
+
+    public JenisReferensi(String desc, Class clazz) {
+        this.desc = desc
+        this.clazz = clazz
+    }
+
+    @Override
+    String toString() {
+        desc
+    }
 
 }

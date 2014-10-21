@@ -41,6 +41,7 @@ execOutsideUI {
     ServiceManager serviceManager = app.serviceManager
     serviceManager.findService('BilyetGiroEventListener')
     serviceManager.findService('InventoryEventListener')
+    serviceManager.findService('ReturJualEventListener')
     serviceManager.findService('Nomor')
 
     // Create repository

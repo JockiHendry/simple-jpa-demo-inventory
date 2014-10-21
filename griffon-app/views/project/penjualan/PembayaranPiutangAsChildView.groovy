@@ -63,6 +63,12 @@ panel(id: 'mainPanel') {
         label('Potongan:')
         checkBox(id: 'potongan', selected: bind('potongan', target: model, mutual: true), errorPath: 'potongan')
         errorLabel(path: 'potongan', constraints: 'wrap')
+        label('Referensi:')
+        panel {
+            comboBox(id: 'jenisReferensi', model: model.jenisReferensi)
+            textField(id: 'nomorReferensi', columns: 20, text: bind('nomorReferensi', target: model), errorPath: 'nomorReferensi')
+        }
+        errorLabel(path: 'nomorReferensi', constraints: 'wrap')
         label('Bilyet Giro:')
         panel {
             label(text: bind { model.bilyetGiro?.nomorSeri?: '- kosong -' })

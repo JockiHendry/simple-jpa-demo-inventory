@@ -16,6 +16,7 @@
 package project
 
 import domain.exception.DataTidakKonsisten
+import domain.exception.FakturTidakDitemukan
 import domain.faktur.ItemFaktur
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
@@ -375,6 +376,19 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertTrue(retur.items[0].klaims.every { !it.sudahDiproses })
         assertTrue(retur.items[1].klaims.every { !it.sudahDiproses })
         assertTrue(retur.items[2].klaims.every { !it.sudahDiproses })
+    }
+
+    void testHapusReferensiFaktur() {
+        ReturJualOlehSales r = new ReturJualOlehSales()
+        r.fakturPotongPiutang = [new Referensi(FakturJualOlehSales, 'F-001'), new Referensi(FakturJualOlehSales, 'F-002')] as Set
+        r.hapusReferensiFaktur('F-001')
+        assertEquals(1, r.fakturPotongPiutang.size())
+        assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-002')))
+        r.hapusReferensiFaktur('F-002')
+        assertTrue(r.fakturPotongPiutang.empty)
+        shouldFail(FakturTidakDitemukan) {
+            r.hapusReferensiFaktur('F-003')
+        }
     }
 
 }

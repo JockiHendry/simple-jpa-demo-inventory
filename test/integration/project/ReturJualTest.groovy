@@ -16,11 +16,14 @@
 package project
 
 import domain.exception.DataTidakKonsisten
+import domain.faktur.Pembayaran
+import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.Supplier
+import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import domain.retur.ItemRetur
@@ -34,6 +37,7 @@ import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
+import project.penjualan.FakturJualRepository
 import project.retur.ReturJualRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
@@ -43,12 +47,14 @@ class ReturJualTest extends DbUnitTestCase {
 	private static final Logger log = LoggerFactory.getLogger(ReturJualTest)
 
     ReturJualRepository returJualRepository
+    FakturJualRepository fakturJualRepository
     GudangRepository gudangRepository
 
 	protected void setUp() {
 		super.setUp()
 		setUpDatabase("returJual", "/project/data_retur_jual.xls")
         returJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturJual')
+        fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
 	}
 
@@ -344,6 +350,31 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(0, produk2.stok(g).jumlah)
         assertEquals(0, produk1.jumlahAkanDikirim)
         assertEquals(0, produk2.jumlahAkanDikirim)
+    }
+
+    void testPerubahanPembayaranPiutang() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-X', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 8, [new KlaimPotongPiutang(500)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimPotongPiutang(1000)] as Set))
+        retur = returJualRepository.buat(retur)
+        assertEquals(1, retur.fakturPotongPiutang.size())
+        assertTrue(retur.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, '000004/042014/SA')))
+
+        // Hapus potongan piutang
+        FakturJualOlehSales f = returJualRepository.findFakturJualOlehSalesByIdFetchComplete(-7l)
+        f = fakturJualRepository.hapusPembayaran(f, f.piutang.listPembayaran[0])
+        retur = returJualRepository.findReturJualOlehSalesById(retur.id)
+        assertTrue(retur.fakturPotongPiutang.empty)
+
+        // Tambah pembayaran piutang secara manual
+        f = fakturJualRepository.bayar(f, new Pembayaran(LocalDate.now(), 1200, true, null, new Referensi(ReturJual, retur.nomor)))
+        retur = returJualRepository.findReturJualOlehSalesById(retur.id)
+        assertEquals(1, retur.fakturPotongPiutang.size())
+        assertTrue(retur.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, '000004/042014/SA')))
     }
 
 }

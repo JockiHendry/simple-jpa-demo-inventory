@@ -17,7 +17,9 @@ package project.penjualan
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.FakturTidakDitemukan
 import domain.faktur.Pembayaran
+import domain.faktur.Referensi
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
@@ -46,6 +48,9 @@ class PembayaranPiutangAsChildController {
             return
         }
         Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan)
+        if (model.jenisReferensi.selectedItem && model.nomorReferensi) {
+            pembayaran.referensi = new Referensi(model.jenisReferensi.selectedItem.clazz, model.nomorReferensi)
+        }
         if (!fakturJualRepository.validate(pembayaran, Default, model)) return
 
         try {
@@ -58,6 +63,8 @@ class PembayaranPiutangAsChildController {
             JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dilakukan lagi!', 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException ex) {
             model.errors['jumlah'] = ex.message
+        } catch (FakturTidakDitemukan ex) {
+            model.errors['nomorReferensi'] = ex.message
         }
     }
 
