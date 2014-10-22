@@ -84,6 +84,19 @@ class ReturController {
         }
     }
 
+    @NeedSupervisorPassword
+    def delete = {
+        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            return
+        }
+        PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
+        model.fakturJualOlehSales = fakturJualRepository.hapusRetur(model.fakturJualOlehSales, penerimaanBarang.nomor)
+        execInsideUISync {
+            model.penerimaanBarangList.remove(penerimaanBarang)
+            clear()
+        }
+    }
+
     def clear = {
         execInsideUISync {
             model.id = null

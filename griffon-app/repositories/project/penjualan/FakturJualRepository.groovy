@@ -400,13 +400,22 @@ class FakturJualRepository {
     }
 
     FakturJualOlehSales retur(FakturJualOlehSales faktur, PenerimaanBarang penerimaanBarang) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
+        faktur = findFakturJualOlehSalesByIdFetchItems(faktur.id)
         if (!faktur) {
             throw new DataTidakBolehDiubah(faktur)
         }
         penerimaanBarang.items.each { it.produk = findProdukById(it.produk.id) }
         faktur.tambahRetur(penerimaanBarang)
         persist(penerimaanBarang)
+        faktur
+    }
+
+    FakturJualOlehSales hapusRetur(FakturJualOlehSales faktur, String nomorPenerimaanBarang) {
+        faktur = findFakturJualOlehSalesByIdFetchItems(faktur.id)
+        if (!faktur) {
+            throw new DataTidakBolehDiubah(faktur)
+        }
+        faktur.hapusRetur(nomorPenerimaanBarang)
         faktur
     }
 

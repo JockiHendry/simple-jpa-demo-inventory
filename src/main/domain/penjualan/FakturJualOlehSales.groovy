@@ -19,6 +19,7 @@ import domain.event.BayarPiutang
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
+import domain.exception.FakturTidakDitemukan
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
@@ -63,6 +64,8 @@ import javax.validation.groups.Default
 ])
 @DomainClass @Entity @Canonical(excludes='piutang,bonusPenjualan,retur') @EqualsAndHashCode(callSuper=true, excludes='piutang,bonusPenjualan,retur')
 class FakturJualOlehSales extends FakturJual {
+
+    public static final String RETUR_FAKTUR = "ReturFaktur"
 
     @NotNull(groups=[Default,InputPenjualanOlehSales]) @ManyToOne
     Konsumen konsumen
@@ -150,8 +153,14 @@ class FakturJualOlehSales extends FakturJual {
         ApplicationHolder.application?.event(new BayarPiutang(this, pembayaran, true))
     }
 
-    void hapusPembayaran(String nomorReferensi) {
-        piutang.listPembayaran.find { it.referensi.nomor == nomorReferensi }.each { Pembayaran pembayaran ->
+    void hapusPembayaran(String nomorReferensi, String jenisReferensi = null) {
+        piutang.listPembayaran.find {
+            if (jenisReferensi) {
+                return (it.referensi.namaClass == jenisReferensi) && (it.referensi.nomor == nomorReferensi)
+            } else {
+                return (it.referensi.nomor == nomorReferensi)
+            }
+        }.each { Pembayaran pembayaran ->
             hapusPembayaran(pembayaran)
         }
     }
@@ -256,7 +265,7 @@ class FakturJualOlehSales extends FakturJual {
 
         // Kurangi piutang bila ada
         if (piutang) {
-            piutang.bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(FakturJualOlehSales, nomor)))
+            bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(RETUR_FAKTUR, penerimaanBarang.nomor)))
         }
 
         // Kurangi bonus untuk konsumen tersebut
@@ -267,6 +276,40 @@ class FakturJualOlehSales extends FakturJual {
         // Lakukan Perubahan stok (bertambah)
         ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
+    }
+
+    void hapusRetur(String nomor) {
+        // Periksa apakah barang yang dikembalikan adalah barang yang sudah dipesan sebelumnya.
+        if (status == StatusFakturJual.LUNAS) {
+            throw new DataTidakBolehDiubah('Faktur jual yang telah lunas tidak boleh di-retur!', this)
+        }
+        if (piutang && piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN) > 0) {
+            throw new DataTidakBolehDiubah('Faktur jual yang telah dibayar tidak boleh di-retur!', this)
+        }
+        if (piutang && !piutang.listPembayaran.find {(it.referensi.namaClass == RETUR_FAKTUR) && (it.referensi.nomor == nomor)}) {
+            throw new DataTidakBolehDiubah('Retur akan mempengaruhi integritas data! Penghapusan retur ini akan menyebabkan piutang bertambah!\n' +
+                'Solusi: Hapus faktur ini dan buat faktur baru dengan nilai yang aktual.', this)
+        }
+
+        PenerimaanBarang penerimaanBarang = retur.find { it.nomor == nomor }
+        if (!penerimaanBarang) {
+            throw new FakturTidakDitemukan(nomor)
+        }
+        retur.remove(penerimaanBarang)
+
+        // Hapus potongan piutang bila perlu
+        if (piutang) {
+            hapusPembayaran(nomor, RETUR_FAKTUR)
+        }
+
+        // Tambah bonus untuk konsumen tersebut bila perlu
+        if (status == StatusFakturJual.DITERIMA) {
+            konsumen.tambahPoin(penerimaanBarang)
+        }
+
+        // Lakukan Perubahan stok (berkurang akibat invers)
+        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref, true))
     }
 
     BigDecimal totalRetur() {

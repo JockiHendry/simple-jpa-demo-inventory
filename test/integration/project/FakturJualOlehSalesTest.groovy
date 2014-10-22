@@ -16,6 +16,7 @@
 package project
 
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.DataTidakKonsisten
 import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
@@ -594,6 +595,31 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == -10})
             assertNotNull(p2.stok(g).periode(LocalDate.now()).listItem.find { it.jumlah == 5})
         }
+
+        f = fakturJualRepository.hapusRetur(f, 'NOMOR')
+        fakturJualRepository.withTransaction {
+            f = findFakturJualOlehSalesById(f.id)
+            assertTrue(f.retur.empty)
+
+            // Periksa apakah piutang bertambah
+            assertEquals(300000, f.jumlahPiutang())
+            assertEquals(0, f.potonganPiutang())
+
+            // Periksa apakah bonus poin bertambah
+            k = findKonsumenById(-1l)
+            assertEquals(80, k.poinTerkumpul)
+            assertEquals(30, k.listRiwayatPoin[0].poin)
+            assertEquals(-20, k.listRiwayatPoin[1].poin)
+            assertEquals(20, k.listRiwayatPoin[2].poin)
+
+            // Periksa apakah stok berkurang
+            p1 = findProdukById(-1l)
+            assertEquals(27, p1.jumlah)
+            assertEquals(0, p1.stok(g).jumlah)
+            p2 = findProdukById(-2l)
+            assertEquals(17, p2.jumlah)
+            assertEquals(4, p2.stok(g).jumlah)
+        }
     }
 
     public void testReturDiantar() {
@@ -652,6 +678,11 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
             // Periksa apakah bonus berkurang
             k = findKonsumenById(-1l)
             assertEquals(60, k.poinTerkumpul)
+        }
+
+        // Hapus retur harus gagal karena menyebabkan piutang bertambah
+        shouldFail(DataTidakBolehDiubah) {
+            fakturJualRepository.hapusRetur(f, 'NOMOR')
         }
     }
 

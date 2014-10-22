@@ -30,6 +30,7 @@ actions {
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
     action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...', closure: controller.showItemBarang)
+    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
 }
 
 panel(id: 'mainPanel') {
@@ -38,9 +39,6 @@ panel(id: 'mainPanel') {
     scrollPane(constraints: CENTER) {
         glazedTable(id: 'table', list: model.penerimaanBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                 doubleClickAction: showItemBarang, enterKeyAction: showItemBarang) {
-            glazedColumn(name: '', property: 'deleted', width: 20) {
-                templateRenderer(exp: { it=='Y'?'D':''})
-            }
             glazedColumn(name: 'Nomor', property: 'nomor')
             glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                 templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
@@ -68,6 +66,7 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save, visible: bind { !table.isRowSelected })
             button(action: cetak, visible: bind { table.isRowSelected })
+            button(action: delete, visible: bind { table.isRowSelected })
             button(action: cancel, visible: bind { table.isRowSelected })
             button(action: close)
         }
