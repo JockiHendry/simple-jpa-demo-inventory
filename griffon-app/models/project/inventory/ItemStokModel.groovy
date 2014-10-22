@@ -24,6 +24,11 @@ import domain.inventory.StokProduk
 
 class ItemStokModel {
 
+    @Bindable boolean showReferensiFinance
+    @Bindable boolean showReferensiGudang
+    @Bindable boolean showPembuat
+    @Bindable boolean showKeterangan
+
     StokProduk parent
 
     BasicEventList<ItemStok> itemStokList = new BasicEventList<>()

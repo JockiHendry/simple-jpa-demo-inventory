@@ -26,6 +26,10 @@ class ItemStokController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
+        model.showReferensiFinance = true
+        model.showReferensiGudang = false
+        model.showPembuat = false
+        model.showKeterangan = true
         init()
     }
 

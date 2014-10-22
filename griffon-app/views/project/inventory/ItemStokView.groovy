@@ -33,24 +33,28 @@ panel(id: 'mainPanel') {
         comboBox(id: 'periodeItemStok', model: model.periodeItemStok,
             templateRenderer: "\${it.tanggalMulai.toString('MMMM YYYY')} (Jumlah: \${it.jumlah})")
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+        checkBox('Referensi Finance', selected: bind('showReferensiFinance', target: model, mutual: true))
+        checkBox('Referensi Gudang', selected: bind('showReferensiGudang', target: model, mutual: true))
+        checkBox('Pembuat', selected: bind('showPembuat', target: model, mutual: true))
+        checkBox('Keterangan', selected: bind('showKeterangan', target: model, mutual: true))
     }
 
-
-    panel(constraints: CENTER) {
-        borderLayout()
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.itemStokList, sortingStrategy: SINGLE_COLUMN) {
-                glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
-                    templateRenderer("\${it.toString('dd-MM-yyyy')}")
-                }
-                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
-                glazedColumn(name: 'Referensi Finance', expression: {it.referensiStok?.deskripsiFinance()?: ''})
-                glazedColumn(name: 'Referensi Gudang', expression: {it.referensiStok?.deskripsiGudang()?: ''})
-                glazedColumn(name: 'Pihak Terkait', expression: {it.referensiStok?.pihakTerkait?: ''})
-                glazedColumn(name: 'Dibuat', expression: {it.referensiStok?.dibuatOleh?:''})
-                glazedColumn(name: 'Diubah', expression: {it.referensiStok?.diubahOleh?:''})
-                glazedColumn(name: 'Keterangan', property: 'keterangan')
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.itemStokList, sortingStrategy: SINGLE_COLUMN) {
+            glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
+                templateRenderer("\${it.toString('dd-MM-yyyy')}")
             }
+            glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
+            glazedColumn(name: 'Pihak Terkait', expression: {it.referensiStok?.pihakTerkait?: ''})
+            glazedColumn(name: 'Referensi Finance', expression: {it.referensiStok?.deskripsiFinance()?: ''},
+                visible: bind {model.showReferensiFinance})
+            glazedColumn(name: 'Referensi Gudang', expression: {it.referensiStok?.deskripsiGudang()?: ''},
+                visible: bind {model.showReferensiGudang})
+            glazedColumn(name: 'Dibuat', expression: {it.referensiStok?.dibuatOleh?:''},
+                visible: bind {model.showPembuat})
+            glazedColumn(name: 'Diubah', expression: {it.referensiStok?.diubahOleh?:''},
+                visible: bind {model.showPembuat})
+            glazedColumn(name: 'Keterangan', property: 'keterangan', visible: bind {model.showKeterangan})
         }
     }
 
