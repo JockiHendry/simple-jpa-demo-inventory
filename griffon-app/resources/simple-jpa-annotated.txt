@@ -1,4 +1,4 @@
-project.penjualan.BilyetGiroClearingService
+project.penjualan.BilyetGiroService
 project.user.NomorService
 project.faktur.BilyetGiroRepository
 project.inventory.GudangRepository

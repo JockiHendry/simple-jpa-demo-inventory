@@ -16,31 +16,41 @@
 package project.penjualan
 
 import domain.faktur.BilyetGiro
+import domain.pembelian.PurchaseOrder
+import domain.penjualan.FakturJualOlehSales
 import domain.user.PesanGiroJatuhTempo
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.faktur.BilyetGiroRepository
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
 @Transaction
-class BilyetGiroClearingService {
+class BilyetGiroService {
 
-    final Logger log = LoggerFactory.getLogger(BilyetGiroClearingService)
+    final Logger log = LoggerFactory.getLogger(BilyetGiroService)
 
     PesanRepository pesanRepository
+    BilyetGiroRepository bilyetGiroRepository
 
     public void periksaJatuhTempo() {
         log.debug "Memeriksa bilyet giro yang sudah jatuh tempo..."
-        findAllBilyetGiroByDsl {
-            tanggalPencairan isNull()
-            and()
-            jatuhTempo lt(LocalDate.now())
-        }.each { BilyetGiro bg ->
+        bilyetGiroRepository.cariJatuhTempo().each { BilyetGiro bg ->
             log.info "Memproses bilyet giro yang jatuh tempo: $bg"
             pesanRepository.buat(new PesanGiroJatuhTempo(bg))
         }
         log.debug "Pemeriksaan selesai!"
+    }
+
+    public List<FakturJualOlehSales> cariFakturJualYangDibayarDengan(BilyetGiro bilyetGiro) {
+        executeQuery("SELECT DISTINCT f FROM FakturJualOlehSales f, IN(f.piutang.listPembayaran) b WHERE b.bilyetGiro = :bilyetGiro AND f.deleted <> 'Y' ORDER BY f.nomor",
+            [:], [bilyetGiro: bilyetGiro])
+    }
+
+    public List<PurchaseOrder> cariPurchaseOrderYangDibayarDengan(BilyetGiro bilyetGiro) {
+        executeQuery("SELECT DISTINCT p FROM PurchaseOrder p, IN(p.fakturBeli.hutang.listPembayaran) b WHERE b.bilyetGiro = :bilyetGiro AND p.deleted <> 'Y' ORDER BY p.nomor",
+            [:], [bilyetGiro: bilyetGiro])
     }
 
 }

@@ -36,6 +36,14 @@ class BilyetGiroRepository {
         }
     }
 
+    List<BilyetGiro> cariJatuhTempo() {
+        findAllBilyetGiroByDsl {
+            tanggalPencairan isNull()
+            and()
+            jatuhTempo lt(LocalDate.now())
+        }
+    }
+
     BilyetGiro buat(BilyetGiro bilyetGiro) {
         if (findBilyetGiroByNomorSeri(bilyetGiro.nomorSeri)) {
             throw new DataDuplikat(bilyetGiro)

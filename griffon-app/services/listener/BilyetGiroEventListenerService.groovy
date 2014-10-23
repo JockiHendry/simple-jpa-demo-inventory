@@ -16,39 +16,37 @@
 package listener
 
 import domain.event.BilyetGiroCleared
+import domain.faktur.BilyetGiro
 import domain.pembelian.PurchaseOrder
 import domain.pembelian.StatusPurchaseOrder
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
+import project.penjualan.BilyetGiroService
 import simplejpa.transaction.Transaction
 
 @Transaction
 class BilyetGiroEventListenerService {
 
+    BilyetGiroService bilyetGiroService
+
     void onBilyetGiroCleared(BilyetGiroCleared bilyetGiroCleared) {
         log.info "Event onBilyetGiroCleared mulai dikerjakan..."
 
+        BilyetGiro bilyetGiro = bilyetGiroCleared.source
+
         // Cari seluruh faktur jual oleh sales yang berhubungan dengan giro ini dan set status
         // menjadi lunas bila perlu.
-        List<FakturJualOlehSales> fakturBelumLunas = executeQuery('SELECT DISTINCT f FROM FakturJualOlehSales f, ' +
-            'IN(f.piutang.listPembayaran) b WHERE f.status <> domain.penjualan.StatusFakturJual.LUNAS ' +
-            'AND b.bilyetGiro = :bilyetGiro ',
-            [:], [bilyetGiro: bilyetGiroCleared.source])
-        fakturBelumLunas.each {
-            if (it.piutang.lunas) {
-                it.status = StatusFakturJual.LUNAS
-                it.konsumen.hapusFakturBelumLunas(it)
+        bilyetGiroService.cariFakturJualYangDibayarDengan(bilyetGiro).each { FakturJualOlehSales f ->
+            if ((f.status != StatusFakturJual.LUNAS) && f.piutang.lunas) {
+                f.status = StatusFakturJual.LUNAS
+                f.konsumen.hapusFakturBelumLunas(f)
             }
         }
 
         // Cari seluruh purchase order yang berhubungan dengan giro ini dan set status menjadi lunas bila perlu.
-        List<PurchaseOrder> purchaseOrderBelumLunas = executeQuery('SELECT DISTINCT p FROM PurchaseOrder p, ' +
-            'IN(p.fakturBeli.hutang.listPembayaran) b WHERE p.status <> domain.pembelian.StatusPurchaseOrder.LUNAS ' +
-            'AND b.bilyetGiro = :bilyetGiro ',
-            [:], [bilyetGiro: bilyetGiroCleared.source])
-        purchaseOrderBelumLunas.each {
-            if (it.fakturBeli.hutang.lunas) {
-                it.status = StatusPurchaseOrder.LUNAS
+        bilyetGiroService.cariPurchaseOrderYangDibayarDengan(bilyetGiro).each { PurchaseOrder p ->
+            if ((p.status != StatusPurchaseOrder.LUNAS) && p.fakturBeli.hutang.lunas) {
+                p.status = StatusPurchaseOrder.LUNAS
             }
         }
 

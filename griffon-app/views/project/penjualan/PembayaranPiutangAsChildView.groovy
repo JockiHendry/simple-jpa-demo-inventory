@@ -27,6 +27,8 @@ actions {
     action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
     action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
     action(id: 'close', name: 'Tutup', closure: controller.close, mnemonic: KeyEvent.VK_T)
+    action(id: 'cariBilyetGiro', name: 'Cari Bilyet Giro...', closure: controller.showBilyetGiro, mnemonic: KeyEvent.VK_G)
+    action(id: 'hapusBilyetGiro', name: 'Hapus', closure: controller.hapusBilyetGiro)
 }
 
 panel(id: 'mainPanel') {
@@ -72,7 +74,8 @@ panel(id: 'mainPanel') {
         label('Bilyet Giro:')
         panel {
             label(text: bind { model.bilyetGiro?.nomorSeri?: '- kosong -' })
-            button('Cari Bilyet Giro...', id: 'cariBilyetGiro', errorPath: 'bilyetGiro', mnemonic: KeyEvent.VK_G, actionPerformed: controller.showBilyetGiro)
+            button(action: cariBilyetGiro, errorPath: 'bilyetGiro')
+            button(action: hapusBilyetGiro)
         }
         errorLabel(path: 'bilyetGiro', constraints: 'wrap')
         panel(constraints: 'span, growx, wrap') {

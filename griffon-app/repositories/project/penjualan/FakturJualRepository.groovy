@@ -296,9 +296,6 @@ class FakturJualRepository {
     FakturJualOlehSales hapusPembayaran(FakturJualOlehSales fakturJualOlehSales, Pembayaran pembayaran) {
         fakturJualOlehSales = findFakturJualOlehSalesById(fakturJualOlehSales.id)
         fakturJualOlehSales.hapusPembayaran(pembayaran)
-        if (pembayaran.bilyetGiro) {
-            softDelete(pembayaran.bilyetGiro)
-        }
         fakturJualOlehSales
     }
 

@@ -102,6 +102,12 @@ class PembayaranPiutangAsChildController {
         }
     }
 
+    def hapusBilyetGiro = {
+        execInsideUISync {
+            model.bilyetGiro = null
+        }
+    }
+
     def close = {
         SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
     }

@@ -24,7 +24,7 @@ import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import project.penjualan.BilyetGiroClearingService
+import project.penjualan.BilyetGiroService
 import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
@@ -34,15 +34,15 @@ class BilyetGiroTest extends DbUnitTestCase {
     private static final Logger log = LoggerFactory.getLogger(BilyetGiroTest)
 
     BilyetGiroRepository bilyetGiroRepository
-    BilyetGiroClearingService bilyetGiroClearingService
+    BilyetGiroService bilyetGiroService
     PesanRepository pesanRepository
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        setUpDatabase("fakturJual", "/project/data_bilyet_giro.xls")
         bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
         pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
-        bilyetGiroClearingService = app.serviceManager.findService('BilyetGiroClearing')
+        bilyetGiroService = app.serviceManager.findService('BilyetGiro')
     }
 
     protected void tearDown() {
@@ -51,25 +51,37 @@ class BilyetGiroTest extends DbUnitTestCase {
     }
 
     public void testPencairan() {
-        bilyetGiroRepository.withTransaction {
-            BilyetGiro bilyetGiro = bilyetGiroRepository.cari('AB-111')[0]
-            bilyetGiro.cairkan(LocalDate.now())
-            assertTrue(bilyetGiro.sudahDicairkan())
-        }
-        FakturJualOlehSales f = bilyetGiroRepository.findFakturJualOlehSalesById(-6l)
+        BilyetGiro bilyetGiro = bilyetGiroRepository.findBilyetGiroById(-1l)
+        bilyetGiro = bilyetGiroRepository.cairkan(bilyetGiro)
+        assertTrue(bilyetGiro.sudahDicairkan())
+        FakturJualOlehSales f = bilyetGiroRepository.findFakturJualOlehSalesById(-4l)
         assertEquals(StatusFakturJual.LUNAS, f.status)
     }
 
-    public void testClearingService() {
+    public void testPeriksaJatuhTempo() {
         BilyetGiro bg1 = new BilyetGiro(nomorSeri: 'BS-0001', nominal: 10000, jatuhTempo: LocalDate.now().minusDays(1))
         BilyetGiro bg2 = new BilyetGiro(nomorSeri: 'BS-0002', nominal: 10000, jatuhTempo: LocalDate.now().plusMonths(1))
         bilyetGiroRepository.buat(bg1)
         bilyetGiroRepository.buat(bg2)
 
-        bilyetGiroClearingService.periksaJatuhTempo()
+        bilyetGiroService.periksaJatuhTempo()
 
         List<Pesan> result = pesanRepository.refresh()
         assertTrue(result.find {(it instanceof PesanGiroJatuhTempo) && it.bilyetGiro == bg1} != null)
+    }
+
+    public void testFakturJualYangDibayarDengan() {
+        BilyetGiro bilyetGiro = bilyetGiroRepository.findBilyetGiroById(-2l)
+        List<FakturJualOlehSales> result = bilyetGiroService.cariFakturJualYangDibayarDengan(bilyetGiro)
+        assertEquals(3, result.size())
+        assertEquals('000002/042014/SA', result[0].nomor)
+        assertEquals('000003/042014/SA', result[1].nomor)
+        assertEquals('000004/042014/SA', result[2].nomor)
+
+        bilyetGiro = bilyetGiroRepository.findBilyetGiroById(-3l)
+        result = bilyetGiroService.cariFakturJualYangDibayarDengan(bilyetGiro)
+        assertEquals(1, result.size())
+        assertEquals('000004/042014/SA', result[0].nomor)
     }
 
 }

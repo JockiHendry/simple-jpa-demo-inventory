@@ -58,7 +58,7 @@ execOutsideUI {
     }
 
     // Clearing bilyet giro yang jatuh tempo
-    serviceManager.findService('BilyetGiroClearing').periksaJatuhTempo()
+    serviceManager.findService('BilyetGiro').periksaJatuhTempo()
 }
 
 SplashScreen.instance.dispose()
