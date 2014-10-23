@@ -33,7 +33,7 @@ class BilyetGiroController {
     }
 
     def search = {
-        List bilyetGiro = bilyetGiroRepository.cari(model.nomorSeriSearch)
+        List bilyetGiro = bilyetGiroRepository.cari(model.nomorSeriSearch, null, model.popupMode)
         execInsideUISync {
             model.bilyetGiroList.clear()
             model.bilyetGiroList.addAll(bilyetGiro)

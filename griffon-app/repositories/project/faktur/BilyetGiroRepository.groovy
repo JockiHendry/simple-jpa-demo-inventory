@@ -24,8 +24,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class BilyetGiroRepository {
 
-    List<BilyetGiro> cari(String nomorSeriSearch, Boolean sudahDicairkanSearch = null) {
-        findAllBilyetGiroByDsl([excludeDeleted: false]) {
+    List<BilyetGiro> cari(String nomorSeriSearch, Boolean sudahDicairkanSearch = null, boolean excludeDeleted = false) {
+        findAllBilyetGiroByDsl([excludeDeleted: excludeDeleted]) {
             if (nomorSeriSearch) {
                 nomorSeri like("%${nomorSeriSearch}%")
             }
