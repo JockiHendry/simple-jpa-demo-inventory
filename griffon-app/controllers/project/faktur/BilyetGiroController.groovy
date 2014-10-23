@@ -18,6 +18,7 @@ package project.faktur
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
+import project.penjualan.BilyetGiroService
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -27,6 +28,7 @@ class BilyetGiroController {
     BilyetGiroModel model
     def view
     BilyetGiroRepository bilyetGiroRepository
+    BilyetGiroService bilyetGiroService
 
     void mvcGroupInit(Map args) {
         model.popupMode = args.'popupMode'?: false
@@ -86,7 +88,7 @@ class BilyetGiroController {
     def delete = {
         try {
             BilyetGiro bilyetGiro = view.table.selectionModel.selected[0]
-            bilyetGiro = bilyetGiroRepository.hapus(bilyetGiro)
+            bilyetGiro = bilyetGiroService.hapus(bilyetGiro)
 
             execInsideUISync {
                 view.table.selectionModel.selected[0] = bilyetGiro

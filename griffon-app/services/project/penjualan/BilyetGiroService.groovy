@@ -15,11 +15,11 @@
  */
 package project.penjualan
 
+import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJualOlehSales
 import domain.user.PesanGiroJatuhTempo
-import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.faktur.BilyetGiroRepository
@@ -51,6 +51,21 @@ class BilyetGiroService {
     public List<PurchaseOrder> cariPurchaseOrderYangDibayarDengan(BilyetGiro bilyetGiro) {
         executeQuery("SELECT DISTINCT p FROM PurchaseOrder p, IN(p.fakturBeli.hutang.listPembayaran) b WHERE b.bilyetGiro = :bilyetGiro AND p.deleted <> 'Y' ORDER BY p.nomor",
             [:], [bilyetGiro: bilyetGiro])
+    }
+
+    public BilyetGiro hapus(BilyetGiro bilyetGiro) {
+        bilyetGiro = findBilyetGiroById(bilyetGiro.id)
+        if (bilyetGiro.sudahDicairkan()) {
+            throw new DataTidakBolehDiubah('Giro yang sudah dicairkan tidak boleh dihapus!', bilyetGiro)
+        }
+        List refFakturJual = cariFakturJualYangDibayarDengan(bilyetGiro)
+        List refPurchaseOrder = cariPurchaseOrderYangDibayarDengan(bilyetGiro)
+        if (!refFakturJual.empty || !refPurchaseOrder.empty) {
+            throw new DataTidakBolehDiubah("Giro tidak boleh dihapus karena dipakai sebagai referensi pembayaran:\n" +
+                "${refFakturJual.collect{it.nomor}.join(', ')}" + "${refPurchaseOrder.collect{it.nomor}.join(', ')}", bilyetGiro)
+        }
+        bilyetGiro.deleted = 'Y'
+        bilyetGiro
     }
 
 }

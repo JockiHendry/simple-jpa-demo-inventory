@@ -70,13 +70,4 @@ class BilyetGiroRepository {
         bilyetGiro
     }
 
-    BilyetGiro hapus(BilyetGiro bilyetGiro) {
-        bilyetGiro = findBilyetGiroById(bilyetGiro.id)
-        if (bilyetGiro.sudahDicairkan()) {
-            throw new DataTidakBolehDiubah('Giro yang sudah dicairkan tidak boleh dihapus!', bilyetGiro)
-        }
-        bilyetGiro.deleted = 'Y'
-        bilyetGiro
-    }
-
 }
