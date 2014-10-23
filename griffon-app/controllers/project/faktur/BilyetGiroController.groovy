@@ -107,7 +107,7 @@ class BilyetGiroController {
             model.tanggalPencairan = null
             model.nominal = null
             model.namaBank = null
-
+            model.deleted = false
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -126,6 +126,7 @@ class BilyetGiroController {
                 model.namaBank = selected.namaBank
                 model.jatuhTempo = selected.jatuhTempo
                 model.tanggalPencairan = selected.tanggalPencairan
+                model.deleted = (selected.deleted != 'N')
             }
         }
     }

@@ -96,12 +96,10 @@ panel(id: 'mainPanel') {
                 }
                 controller.save()
                 form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
-            })
-            button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
-            button('Cairkan', actionPerformed: controller.cairkan, visible: bind {table.isRowSelected})
-            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: {
+            }, visible: bind { !model.deleted })
+            button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode && !model.deleted}), action: pilih)
+            button('Cairkan', actionPerformed: controller.cairkan, visible: bind {table.isRowSelected && !model.deleted})
+            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {table.isRowSelected && !model.deleted}, actionPerformed: {
                 if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
                         app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
                     controller.delete()

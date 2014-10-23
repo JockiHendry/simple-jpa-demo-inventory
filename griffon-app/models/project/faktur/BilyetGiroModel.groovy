@@ -22,6 +22,8 @@ import org.joda.time.LocalDate
 
 class BilyetGiroModel {
 
+    @Bindable boolean deleted = false
+
     @Bindable Long id
     @Bindable String nomorSeri
     @Bindable BigDecimal nominal
