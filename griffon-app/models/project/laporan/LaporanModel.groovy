@@ -36,7 +36,8 @@ public enum JenisLaporan {
     LAPORAN_STOK_GUDANG('Laporan Stok Per Gudang', 'laporan_stok_gudang', 'laporanStokGudang'),
     SURAT_JALAN('Surat Jalan', 'laporan_surat_jalan', 'laporanSuratJalan'),
     LAPORAN_RETURJUAL_KONSUMEN('Laporan Retur Jual Per Konsumen', 'laporan_retur_jual_konsumen', 'laporanReturJualPerKonsumen'),
-    LAPORAN_RETURBELI_SUPPLIER('Laporan Retur Beli Per Supplier', 'laporan_retur_beli_supplier', 'laporanReturBeliPerSupplier')
+    LAPORAN_RETURBELI_SUPPLIER('Laporan Retur Beli Per Supplier', 'laporan_retur_beli_supplier', 'laporanReturBeliPerSupplier'),
+    LAPORAN_RETUR_PRODUK('Laporan Retur Produk', 'laporan_retur_produk', 'laporanReturProduk')
 
     String nama
     String namaLaporan
