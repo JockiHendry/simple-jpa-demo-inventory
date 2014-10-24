@@ -25,6 +25,7 @@ import project.retur.ReturBeliViewMode
 import project.retur.ReturJualViewMode
 import util.BusyLayerUI
 import util.MainTabbedPane
+import util.ScrollableToolBar
 import javax.swing.*
 import javax.swing.border.*
 import java.awt.*
@@ -201,7 +202,7 @@ application(id: 'mainFrame',
         panel() {
             borderLayout()
 
-            toolBar(id: 'toolbar', constraints: BorderLayout.PAGE_START) {
+            container(new ScrollableToolBar(), id: 'toolbar', constraints: BorderLayout.PAGE_START) {
                 button(action: penerimaanBarang, id: 'penerimaanBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.penerimaanBarangVisible})
                 button(action: pengeluaranBarang, id: 'pengeluaranBarangButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
