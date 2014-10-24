@@ -43,7 +43,7 @@ class LaporanController {
         }
         def result, batal, params
         execInsideUISync {
-            DialogUtils.showMVCGroup(jenisLaporan.namaMVC, [:], app, view, [title: 'Pilih Kriteria'], { m, v, c ->
+            DialogUtils.showAndReuseMVCGroup(jenisLaporan.namaMVC, [:], app, view, [title: 'Pilih Kriteria'], { m, v, c ->
                 result = m.result
                 params = m.params
                 batal = m.batal

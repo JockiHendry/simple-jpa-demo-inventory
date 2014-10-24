@@ -24,10 +24,10 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''),
     panel(constraints: 'grow 0, wrap') {
         flowLayout()
         dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
-            dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
         label(" s/d ")
         dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
-            dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
     }
 
     label('Produk')
@@ -41,7 +41,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''),
     comboBox(id: 'gudangSearch', model: model.gudangSearch, templateRenderer: '${value}', errorPath: 'gudangSearch', constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
-        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('OK', id: 'defaultButton', actionPerformed: controller.tampilkanLaporan, defaultCapable: true)
         button('Batal', actionPerformed: controller.batal)
     }
 }

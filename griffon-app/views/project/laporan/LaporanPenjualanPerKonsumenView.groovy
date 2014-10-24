@@ -22,10 +22,10 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     panel(constraints: 'wrap') {
         flowLayout()
         dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
-                dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
         label(" s/d ")
         dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
-                dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
     }
 
     label('Dan', constraints: 'wrap')
@@ -37,7 +37,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
-        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
         button('Batal', actionPerformed: controller.batal)
     }
 }

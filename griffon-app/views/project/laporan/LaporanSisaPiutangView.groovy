@@ -22,10 +22,10 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''),
     panel(constraints: 'grow 0, wrap') {
         flowLayout()
         dateTimePicker(id: 'tanggalMulaiCari', localDate: bind('tanggalMulaiCari', target: model, mutual: true),
-                dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
         label(" s/d ")
         dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
-                dateVisible: true, timeVisible: false)
+            dateVisible: true, timeVisible: false, focusable: true)
     }
 
     label('Nama Sales')
@@ -44,7 +44,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''),
     checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
-        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
         button('Batal', actionPerformed: controller.batal)
     }
 }

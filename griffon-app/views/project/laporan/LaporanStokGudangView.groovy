@@ -26,7 +26,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     textField(text: bind('gudangSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
-        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
         button('Batal', actionPerformed: controller.batal)
     }
 }

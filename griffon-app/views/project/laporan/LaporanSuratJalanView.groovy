@@ -23,7 +23,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     errorLabel(path: 'nomor')
 
     panel(constraints: 'span, growx, wrap') {
-        button('OK', actionPerformed: controller.tampilkanLaporan)
+        button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
         button('Batal', actionPerformed: controller.batal)
     }
 }
