@@ -52,7 +52,7 @@ class SplashScreen {
             @Override
             protected void paintComponent(Graphics g) {
                 g.drawImage(image, 0, 0, null)
-                g.drawString("Versi ${app.metadata.getApplicationVersion()}", 180, 193)
+                g.drawString("Versi ${app.metadata.getApplicationVersion()}", 150, 193)
             }
 
         }
@@ -60,13 +60,11 @@ class SplashScreen {
         glassPane.size = window.size
         glassPane.setLayout(null)
         JLabel progress = new JLabel(new ImageIcon(app.getResourceAsURL('loading.gif')))
-        progress.setBounds(110, 70, 180, 40)
+        progress.setBounds(50, 120, 256, 25)
         glassPane.add(progress)
         glassPane.visible = true
-        //window.getContentPane().add(new JLabel(new ImageIcon(image)))
 
         window.setLocationRelativeTo(null)
-
     }
 
     public void show() {
