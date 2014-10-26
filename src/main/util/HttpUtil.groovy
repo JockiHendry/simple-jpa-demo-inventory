@@ -38,15 +38,17 @@ public class HttpUtil {
     }
 
     private String prepareText(String text) {
-        StringBuilder result = new StringBuilder(text)
-        result.append("\nEnvironments:\n")
-        for (String key: System.getenv().keySet()) {
-            result.append("$key : ${System.getenv(key)}\n")
-        }
+        StringBuilder result = new StringBuilder()
+        result.append("System Information:\n")
+        result.append("${System.getProperty('java.vendor')} ${System.getProperty('java.version')} (${System.getProperty('java.home')})\n")
+        result.append("${System.getProperty('os.name')} ${System.getProperty('os.version')} (${System.getProperty('os.arch')})\n")
+        result.append("${System.getProperty('user.name')}, home: ${System.getProperty('user.home')}, working: ${System.getProperty('user.dir')}\n")
+        result.append("\nMessage:\n")
+        result.append(text)
         return StringEscapeUtils.escapeJavaScript(result.toString())
     }
 
-    public void sendNotification(String username, String text) {
+    public boolean sendNotification(String username, String text) {
         try {
             HttpsURLConnection http = (HttpsURLConnection) new URL(server).openConnection()
             http.setDoOutput(true)
@@ -63,6 +65,8 @@ public class HttpUtil {
             LOG.info("Notification server response: [" + http.getResponseMessage() + "]")
         } catch (Exception ex) {
             LOG.error("Can't send to notification server: [" + ex.getMessage() + "]")
+            return false
         }
+        true
     }
 }

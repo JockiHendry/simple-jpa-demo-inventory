@@ -35,7 +35,7 @@ class PesanGiroJatuhTempo extends Pesan {
     PesanGiroJatuhTempo(BilyetGiro bilyetGiro) {
         this.tanggal = LocalDateTime.now()
         this.bilyetGiro = bilyetGiro
-        this.pesan = "Giro ${bilyetGiro.nomorSeri} untuk bank ${bilyetGiro.namaBank} sudah jatuh tempo"
+        this.pesan = "Giro <strong>${bilyetGiro.nomorSeri}</strong> untuk bank <strong>${bilyetGiro.namaBank}</strong> sudah jatuh tempo"
     }
 
     @Override

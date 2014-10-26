@@ -20,6 +20,6 @@ import domain.user.Pesan
 
 class PesanModel {
 
-    BasicEventList<Pesan> pesanList = new BasicEventList<>()
+    List<Pesan> pesanList = []
 
 }

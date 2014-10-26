@@ -21,22 +21,8 @@ import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COL
 panel(id: 'mainPanel') {
     borderLayout()
 
-    panel(constraints: PAGE_START) {
-        button('Refresh', actionPerformed: controller.refresh)
-    }
-
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.pesanList, sortingStrategy: SINGLE_COLUMN) {
-            glazedColumn(name: 'Tanggal', property: 'tanggal', width: 140) {
-                templateRenderer(exp: { it?.toString('dd-MM-yyyy HH:mm:ss') })
-            }
-            glazedColumn(name: 'Prioritas', property: 'prioritas', width: 100)
-            glazedColumn(name: 'Pesan', property: 'pesan')
-        }
+        editorPane(id: 'dashboard', editable: false, hyperlinkUpdate: controller.aksi)
     }
 
-    panel(constraints: PAGE_END) {
-        flowLayout(alignment: FlowLayout.LEADING)
-        button('Hapus', actionPerformed: controller.hapus, visible: bind{table.isRowSelected})
-    }
 }
