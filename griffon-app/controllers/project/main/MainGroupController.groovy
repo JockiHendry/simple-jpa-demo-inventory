@@ -53,6 +53,9 @@ class MainGroupController {
             model.pesanVisible = currentUser.bolehAkses(domain.user.Menu.PESAN)
         }
         app.addApplicationEventListener(this)
+        if (model.pesanVisible) {
+            view.mainTab.addMVCTab('pesan', [:])
+        }
     }
 
     void onUpdatePesan(boolean visible) {
