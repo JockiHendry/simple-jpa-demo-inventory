@@ -39,9 +39,7 @@ panel(id: 'mainPanel') {
         dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
-        checkBox('Jatuh Tempo ', id: 'chkJatuhTempo', selected: bind('chkJatuhTempo', target: model, mutual: true))
-        dateTimePicker(id: 'jatuhTempoSearch', localDate: bind('jatuhTempoSearch', target: model, mutual: true), timeVisible: false,
-            visible: bind('chkJatuhTempo', source: model))
+        checkBox('Hanya Akan Jatuh Tempo ', id: 'chkJatuhTempo', selected: bind('chkJatuhTempo', target: model, mutual: true))
         comboBox(id: 'statusSearch', model: model.statusSearch)
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
     }

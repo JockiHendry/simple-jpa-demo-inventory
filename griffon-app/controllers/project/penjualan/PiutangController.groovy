@@ -44,7 +44,7 @@ class PiutangController {
 
     def search = {
         List result = fakturJualRepository.cariPiutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-                model.nomorSearch, model.konsumenSearch, model.chkJatuhTempo? model.jatuhTempoSearch: null, model.statusSearch.selectedItem)
+            model.nomorSearch, model.konsumenSearch, model.chkJatuhTempo, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturJualList.clear()
             model.fakturJualList.addAll(result)

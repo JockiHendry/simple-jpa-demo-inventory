@@ -151,10 +151,9 @@ class FakturJualRepository {
     }
 
     public List<FakturJualOlehSales> cariPiutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
-                                        String konsumenSearch, LocalDate tanggalJatuhTempo = null,
-                                        StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
+            String konsumenSearch, boolean hanyaAkanJatuhTempo = false, StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
         findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            if (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS) {
+            if (!hanyaAkanJatuhTempo && (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS)) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             }
             if (nomorSearch) {
@@ -165,9 +164,9 @@ class FakturJualRepository {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
             }
-            if (tanggalJatuhTempo) {
+            if (hanyaAkanJatuhTempo) {
                 and()
-                jatuhTempo eq(tanggalJatuhTempo)
+                jatuhTempo lt(LocalDate.now().plusDays(7))
             }
             List statusSearch = []
             if ((statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
