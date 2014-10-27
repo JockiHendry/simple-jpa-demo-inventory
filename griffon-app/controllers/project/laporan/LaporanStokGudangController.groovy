@@ -29,6 +29,7 @@ class LaporanStokGudangController {
                 produk__nama like("%${model.produkSearch}%")
             }
             if (model.gudangSearch) {
+                and()
                 gudang__nama like("%${model.gudangSearch}%")
             }
         }

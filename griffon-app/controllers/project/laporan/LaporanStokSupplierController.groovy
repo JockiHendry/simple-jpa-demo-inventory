@@ -31,6 +31,7 @@ class LaporanStokSupplierController {
                 nama like("%${model.produkSearch}%")
             }
             if (model.supplierSearch) {
+                and()
                 supplier__nama like("%${model.supplierSearch}%")
             }
         }
