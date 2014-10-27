@@ -28,9 +28,13 @@ class PesanRepository {
     GriffonApplication app = ApplicationHolder.application
 
     public Pesan buat(Pesan pesan) {
-        persist(pesan)
+        Pesan hasil = findPesanByPesan(pesan.pesan)
+        if (!hasil) {
+            persist(pesan)
+            hasil = pesan
+        }
         app.event(EVENT_UPDATE_PESAN, [true])
-        pesan
+        hasil
     }
 
     public List<Pesan> refresh() {

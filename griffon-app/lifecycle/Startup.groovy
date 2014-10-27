@@ -56,9 +56,6 @@ execOutsideUI {
             UIManager.put('Table.rowHeight', ukuranHuruf + 1)
         }
     }
-
-    // Clearing bilyet giro yang jatuh tempo
-    serviceManager.findService('BilyetGiro').periksaJatuhTempo()
 }
 
 SplashScreen.instance.dispose()

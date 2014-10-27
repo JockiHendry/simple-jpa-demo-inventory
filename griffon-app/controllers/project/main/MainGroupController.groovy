@@ -17,6 +17,7 @@
 package project.main
 
 import domain.user.User
+import project.penjualan.BilyetGiroService
 import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
 import javax.swing.JButton
@@ -28,6 +29,8 @@ class MainGroupController {
     MainGroupModel model
     def view
     def groupId
+
+    BilyetGiroService bilyetGiroService
 
     void mvcGroupInit(Map args) {
         User currentUser = SimpleJpaUtil.instance.user
@@ -53,6 +56,14 @@ class MainGroupController {
             model.pesanVisible = currentUser.bolehAkses(domain.user.Menu.PESAN)
         }
         app.addApplicationEventListener(this)
+        init()
+
+    }
+
+    def init = {
+        // Notifikasi pesan bilyet giro yang jatuh tempo
+        bilyetGiroService.periksaJatuhTempo()
+
         if (model.pesanVisible) {
             view.mainTab.addMVCTab('pesan', [:])
         }

@@ -34,7 +34,7 @@ class PesanLevelMinimum extends Pesan {
     PesanLevelMinimum(Produk produk, int jumlahAktual, int levelMinimum) {
         this.tanggal = LocalDateTime.now()
         this.produk = produk
-        this.pesan = "Stok <strong>${produk.nama}</strong> mencapai level minimum: <strong>$levelMinimum</strong>, dimana jumlahnya saat ini: <strong>$jumlahAktual</strong>"
+        this.pesan = "Stok <strong>${produk.nama}</strong> mencapai level minimum <strong>$levelMinimum</strong>."
     }
 
     @Override
