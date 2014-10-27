@@ -95,6 +95,11 @@ class ItemReturAsChildController {
             DialogUtils.showMVCGroup('klaimAsChild', args, app, view, props) { m, v, c ->
                 model.klaims.clear()
                 model.klaims.addAll(m.klaimList)
+                ItemRetur itemRetur = view.table.selectionModel.selected[0]
+                if (itemRetur) {
+                    itemRetur.klaims.clear()
+                    m.klaimList.each { itemRetur.tambahKlaim(it) }
+                }
             }
         }
     }
