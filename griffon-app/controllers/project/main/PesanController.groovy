@@ -18,6 +18,8 @@ package project.main
 import domain.user.Pesan
 import domain.user.PesanGiroJatuhTempo
 import domain.user.PesanLevelMinimum
+import domain.user.PesanPiutangJatuhTempo
+import project.penjualan.FakturJualRepository
 import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
@@ -52,6 +54,25 @@ class PesanController {
             }
             body {
                 img(src: "${app.getResourceAsURL('beranda.png')}")
+
+                // Informasi untuk piutang yang akan jatuh tempo
+                List piutangJatuhTempo = model.pesanList.findAll { it instanceof PesanPiutangJatuhTempo }
+                h1 "Piutang Yang Akan Jatuh Tempo"
+                div {
+                    if (piutangJatuhTempo.empty) {
+                        mkp.yield "Tidak ada piutang yang akan jatuh tempo."
+                    } else {
+                        mkp.yieldUnescaped "Terdapat <strong>${piutangJatuhTempo.size()}</strong> piutang yang akan segera jatuh tempo.  Berikut adalah daftar piutang tersebut:"
+                        ul {
+                            piutangJatuhTempo.each { PesanPiutangJatuhTempo p -> li {mkp.yieldUnescaped(p.pesan)} }
+                        }
+                    }
+                }
+                if (!piutangJatuhTempo.empty) {
+                    div {
+                        mkp.yieldUnescaped "Anda juga dapat melihat informasi ini dalam bentuk tabel di <a href='#piutang'>Screen Piutang</a>."
+                    }
+                }
 
                 // Informasi untuk bilyet giro yang jatuh tempo
                 List giroJatuhTempo = model.pesanList.findAll { it instanceof PesanGiroJatuhTempo }
@@ -110,7 +131,9 @@ class PesanController {
                     JOptionPane.showMessageDialog(view.mainPanel, "Maaf, $userName.  Program sedang tidak dapat menghubungi server kami.", 'Pesan Gagal Dikirim', JOptionPane.ERROR_MESSAGE)
                 }
             } else {
-                // add new hyperlink actions here!
+                if (e.description == '#piutang') {
+                    app.mvcGroupManager.findGroup('mainGroup').view.mainTab.addMVCTab('piutang', [statusPiutangSearch: FakturJualRepository.StatusPiutangSearch.AKAN_JATUH_TEMPO])
+                }
             }
         }
     }

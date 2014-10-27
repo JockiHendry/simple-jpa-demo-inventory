@@ -32,7 +32,6 @@ class PiutangModel {
     @Bindable String konsumenSearch
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
-    @Bindable boolean chkJatuhTempo
     EnumComboBoxModel statusSearch = new EnumComboBoxModel(FakturJualRepository.StatusPiutangSearch)
 
 }

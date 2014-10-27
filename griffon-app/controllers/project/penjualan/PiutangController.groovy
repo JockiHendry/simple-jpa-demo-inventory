@@ -30,21 +30,18 @@ class PiutangController {
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        init()
-        search()
-    }
-
-    def init = {
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.statusSearch.selectedItem = PurchaseOrderRepository.StatusHutangSearch.BELUM_LUNAS
+            model.statusSearch.selectedItem = args.containsKey('statusPiutangSearch')? args.statusPiutangSearch:
+                FakturJualRepository.StatusPiutangSearch.BELUM_LUNAS
         }
+        search()
     }
 
     def search = {
         List result = fakturJualRepository.cariPiutang(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.konsumenSearch, model.chkJatuhTempo, model.statusSearch.selectedItem)
+            model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturJualList.clear()
             model.fakturJualList.addAll(result)

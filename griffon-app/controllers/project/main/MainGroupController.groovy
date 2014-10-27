@@ -18,6 +18,7 @@ package project.main
 
 import domain.user.User
 import project.penjualan.BilyetGiroService
+import project.penjualan.PiutangService
 import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
 import javax.swing.JButton
@@ -31,6 +32,7 @@ class MainGroupController {
     def groupId
 
     BilyetGiroService bilyetGiroService
+    PiutangService piutangService
 
     void mvcGroupInit(Map args) {
         User currentUser = SimpleJpaUtil.instance.user
@@ -61,8 +63,9 @@ class MainGroupController {
     }
 
     def init = {
-        // Notifikasi pesan bilyet giro yang jatuh tempo
+        // Notifikasi pesan
         bilyetGiroService.periksaJatuhTempo()
+        piutangService.periksaJatuhTempo()
 
         if (model.pesanVisible) {
             view.mainTab.addMVCTab('pesan', [:])

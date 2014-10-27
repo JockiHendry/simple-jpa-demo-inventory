@@ -151,9 +151,9 @@ class FakturJualRepository {
     }
 
     public List<FakturJualOlehSales> cariPiutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
-            String konsumenSearch, boolean hanyaAkanJatuhTempo = false, StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
+            String konsumenSearch, StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
         findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            if (!hanyaAkanJatuhTempo && (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS)) {
+            if ((statusPiutangSearch != StatusPiutangSearch.AKAN_JATUH_TEMPO) && (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS)) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             }
             if (nomorSearch) {
@@ -164,19 +164,22 @@ class FakturJualRepository {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
             }
-            if (hanyaAkanJatuhTempo) {
+            if (statusPiutangSearch == StatusPiutangSearch.AKAN_JATUH_TEMPO) {
                 and()
-                jatuhTempo lt(LocalDate.now().plusDays(7))
+                jatuhTempo between(LocalDate.now().plusDays(1), LocalDate.now().plusDays(7))
+                and()
+                status eq(StatusFakturJual.DITERIMA)
+            } else {
+                List statusSearch = []
+                if ((statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
+                    statusSearch << StatusFakturJual.DITERIMA
+                }
+                if ((statusPiutangSearch == StatusPiutangSearch.LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
+                    statusSearch << StatusFakturJual.LUNAS
+                }
+                and()
+                status isIn(statusSearch)
             }
-            List statusSearch = []
-            if ((statusPiutangSearch == StatusPiutangSearch.BELUM_LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
-                statusSearch << StatusFakturJual.DITERIMA
-            }
-            if ((statusPiutangSearch == StatusPiutangSearch.LUNAS) || (statusPiutangSearch == StatusPiutangSearch.SEMUA)) {
-                statusSearch << StatusFakturJual.LUNAS
-            }
-            and()
-            status isIn(statusSearch)
         }
     }
 
@@ -437,7 +440,7 @@ class FakturJualRepository {
     }
 
     public enum StatusPiutangSearch {
-        SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas')
+        SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas'), AKAN_JATUH_TEMPO('Akan Jatuh Tempo')
 
         String description
 
