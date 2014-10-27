@@ -40,6 +40,7 @@ class PencairanPoinModel {
     @Bindable BigDecimal rate
     @Bindable Konsumen konsumen
     List<ItemBarang> items = []
+    @Bindable FakturJualOlehSales fakturPotongPiutang
     EnumComboBoxModel<JenisPencairanPoin> jenisPencairanPoin = new EnumComboBoxModel<JenisPencairanPoin>(JenisPencairanPoin)
 
     @Bindable String created
@@ -50,6 +51,7 @@ class PencairanPoinModel {
     BasicEventList pencairanPoinList = new BasicEventList()
 
     @Bindable boolean daftarBarangVisible
+    @Bindable boolean potongPiutangVisible
 
     @Bindable String nomorSearch
     @Bindable String konsumenSearch

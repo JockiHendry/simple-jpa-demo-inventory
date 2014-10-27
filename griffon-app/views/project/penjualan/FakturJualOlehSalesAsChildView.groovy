@@ -27,6 +27,10 @@ import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.RIGHT
 import static javax.swing.SwingConstants.RIGHT
 
+actions {
+    action(id: 'tutup', name: 'Tutup', closure: controller.tutup)
+}
+
 panel(id: 'mainPanel') {
     borderLayout()
 
@@ -35,7 +39,8 @@ panel(id: 'mainPanel') {
     }
 
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN) {
+        glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN, doubleClickAction: tutup,
+                enterKeyAction: tutup) {
             glazedColumn(name: '', property: 'deleted', width: 20) {
                 templateRenderer(exp: { it == 'Y'? 'D': ''})
             }

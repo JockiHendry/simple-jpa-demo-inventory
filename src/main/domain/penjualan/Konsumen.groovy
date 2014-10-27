@@ -15,6 +15,7 @@
  */
 package domain.penjualan
 
+import domain.exception.FakturTidakDitemukan
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
@@ -156,6 +157,20 @@ class Konsumen implements Comparable {
             if (jumlah==0) break
         }
         hasil
+    }
+
+    public Referensi potongPiutang(BigDecimal jumlah, FakturJualOlehSales faktur, Referensi referensi = null) {
+        // Pastikan bahwa faktur ini valid
+        faktur = listFakturBelumLunas.find { it.nomor == faktur.nomor }
+        if (!faktur) {
+            throw new FakturTidakDitemukan(faktur.nomor, "Tidak ada faktur belum lunas ini untuk konsumen ${nama}!")
+        }
+        if (jumlah > faktur.jumlahPiutang()) {
+            throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(faktur.jumlahPiutang())}")
+        }
+
+        faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true, referensi: referensi))
+        new Referensi(FakturJualOlehSales, faktur.nomor)
     }
 
     public void tambahPoin(Integer poin, String referensi = null) {

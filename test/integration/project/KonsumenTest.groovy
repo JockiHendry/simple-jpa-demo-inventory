@@ -15,6 +15,7 @@
  */
 package project
 
+import domain.faktur.Referensi
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import project.penjualan.KonsumenRepository
@@ -50,6 +51,19 @@ class KonsumenTest extends DbUnitTestCase {
             konsumen.potongPiutang(20000)
             assertEquals(0, konsumen.listFakturBelumLunas.size())
             assertEquals(0, konsumen.jumlahPiutang())
+        }
+    }
+
+    public void testPotongPiutangPerFaktur() {
+        konsumenRepository.withTransaction {
+            Konsumen konsumen = findKonsumenByIdFetchFakturBelumLunas(-3l)
+            FakturJualOlehSales faktur = findFakturJualOlehSalesById(-3l)
+            Referensi referensi = konsumen.potongPiutang(30000, faktur)
+            assertEquals('FakturJualOlehSales', referensi.namaClass)
+            assertEquals(faktur.nomor, referensi.nomor)
+            assertEquals(20000, konsumen.jumlahPiutang())
+            faktur = findFakturJualOlehSalesByIdFetchComplete(-3l)
+            assertEquals(20000, faktur.sisaPiutang())
         }
     }
 

@@ -23,6 +23,9 @@ import javax.persistence.*
 @DomainClass @Entity @Canonical
 class PencairanPoinPotongPiutang extends PencairanPoin {
 
+    @Transient
+    FakturJualOlehSales fakturJualOlehSales
+
     @Override
     boolean valid() {
         konsumen.jumlahPiutang() >= getNominal()
@@ -30,12 +33,16 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
 
     @Override
     void proses() {
-        konsumen.potongPiutang(getNominal(), new Referensi(PencairanPoin, nomor))
+        if (fakturJualOlehSales) {
+            konsumen.potongPiutang(getNominal(),fakturJualOlehSales, new Referensi(PencairanPoin, nomor))
+        } else {
+            konsumen.potongPiutang(getNominal(), new Referensi(PencairanPoin, nomor))
+        }
     }
 
     @Override
     void hapus() {
-        throw new RuntimeException('Untuk saat ini, pencairan poin untuk potong piutang belum di-implementasi-kan!')
+        throw new RuntimeException('Untuk saat ini, proses hapus pencairan poin untuk potong piutang belum di-implementasi-kan!')
     }
 }
 

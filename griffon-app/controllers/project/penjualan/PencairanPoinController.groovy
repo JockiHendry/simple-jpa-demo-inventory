@@ -27,7 +27,6 @@ import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
-import java.text.DateFormat
 
 class PencairanPoinController {
 
@@ -67,14 +66,13 @@ class PencairanPoinController {
             pencairanPoin = new PencairanPoinTukarBarang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: 1, keterangan: model.keterangan)
             pencairanPoin.listItemBarang.addAll(model.items)
         } else if (jenisPencarian == JenisPencairanPoin.POTONG_PIUTANG) {
-            pencairanPoin = new PencairanPoinPotongPiutang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: model.jumlahPoin, keterangan: model.keterangan)
+            pencairanPoin = new PencairanPoinPotongPiutang(tanggal: model.tanggal, konsumen: model.konsumen, jumlahPoin: model.jumlahPoin, keterangan: model.keterangan, fakturJualOlehSales: model.fakturPotongPiutang)
         } else {
             model.errors['jenisPencairanPoin'] = 'Tidak didukung untuk saat ini!'
             return
         }
 
         if (!pencairanPoinRepository.validate(pencairanPoin, InputPencairanPoin, model)) {
-            JOptionPane.showMessageDialog(null, "Error = " + model.errors)
             return
         }
 
@@ -127,6 +125,25 @@ class PencairanPoinController {
         }
     }
 
+    def showFakturPotongPiutang = {
+        if (!model.konsumen) {
+            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memiliki konsumen terlebih dahulu!', 'Kesalahan Urutan Pengisian Data', JOptionPane.ERROR_MESSAGE)
+            return
+        }
+        execInsideUISync {
+            def args = [konsumen: model.konsumen]
+            def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps) { m, v, c ->
+                if (v.table.selectionModel.isSelectionEmpty()) {
+                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada faktur yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                    return
+                } else {
+                    model.fakturPotongPiutang = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
     def cariKonsumen = {
         execInsideUISync {
             def args = [popup: true]
@@ -142,11 +159,8 @@ class PencairanPoinController {
     }
 
     def onPerubahanJenisLaporan = {
-        if (model.jenisPencairanPoin.selectedItem == JenisPencairanPoin.TUKAR_BARANG) {
-            model.daftarBarangVisible = true
-        } else {
-            model.daftarBarangVisible = false
-        }
+        model.daftarBarangVisible = (model.jenisPencairanPoin.selectedItem == JenisPencairanPoin.TUKAR_BARANG)
+        model.potongPiutangVisible = (model.jenisPencairanPoin.selectedItem == JenisPencairanPoin.POTONG_PIUTANG)
     }
 
     def clear = {
@@ -159,6 +173,7 @@ class PencairanPoinController {
             model.rate = null
             model.konsumen = null
             model.items.clear()
+            model.fakturPotongPiutang = null
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -191,6 +206,7 @@ class PencairanPoinController {
                     model.jenisPencairanPoin.selectedItem = JenisPencairanPoin.TUKAR_BARANG
                 } else if (selected instanceof PencairanPoinPotongPiutang) {
                     model.jenisPencairanPoin.selectedItem = JenisPencairanPoin.POTONG_PIUTANG
+                    model.fakturPotongPiutang = null
                 }
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null

@@ -21,4 +21,7 @@ class FakturTidakDitemukan extends RuntimeException {
         super("Faktur dengan nomor " + nomorFaktur + " tidak ditemukan!")
     }
 
+    FakturTidakDitemukan(String nomorFaktur, String keterangan) {
+        super("Faktur tidak ditemukan (" + nomorFaktur + "). " + keterangan)
+    }
 }

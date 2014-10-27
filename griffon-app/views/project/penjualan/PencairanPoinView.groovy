@@ -25,6 +25,7 @@ import static javax.swing.SwingConstants.RIGHT
 
 actions {
     action(id: 'showDaftarBarang', name: 'Isi Daftar Produk Yang Ditukar...', closure: controller.showDaftarBarang)
+    action(id: 'showFakturPotongPiutang', name: 'Cari Faktur Jual...', closure: controller.showFakturPotongPiutang)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
@@ -79,6 +80,12 @@ panel(id: 'mainPanel') {
         label('Daftar Barang:', visible: bind {model.daftarBarangVisible})
         button(action: showDaftarBarang, errorPath: 'listItemBarang', visible: bind {model.daftarBarangVisible})
         errorLabel(path: 'listItemBarang', constraints: 'wrap', visible: bind {model.daftarBarangVisible})
+        label('Potong Piutang Pada Faktur', visible: bind {model.potongPiutangVisible})
+        panel {
+            label(text: bind {model.fakturPotongPiutang?.nomor?: '-'}, visible: bind {model.potongPiutangVisible})
+            button(action: showFakturPotongPiutang, errorPath: 'potongPiutangFaktur', visible: bind {model.potongPiutangVisible})
+        }
+        errorLabel(path: 'fakturPotongPiutang', constraints: 'wrap', visible: bind {model.potongPiutangVisible})
         label('Keterangan:')
         textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
         errorLabel(path: 'keterangan', constraints: 'wrap')

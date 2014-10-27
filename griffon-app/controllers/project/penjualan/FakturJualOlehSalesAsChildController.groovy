@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import javax.swing.SwingUtilities
 import java.text.NumberFormat
 
 class FakturJualOlehSalesAsChildController {
@@ -34,6 +35,10 @@ class FakturJualOlehSalesAsChildController {
             model.fakturJualOlehSalesList.addAll(model.konsumen.listFakturBelumLunas)
             model.informasi = "<html>Konsumen: <strong>${model.konsumen.nama}</strong>  Jumlah Piutang: <strong>${NumberFormat.currencyInstance.format(model.konsumen.jumlahPiutang())}</strong></html>"
         }
+    }
+
+    def tutup = {
+        SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
     }
 
 }
