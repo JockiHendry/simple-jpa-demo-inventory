@@ -290,15 +290,17 @@ class ReturJualTests extends GriffonUnitTestCase {
         i1.merge(i2)
         assertEquals(produkA, i1.produk)
         assertEquals(30, i1.jumlah)
-        assertEquals(4, i1.klaims.size())
-        assertTrue(i1.klaims.containsAll([potongPiutang1, potongPiutang2, klaimTukar1, klaimTukar2]))
+        assertEquals(2, i1.klaims.size())
+        assertNotNull(i1.klaims.find { (it instanceof KlaimPotongPiutang) && it.jumlah == 3000})
+        assertNotNull(i1.klaims.find { (it instanceof KlaimTukar) && it.jumlah == 24})
 
         ItemRetur i3 = new ItemRetur(produkA, 30, [potongPiutang3] as Set)
         i1 << i3
         assertEquals(produkA, i1.produk)
         assertEquals(60, i1.jumlah)
-        assertEquals(5, i1.klaims.size())
-        assertTrue(i1.klaims.containsAll([potongPiutang1, potongPiutang2, potongPiutang3, klaimTukar1, klaimTukar2]))
+        assertEquals(2, i1.klaims.size())
+        assertNotNull(i1.klaims.find { (it instanceof KlaimPotongPiutang) && it.jumlah == 6000})
+        assertNotNull(i1.klaims.find { (it instanceof KlaimTukar) && it.jumlah == 24})
 
         ItemRetur i4 = new ItemRetur(produkB, 40)
         shouldFail(IllegalArgumentException) {
@@ -330,12 +332,13 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(3, hasil.size())
         assertEquals(produkA, hasil[0].produk)
         assertEquals(15, hasil[0].jumlah)
-        assertEquals(4, hasil[0].klaims.size())
-        assertTrue(hasil[0].klaims.containsAll([potongPiutang1, klaimTukar1, potongPiutang3, klaimTukar5]))
+        assertEquals(3, hasil[0].klaims.size())
+        assertNotNull(hasil[0].klaims.find { (it instanceof KlaimPotongPiutang) && (it.jumlah == 4000 )})
+        assertTrue(hasil[0].klaims.containsAll([klaimTukar1, klaimTukar5]))
         assertEquals(produkB, hasil[1].produk)
         assertEquals(30, hasil[1].jumlah)
         assertEquals(3, hasil[1].klaims.size())
-        assertTrue(hasil[1].klaims.containsAll([potongPiutang2, klaimTukar3, klaimTukar6]))
+        assertNotNull(hasil[1].klaims.containsAll([potongPiutang2, klaimTukar3, klaimTukar6]))
         assertEquals(produkC, hasil[2].produk)
         assertEquals(30, hasil[2].jumlah)
         assertTrue(hasil[2].klaims.containsAll([klaimTukar4]))
@@ -389,6 +392,40 @@ class ReturJualTests extends GriffonUnitTestCase {
         shouldFail(FakturTidakDitemukan) {
             r.hapusReferensiFaktur('F-003')
         }
+    }
+
+    void testNormalisasi() {
+        Produk produk1 = new Produk(nama: 'Produk A')
+        Produk produk2 = new Produk(nama: 'Produk B')
+        ReturJualOlehSales retur = new ReturJualOlehSales()
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 3), new KlaimTukar(produk1, 7)] as Set))
+        retur.tambah(new ItemRetur(produk1, 20, [new KlaimTukar(produk1, 20)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+        List<ItemRetur> hasil = retur.normalisasi()
+        assertEquals(2, hasil.size())
+        assertEquals(produk1, hasil[0].produk)
+        assertEquals(30, hasil[0].jumlah)
+        assertEquals(2, hasil[0].klaims.size())
+        assertEquals(30, hasil[0].jumlahBarangDitukar())
+        assertEquals(produk2, hasil[1].produk)
+        assertEquals(10, hasil[1].jumlah)
+        assertEquals(1, hasil[1].klaims.size())
+        assertTrue(hasil[1].klaims.contains(new KlaimTukar(produk2, 10)))
+
+        retur = new ReturJualOlehSales()
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 10)] as Set))
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 10)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+        hasil = retur.normalisasi()
+        assertEquals(2, hasil.size())
+        assertEquals(produk1, hasil[0].produk)
+        assertEquals(20, hasil[0].jumlah)
+        assertEquals(1, hasil[0].klaims.size())
+        assertEquals(20, hasil[0].jumlahBarangDitukar())
+        assertEquals(produk2, hasil[1].produk)
+        assertEquals(10, hasil[1].jumlah)
+        assertEquals(1, hasil[1].klaims.size())
+        assertTrue(hasil[1].klaims.contains(new KlaimTukar(produk2, 10)))
     }
 
 }

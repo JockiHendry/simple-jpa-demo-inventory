@@ -82,8 +82,16 @@ class ItemRetur {
             throw new IllegalArgumentException("Item untuk produk ${produk.nama} tidak dapat digabung dengan item untuk produk ${itemReturLain?.produk?.nama}")
         }
         jumlah += itemReturLain.jumlah
-        if (!itemReturLain.klaims.empty) {
-            klaims.addAll(itemReturLain.klaims)
+        Set<Klaim> sudahDiMerge = [] as Set
+        itemReturLain.klaims.toArray().each { Klaim k ->
+            // Cari apakah sudah ada klaim serupa
+            Klaim klaimSudahAda = klaims.find { it.class == k.class }
+            if (klaimSudahAda && klaimSudahAda.bolehMerge(k)) {
+                klaimSudahAda.merge(k)
+                sudahDiMerge << k
+            } else if (!sudahDiMerge.contains(k)) {
+                klaims << k
+            }
         }
     }
 

@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-abstract class Klaim {
+abstract class Klaim implements Cloneable {
 
     @NotNull
     Boolean sudahDiproses = false
@@ -34,6 +34,10 @@ abstract class Klaim {
     void proses() {
         sudahDiproses = true
     }
+
+    abstract void merge(Klaim klaim)
+
+    abstract boolean bolehMerge(Klaim klaim)
 
 }
 

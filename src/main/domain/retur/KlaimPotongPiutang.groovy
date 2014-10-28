@@ -24,11 +24,23 @@ import org.hibernate.validator.constraints.*
 import org.joda.time.*
 import java.text.NumberFormat
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical @AutoClone
 class KlaimPotongPiutang extends Klaim {
 
     @Min(0l) @NotNull
     BigDecimal jumlah
+
+    @Override
+    void merge(Klaim klaim) {
+        if (bolehMerge(klaim)) {
+            jumlah += klaim.jumlah
+        }
+    }
+
+    @Override
+    boolean bolehMerge(Klaim klaim) {
+        klaim instanceof KlaimPotongPiutang
+    }
 
     @Override
     boolean equals(Object o) {
@@ -44,5 +56,6 @@ class KlaimPotongPiutang extends Klaim {
     String toString() {
         "Potong Piutang: ${jumlah? NumberFormat.currencyInstance.format(jumlah): 0}"
     }
+
 }
 

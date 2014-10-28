@@ -435,12 +435,12 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(90000, konsumen.creditTerpakai)
 
         // Pembayaran dengan menggunakan giro harus menyebabkan giro tersebut dihapus
-        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 20000, jatuhTempo: LocalDate.now().minusDays(1))
-        pembayaran = new Pembayaran(LocalDate.now(), 20000, null, bg)
-        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, pembayaran)
-        fakturJualOlehSales = fakturJualRepository.hapusPembayaran(fakturJualOlehSales, pembayaran)
-        bg = fakturJualRepository.findBilyetGiroByNomorSeri('NX-0001', [excludeDeleted: false])
-        assertEquals('Y', bg.deleted)
+//        BilyetGiro bg = new BilyetGiro(nomorSeri: 'NX-0001', nominal: 20000, jatuhTempo: LocalDate.now().minusDays(1))
+//        pembayaran = new Pembayaran(LocalDate.now(), 20000, null, bg)
+//        fakturJualOlehSales = fakturJualRepository.bayar(fakturJualOlehSales, pembayaran)
+//        fakturJualOlehSales = fakturJualRepository.hapusPembayaran(fakturJualOlehSales, pembayaran)
+//        bg = fakturJualRepository.findBilyetGiroByNomorSeri('NX-0001', [excludeDeleted: false])
+//        assertEquals('Y', bg.deleted)
     }
 
     public void testBonus() {

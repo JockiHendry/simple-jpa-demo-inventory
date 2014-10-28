@@ -25,7 +25,7 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical @AutoClone
 class KlaimTukar extends Klaim {
 
     @ManyToOne @NotNull
@@ -33,6 +33,18 @@ class KlaimTukar extends Klaim {
 
     @Min(0l) @NotNull
     Integer jumlah
+
+    @Override
+    void merge(Klaim klaim) {
+        if (bolehMerge(klaim)) {
+            jumlah += klaim.jumlah
+        }
+    }
+
+    @Override
+    boolean bolehMerge(Klaim klaim) {
+        (klaim instanceof KlaimTukar) && (klaim.produk == produk)
+    }
 
     Object asType(Class type) {
         if (type == ItemBarang) {
