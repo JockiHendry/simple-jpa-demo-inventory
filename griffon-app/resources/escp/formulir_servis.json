@@ -1,0 +1,29 @@
+{
+    "pageFormat": {
+        "characterPitch": "12 cpi",
+        "pageWidth": 96,
+        "pageLength": 31,
+        "usePageLengthFromPrinter": true
+    },
+    "template": [
+           "      %{176 R2}      Formulir Servis          ${companyName:49} Hal: %{PAGE_NO}",
+           "    %{176 R6}    Nama      : ${namaKonsumen}",
+           "   %{176 R8}   Alamat    : ${alamat}",
+           "     %{176 R4}",
+           "      %{176 R2}",
+           "",
+           "  Model / Tipe    : ${tipe}",
+           "  Keluhan         : ${keluhan}",
+           "  Keterangan      : ${keterangan}",
+           "  Tanggal Masuk   : {{ tanggalMasuk.toString('dd-MM-YYYY') }}",
+           "  Tanggal Selesai : {{ tanggalSelesai.toString('dd-MM-YYYY') }}",
+           "  Tanggal Diambil : {{ tanggalDiambil.toString('dd-MM-YYYY') }}",
+           "",
+           "",
+           "        Hormat kami,                       Gudang,                         Penerima,            ",
+           "",
+           "",
+           "",
+           "  (${createdBy:21:center})           (..................)              (.................)        "
+    ]
+}

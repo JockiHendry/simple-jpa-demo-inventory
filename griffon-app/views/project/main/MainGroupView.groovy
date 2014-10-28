@@ -118,6 +118,9 @@ actions {
     action(id: 'returBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_retur_beli.png'), closure: controller.switchPage)
 
+    action(id: 'servis', name: 'Servis', actionCommandKey: 'servis', mnemonic: KeyEvent.VK_V,
+        smallIcon: imageIcon('/menu_servis.png'), closure: controller.switchPage)
+
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
 
@@ -232,6 +235,8 @@ application(id: 'mainFrame',
                 button(action: returJual, id: 'returJualButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.returJualVisible})
                 button(action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.returBeliVisible})
+                button(action: servis, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.returBeliVisible})
                 button(action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.laporanVisible})

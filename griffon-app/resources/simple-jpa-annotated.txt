@@ -20,3 +20,4 @@ listener.BilyetGiroEventListenerService
 project.retur.ReturBeliRepository
 project.retur.ReturJualRepository
 project.retur.ReturJualService
+project.servis.ServisRepository
