@@ -15,15 +15,15 @@
            "  Model / Tipe    : ${tipe}",
            "  Keluhan         : ${keluhan}",
            "  Keterangan      : ${keterangan}",
-           "  Tanggal Masuk   : {{ tanggalMasuk.toString('dd-MM-YYYY') }}",
-           "  Tanggal Selesai : {{ tanggalSelesai.toString('dd-MM-YYYY') }}",
-           "  Tanggal Diambil : {{ tanggalDiambil.toString('dd-MM-YYYY') }}",
+           "  Tanggal Masuk   : ..........",
+           "  Tanggal Selesai : ..........",
+           "  Tanggal Diambil : ..........",
            "",
            "",
-           "        Hormat kami,                       Gudang,                         Penerima,            ",
+           "        Hormat kami,                    Bagian Servis,                     Penerima,            ",
            "",
            "",
            "",
-           "  (${createdBy:21:center})           (..................)              (.................)        "
+           "  (${createdBy:21:center})           (...................)             (.................)        "
     ]
 }
