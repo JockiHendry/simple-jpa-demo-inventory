@@ -33,7 +33,7 @@ class LaporanPembayaranPiutangController {
     }
 
     def tampilkanLaporan = {
-        model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'konsumen__sales__nama,tanggal,nomor']) {
+        model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchPiutang([orderBy: 'konsumen__sales__nama,tanggal,nomor']) {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
             and()
             status isIn([StatusFakturJual.DITERIMA, StatusFakturJual.LUNAS])
