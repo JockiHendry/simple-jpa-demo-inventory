@@ -120,6 +120,8 @@ actions {
 
     action(id: 'servis', name: 'Servis', actionCommandKey: 'servis', mnemonic: KeyEvent.VK_V,
         smallIcon: imageIcon('/menu_servis.png'), closure: controller.switchPage)
+    action(id: 'penerimaanServis', name: 'Penerimaan Servis', actionCommandKey: 'penerimaanServis',
+        smallIcon: imageIcon('/menu_penerimaan_servis.png'), closure: controller.switchPage)
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
         smallIcon: imageIcon('/menu_laporan.png'), closure: controller.switchPage)
@@ -237,7 +239,9 @@ application(id: 'mainFrame',
                 button(action: returBeli, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.returBeliVisible})
                 button(action: servis, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    borderPainted: false, visible: bind {model.returBeliVisible})
+                    borderPainted: false, visible: bind {model.servisVisible})
+                button(action: penerimaanServis, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.penerimaanServisVisible})
                 button(action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.laporanVisible})
                 button(action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,

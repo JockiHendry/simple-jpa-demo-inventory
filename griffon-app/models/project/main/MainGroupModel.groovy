@@ -37,6 +37,8 @@ class MainGroupModel {
     @Bindable boolean penyesuaianStokVisible = true
     @Bindable boolean returJualVisible = true
     @Bindable boolean returBeliVisible = true
+    @Bindable boolean servisVisible = true
+    @Bindable boolean penerimaanServisVisible = true
     @Bindable boolean laporanVisible = true
     @Bindable boolean pesanVisible = true
     @Bindable boolean maintenanceVisible = true

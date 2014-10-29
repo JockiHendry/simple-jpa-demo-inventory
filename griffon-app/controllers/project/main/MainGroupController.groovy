@@ -53,6 +53,8 @@ class MainGroupController {
             model.penyesuaianStokVisible = currentUser.bolehAkses(domain.user.Menu.PENYESUAIAN_STOK)
             model.returJualVisible = currentUser.bolehAkses(domain.user.Menu.RETUR_JUAL)
             model.returBeliVisible = currentUser.bolehAkses(domain.user.Menu.RETUR_BELI)
+            model.servisVisible = currentUser.bolehAkses(domain.user.Menu.SERVIS)
+            model.penerimaanServisVisible = currentUser.bolehAkses(domain.user.Menu.PENERIMAAN_SERVIS)
             model.laporanVisible = currentUser.bolehAkses(domain.user.Menu.LAPORAN)
             model.maintenanceVisible = currentUser.bolehAkses(domain.user.Menu.MAINTENANCE)
             model.pesanVisible = currentUser.bolehAkses(domain.user.Menu.PESAN)
