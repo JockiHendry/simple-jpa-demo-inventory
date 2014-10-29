@@ -34,6 +34,8 @@ import domain.inventory.ItemBarang
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.pembelian.PenerimaanBarang
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import project.inventory.GudangRepository
 import project.user.NomorService
 import domain.validation.InputPenjualanOlehSales
@@ -52,6 +54,15 @@ import javax.validation.groups.Default
         @NamedAttributeNode('listItemFaktur'),
         @NamedAttributeNode('piutang'),
         @NamedAttributeNode('bonusPenjualan'),
+    ]),
+    @NamedEntityGraph(name='FakturJualOlehSales.Piutang', attributeNodes=[
+        @NamedAttributeNode(value='konsumen', subgraph='konsumen'),
+        @NamedAttributeNode('piutang')
+    ], subgraphs = [
+        @NamedSubgraph(name='konsumen', attributeNodes=[
+            @NamedAttributeNode('region'),
+            @NamedAttributeNode('sales')
+        ])
     ]),
     @NamedEntityGraph(name='FakturJualOlehSales.PengeluaranBarang', attributeNodes=[
         @NamedAttributeNode('listItemFaktur'),
@@ -81,7 +92,8 @@ class FakturJualOlehSales extends FakturJual {
 
     Boolean kirimDariGudangUtama
 
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur') @OrderColumn
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur')
+    @Fetch(FetchMode.SUBSELECT)
     List<PenerimaanBarang> retur = []
 
     void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {

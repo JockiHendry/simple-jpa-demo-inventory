@@ -16,6 +16,8 @@
 package domain.faktur
 
 import groovy.transform.*
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
@@ -27,6 +29,7 @@ class KewajibanPembayaran {
     BigDecimal jumlah
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @CollectionTable(name='kewajibanpembayaran_items')
+    @Fetch(FetchMode.SUBSELECT)
     List<Pembayaran> listPembayaran = []
 
     BigDecimal sisa(KRITERIA_PEMBAYARAN kriteria = KRITERIA_PEMBAYARAN.SEMUA) {

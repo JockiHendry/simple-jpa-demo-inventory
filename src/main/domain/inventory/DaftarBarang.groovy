@@ -18,6 +18,8 @@ package domain.inventory
 import domain.faktur.Faktur
 import domain.validation.TanpaGudang
 import groovy.transform.Canonical
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Type
 import org.hibernate.validator.constraints.NotBlank
 import org.hibernate.validator.constraints.NotEmpty
@@ -47,6 +49,7 @@ abstract class DaftarBarang implements SebuahDaftarBarang {
     Gudang gudang
 
     @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty(groups=[Default])
+    @Fetch(FetchMode.SUBSELECT)
     List<ItemBarang> items = []
 
     abstract int faktor()
