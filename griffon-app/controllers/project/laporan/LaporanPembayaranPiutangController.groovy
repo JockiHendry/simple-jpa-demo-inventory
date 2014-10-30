@@ -18,8 +18,9 @@ package project.laporan
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
 import project.penjualan.FakturJualRepository
-
+import simplejpa.swing.DialogUtils
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanPembayaranPiutangController {
 
@@ -30,6 +31,13 @@ class LaporanPembayaranPiutangController {
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        execInsideUISync {
+            model.salesList.clear()
+        }
+        List sales = fakturJualRepository.findAllSales([orderBy: 'nama'])
+        execInsideUISync {
+            model.salesList.addAll(sales)
+        }
     }
 
     def tampilkanLaporan = {
@@ -37,18 +45,37 @@ class LaporanPembayaranPiutangController {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
             and()
             status isIn([StatusFakturJual.DITERIMA, StatusFakturJual.LUNAS])
-            if (model.salesSearch) {
+            if (model.sales.selectedItem) {
                 and()
-                konsumen__sales__nama like("%${model.salesSearch}%")
+                konsumen__sales eq(model.sales.selectedItem)
             }
             if (model.konsumenSearch) {
                 and()
-                konsumen__nama like("%${model.konsumenSearch}%")
+                konsumen eq(model.konsumenSearch)
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.sales.selectedItem = null
+        model.konsumenSearch = null
+    }
+
+    def cariKonsumen = {
+        execInsideUISync {
+            def args = [popup: true]
+            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.konsumenSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
     }
 
     def batal = {

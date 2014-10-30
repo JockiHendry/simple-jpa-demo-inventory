@@ -15,6 +15,11 @@
  */
 package project.laporan
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
+import domain.penjualan.Konsumen
+import domain.penjualan.Sales
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
@@ -22,8 +27,9 @@ class LaporanPenjualanPerKonsumenModel {
 
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari
-    @Bindable String salesSearch
-    @Bindable String konsumenSearch
+    BasicEventList<Sales> salesList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
+    @Bindable Konsumen konsumenSearch
 
     List result
     Map params = [:]

@@ -15,14 +15,21 @@
  */
 package project.laporan
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
+import domain.penjualan.Region
+import domain.penjualan.Sales
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
 import simplejpa.swing.TagChooserModel
 
 class LaporanSisaPiutangModel {
 
-    @Bindable String salesSearch
-    @Bindable String regionSearch
+    BasicEventList<Sales> salesList = new BasicEventList<>()
+    BasicEventList<Region> regionList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
+    @Bindable DefaultEventComboBoxModel<Region> region = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(regionList)
     @Bindable Boolean cetakFormulir
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari

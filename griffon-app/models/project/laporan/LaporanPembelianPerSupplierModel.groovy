@@ -15,6 +15,10 @@
  */
 package project.laporan
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
+import domain.pembelian.Supplier
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
@@ -22,7 +26,8 @@ class LaporanPembelianPerSupplierModel {
 
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari
-    @Bindable String supplierSearch
+    BasicEventList<Supplier> supplierList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
 
     List result
     Map params = [:]

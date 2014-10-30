@@ -29,19 +29,32 @@ class LaporanPembelianPerSupplierController {
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        execInsideUISync {
+            model.supplierList.clear()
+        }
+        List supplier = purchaseOrderRepository.findAllSupplier([orderBy: 'nama'])
+        execInsideUISync {
+            model.supplierList.addAll(supplier)
+        }
     }
 
     def tampilkanLaporan = {
         model.result = purchaseOrderRepository.findAllPurchaseOrderByDslFetchComplete([orderBy: 'supplier__nama,tanggal,nomor']) {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
-            if (model.supplierSearch) {
+            if (model.supplier.selectedItem) {
                 and()
-                supplier__nama like("%${model.supplierSearch}%")
+                supplier eq(model.supplier.selectedItem)
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.supplier.selectedItem = null
     }
 
     def batal = {

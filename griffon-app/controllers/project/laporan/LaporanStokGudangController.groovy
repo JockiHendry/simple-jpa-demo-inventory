@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 package project.laporan
+
+import org.joda.time.LocalDate
 import project.inventory.ProdukRepository
+import simplejpa.swing.DialogUtils
+
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanStokGudangController {
 
@@ -23,17 +28,42 @@ class LaporanStokGudangController {
     def view
     ProdukRepository produkRepository
 
+    void mvcGroupInit(Map args) {
+        List gudang = produkRepository.findAllGudang([orderBy: 'nama'])
+        execInsideUISync {
+            model.gudangList.clear()
+            model.gudangList.addAll(gudang)
+        }
+    }
+
     def tampilkanLaporan = {
         model.result = produkRepository.findAllStokProdukByDsl([orderBy: 'gudang__nama,produk__nama']) {
             if (model.produkSearch) {
-                produk__nama like("%${model.produkSearch}%")
+                produk eq(model.produkSearch)
             }
-            if (model.gudangSearch) {
+            if (model.gudang.selectedItem) {
                 and()
-                gudang__nama like("%${model.gudangSearch}%")
+                gudang eq(model.gudang.selectedItem)
             }
         }
         close()
+    }
+
+    def cariProduk = {
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: false]
+            def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
+            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
+    def reset = {
+        model.produkSearch = null
+        model.gudang.selectedItem = null
     }
 
     def batal = {

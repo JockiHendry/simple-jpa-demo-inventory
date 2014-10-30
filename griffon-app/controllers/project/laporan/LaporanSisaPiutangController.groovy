@@ -16,6 +16,8 @@
 package project.laporan
 
 import domain.penjualan.Konsumen
+import domain.penjualan.Region
+import domain.penjualan.Sales
 import org.joda.time.LocalDate
 import project.penjualan.KonsumenRepository
 import javax.swing.SwingUtilities
@@ -30,8 +32,14 @@ class LaporanSisaPiutangController {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
         List<Konsumen> daftarKonsumen = konsumenRepository.findAllKonsumen([orderBy: 'nama'])
+        List<Sales> daftarSales = konsumenRepository.findAllSales([orderBy: 'nama'])
+        List<Region> daftarRegion = konsumenRepository.findAllRegion([orderBy: 'nama'])
         execInsideUISync {
             model.konsumenSearch.values = daftarKonsumen
+            model.salesList.clear()
+            model.salesList.addAll(daftarSales)
+            model.regionList.clear()
+            model.regionList.addAll(daftarRegion)
         }
     }
 
@@ -47,17 +55,24 @@ class LaporanSisaPiutangController {
             jpql += " AND k.id IN ($ids)"
         }
 
-        if (model.salesSearch) {
-            jpql += " AND k.sales.nama LIKE '%${model.salesSearch}%'"
+        if (model.sales.selectedItem) {
+            jpql += " AND k.sales = :salesSearch"
         }
 
-        if (model.regionSearch) {
-            jpql += " AND (k.region.nama LIKE '%${model.regionSearch}%' OR k.region.bagianDari.nama LIKE '%${model.regionSearch}%')"
+        if (model.region.selectedItem) {
+            jpql += " AND (k.region = :regionSearch OR k.region.bagianDari = :regionSearch)"
         }
 
         jpql += " ORDER BY k.nama "
 
-        model.result = konsumenRepository.executeQuery(jpql, [:], [tanggalMulaiSearch: model.tanggalMulaiCari, tanggalSelesaiSearch: model.tanggalSelesaiCari])
+        Map params = [tanggalMulaiSearch: model.tanggalMulaiCari, tanggalSelesaiSearch: model.tanggalSelesaiCari]
+        if (model.sales.selectedItem) {
+            params.salesSearch = model.sales.selectedItem
+        }
+        if (model.region.selectedItem) {
+            params.regionSearch = model.region.selectedItem
+        }
+        model.result = konsumenRepository.executeQuery(jpql, [:], params)
 
         if (model.cetakFormulir?.booleanValue()) {
             model.params.fileLaporan = 'report/formulir_sisa_piutang.jasper'
@@ -67,6 +82,14 @@ class LaporanSisaPiutangController {
         model.params.tanggalSelesaiCari = model.tanggalSelesaiCari
 
         close()
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.sales.selectedItem = null
+        model.region.selectedItem = null
+        model.konsumenSearch.clearSelectedValues()
     }
 
     def batal = {

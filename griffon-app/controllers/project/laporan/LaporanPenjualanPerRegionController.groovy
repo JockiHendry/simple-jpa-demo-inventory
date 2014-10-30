@@ -28,21 +28,34 @@ class LaporanPenjualanPerRegionController {
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        execInsideUISync {
+            model.regionList.clear()
+        }
+        List region = fakturJualRepository.findAllRegion([orderBy: 'nama'])
+        execInsideUISync {
+            model.regionList.addAll(region)
+        }
     }
 
     def tampilkanLaporan = {
         model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchItems([orderBy: 'konsumen__region__nama,tanggal,nomor']) {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
-            if (model.regionSearch) {
+            if (model.region.selectedItem) {
                 and()
-                konsumen__region__nama like("%${model.regionSearch}%")
+                konsumen__region eq(model.region.selectedItem)
                 or()
-                konsumen__region__bagianDari__nama like("%${model.regionSearch}%")
+                konsumen__region__bagianDari eq(model.region.selectedItem)
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.region.selectedItem = null
     }
 
     def batal = {

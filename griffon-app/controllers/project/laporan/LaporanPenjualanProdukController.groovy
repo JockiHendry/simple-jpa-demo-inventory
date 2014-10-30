@@ -20,8 +20,9 @@ import laporan.PenjualanProduk
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import project.penjualan.FakturJualRepository
-
+import simplejpa.swing.DialogUtils
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanPenjualanProdukController {
 
@@ -37,8 +38,8 @@ class LaporanPenjualanProdukController {
 
     def tampilkanLaporan = {
         String kriteriaNama = ''
-        if (model.namaSearch) {
-            kriteriaNama = " AND i.produk.nama LIKE '%${model.namaSearch}%' "
+        if (model.produkSearch) {
+            kriteriaNama = " AND i.produk.nama.id = ${model.produkSearch.id} "
         }
 
         List result = fakturJualRepository.executeQuery("""
@@ -74,6 +75,24 @@ class LaporanPenjualanProdukController {
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def cariProduk = {
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: false]
+            def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
+            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.produkSearch = null
     }
 
     def batal = {

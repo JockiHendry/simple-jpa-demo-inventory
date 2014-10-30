@@ -35,8 +35,8 @@ class LaporanPenjualanTriwulanController {
 
     def tampilkanLaporan = {
 
-        LocalDate tanggalMulai = model.tanggalMulaiCari.withDayOfMonth(1).minusMonths(1).minusDays(1)
-        LocalDate tanggalSelesai = model.tanggalMulaiCari.plusMonths(1).minusDays(1)
+        LocalDate tanggalMulai = model.tanggalMulaiCari.withDayOfMonth(1).minusMonths(2)
+        LocalDate tanggalSelesai = model.tanggalMulaiCari.withDayOfMonth(1).plusMonths(1).minusDays(1)
         LocalDate bulan1 = tanggalMulai
         LocalDate bulan2 = tanggalMulai.plusMonths(1)
         LocalDate bulan3 = tanggalMulai.plusMonths(2)

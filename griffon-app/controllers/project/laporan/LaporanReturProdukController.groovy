@@ -25,8 +25,10 @@ import domain.retur.ReturJualOlehSales
 import laporan.ReturProduk
 import org.joda.time.LocalDate
 import project.inventory.ProdukRepository
+import simplejpa.swing.DialogUtils
 
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanReturProdukController {
 
@@ -41,8 +43,10 @@ class LaporanReturProdukController {
 
     def tampilkanLaporan = {
         String kriteriaNama = ''
-        if (model.namaSearch) {
-            kriteriaNama = " AND i.produk.nama LIKE '%${model.namaSearch}%' "
+        Map params = [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari]
+        if (model.produkSearch) {
+            kriteriaNama = " AND i.produk = :produkSearch "
+            params.produkSearch = model.produkSearch
         }
 
         Map<Produk, ReturProduk> returProduk = [:]
@@ -50,8 +54,9 @@ class LaporanReturProdukController {
         produkRepository.executeQuery("""
             SELECT r FROM ReturJualOlehSales r LEFT JOIN r.items i
             WHERE r.deleted != 'Y' AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai $kriteriaNama
-        """, [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari]).each { ReturJualOlehSales r ->
+        """, [:], params).each { ReturJualOlehSales r ->
             r.items.each { ItemRetur i ->
+                if (model.produkSearch && (i.produk != model.produkSearch)) return
                 ReturProduk rp = returProduk[i.produk]
                 if (rp) {
                     rp.jumlahReturJualSales += i.jumlah
@@ -64,8 +69,9 @@ class LaporanReturProdukController {
         produkRepository.executeQuery("""
             SELECT r FROM ReturJualEceran r LEFT JOIN r.items i
             WHERE r.deleted != 'Y' AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai $kriteriaNama
-        """, [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari]).each { ReturJualEceran r ->
+        """, [:], params).each { ReturJualEceran r ->
             r.items.each { ItemRetur i ->
+                if (model.produkSearch && (i.produk != model.produkSearch)) return
                 ReturProduk rp = returProduk[i.produk]
                 if (rp) {
                     rp.jumlahReturJualEceran += i.jumlah
@@ -77,10 +83,11 @@ class LaporanReturProdukController {
 
         produkRepository.executeQuery("""
             SELECT r FROM ReturBeli r LEFT JOIN r.items k LEFT JOIN k.items i
-            WHERE r.deleted != 'Y' AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai $kriteriaNama
-        """, [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari]).each { ReturBeli r ->
+            WHERE r.deleted != 'Y' $kriteriaNama AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+        """, [:], params).each { ReturBeli r ->
             r.items.each { Kemasan k ->
                 k.items.each { ItemBarang i ->
+                    if (model.produkSearch && (i.produk != model.produkSearch)) return
                     ReturProduk rp = returProduk[i.produk]
                     if (rp) {
                         rp.jumlahReturBeli += i.jumlah
@@ -95,6 +102,24 @@ class LaporanReturProdukController {
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def cariProduk = {
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: false]
+            def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
+            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.produkSearch = null
     }
 
     def batal = {

@@ -17,7 +17,13 @@ package project.laporan
 
 import net.miginfocom.swing.MigLayout
 
-panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''), preferredSize: [800,300]) {
+import java.awt.event.KeyEvent
+
+actions {
+    action(id: 'reset', name: 'Reset', closure: controller.reset, mnemonic: KeyEvent.VK_R)
+}
+
+panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''), preferredSize: [800,300]) {
     label('Periode')
     panel(constraints: 'grow 0, wrap') {
         flowLayout()
@@ -29,7 +35,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''),
     }
 
     label('Nama Sales')
-    textField(text: bind('salesSearch', target: model, mutual: true), columns: 20, constraints: 'grow 0, wrap')
+    comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', constraints: 'wrap')
 
     label('Dan', constraints: 'wrap')
 
@@ -39,12 +45,13 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,fill,grow]', ''),
     label('Dan', constraints: 'wrap')
 
     label('Region')
-    textField(text: bind('regionSearch', target: model, mutual: true), columns: 20, constraints: 'grow 0, wrap')
+    comboBox(id: 'region', model: model.region, templateRenderer: '${value.nama}', constraints: 'wrap')
 
     checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
+        button(action: reset)
         button('Batal', actionPerformed: controller.batal)
     }
 }

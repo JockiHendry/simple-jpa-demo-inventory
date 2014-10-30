@@ -16,8 +16,10 @@
 package project.laporan
 
 import project.inventory.ProdukRepository
+import simplejpa.swing.DialogUtils
 
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanStokController {
 
@@ -25,17 +27,42 @@ class LaporanStokController {
     def view
     ProdukRepository produkRepository
 
+    void mvcGroupInit(Map args) {
+        List supplier = produkRepository.findAllSupplier([orderBy: 'nama'])
+        execInsideUISync {
+            model.supplierList.clear()
+            model.supplierList.addAll(supplier)
+        }
+    }
+
     def tampilkanLaporan = {
         model.result = produkRepository.findAllProdukByDsl([orderBy: 'nama']) {
             if (model.produkSearch) {
-                nama like("%${model.produkSearch}%")
+                id eq(model.produkSearch.id)
             }
-            if (model.supplierSearch) {
+            if (model.supplier.selectedItem) {
                 and()
-                supplier__nama like("%${model.supplierSearch}%")
+                supplier eq(model.supplier.selectedItem)
             }
         }
         close()
+    }
+
+    def cariProduk = {
+        execInsideUISync {
+            def args = [popup: true, allowTambahProduk: false]
+            def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
+            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
+    }
+
+    def reset = {
+        model.produkSearch = null
+        model.supplier.selectedItem = null
     }
 
     def batal = {

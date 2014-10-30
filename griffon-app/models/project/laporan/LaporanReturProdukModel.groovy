@@ -15,6 +15,7 @@
  */
 package project.laporan
 
+import domain.inventory.Produk
 import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
@@ -22,7 +23,7 @@ class LaporanReturProdukModel {
 
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari
-    @Bindable String namaSearch
+    @Bindable Produk produkSearch
 
     List result
     Map params = [:]

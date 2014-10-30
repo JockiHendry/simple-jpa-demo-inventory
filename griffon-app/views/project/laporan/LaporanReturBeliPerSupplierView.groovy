@@ -17,6 +17,12 @@ package project.laporan
 
 import net.miginfocom.swing.MigLayout
 
+import java.awt.event.KeyEvent
+
+actions {
+    action(id: 'reset', name: 'Reset', closure: controller.reset, mnemonic: KeyEvent.VK_R)
+}
+
 panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
     label('Periode')
     panel(constraints: 'wrap') {
@@ -29,11 +35,13 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     }
 
     label('Dan', constraints: 'wrap')
+
     label('Nama Supplier')
-    textField(text: bind('supplierSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    comboBox(id: 'supplier', model: model.supplier, templateRenderer: '${value.nama}', constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
+        button(action: reset)
         button('Batal', actionPerformed: controller.batal)
     }
 }

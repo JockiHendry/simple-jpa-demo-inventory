@@ -16,8 +16,14 @@
 package project.laporan
 
 import net.miginfocom.swing.MigLayout
+import java.awt.event.KeyEvent
 
-panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
+actions {
+    action(id: 'cariKonsumen', name: 'Cari Konsumen...', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
+    action(id: 'reset', name: 'Reset', closure: controller.reset, mnemonic: KeyEvent.VK_R)
+}
+
+panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,grow]', '')) {
     label('Periode')
     panel(constraints: 'wrap') {
         flowLayout()
@@ -29,11 +35,15 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     }
 
     label('Dan', constraints: 'wrap')
+
     label('Nama Konsumen')
-    textField(text: bind('konsumenSearch', target: model, mutual: true), columns: 20, constraints: 'wrap')
+    label(text: bind {model.konsumenSearch? model.konsumenSearch.nama: '-'})
+    button(action: cariKonsumen, constraints: 'wrap')
+
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
+        button(action: reset)
         button('Batal', actionPerformed: controller.batal)
     }
 }

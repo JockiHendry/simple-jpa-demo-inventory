@@ -15,12 +15,18 @@
  */
 package project.laporan
 
+import ca.odell.glazedlists.BasicEventList
+import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
+import ca.odell.glazedlists.swing.GlazedListsSwing
+import domain.inventory.Gudang
+import domain.inventory.Produk
 import groovy.beans.Bindable
 
 class LaporanStokGudangModel {
 
-    @Bindable String produkSearch
-    @Bindable String gudangSearch
+    @Bindable Produk produkSearch
+    BasicEventList<Gudang> gudangList = new BasicEventList<>()
+    @Bindable DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
 
     List result
     Map params = [:]

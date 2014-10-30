@@ -17,8 +17,10 @@ package project.laporan
 
 import org.joda.time.LocalDate
 import project.retur.ReturJualRepository
+import simplejpa.swing.DialogUtils
 
 import javax.swing.SwingUtilities
+import java.awt.Dimension
 
 class LaporanReturJualPerKonsumenController {
 
@@ -36,12 +38,30 @@ class LaporanReturJualPerKonsumenController {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
             if (model.konsumenSearch) {
                 and()
-                konsumen__nama like("%${model.konsumenSearch}%")
+                konsumen eq(model.konsumenSearch)
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
+    }
+
+    def reset = {
+        model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
+        model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
+        model.konsumenSearch = null
+    }
+
+    def cariKonsumen = {
+        execInsideUISync {
+            def args = [popup: true]
+            def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+                if (!v.table.selectionModel.isSelectionEmpty()) {
+                    model.konsumenSearch = v.view.table.selectionModel.selected[0]
+                }
+            }
+        }
     }
 
     def batal = {
