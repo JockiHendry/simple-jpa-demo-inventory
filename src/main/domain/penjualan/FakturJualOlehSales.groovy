@@ -93,7 +93,7 @@ class FakturJualOlehSales extends FakturJual {
     Boolean kirimDariGudangUtama
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur')
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.SUBSELECT) @OrderColumn
     List<PenerimaanBarang> retur = []
 
     void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
