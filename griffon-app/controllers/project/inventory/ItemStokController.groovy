@@ -49,8 +49,9 @@ class ItemStokController {
             execInsideUISync { model.itemStokList.clear()}
             List data = []
             produkRepository.withTransaction {
+                model.parent = produkRepository.findStokProdukById(model.parent.id)
                 PeriodeItemStok p = produkRepository.findPeriodeItemStokById(model.periodeItemStok.selectedItem.id)
-                data.addAll(p.listItem)
+                data.addAll(model.parent.cariItemStok(p))
             }
             execInsideUISync { model.itemStokList.addAll(data) }
         }

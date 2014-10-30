@@ -122,5 +122,26 @@ class StokProduk {
         this.jumlah += item.jumlah
     }
 
+    long saldoKumulatifSebelum(PeriodeItemStok periodeItemStok) {
+        long saldo = 0
+        for (PeriodeItemStok p: listPeriodeRiwayat) {
+            if (p.termasuk(periodeItemStok.tanggalMulai)) break
+            saldo += p.jumlah
+        }
+        saldo
+    }
+
+    List<ItemStok> cariItemStok(PeriodeItemStok periodeItemStok) {
+        long saldo = saldoKumulatifSebelum(periodeItemStok)
+        List<ItemStok> hasil = []
+        hasil << new ItemStok(periodeItemStok.tanggalMulai, null, null, 'Saldo Awal', saldo)
+        for (ItemStok itemStok: periodeItemStok.listItem) {
+            saldo += itemStok.jumlah
+            itemStok.saldo = saldo
+            hasil << itemStok
+        }
+        hasil
+    }
+
 }
 

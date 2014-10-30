@@ -38,6 +38,9 @@ class ItemStok {
     @Size(min=3, max=100)
     String keterangan
 
+    @Transient
+    long saldo
+
     LocalDate tanggalRiwayat() {
         tanggal
     }

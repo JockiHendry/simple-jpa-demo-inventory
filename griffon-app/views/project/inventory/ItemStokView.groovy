@@ -44,7 +44,8 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
                 templateRenderer("\${it.toString('dd-MM-yyyy')}")
             }
-            glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
+            glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 50)
+            glazedColumn(name: 'Saldo', property: 'saldo', columnClass: Integer, width: 60)
             glazedColumn(name: 'Pihak Terkait', expression: {it.referensiStok?.pihakTerkait?: ''})
             glazedColumn(name: 'Referensi Finance', expression: {it.referensiStok?.deskripsiFinance()?: ''},
                 visible: bind {model.showReferensiFinance})
