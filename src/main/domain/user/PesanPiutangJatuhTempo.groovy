@@ -35,7 +35,7 @@ class PesanPiutangJatuhTempo extends Pesan {
     PesanPiutangJatuhTempo(FakturJualOlehSales faktur) {
         this.tanggal = LocalDateTime.now()
         this.faktur = faktur
-        this.pesan = "Faktur <strong>${faktur.nomor}</strong> akan segera jatuh tempo pada tanggal <strong>${faktur.jatuhTempo.toString('dd-MM-YYYY')}</strong>."
+        this.pesan = "Faktur <span class='info'>${faktur.nomor}</span> akan segera jatuh tempo pada tanggal <span class='info'>${faktur.jatuhTempo.toString('dd-MM-YYYY')}</span>."
     }
 
     @Override

@@ -49,7 +49,8 @@ class PesanController {
                 style(type: 'text/css') {
                     mkp.yieldUnescaped "h1{ margin-left: 10px; padding-top: 10px; color: #666666; font-size: 20px; font-family: Georgia, serif; border-top: 1px solid #888888;}\n" +
                         "body { font-size: 14px; }\n" +
-                        "div { margin-left: 10px; }\n"
+                        "div { margin-left: 10px; }\n" +
+                        ".info { color: red; font-weight: bold; }\n"
                 }
             }
             body {
