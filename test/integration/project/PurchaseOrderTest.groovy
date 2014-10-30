@@ -47,14 +47,14 @@ class PurchaseOrderTest extends DbUnitTestCase {
 
     public void testTidakBolehDiUpdate() {
         PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
-        GroovyAssert.shouldFail(DataTidakBolehDiubah) {
+        shouldFail(DataTidakBolehDiubah) {
             purchaseOrderRepository.update(p)
         }
     }
 
     public void testTidakBolehDiHapus() {
         PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
-        GroovyAssert.shouldFail(DataTidakBolehDiubah) {
+        shouldFail(DataTidakBolehDiubah) {
             purchaseOrderRepository.hapus(p)
         }
     }
@@ -88,6 +88,7 @@ class PurchaseOrderTest extends DbUnitTestCase {
             assertEquals(1, p.listPenerimaanBarang.size())
             assertEquals(27, p.listItemFaktur[0].produk.jumlah)
 
+            p.hapusFaktur()
             p.hapus(p.listPenerimaanBarang[0])
             assertEquals(25, purchaseOrderRepository.findProdukById(-2l).jumlah)
             assertEquals(StatusPurchaseOrder.DIBUAT, p.status)

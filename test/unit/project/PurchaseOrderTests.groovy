@@ -86,6 +86,55 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertTrue(p.sisaBelumDiterima().empty)
     }
 
+    public void testSisaBelumDiterimaSetelahAdaFakturBeli() {
+        Produk produkA = new Produk('Produk A', 1000)
+        Produk produkB = new Produk('Produk B', 2000)
+        Produk produkC = new Produk('Produk C', 3000)
+        PurchaseOrder p = new PurchaseOrder()
+        p.tambah(new ItemFaktur(produk: produkA, jumlah: 10))
+        p.tambah(new ItemFaktur(produk: produkB, jumlah: 7))
+        p.tambah(new ItemFaktur(produk: produkC, jumlah: 15))
+
+        // Tambah faktur beli
+        FakturBeli f = new FakturBeli(nomor: 'FB-001', tanggal: LocalDate.now())
+        f.tambah(new ItemFaktur(produk: produkA, jumlah: 12, harga: 12000))
+        f.tambah(new ItemFaktur(produk: produkB, jumlah: 5 , harga:  5000))
+        f.tambah(new ItemFaktur(produk: produkC, jumlah: 10, harga: 10000))
+        p.tambah(f, false)
+
+        assertEquals(3, p.sisaBelumDiterima().size())
+        assertEquals(new ItemBarang(produkA, 12), p.sisaBelumDiterima()[0])
+        assertEquals(new ItemBarang(produkB, 5), p.sisaBelumDiterima()[1])
+        assertEquals(new ItemBarang(produkC, 10), p.sisaBelumDiterima()[2])
+
+        PenerimaanBarang penerimaan1 = new PenerimaanBarang()
+        penerimaan1.tambah(new ItemBarang(produk: produkA, jumlah: 5))
+        penerimaan1.tambah(new ItemBarang(produk: produkB, jumlah: 4))
+        p.tambah(penerimaan1)
+        assertEquals(3, p.sisaBelumDiterima().size())
+        assertEquals(new ItemBarang(produkA, 7), p.sisaBelumDiterima()[0])
+        assertEquals(new ItemBarang(produkB, 1), p.sisaBelumDiterima()[1])
+        assertEquals(new ItemBarang(produkC, 10), p.sisaBelumDiterima()[2])
+
+        PenerimaanBarang penerimaan2 = new PenerimaanBarang()
+        penerimaan2.tambah(new ItemBarang(produk: produkA, jumlah: 7))
+        penerimaan2.tambah(new ItemBarang(produk: produkB, jumlah: 1))
+        p.tambah(penerimaan2)
+        assertEquals(1, p.sisaBelumDiterima().size())
+        assertEquals(new ItemBarang(produkC, 10), p.sisaBelumDiterima()[0])
+
+        shouldFail(DataTidakKonsisten) {
+            PenerimaanBarang penerimaan3 = new PenerimaanBarang()
+            penerimaan3.tambah(new ItemBarang(produk: produkC, jumlah: 15))
+            p.tambah(penerimaan3)
+        }
+
+        PenerimaanBarang penerimaan3 = new PenerimaanBarang()
+        penerimaan3.tambah(new ItemBarang(produk: produkC, jumlah: 10))
+        p.tambah(penerimaan3)
+        assertTrue(p.sisaBelumDiterima().empty)
+    }
+
     public void testIsDiterimaPenuh() {
         Produk produkA = new Produk('Produk A', 1000)
         Produk produkB = new Produk('Produk B', 2000)
@@ -264,7 +313,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now(), diskon: new Diskon(1))
         fakturBeli.tambah(new ItemFaktur(produkA, 3, 1000, null, new Diskon(1, 100)))
         fakturBeli.tambah(new ItemFaktur(produkB, 5, 2000, null, new Diskon(2)))
-        GroovyAssert.shouldFail(DataTidakKonsisten) {
+        shouldFail(DataTidakKonsisten) {
             p.tambah(fakturBeli)
         }
     }

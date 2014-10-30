@@ -21,6 +21,8 @@ import domain.exception.DataTidakKonsisten
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
+import domain.inventory.DaftarBarang
+import domain.inventory.DaftarBarangSementara
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.retur.ReturBeli
@@ -58,6 +60,9 @@ import java.text.NumberFormat
         @NamedSubgraph(name='faktur', attributeNodes = [
             @NamedAttributeNode(value = 'listItemFaktur')
         ])
+    ]),
+    @NamedEntityGraph(name='PurchaseOrder.Items', attributeNodes = [
+        @NamedAttributeNode(value='listItemFaktur')
     ])
 ])
 @DomainClass @Entity @Canonical(excludes='fakturBeli,listPenerimaanBarang')
@@ -81,11 +86,8 @@ class PurchaseOrder extends Faktur {
         }
 
         // Melakukan pemeriksaan apakah barang yang ditambahkan adalah bagian dari yang dipesan.
-        List<ItemBarang> sisaBarang = sisaBelumDiterima()
-        penerimaanBarang.normalisasi().each { ItemBarang i ->
-            if (!sisaBarang.find { i.produk == it.produk && i.jumlah <= it.jumlah }) {
-                throw new DataTidakKonsisten("Tidak pemesanan ${i.produk.nama} sejumlah ${i.jumlah} yang dipesan untuk PO ${nomor}!", penerimaanBarang)
-            }
+        if (!penerimaanBarang.bagianDari(new DaftarBarangSementara(sisaBelumDiterima()))) {
+            throw new DataTidakKonsisten("Barang yang diterima tidak sesuai dengan yang ada di Purchase Order atau Faktur Beli!", penerimaanBarang)
         }
 
         penerimaanBarang.gudang = (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
@@ -136,11 +138,11 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
 
-        // Memeriksa apakah isi faktur baru sama dengan isi barang yang dipesan
-        if (!toDaftarBarang().isiSamaDengan(f.toDaftarBarang())) {
-            throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
-        }
         if (strictMode) {
+            // Memeriksa apakah isi faktur baru sama dengan isi barang yang dipesan
+            if (!toDaftarBarang().isiSamaDengan(f.toDaftarBarang())) {
+                throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
+            }
             if (f.total().compareTo(this.total()) != 0) {
                 throw new DataTidakKonsisten("Total untuk faktur ${f.nomor} sebesar ${NumberFormat.currencyInstance.format(f.total())} " +
                     "berbeda dengan yang dipesan untuk PO ${nomor} sebesar " +
@@ -207,46 +209,30 @@ class PurchaseOrder extends Faktur {
     }
 
     boolean diterimaPenuh() {
-        if (listPenerimaanBarang.isEmpty() || listItemFaktur.isEmpty()) return false
-        PenerimaanBarang sudahDiterima
-        listPenerimaanBarang.each {
-            if (it.deleted == 'Y') return
-            sudahDiterima = (sudahDiterima==null)? it: (sudahDiterima + it)
-        }
-        sudahDiterima? sudahDiterima.isiSamaDengan(this): false
+        sisaBelumDiterima().empty
     }
 
     boolean isPenerimaanKosong() {
-        boolean kosong = true
-        listPenerimaanBarang.each {
-            if (it.deleted != 'Y') kosong = false
-        }
-        kosong
+        listPenerimaanBarang.find { it.deleted != 'Y' }
     }
 
     List<ItemBarang> sisaBelumDiterima() {
-        List<ItemBarang> daftarBarang = toDaftarBarang().items
+        // Jika sudah ada faktur beli, maka yang dijadikan patokan adalah faktur beli, bukan lagi PO
+        DaftarBarang daftarBarangYangHarusDiterima
+        if (fakturBeli) {
+            daftarBarangYangHarusDiterima = fakturBeli.toDaftarBarang()
+        } else {
+            daftarBarangYangHarusDiterima = toDaftarBarang()
+        }
 
         PenerimaanBarang p
         listPenerimaanBarang.each {
             if (it.deleted == 'Y') return
             p = (!p? it: (p + it))
         }
-        if (!p) return daftarBarang
-        List diterima = p.normalisasi()
+        if (!p) return daftarBarangYangHarusDiterima.items
 
-        diterima.each { ItemBarang d ->
-            def i = daftarBarang.findIndexOf { ItemBarang it -> it.produk == d.produk }
-            if (i>=0) {
-                if (daftarBarang[i].jumlah == d.jumlah) {
-                    daftarBarang.remove(i)
-                } else {
-                    daftarBarang[i].jumlah -= d.jumlah
-                }
-            }
-        }
-
-        daftarBarang
+        (daftarBarangYangHarusDiterima - p).items
     }
 
     boolean equals(o) {

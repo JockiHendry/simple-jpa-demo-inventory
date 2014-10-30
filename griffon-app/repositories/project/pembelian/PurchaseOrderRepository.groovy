@@ -173,7 +173,7 @@ class PurchaseOrderRepository {
         if (listItemBarang.isEmpty()) {
             throw new DataTidakLengkap('Daftar barang yang diterima tidak boleh kosong!')
         }
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchItems(purchaseOrder.id)
         listItemBarang.each {
             it.produk = findProdukById(it.produk.id)
             it.produk.supplier = purchaseOrder.supplier
