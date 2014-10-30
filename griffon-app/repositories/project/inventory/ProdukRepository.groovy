@@ -89,6 +89,7 @@ class ProdukRepository {
         p.supplier = produk.supplier
         p.poin = produk.poin
         p.levelMinimum = produk.levelMinimum
+        p.keterangan = produk.keterangan
         p
     }
 

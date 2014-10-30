@@ -66,8 +66,10 @@ class ProdukController {
     }
 
     def save = {
-        Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota, supplier: model.supplier.selectedItem,
-            hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem, poin: model.poin, levelMinimum: model.levelMinimum, jumlahAkanDikirim: 0)
+        Produk produk = new Produk(id: model.id, nama: model.nama, hargaDalamKota: model.hargaDalamKota,
+            supplier: model.supplier.selectedItem, hargaLuarKota: model.hargaLuarKota, satuan: model.satuan.selectedItem,
+            poin: model.poin, levelMinimum: model.levelMinimum, jumlahAkanDikirim: 0, keterangan: model.keterangan)
+
         if (!produkRepository.validate(produk, Default, model)) return
 
         try {
@@ -126,6 +128,7 @@ class ProdukController {
             model.poin = null
             model.levelMinimum = null
             model.jumlahAkanDikirim = null
+            model.keterangan = null
             model.supplier.selectedItem = null
 			model.daftarStok.clear()
 
@@ -158,6 +161,7 @@ class ProdukController {
                 model.poin = selected.poin
                 model.levelMinimum = selected.levelMinimum
                 model.jumlahAkanDikirim = selected.jumlahAkanDikirim
+                model.keterangan = selected.keterangan
 				model.daftarStok.clear()
 				model.daftarStok.addAll(selected.daftarStok)
             }

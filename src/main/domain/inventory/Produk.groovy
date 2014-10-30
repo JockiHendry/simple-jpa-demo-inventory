@@ -94,6 +94,8 @@ class Produk implements Comparable {
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, mappedBy='produk') @MapKey(name='gudang')
     Map<Gudang, StokProduk> daftarStok = [:]
 
+    String keterangan
+
     public StokProduk stok(Gudang gudang) {
         StokProduk result = daftarStok[gudang]
         if (!result) {
