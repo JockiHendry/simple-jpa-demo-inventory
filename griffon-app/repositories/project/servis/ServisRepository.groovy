@@ -35,9 +35,6 @@ class ServisRepository {
 	}
 
 	public Servis buat(Servis servis) {
-		if (findServisByNamaKonsumen(servis.namaKonsumen)) {
-			throw new DuplicateEntityException(servis)
-		}
 		persist(servis)
 		servis
 	}
