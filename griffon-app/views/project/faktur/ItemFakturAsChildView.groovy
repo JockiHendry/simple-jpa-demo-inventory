@@ -38,7 +38,7 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer, visible: bind { model.showHarga }) {
                     templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Keterangan', property: 'keterangan', width: [40, 40, 100])
+                glazedColumn(name: 'Keterangan', property: 'keterangan', width: [40, 40, 500])
                 glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showHarga }, width: [40, 100, 100])
                 glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.harga)?.multiply(it.jumlah)},
                         columnClass: Integer, visible: bind { model.showHarga }) {
