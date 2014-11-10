@@ -77,6 +77,9 @@ class Produk implements Comparable {
     Integer jumlahAkanDikirim = 0
 
     @Min(0l)
+    Integer jumlahTukar = 0
+
+    @Min(0l)
     Integer jumlahRetur = 0
 
     @NotNull @ManyToOne

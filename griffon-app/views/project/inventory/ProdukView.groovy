@@ -41,7 +41,7 @@ actions {
         }
     })
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
-    action(id: 'showUbahJumlahRetur', name: 'Ubah Qty Retur...', closure: controller.showUbahJumlahRetur)
+    action(id: 'showUbahQty', name: 'Ubah Qty...', closure: controller.showUbahQty)
 }
 
 panel(id: 'mainPanel') {
@@ -91,6 +91,9 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode || model.showReturOnly}) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                 }
+                glazedColumn(name: 'Qty Tukar', property: 'jumlahTukar', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode }) {
+                    templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
+                }
                 glazedColumn(name: 'Qty Ready', expression: {it.jumlahReadyGudangUtama()}, columnClass: Integer, preferredWidth: 30) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                 }
@@ -98,7 +101,7 @@ panel(id: 'mainPanel') {
         }
     }
 
-    panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]',''), constraints: PAGE_END, focusCycleRoot: true,
+    panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left,grow]',''), constraints: PAGE_END, focusCycleRoot: true,
           visible: bind { model.allowTambahProduk }) {
         label('Nama:')
         textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
@@ -124,9 +127,6 @@ panel(id: 'mainPanel') {
         label('Keterangan:')
         textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
         errorLabel(path: 'keterangan', constraints: 'wrap')
-        label('Jumlah Akan Dikirim:')
-        numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', editable: false, errorPath: 'jumlahAkanDikirim')
-        errorLabel(path: 'jumlahAkanDikirim', constraints: 'wrap')
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
@@ -141,7 +141,7 @@ panel(id: 'mainPanel') {
             })
             button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
             button(id: 'stokProduk', action: showStokProduk, visible: bind{table.isRowSelected})
-            button(id: 'ubahJumlahRetur', action: showUbahJumlahRetur, visible: bind{table.isRowSelected})
+            button(id: 'ubahQty', action: showUbahQty, visible: bind{table.isRowSelected}, constraints: 'wrap')
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {
                 if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),

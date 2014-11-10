@@ -103,19 +103,14 @@ class ProdukController {
     }
 
     @NeedSupervisorPassword
-    def showUbahJumlahRetur = {
-        String input = JOptionPane.showInputDialog(view.mainPanel, 'Masukkan nilai qty retur baru:', 'Input Qty Retur', JOptionPane.QUESTION_MESSAGE)
-        try {
-            Integer qtyRetur = new Integer(input)
-            Produk produk = view.table.selectionModel.selected[0]
-            produk = produkRepository.aturJumlahRetur(produk, qtyRetur)
-            execInsideUISync {
-                view.table.selectionModel.selected[0] = produk
+    def showUbahQty = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Qty Produk', size: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('produkQty', args, view, dialogProps) { m, v, c ->
+                view.table.selectionModel.selected[0] = m.parent
             }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Nilai qty retur bukan nilai yang valid!', 'Kesalahan Input', JOptionPane.ERROR_MESSAGE)
         }
-
     }
 
     def clear = {

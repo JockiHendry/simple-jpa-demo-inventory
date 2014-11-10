@@ -93,9 +93,11 @@ class ProdukRepository {
         p
     }
 
-    public Produk aturJumlahRetur(Produk produk, Integer jumlahRetur) {
+    public Produk updateQty(Produk produk) {
         Produk p = findProdukByIdFetchComplete(produk.id)
-        p.jumlahRetur = jumlahRetur
+        p.jumlahRetur = produk.jumlahRetur
+        p.jumlahTukar = produk.jumlahTukar
+        p.jumlahAkanDikirim = produk.jumlahAkanDikirim
         p
     }
 
