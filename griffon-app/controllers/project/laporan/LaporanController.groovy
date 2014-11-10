@@ -48,10 +48,10 @@ class LaporanController {
                 params = m.params
                 batal = m.batal
             })
-            BusyLayerUI.instance.hide()
         }
 
         if (!batal) {
+            execInsideUISync { BusyLayerUI.instance.show() }
             JRDataSource dataSource = new JRBeanCollectionDataSource(result)
             params.companyName = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
             InputStream logoInputStream = getResourceAsStream('report/logo.png')
@@ -63,7 +63,9 @@ class LaporanController {
             execInsideUISync {
                 view.content.clear()
                 view.content.add(new JRViewer(jasperPrint), BorderLayout.CENTER)
+                BusyLayerUI.instance.hide()
             }
+
         }
 
     }
