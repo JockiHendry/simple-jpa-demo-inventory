@@ -71,7 +71,21 @@
 	<field name="_THIS" class="java.lang.Object">
 		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
 	</field>
-	<variable name="variable1" class="java.lang.String"/>
+	<variable name="totalBulan1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{bulan1}]]></variableExpression>
+	</variable>
+	<variable name="totalBulan2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{bulan2}]]></variableExpression>
+	</variable>
+	<variable name="totalBulan3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{bulan3}]]></variableExpression>
+	</variable>
+	<variable name="totalSelisih" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{_THIS}.jumlahSelisih()]]></variableExpression>
+	</variable>
+	<variable name="totalPersenSelisih" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{_THIS}.persenSelisih()]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -235,4 +249,43 @@
 			</image>
 		</band>
 	</detail>
+	<summary>
+		<band height="35">
+			<textField pattern="#,##0">
+				<reportElement x="107" y="10" width="96" height="20" uuid="31c4e946-d58b-4303-b4ae-ed30d5010cae"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalBulan1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="203" y="10" width="96" height="20" uuid="4ed895e3-48bf-4691-9148-779ae5200228"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalBulan2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="299" y="10" width="96" height="20" uuid="eef46d34-1d81-4137-9e33-783e8d999b5c"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalBulan3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="396" y="10" width="100" height="20" uuid="1c428ddd-4aab-4eff-80a5-860764cc0c66"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalSelisih}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="496" y="10" width="59" height="20" uuid="cc793f2a-900a-4ba2-8961-7b978a1b66a4"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalPersenSelisih}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>
