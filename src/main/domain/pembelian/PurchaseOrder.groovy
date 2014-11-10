@@ -188,9 +188,10 @@ class PurchaseOrder extends Faktur {
         if (returBeli.supplier != supplier) {
             throw new IllegalArgumentException("Supplier retur [${returBeli.supplier}] tidak sama dengan di PO [$supplier].")
         }
-        if (returBeli.sudahDiterima) {
-            throw new IllegalArgumentException("Retur [${returBeli.nomor} sudah pernah diproses dan tidak dapat dipakai lagi.")
-        }
+        // TODO: Pastikan returBeli yang sudah diaplikasikan tidak dapat dipakai untuk pemotongan lainnya.
+//        if (returBeli.sudahDiterima) {
+//            throw new IllegalArgumentException("Retur [${returBeli.nomor} sudah pernah diproses dan tidak dapat dipakai lagi.")
+//        }
         Pembayaran pembayaran = new Pembayaran(LocalDate.now(), returBeli.nilaiPotonganHutang, true)
         returBeli.sudahDiterima = true
         bayar(pembayaran)

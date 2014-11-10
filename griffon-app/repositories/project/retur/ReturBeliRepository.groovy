@@ -50,7 +50,7 @@ class ReturBeliRepository {
         }
     }
 
-    List<ReturBeli> cariForSupplier(Supplier supplierSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
+    List<ReturBeli> cariForSupplier(Supplier supplierSearch, LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, Boolean sudahDiterimaSearch, boolean excludeDeleted = false) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             supplier eq(supplierSearch)
             and()
@@ -59,9 +59,9 @@ class ReturBeliRepository {
                 and()
                 nomor like("%${nomorSearch}%")
             }
-            if (sudahDiprosesSearch != null) {
+            if (sudahDiterimaSearch != null) {
                 and()
-                sudahDiproses eq(sudahDiprosesSearch)
+                sudahDiterima eq(sudahDiterimaSearch)
             }
         }
     }
