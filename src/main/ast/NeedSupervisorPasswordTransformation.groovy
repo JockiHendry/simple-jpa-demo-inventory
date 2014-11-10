@@ -58,8 +58,8 @@ class NeedSupervisorPasswordTransformation extends AbstractASTTransformation{
         BlockStatement wrappedCode = new BlockStatement()
 
         Statement line1 = new AstBuilder().buildFromCode(CompilePhase.CANONICALIZATION) {
-            java.lang.Boolean passwordCorrect = simplejpa.swing.DialogUtils.showMVCGroup('supervisorPassword', [:], app,
-                view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)],
+            java.lang.Boolean passwordCorrect = simplejpa.swing.DialogUtils.showMVCGroup('supervisorPassword', [:],
+                view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)], null,
                 { java.lang.Object m, java.lang.Object v, java.lang.Object c -> m .ok })
         }[0].getStatements()[0]
         IfStatement line2 = new IfStatement(new BooleanExpression(new VariableExpression('passwordCorrect')),

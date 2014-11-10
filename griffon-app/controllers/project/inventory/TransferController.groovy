@@ -111,7 +111,7 @@ class TransferController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.items, allowTambahProduk: false]
             def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
                 refreshInformasi()

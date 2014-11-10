@@ -85,7 +85,7 @@ class PembayaranHutangAsChildController {
         execInsideUISync {
             def args = [popupMode: true]
             def dialogProps = [title: 'Cari Bilyet Giro', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('bilyetGiro', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('bilyetGiro', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada bilyet giro yang dipilih!', 'Cari Bilyet Giro', JOptionPane.ERROR_MESSAGE)
                 } else {

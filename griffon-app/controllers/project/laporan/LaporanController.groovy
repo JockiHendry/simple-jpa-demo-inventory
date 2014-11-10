@@ -43,11 +43,11 @@ class LaporanController {
         }
         def result, batal, params
         execInsideUISync {
-            DialogUtils.showAndReuseMVCGroup(jenisLaporan.namaMVC, [:], app, view, [title: 'Pilih Kriteria'], { m, v, c ->
+            DialogUtils.showAndReuseMVCGroup(jenisLaporan.namaMVC, [:], view, [title: 'Pilih Kriteria'], null, { m, v, c ->
                 result = m.result
                 params = m.params
                 batal = m.batal
-            }, {v -> v})
+            })
             BusyLayerUI.instance.hide()
         }
 

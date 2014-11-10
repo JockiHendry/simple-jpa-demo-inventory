@@ -16,6 +16,7 @@
 
 package util
 
+import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.swing.plaf.LayerUI
 import java.awt.*
@@ -26,6 +27,11 @@ class BusyLayerUI extends LayerUI<JPanel> {
 
     public static final BusyLayerUI instance = new BusyLayerUI()
 
+    static {
+        instance = new BusyLayerUI()
+        DialogUtils.defaultLayerUI = instance
+    }
+
     public static BusyLayerUI getInstance() {
         instance
     }
@@ -35,13 +41,21 @@ class BusyLayerUI extends LayerUI<JPanel> {
     private BusyLayerUI() {}
 
     public void show() {
+        boolean oldValue = visible
         visible = true
-        firePropertyChange("visible", false, true)
+        firePropertyChange("visible", oldValue, visible)
+        for (Window w: Window.windows) {
+            w.enabled = false
+        }
     }
 
     public void hide() {
+        boolean oldValue = visible
         visible = false
-        firePropertyChange("visible", true, false)
+        firePropertyChange("visible", oldValue, visible)
+        for (Window w: Window.windows) {
+            w.enabled = true
+        }
     }
 
     @Override

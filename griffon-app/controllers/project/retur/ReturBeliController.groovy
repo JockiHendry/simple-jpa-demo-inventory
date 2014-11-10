@@ -160,7 +160,7 @@ class ReturBeliController {
             execInsideUISync {
                 def args = [listItemBarang: returBeli.toDaftarBarang().items, parent: returBeli, editable: false]
                 def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-                DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props)
+                DialogUtils.showMVCGroup('itemBarangAsChild', args, view, props)
             }
         }
     }
@@ -173,7 +173,7 @@ class ReturBeliController {
         execInsideUISync {
             def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], supplierSearch: model.supplier.selectedItem]
             def props = [title: 'List Klaim Retur', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('kemasanRetur', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('kemasanRetur', args, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.kemasanReturList)
                 if (m.parent) {
@@ -187,7 +187,7 @@ class ReturBeliController {
         execInsideUISync {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_retur_beli.jasper']
             def dialogProps = [title: 'Preview Faktur Retur Beli', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewFaktur', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewFaktur', args, view, dialogProps)
         }
     }
 

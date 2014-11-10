@@ -56,7 +56,7 @@ class LaporanReturJualPerKonsumenController {
         execInsideUISync {
             def args = [popup: true]
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (!v.table.selectionModel.isSelectionEmpty()) {
                     model.konsumenSearch = v.view.table.selectionModel.selected[0]
                 }

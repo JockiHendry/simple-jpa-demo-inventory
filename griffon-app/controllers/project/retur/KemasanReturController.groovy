@@ -84,7 +84,7 @@ class KemasanReturController {
         execInsideUISync {
             def args = [listItemBarang: model.items, parent: view.table.selectionModel.selected[0], allowTambahProduk: false, showReturOnly: true, supplierSearch: model.supplierSearch]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
             }
@@ -99,7 +99,7 @@ class KemasanReturController {
         execInsideUISync {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'kemasan_retur.json', options: ['nomorRetur': model.parent.nomor]]
             def dialogProps = [title: 'Preview Kemasan Retur Beli', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

@@ -153,7 +153,7 @@ class PurchaseOrderController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'purchase_order.json']
             if (e instanceof PurchaseOrder ) args.dataSource = e
             def dialogProps = [title: 'Preview Purchase Order', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 
@@ -178,7 +178,7 @@ class PurchaseOrderController {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
                         editable: model.allowAddPO, showHarga: model.showFakturBeli]
             def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()

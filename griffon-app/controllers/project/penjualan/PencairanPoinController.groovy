@@ -110,7 +110,7 @@ class PencairanPoinController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: model.jenisPencairanPoin.selectedItem.fileLaporan]
             if (e instanceof PencairanPoin) args.dataSource = e
             def dialogProps = [title: 'Preview Bukti Pencairan Poin', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 
@@ -118,7 +118,7 @@ class PencairanPoinController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.items, editable: true, allowTambahProduk: false]
             def dialogProps = [title: 'Daftar Barang Yang Ditukar', size: new Dimension(900,420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
             }
@@ -133,7 +133,7 @@ class PencairanPoinController {
         execInsideUISync {
             def args = [konsumen: model.konsumen]
             def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada faktur yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                     return
@@ -148,7 +148,7 @@ class PencairanPoinController {
         execInsideUISync {
             def args = [popup: true]
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {

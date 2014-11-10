@@ -53,7 +53,7 @@ class LaporanStokSupplierController {
         execInsideUISync {
             def args = [popup: true, allowTambahProduk: false]
             def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
-            DialogUtils.showMVCGroup('produk', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (!v.table.selectionModel.isSelectionEmpty()) {
                     model.produkSearch = v.view.table.selectionModel.selected[0]
                 }

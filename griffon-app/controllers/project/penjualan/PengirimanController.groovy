@@ -117,7 +117,7 @@ class PengirimanController {
         execInsideUISync {
             def args = [editable: false, listItemBarang: view.table.selectionModel.selected[0].barangYangHarusDikirim().items, allowTambahProduk: false]
             def dialogProps = [title: 'Daftar Barang Yang Harus Dikirim', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps)
         }
     }
 
@@ -127,7 +127,7 @@ class PengirimanController {
             execInsideUISync {
                 def args = [dataSource: selected, template: 'surat_jalan.json']
                 def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
-                DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+                DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
             }
         } else {
             JOptionPane.showMessageDialog(view.mainPanel, 'Surat jalan belum dibuat sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
@@ -139,7 +139,7 @@ class PengirimanController {
         execInsideUISync {
             def args = [dataSource: daftarBarang, template: 'daftar_barang_kirim.json']
             def dialogProps = [title: 'Preview Daftar Barang Untuk Dikirim', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

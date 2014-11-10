@@ -92,7 +92,7 @@ class ItemReturAsChildController {
         execInsideUISync {
             def args = [parentList: model.klaims, parent: view.table.selectionModel.selected[0]]
             def props = [title: 'Klaims', preferredSize: new Dimension(900, 300)]
-            DialogUtils.showMVCGroup('klaimAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('klaimAsChild', args, view, props) { m, v, c ->
                 model.klaims.clear()
                 model.klaims.addAll(m.klaimList)
                 ItemRetur itemRetur = view.table.selectionModel.selected[0]
@@ -109,7 +109,7 @@ class ItemReturAsChildController {
             def args = [popup: true, allowTambahProduk: false]
             def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
             Produk produk = null
-            DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                 } else {

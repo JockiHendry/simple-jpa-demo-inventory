@@ -57,7 +57,7 @@ class HutangController {
         execInsideUISync {
             def args = [purchaseOrder: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranHutang]
             def dialogProps = [title: 'Pembayaran Hutang', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('pembayaranHutangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('pembayaranHutangAsChild', args, view, dialogProps) { m, v, c ->
                 model.listPembayaranHutang.clear()
                 model.listPembayaranHutang.addAll(m.pembayaranList)
                 view.table.selectionModel.selected[0] = m.purchaseOrder
@@ -71,7 +71,7 @@ class HutangController {
         execInsideUISync {
             def args = [mode: ReturBeliViewMode.BAYAR, forSupplier: purchaseOrder.supplier]
             def dialogProps = [title: 'Pembayaran Hutang', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('returBeli', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('returBeli', args, view, dialogProps) { m, v, c ->
                 returBeli = v.table.selectionModel.selected[0]
             }
         }

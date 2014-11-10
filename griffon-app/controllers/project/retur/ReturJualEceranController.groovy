@@ -143,7 +143,7 @@ class ReturJualEceranController {
         execInsideUISync {
             def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], showPiutang: false, modusEceran: true]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemReturAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('itemReturAsChild', args, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemReturList)
             }
@@ -155,7 +155,7 @@ class ReturJualEceranController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual_eceran.json']
             if (e instanceof ReturJualEceran) args.dataSource = e
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

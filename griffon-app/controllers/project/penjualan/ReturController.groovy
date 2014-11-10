@@ -69,7 +69,7 @@ class ReturController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: false]
             def dialogProps = [title: 'Daftar Barang', size: new Dimension(400, 320)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemBarang.clear()
                 model.listItemBarang.addAll(m.itemBarangList)
             }
@@ -80,7 +80,7 @@ class ReturController {
         execInsideUISync {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_faktur.json']
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

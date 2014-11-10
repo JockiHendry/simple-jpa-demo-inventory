@@ -68,7 +68,7 @@ class ItemBarangAsChildController {
             def args = [popup: true, allowTambahProduk: model.allowTambahProduk, showReturOnly: model.showReturOnly, supplierSearch: model.supplierSearch]
             def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
             Produk produk = null
-            DialogUtils.showMVCGroup('produk', args, ApplicationHolder.application, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                 } else {

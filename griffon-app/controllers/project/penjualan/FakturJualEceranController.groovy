@@ -190,7 +190,7 @@ class FakturJualEceranController {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
                         allowTambahProduk: false, showHarga: model.showFakturJual]
             def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 620)]
-            DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
@@ -203,7 +203,7 @@ class FakturJualEceranController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_eceran.json']
             if (e instanceof FakturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

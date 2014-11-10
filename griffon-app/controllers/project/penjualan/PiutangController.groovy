@@ -52,7 +52,7 @@ class PiutangController {
         execInsideUISync {
             def args = [faktur: view.table.selectionModel.selected[0], listPembayaran: model.listPembayaranPiutang]
             def dialogProps = [title: 'Pembayaran Piutang', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('pembayaranPiutangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('pembayaranPiutangAsChild', args, view, dialogProps) { m, v, c ->
                 model.listPembayaranPiutang.clear()
                 model.listPembayaranPiutang.addAll(m.pembayaranList)
                 view.table.selectionModel.selected[0] = m.faktur
@@ -66,7 +66,7 @@ class PiutangController {
             execInsideUISync {
                 def args = [konsumen: konsumen]
                 def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
-                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
+                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, view, dialogProps)
             }
         }
     }

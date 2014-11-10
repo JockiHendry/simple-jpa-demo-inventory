@@ -92,7 +92,7 @@ class BuktiTerimaController {
         execInsideUISync {
             def args = [editable: false, listItemBarang: view.table.selectionModel.selected[0].barangYangHarusDikirim().items, allowTambahProduk: false]
             def dialogProps = [title: 'Daftar Barang Yang Telah Dikirim', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps)
         }
     }
 

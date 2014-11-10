@@ -113,7 +113,7 @@ class PenerimaanServisController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.items, allowTambahProduk: false, showReturOnly: true]
             def dialogProps = [title: 'Daftar Barang', size: new Dimension(400, 320)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemBarangList)
             }
@@ -125,7 +125,7 @@ class PenerimaanServisController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'penerimaan_servis.json']
             if (e instanceof PenerimaanServis) args.dataSource = e
             def dialogProps = [title: 'Preview Penerimaan Servis', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

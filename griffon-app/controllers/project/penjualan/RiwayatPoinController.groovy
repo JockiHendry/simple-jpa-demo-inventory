@@ -30,7 +30,7 @@ class RiwayatPoinController {
         execInsideUISync {
             def args = [popup: true]
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
@@ -61,7 +61,7 @@ class RiwayatPoinController {
             def args = [dataSource: result, template: 'riwayat_poin.jasper', options:
                 ['konsumen': konsumen, 'tanggalMulai': model.tanggalMulaiSearch, 'tanggalSelesai': model.tanggalSelesaiSearch]]
             def dialogProps = [title: 'Preview Riwayat Poin', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewFaktur', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewFaktur', args, view, dialogProps)
         }
     }
 

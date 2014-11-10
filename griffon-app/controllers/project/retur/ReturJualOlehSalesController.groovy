@@ -166,7 +166,7 @@ class ReturJualOlehSalesController {
         execInsideUISync {
             def args = [popup: true]
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
@@ -180,7 +180,7 @@ class ReturJualOlehSalesController {
         execInsideUISync {
             def args = [parentList: model.items, parent: view.table.selectionModel.selected[0], parentGudang: model.gudang.selectedItem, parentKonsumen: model.konsumen, showPiutang: model.showPiutang]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemReturAsChild', args, app, view, props) { m, v, c ->
+            DialogUtils.showMVCGroup('itemReturAsChild', args, view, props) { m, v, c ->
                 model.items.clear()
                 model.items.addAll(m.itemReturList)
             }
@@ -192,7 +192,7 @@ class ReturJualOlehSalesController {
         execInsideUISync {
             def args = [listItemBarang: retur.yangHarusDitukar().items, editable: false]
             def props = [title: 'Items', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, props)
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, props)
         }
     }
 
@@ -201,7 +201,7 @@ class ReturJualOlehSalesController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual_sales.json']
             if (e instanceof ReturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
     

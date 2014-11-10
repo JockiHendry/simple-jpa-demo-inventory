@@ -108,7 +108,7 @@ class KonsumenController {
             execInsideUISync {
                 def args = [konsumen: view.table.selectionModel.selected[0]]
                 def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
-                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, app, view, dialogProps)
+                DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, view, dialogProps)
             }
         }
     }

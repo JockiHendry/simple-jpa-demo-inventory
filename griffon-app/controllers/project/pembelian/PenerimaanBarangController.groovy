@@ -82,7 +82,7 @@ class PenerimaanBarangController {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.listItemBarang, allowTambahProduk: model.allowTambahProduk]
             def dialogProps = [title: 'Daftar Barang', size: new Dimension(400, 320)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemBarang.clear()
                 model.listItemBarang.addAll(m.itemBarangList)
             }

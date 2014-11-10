@@ -73,7 +73,7 @@ class FakturJualOlehSalesController {
                 try {
                     fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false, !model.listBonus.empty? model.listBonus: [])
                 } catch (MelebihiBatasKredit ex) {
-                    DialogUtils.showMVCGroup('supervisorPassword', [pesan: ex.getHTMLMessage()], app, view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)]) { m, v, c ->
+                    DialogUtils.showMVCGroup('supervisorPassword', [pesan: ex.getHTMLMessage()], view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)]) { m, v, c ->
                         if (m.ok) {
                             fakturJualOlehSales.bonusPenjualan = null
                             fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true, (!model.listBonus.empty)? model.listBonus: [])
@@ -129,7 +129,7 @@ class FakturJualOlehSalesController {
             }
 
             def dialogProps = [title: 'Detail Bonus', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
                 model.listBonus.clear()
                 model.listBonus.addAll(m.itemBarangList)
                 refreshInformasi()
@@ -146,7 +146,7 @@ class FakturJualOlehSalesController {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
                         konsumen: model.konsumen, allowTambahProduk: false, showHarga: model.showFakturJual]
             def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 620)]
-            DialogUtils.showMVCGroup('itemFakturAsChild', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
@@ -158,7 +158,7 @@ class FakturJualOlehSalesController {
         execInsideUISync {
             def args = [fakturJualOlehSales: view.table.selectionModel.selected[0]]
             def dialogProps = [title: 'Retur Faktur', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('retur', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('retur', args, view, dialogProps) { m, v, c ->
                 view.table.selectionModel.selected[0] = m.fakturJualOlehSales
             }
         }
@@ -168,7 +168,7 @@ class FakturJualOlehSalesController {
         execInsideUISync {
             def args = [popup: true]
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('konsumen', args, app, view, dialogProps) { m, v, c ->
+            DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
                     JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
@@ -183,7 +183,7 @@ class FakturJualOlehSalesController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json']
             if (e instanceof FakturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 

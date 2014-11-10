@@ -108,7 +108,7 @@ class ServisController {
             def args = [dataSource: view.table.selectionModel.selected[0], template: 'formulir_servis.json']
             if (e instanceof Servis) args.dataSource = e
             def dialogProps = [title: 'Preview Formulir Servis', preferredSize: new Dimension(970, 700)]
-            DialogUtils.showMVCGroup('previewEscp', args, app, view, dialogProps)
+            DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }
     }
 
