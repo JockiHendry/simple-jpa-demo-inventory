@@ -66,6 +66,10 @@ class ItemRetur {
         getKlaims(KlaimTukar, hanyaBelumDiproses).sum { KlaimTukar k -> k.jumlah }?: 0
     }
 
+    Integer jumlahBarangDiservis(boolean hanyaBelumDiproses = false) {
+        getKlaims(KlaimServis, hanyaBelumDiproses).sum { KlaimServis k -> k.jumlah }?: 0
+    }
+
     Integer jumlahPotongPiutang(boolean  hanyaBelumDiproses = false) {
         getKlaims(KlaimPotongPiutang, hanyaBelumDiproses).sum { KlaimPotongPiutang k -> k.jumlah }?: 0
     }

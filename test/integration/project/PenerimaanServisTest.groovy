@@ -64,6 +64,9 @@ class PenerimaanServisTest extends DbUnitTestCase {
         assertEquals(8, p1.jumlahTukar)
         assertEquals(2, p2.jumlahTukar)
         assertEquals(3, p3.jumlahTukar)
+        assertEquals(5, p1.jumlahRetur)
+        assertEquals(1, p2.jumlahRetur)
+        assertEquals(2, p3.jumlahRetur)
 
         // Hapus
         penerimaanServis = penerimaanServisRepository.hapus(penerimaanServis)
@@ -75,6 +78,9 @@ class PenerimaanServisTest extends DbUnitTestCase {
         assertEquals(3, p1.jumlahTukar)
         assertEquals(0, p2.jumlahTukar)
         assertEquals(0, p3.jumlahTukar)
+        assertEquals(10, p1.jumlahRetur)
+        assertEquals( 3, p2.jumlahRetur)
+        assertEquals( 5, p3.jumlahRetur)
     }
 
     public void testBuatDenganJumlahSalah() {

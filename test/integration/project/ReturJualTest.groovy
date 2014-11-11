@@ -16,6 +16,7 @@
 package project
 
 import domain.exception.DataTidakKonsisten
+import domain.exception.StokTidakCukup
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
@@ -29,6 +30,7 @@ import domain.penjualan.PengeluaranBarang
 import domain.retur.ItemRetur
 import domain.retur.Klaim
 import domain.retur.KlaimPotongPiutang
+import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
@@ -83,6 +85,46 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(35, p3.jumlahRetur)
     }
 
+    public void testJumlahTukarDiProduk() {
+        returJualRepository.withTransaction {
+            returJualRepository.findProdukById(-1l).jumlahTukar = 10
+            returJualRepository.findProdukById(-2l).jumlahTukar = 20
+            returJualRepository.findProdukById(-3l).jumlahTukar = 30
+        }
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        Produk p3 = returJualRepository.findProdukById(-3l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        ReturJual returJual = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-1', konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        returJual.tambah(new ItemRetur(p1, 10, [new KlaimTukar(p1, 1), new KlaimServis(p1, 3)] as Set))
+        returJual.tambah(new ItemRetur(p2, 20, [new KlaimPotongPiutang(1), new KlaimServis(p2, 5)] as Set))
+        returJual.tambah(new ItemRetur(p3, 30, [new KlaimPotongPiutang(1)] as Set))
+        returJualRepository.buat(returJual)
+
+        // Pastikan klaim servis sudah diproses seusai dibuat
+        assertTrue(returJual.getDaftarBarangServis(true).items.empty)
+
+        // Periksa nilai jumlah retur di produk
+        p1 = returJualRepository.findProdukById(-1l)
+        assertEquals(7, p1.jumlahTukar)
+        assertEquals(20, p1.jumlahRetur)
+        p2 = returJualRepository.findProdukById(-2l)
+        assertEquals(15, p2.jumlahTukar)
+        assertEquals(23, p2.jumlahRetur)
+        p3 = returJualRepository.findProdukById(-3l)
+        assertEquals(30, p3.jumlahTukar)
+        assertEquals(35, p3.jumlahRetur)
+
+        // Retur dengan jumlah servis yang tidak cukup
+        shouldFail(StokTidakCukup) {
+            returJual = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: 'TEST-2', konsumen: k, gudang: gudangRepository.cariGudangUtama())
+            returJual.tambah(new ItemRetur(p1, 10, [new KlaimTukar(p1, 1), new KlaimServis(p1, 200)] as Set))
+            returJual.tambah(new ItemRetur(p2, 20, [new KlaimPotongPiutang(1), new KlaimServis(p2, 300)] as Set))
+            returJual.tambah(new ItemRetur(p3, 30, [new KlaimPotongPiutang(1)] as Set))
+            returJualRepository.buat(returJual)
+        }
+    }
+
     public void testJumlahReturDiProdukSetelahHapus() {
         returJualRepository.withTransaction {
             Produk p1 = findProdukById(-1l)
@@ -102,6 +144,30 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(0, p2.jumlahRetur)
         Produk p3 = returJualRepository.findProdukById(-3l)
         assertEquals(3, p3.jumlahRetur)
+    }
+
+    public void testJumlahTukarDiProdukSetelahHapus() {
+        returJualRepository.withTransaction {
+            Produk p1 = findProdukById(-1l)
+            Produk p2 = findProdukById(-2l)
+            Produk p3 = findProdukById(-3l)
+            p1.jumlahAkanDikirim = 100
+            p2.jumlahAkanDikirim = 100
+            p3.jumlahAkanDikirim = 100
+            p1.jumlahTukar = 100
+            p2.jumlahTukar = 100
+            p3.jumlahTukar = 100
+        }
+        ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-2l)
+        returJualRepository.hapus(returJual)
+
+        // Periksa nilai jumlah retur di produk
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        assertEquals(105, p1.jumlahTukar)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        assertEquals(103, p2.jumlahTukar)
+        Produk p3 = returJualRepository.findProdukById(-3l)
+        assertEquals(102, p3.jumlahTukar)
     }
 
     public void testTukarBaru() {

@@ -17,10 +17,8 @@ package project.retur
 
 import domain.inventory.Produk
 import domain.retur.*
-import project.penjualan.JenisPencairanPoin
-import project.retur.*
 import simplejpa.swing.DialogUtils
-import simplejpa.transaction.Transaction
+
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -53,8 +51,10 @@ class KlaimAsChildController {
         Klaim klaim
         if (model.jenisKlaim.selectedItem == JenisKlaim.POTONG_PIUTANG) {
             klaim = new KlaimPotongPiutang(model.jumlah)
-        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_BARANG) {
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_BARU) {
             klaim = new KlaimTukar(model.produk, model.jumlah as Integer)
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_SERVIS) {
+            klaim = new KlaimServis(model.produk, model.jumlah as Integer)
         }
 
         if (!returJualRepository.validate(klaim, Default, model)) return
@@ -70,7 +70,7 @@ class KlaimAsChildController {
             Klaim selectedKlaim = view.table.selectionModel.selected[0]
             if (selectedKlaim instanceof KlaimPotongPiutang) {
                 selectedKlaim.jumlah = model.jumlah
-            } else if (selectedKlaim instanceof KlaimTukar) {
+            } else if ((selectedKlaim instanceof KlaimTukar) || (selectedKlaim instanceof KlaimServis)) {
                 selectedKlaim.produk = model.produk
                 selectedKlaim.jumlah = model.jumlah
             }
@@ -112,7 +112,9 @@ class KlaimAsChildController {
     def onPerubahanJenisKlaim = {
         if (model.jenisKlaim.selectedItem == JenisKlaim.POTONG_PIUTANG) {
             model.produkVisible = false
-        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_BARANG) {
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_BARU) {
+            model.produkVisible = true
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_SERVIS) {
             model.produkVisible = true
         }
     }
@@ -136,11 +138,15 @@ class KlaimAsChildController {
                 model.errors.clear()
                 model.id = selected.id
                 if (selected instanceof KlaimTukar) {
-                    model.jenisKlaim.selectedItem = JenisKlaim.TUKAR_BARANG
+                    model.jenisKlaim.selectedItem = JenisKlaim.TUKAR_BARU
                     model.produk = selected.produk
                     model.jumlah = selected.jumlah
                 } else if (selected instanceof KlaimPotongPiutang) {
                     model.jenisKlaim.selectedItem = JenisKlaim.POTONG_PIUTANG
+                    model.jumlah = selected.jumlah
+                } else if (selected instanceof KlaimServis) {
+                    model.jenisKlaim.selectedItem = JenisKlaim.TUKAR_SERVIS
+                    model.produk = selected.produk
                     model.jumlah = selected.jumlah
                 }
             }

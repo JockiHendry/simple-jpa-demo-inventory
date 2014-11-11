@@ -17,12 +17,15 @@ package project.retur
 
 import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
+import domain.event.PerubahanStokTukar
 import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Referensi
+import domain.inventory.DaftarBarang
+import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
@@ -86,14 +89,28 @@ class ReturJualRepository {
             returJual = buatReturEceran(returJual)
         }
 
+        def app = ApplicationHolder.application
         // Khusus untuk retur jual yang bukan kirim dari gudang utama, barang yang ditukar dianggap langsung dikirim.
         if (returJual instanceof ReturJualOlehSales && !returJual.gudang.utama && !returJual.getKlaimsTukar().empty) {
             tukar(returJual)
         } else {
-            ApplicationHolder.application?.event(new PerubahanRetur(returJual))
+            app?.event(new PerubahanRetur(returJual))
         }
 
-        ApplicationHolder.application?.event(new PesanStok(returJual))
+        app?.event(new PesanStok(returJual))
+
+        // Periksa apakah klaim servis bisa dilakukan (bila ada klaim servis)
+        DaftarBarang daftarKlaimServis = returJual.getDaftarBarangServis(true)
+        if (!daftarKlaimServis.items.empty) {
+            daftarKlaimServis.items.each { ItemBarang i ->
+                if (i.jumlah > i.produk.jumlahTukar) {
+                    throw new StokTidakCukup(i.produk.nama, i.jumlah, i.produk.jumlahTukar, null, StokTidakCukup.JENIS_STOK.STOK_TUKAR)
+                }
+            }
+            app?.event(new PerubahanStokTukar(daftarKlaimServis))
+            returJual.prosesKlaimServis()
+        }
+
         returJual
 	}
 
@@ -121,10 +138,6 @@ class ReturJualRepository {
     }
 
     private ReturJualEceran buatReturEceran(ReturJualEceran returJualEceran) {
-        // Periksa apakah ada retur jual eceran yang di-klaim selain tukar
-        if (!returJualEceran.items.every { ItemRetur i -> i.klaims.every { it instanceof KlaimTukar }}) {
-            throw new DataTidakKonsisten('Tidak ada klaim selain tukar di retur jual eceran!', returJualEceran)
-        }
         // Periksa apakah barang yang di-klaim tersedia
         returJualEceran.getKlaimsTukar().each { KlaimTukar k ->
             Produk produk = findProdukById(k.produk.id)
@@ -159,7 +172,8 @@ class ReturJualRepository {
         if (returJual.pengeluaranBarang != null) {
             throw new DataTidakBolehDiubah(returJual)
         }
-        ApplicationHolder.application?.event(new PerubahanRetur(returJual, true))
+        def app = ApplicationHolder.application
+        app?.event(new PerubahanRetur(returJual, true))
         if (returJual instanceof ReturJualOlehSales) {
             // Hapus piutang khusus untuk retur jual oleh sales
             returJual.konsumen = findKonsumenById(returJual.konsumen.id)
@@ -168,7 +182,11 @@ class ReturJualRepository {
                 f.hapusPembayaran(returJual.nomor)
             }
         }
-        ApplicationHolder.application?.event(new PesanStok(returJual, true))
+        app?.event(new PesanStok(returJual, true))
+        DaftarBarang daftarKlaimServis = returJual.getDaftarBarangServis()
+        if (!daftarKlaimServis.items.empty) {
+            app?.event(new PerubahanStokTukar(daftarKlaimServis, true))
+        }
         returJual.deleted = 'Y'
         returJual
     }

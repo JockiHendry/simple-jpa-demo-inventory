@@ -29,8 +29,9 @@ actions {
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
     action(id: 'showKlaim', name: 'Klaims', closure: controller.showKlaim)
-    action(id: 'autoKlaim', name: 'Auto Klaim (Tukar + Piutang)', closure: controller.autoKlaim)
-    action(id: 'autoKlaimPiutang', name: 'Auto Klaim (Piutang)', closure: controller.autoKlaimPiutang)
+    action(id: 'autoKlaim', name: 'Tukar Baru + Piutang', closure: controller.autoKlaim)
+    action(id: 'autoKlaimServis', name: 'Tukar Baru + Tukar Servis + Piutang', closure: controller.autoKlaimServis)
+    action(id: 'autoKlaimPiutang', name: 'Piutang', closure: controller.autoKlaimPiutang)
     action(id: 'resetKlaim', name: 'Reset Klaim', closure: controller.resetKlaim)
 }
 
@@ -42,6 +43,7 @@ panel(id: 'mainPanel') {
         panel(visible: bind {model.editable}, constraints: PAGE_START) {
             flowLayout(alignment: FlowLayout.LEFT)
             button(action: autoKlaim)
+            button(action: autoKlaimServis)
             button(action: autoKlaimPiutang, visible: bind {!model.modusEceran})
             button(action: resetKlaim)
         }
@@ -49,7 +51,8 @@ panel(id: 'mainPanel') {
             glazedTable(id: 'table', list: model.itemReturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showKlaim, enterKeyAction: showKlaim) {
                 glazedColumn(name: 'Produk', expression: { it.getDescription() })
                 glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 50)
-                glazedColumn(name: 'Qty Ditukar', expression: { it.jumlahBarangDitukar() }, columnClass: Integer, width: 70)
+                glazedColumn(name: 'Qty Tukar Baru', expression: { it.jumlahBarangDitukar() }, columnClass: Integer)
+                glazedColumn(name: 'Qty Tukar Servis', expression: { it.jumlahBarangDiservis() }, columnClass: Integer)
                 glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind{model.showPiutang}) {
                     templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
                 }

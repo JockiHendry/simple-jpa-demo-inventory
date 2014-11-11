@@ -37,6 +37,7 @@ class InventoryEventListenerService {
 
     PesanRepository pesanRepository
 
+    @Transaction
     void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
         log.info "Event onPerubahanStokTukar mulai dikerjakan..."
 
@@ -44,10 +45,11 @@ class InventoryEventListenerService {
         int pengali = daftarBarang.faktor() * (perubahanStokTukar.invers? -1: 1)
         daftarBarang.items.each { ItemBarang itemBarang ->
             int jumlahTukar = pengali * itemBarang.jumlah
-            if (itemBarang.produk.jumlahTukar == null) {
-                itemBarang.produk.jumlahTukar = jumlahTukar
+            Produk produk = findProdukById(itemBarang.produk.id)
+            if (produk.jumlahTukar == null) {
+                produk.jumlahTukar = jumlahTukar
             } else {
-                itemBarang.produk.jumlahTukar += jumlahTukar
+                produk.jumlahTukar += jumlahTukar
             }
         }
 

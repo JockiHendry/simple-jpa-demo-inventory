@@ -125,11 +125,15 @@ class ItemReturAsChildController {
         prosesAutoKlaim()
     }
 
+    def autoKlaimServis = {
+        prosesAutoKlaim(false, true)
+    }
+
     def autoKlaimPiutang = {
         prosesAutoKlaim(true)
     }
 
-    def prosesAutoKlaim = { boolean hanyaPiutang = false ->
+    def prosesAutoKlaim = { boolean hanyaPiutang = false, boolean tukarServis = false ->
         if (!model.modusEceran && !model.parent && (!model.parentGudang || !model.parentKonsumen)) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
             return
@@ -144,7 +148,7 @@ class ItemReturAsChildController {
         if (hanyaPiutang) {
             returJualService.potongPiutang(returJual)
         } else {
-            returJualService.autoKlaim(returJual)
+            returJualService.autoKlaim(returJual, tukarServis)
         }
         execInsideUISync {
             view.table.repaint()

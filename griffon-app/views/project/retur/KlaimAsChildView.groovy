@@ -16,10 +16,9 @@
 package project.retur
 
 import domain.retur.KlaimPotongPiutang
+import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
-
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -39,8 +38,8 @@ panel(id: 'mainPanel') {
     scrollPane(constraints: CENTER) {
         glazedTable(id: 'table', list: model.klaimList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
             glazedColumn(name: 'Jenis', expression: { griffon.util.GriffonNameUtils.getNaturalName(it?.class?.simpleName)})
-            glazedColumn(name: 'Tukar Dengan', expression: { (it instanceof KlaimTukar)? it.produk.nama: '' })
-            glazedColumn(name: 'Qty Ditukar', expression: { (it instanceof KlaimTukar)? it.jumlah: '' })
+            glazedColumn(name: 'Tukar Dengan', expression: { (it instanceof KlaimTukar) || (it instanceof KlaimServis)? it.produk.nama: '' })
+            glazedColumn(name: 'Qty Ditukar', expression: { (it instanceof KlaimTukar) || (it instanceof KlaimServis)? it.jumlah: '' })
             glazedColumn(name: 'Potongan Piutang', expression: { (it instanceof KlaimPotongPiutang)? it.jumlah: null}, columnClass: Integer) {
                 templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
             }

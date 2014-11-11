@@ -23,13 +23,53 @@ class StokTidakCukup extends RuntimeException {
     Integer jumlahTersedia
     String namaProduk
     Gudang gudang
+    JENIS_STOK jenisStok
+    String pesan
 
-    StokTidakCukup(String namaProduk, Integer jumlahYangDibutuhkan, Integer jumlahTersedia, Gudang gudang = null) {
-        super("${namaProduk} sejumlah ${jumlahYangDibutuhkan} tidak tersedia di gudang [${gudang?.nama?:'-'}]; yang tersedia adalah ${jumlahTersedia}")
+    StokTidakCukup(String namaProduk, Integer jumlahYangDibutuhkan, Integer jumlahTersedia, Gudang gudang = null, JENIS_STOK jenisStok = JENIS_STOK.STOK_BIASA) {
+        // Inisialisasi variabel
         this.namaProduk = namaProduk
         this.jumlahYangDibutuhkan = jumlahYangDibutuhkan
         this.jumlahTersedia = jumlahTersedia
         this.gudang = gudang
+        this.jenisStok = jenisStok
+
+        // Buat pesan kesalahan
+        StringBuilder pesan = new StringBuilder(jenisStok.keterangan)
+        pesan.append(' untuk ')
+        pesan.append(namaProduk)
+        pesan.append(' tidak tersedia')
+        if (gudang) {
+            pesan.append(' di ')
+            pesan.append(gudang.nama)
+        }
+        pesan.append(' ( ')
+        pesan.append(jumlahYangDibutuhkan)
+        pesan.append(' melebihi jumlah tersedia: ')
+        pesan.append(jumlahTersedia)
+        pesan.append(' )')
+        this.pesan = pesan
+    }
+
+    @Override
+    String getMessage() {
+        pesan
+    }
+
+    enum JENIS_STOK {
+        STOK_BIASA ('Stok'),
+        STOK_TUKAR ('Stok tukar')
+
+        String keterangan
+
+        JENIS_STOK(String keterangan) {
+            this.keterangan = keterangan
+        }
+
+        @Override
+        String toString() {
+            this.keterangan
+        }
     }
 
 }

@@ -32,6 +32,7 @@ import domain.penjualan.Sales
 import domain.retur.ItemRetur
 import domain.retur.KlaimPotongPiutang
 import domain.retur.Klaim
+import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import domain.retur.ReturJualOlehSales
@@ -428,4 +429,21 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertTrue(hasil[1].klaims.contains(new KlaimTukar(produk2, 10)))
     }
 
+    void testGetDaftarBarangServis() {
+        Produk produk1 = new Produk(nama: 'Produk A')
+        Produk produk2 = new Produk(nama: 'Produk B')
+        ReturJualOlehSales retur = new ReturJualOlehSales()
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimServis(produk1, 10)] as Set))
+        retur.tambah(new ItemRetur(produk1, 20, [new KlaimServis(produk1, 20)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimServis(produk2, 10)] as Set))
+
+        DaftarBarang d = retur.getDaftarBarangServis()
+        assertFalse(d.items.empty)
+        assertEquals(-1, d.faktor())
+        assertEquals(2, d.items.size())
+        assertEquals(produk1, d.items[0].produk)
+        assertEquals(30, d.items[0].jumlah)
+        assertEquals(produk2, d.items[1].produk)
+        assertEquals(10, d.items[1].jumlah)
+    }
 }

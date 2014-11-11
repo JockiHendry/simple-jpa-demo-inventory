@@ -21,6 +21,7 @@ import domain.inventory.Produk
 import domain.penjualan.Konsumen
 import domain.retur.ItemRetur
 import domain.retur.KlaimPotongPiutang
+import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
 import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
@@ -102,6 +103,12 @@ class ReturJualServiceTest extends DbUnitTestCase {
     }
 
     public void testAutoKlaimReturJualOlehSales() {
+        returJualService.withTransaction {
+            returJualService.findProdukById(-1l).jumlahTukar = 10
+            returJualService.findProdukById(-2l).jumlahTukar = 2
+            returJualService.findProdukById(-4l).jumlahTukar = 2
+        }
+
         Produk produk1 = returJualService.findProdukById(-1l)
         Produk produk2 = returJualService.findProdukById(-2l)
         Produk produk3 = returJualService.findProdukById(-3l)
@@ -110,17 +117,17 @@ class ReturJualServiceTest extends DbUnitTestCase {
         Konsumen konsumen = returJualService.findKonsumenById(-1l)
         Gudang gudang = returJualService.findGudangById(-1l)
 
-
         ReturJual r1 = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
         r1.tambah(new ItemRetur(produk1, 10))
         r1.tambah(new ItemRetur(produk2, 20))
         r1.tambah(new ItemRetur(produk3, 30))
-        returJualService.autoKlaim(r1)
+        returJualService.autoKlaim(r1, true)
         assertEquals(produk1, r1.items[0].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(10, r1.items[0].getKlaims(KlaimTukar).toList()[0].jumlah)
         assertEquals(produk2, r1.items[1].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(14, r1.items[1].getKlaims(KlaimTukar).toList()[0].jumlah)
-        assertEquals(1200, r1.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(2, r1.items[1].getKlaims(KlaimServis).toList()[0].jumlah)
+        assertEquals(800, r1.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
         assertEquals(produk3, r1.items[2].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(15, r1.items[2].getKlaims(KlaimTukar).toList()[0].jumlah)
         assertEquals(4500, r1.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
@@ -129,21 +136,24 @@ class ReturJualServiceTest extends DbUnitTestCase {
         r2.tambah(new ItemRetur(produk3, 16))
         r2.tambah(new ItemRetur(produk4, 2))
         r2.tambah(new ItemRetur(produk5, 2))
-        returJualService.autoKlaim(r2)
+        returJualService.autoKlaim(r2, true)
         assertEquals(produk3, r2.items[0].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(15, r2.items[0].getKlaims(KlaimTukar).toList()[0].jumlah)
         assertEquals(300, r2.items[0].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
-        assertEquals(26000, r2.items[1].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
+        assertEquals(produk4, r2.items[1].getKlaims(KlaimServis).toList()[0].produk)
+        assertEquals(2, r2.items[1].getKlaims(KlaimServis).toList()[0].jumlah)
         assertEquals(1000, r2.items[2].getKlaims(KlaimPotongPiutang).toList()[0].jumlah)
     }
 
     public void testAutoKlaimReturJualEceran() {
         Produk produk1 = returJualService.findProdukById(-1l)
         ReturJual r1 = new ReturJualEceran(nomor: 'R-01', tanggal: LocalDate.now(), namaKonsumen: 'Aname')
-        r1.tambah(new ItemRetur(produk1, 10))
-        returJualService.autoKlaim(r1)
+        r1.tambah(new ItemRetur(produk1, 13))
+        returJualService.autoKlaim(r1, true)
         assertEquals(produk1, r1.items[0].getKlaims(KlaimTukar).toList()[0].produk)
         assertEquals(10, r1.items[0].getKlaims(KlaimTukar).toList()[0].jumlah)
+        assertEquals(produk1, r1.items[0].getKlaims(KlaimServis).toList()[0].produk)
+        assertEquals(3, r1.items[0].getKlaims(KlaimServis).toList()[0].jumlah)
 
         ReturJual r2 = new ReturJualEceran(nomor: 'R-02', tanggal: LocalDate.now(), namaKonsumen: 'Aname')
         r2.tambah(new ItemRetur(produk1, 30))

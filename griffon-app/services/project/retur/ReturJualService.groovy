@@ -16,16 +16,12 @@
 package project.retur
 
 import domain.exception.StokTidakCukup
-import domain.inventory.DaftarBarangSementara
-import domain.inventory.Gudang
-import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
 import domain.retur.ItemRetur
-import domain.retur.Klaim
 import domain.retur.KlaimPotongPiutang
+import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
-import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
 import org.slf4j.Logger
@@ -40,7 +36,7 @@ class ReturJualService {
 
     void potongPiutang(ReturJualOlehSales returJual) {
         returJual.items.each { ItemRetur i ->
-            int sisaBelumDitukar = i.jumlah - i.jumlahBarangDitukar(true)
+            int sisaBelumDitukar = i.jumlah - i.jumlahBarangDitukar(true) - i.jumlahBarangDiservis(true)
             if (sisaBelumDitukar > 0) {
                 Konsumen konsumen = findKonsumenById(returJual.konsumen.id)
                 BigDecimal jumlahPiutang = sisaBelumDitukar * konsumen.hargaTerakhir(i.produk)
@@ -53,29 +49,37 @@ class ReturJualService {
         }
     }
 
-    void autoKlaim(ReturJualOlehSales returJual) {
+    void autoKlaim(ReturJualOlehSales returJual, boolean tukarServis = false) {
         // Tentukan produk yang bisa ditukar (semaksimal mungkin)
         returJual.items.each { ItemRetur i ->
             i.klaims.clear()
             Produk produk = findProdukById(i.produk.id)
+            int sisa = i.jumlah - i.jumlahBarangDitukar(true) - i.jumlahBarangDiservis(true)
             int jumlahTersedia = returJual.gudang.utama? produk.jumlahReadyGudangUtama(): produk.stok(returJual.gudang).jumlah
-            int jumlahPerluDitukar = i.jumlah - i.jumlahBarangDitukar(true)
             if (jumlahTersedia > 0) {
-                int jumlahDitukar = (jumlahTersedia >= jumlahPerluDitukar)? jumlahPerluDitukar: jumlahTersedia
+                int jumlahDitukar = (jumlahTersedia >= sisa)? sisa: jumlahTersedia
                 i.tambahKlaim(new KlaimTukar(produk, jumlahDitukar))
+                sisa -= jumlahDitukar
+            }
+            if ((sisa > 0) && (produk.jumlahTukar > 0) && tukarServis) {
+                int jumlahDitukar = (produk.jumlahTukar >= sisa)? sisa: produk.jumlahTukar
+                i.tambahKlaim(new KlaimServis(produk, jumlahDitukar))
             }
         }
         // Potong piutang untuk sisa-nya
         potongPiutang(returJual)
     }
 
-    void autoKlaim(ReturJualEceran returJual) {
+    void autoKlaim(ReturJualEceran returJual, boolean tukarServis = false) {
         returJual.items.each { ItemRetur i ->
             i.klaims.clear()
             Produk produk = findProdukById(i.produk.id)
-            int jumlahPerluDitukar = i.jumlah - i.jumlahBarangDitukar(true)
+            int jumlahPerluDitukar = i.jumlah - i.jumlahBarangDitukar(true) - i.jumlahBarangDiservis(true)
             if (produk.jumlahReadyGudangUtama() >= jumlahPerluDitukar) {
                 i.tambahKlaim(new KlaimTukar(produk, jumlahPerluDitukar))
+            } else if (tukarServis && ((produk.jumlahReadyGudangUtama() + produk.jumlahTukar) >= jumlahPerluDitukar)) {
+                i.tambahKlaim(new KlaimTukar(produk, produk.jumlahReadyGudangUtama()))
+                i.tambahKlaim(new KlaimServis(produk, jumlahPerluDitukar - produk.jumlahReadyGudangUtama()))
             } else {
                 throw new StokTidakCukup(produk.nama, jumlahPerluDitukar, produk.jumlahReadyGudangUtama(), null)
             }

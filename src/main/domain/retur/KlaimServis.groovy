@@ -15,47 +15,55 @@
  */
 package domain.retur
 
-import domain.inventory.BolehPesanStok
-import domain.inventory.Gudang
 import domain.inventory.ItemBarang
-import domain.penjualan.PengeluaranBarang
+import domain.inventory.Produk
 import groovy.transform.*
-import project.inventory.GudangRepository
 import simplejpa.DomainClass
-import simplejpa.SimpleJpaUtil
-
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-class ReturJualEceran extends ReturJual implements BolehPesanStok {
+@DomainClass @Entity @Canonical @AutoClone
+class KlaimServis extends Klaim {
 
-    @NotEmpty @Size(min=2, max=100)
-    String namaKonsumen
+    @ManyToOne @NotNull
+    Produk produk
+
+    @Min(0l) @NotNull
+    Integer jumlah
 
     @Override
-    void tambah(ItemRetur itemRetur) {
-        if (itemRetur.klaims.find { it instanceof KlaimPotongPiutang }) {
-            throw new IllegalArgumentException('Retur jual eceran tidak boleh memiliki klaim potong piutang!')
+    void merge(Klaim klaim) {
+        if (bolehMerge(klaim)) {
+            jumlah += klaim.jumlah
         }
-        super.tambah(itemRetur)
-    }
-
-    PengeluaranBarang tukar() {
-        super.tukar((SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang') as GudangRepository).cariGudangUtama(), namaKonsumen)
     }
 
     @Override
-    boolean isBolehPesanStok() {
-        true
+    boolean bolehMerge(Klaim klaim) {
+        (klaim instanceof KlaimServis) && (klaim.produk == produk)
+    }
+
+    Object asType(Class type) {
+        if (type == ItemBarang) {
+            return new ItemBarang(produk, jumlah)
+        }
+        super.asType(type)
     }
 
     @Override
-    List<ItemBarang> yangDipesan() {
-        yangHarusDitukar().items
+    boolean equals(Object o) {
+        if (o && o.produk && o.jumlah) {
+            return (produk == o.produk) && (jumlah == o.jumlah)
+        }
+        false
+    }
+
+    @Override
+    String toString() {
+        "Tukar Servis ${produk?.nama}: ${jumlah}"
     }
 
 }

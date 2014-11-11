@@ -79,13 +79,23 @@ abstract class ReturJual implements SebuahDaftarBarang {
         getKlaims(KlaimTukar, hanyaBelumDiproses)
     }
 
+    DaftarBarang getDaftarBarangServis(boolean hanyaBelumDiproses = false) {
+        new DaftarBarangSementara(getKlaims(KlaimServis, hanyaBelumDiproses).collect {
+            new ItemBarang(it.produk, it.jumlah)
+        }, -1)
+    }
+
     Integer jumlahDitukar() {
-        items.sum { ItemRetur i -> i.jumlahBarangDitukar() }?: 0
+        items.sum { ItemRetur i -> i.jumlahBarangDitukar() + i.jumlahBarangDiservis() }?: 0
     }
 
     void proses(Klaim klaim) {
         klaim.proses()
         sudahDiproses = items.every { it.isSudahDiproses() }?: false
+    }
+
+    void prosesKlaimServis() {
+        getKlaims(KlaimServis, true).each { proses(it) }
     }
 
     PengeluaranBarang tukar(Gudang gudang, String namaKonsumen, boolean pakaiYangSudahDipesan = true) {

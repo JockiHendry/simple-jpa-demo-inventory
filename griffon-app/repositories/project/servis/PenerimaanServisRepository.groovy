@@ -15,6 +15,7 @@
  */
 package project.servis
 
+import domain.event.PerubahanRetur
 import domain.event.PerubahanStokTukar
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.ItemBarang
@@ -50,6 +51,7 @@ class PenerimaanServisRepository {
         }
 
         persist(penerimaanServis)
+        ApplicationHolder.application?.event(new PerubahanRetur(penerimaanServis, true))
         ApplicationHolder.application?.event(new PerubahanStokTukar(penerimaanServis))
         penerimaanServis
     }
@@ -74,6 +76,7 @@ class PenerimaanServisRepository {
         }
         penerimaanServis.deleted = 'Y'
         ApplicationHolder.application?.event(new PerubahanStokTukar(penerimaanServis, true))
+        ApplicationHolder.application?.event(new PerubahanRetur(penerimaanServis))
         penerimaanServis
     }
 

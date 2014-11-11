@@ -45,7 +45,8 @@ class KlaimAsChildModel {
 
 enum JenisKlaim {
 
-    TUKAR_BARANG('Tukar Barang'),
+    TUKAR_BARU('Tukar Baru'),
+    TUKAR_SERVIS('Tukar Hasil Servis'),
     POTONG_PIUTANG('Potong Piutang')
 
     String desc

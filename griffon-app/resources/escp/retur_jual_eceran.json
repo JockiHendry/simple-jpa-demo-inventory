@@ -9,7 +9,7 @@
         "header": [
            "      %{176 R2}      Retur Jual  ${companyName:62} Hal: %{PAGE_NO}",
            "    %{176 R6}    Nomor            : ${nomor:25}                 Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
-           "   %{176 R8}   Konsumen         : ${konsumen.nama:40}",
+           "   %{176 R8}   Konsumen         : ${namaKonsumen:40}",
            "     %{176 R4}",
            "      %{176 R2}"
         ],
