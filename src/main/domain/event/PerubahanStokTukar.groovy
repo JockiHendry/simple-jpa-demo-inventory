@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.servis
+package domain.event
 
 import domain.inventory.DaftarBarang
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
+import griffon.core.*
 
-@DomainClass @Entity @Canonical
-class PenerimaanServis extends DaftarBarang {
+class PerubahanStokTukar extends Event {
 
-    @Override
-    int faktor() {
-        1
+    boolean invers
+
+    PerubahanStokTukar(DaftarBarang daftarBarang, boolean invers = false) {
+        super(daftarBarang)
+        this.invers = invers
     }
 
 }
-

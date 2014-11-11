@@ -17,6 +17,7 @@ package listener
 
 import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
+import domain.event.PerubahanStokTukar
 import domain.event.PesanStok
 import domain.event.TransferStok
 import domain.inventory.BolehPesanStok
@@ -35,6 +36,23 @@ import simplejpa.transaction.Transaction
 class InventoryEventListenerService {
 
     PesanRepository pesanRepository
+
+    void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
+        log.info "Event onPerubahanStokTukar mulai dikerjakan..."
+
+        DaftarBarang daftarBarang = (DaftarBarang) perubahanStokTukar.source
+        int pengali = daftarBarang.faktor() * (perubahanStokTukar.invers? -1: 1)
+        daftarBarang.items.each { ItemBarang itemBarang ->
+            int jumlahTukar = pengali * itemBarang.jumlah
+            if (itemBarang.produk.jumlahTukar == null) {
+                itemBarang.produk.jumlahTukar = jumlahTukar
+            } else {
+                itemBarang.produk.jumlahTukar += jumlahTukar
+            }
+        }
+
+        log.info "Event onPerubahanStokTukar selesai dikerjakan!"
+    }
 
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
         log.info "Event onPerubahanRetur mulai dikerjakan..."
