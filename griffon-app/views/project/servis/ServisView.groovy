@@ -45,9 +45,15 @@ panel(id: 'mainPanel') {
             glazedColumn(name: '', expression: { it.deleted == 'Y'? 'D': ''}, width: 20)
             glazedColumn(name: 'Nama Konsumen', property: 'namaKonsumen')
             glazedColumn(name: 'Tipe', property: 'tipe')
-            glazedColumn(name: 'Tanggal Masuk', property: 'tanggalMasuk')
-            glazedColumn(name: 'Tanggal Selesai', property: 'tanggalSelesai')
-            glazedColumn(name: 'Tanggal Diambil', property: 'tanggalDiambil')
+            glazedColumn(name: 'Tanggal Masuk', property: 'tanggalMasuk') {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
+            }
+            glazedColumn(name: 'Tanggal Selesai', property: 'tanggalSelesai') {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
+            }
+            glazedColumn(name: 'Tanggal Diambil', property: 'tanggalDiambil') {
+                templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
+            }
         }
     }
 
