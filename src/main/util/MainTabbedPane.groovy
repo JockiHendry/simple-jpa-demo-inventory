@@ -39,10 +39,9 @@ class MainTabbedPane extends JTabbedPane {
         this.app = ApplicationHolder.application
     }
 
-    void addMVCTab(String mvcType, def args) {
-        int idx = app.mvcGroupManager.groups.findAll { k,v -> v.mvcType == mvcType }.size() + 1
-        String naturalMvcTypeName = GriffonNameUtils.getNaturalName(mvcType)
-        String mvcName = idx == 1? naturalMvcTypeName: "${naturalMvcTypeName} ($idx)"
+    void addMVCTab(String mvcType, def args, String caption) {
+        int idx = app.mvcGroupManager.groups.keySet().findAll { it.replaceAll('\\(\\d+\\)','').trim().equals(caption)}.size() + 1
+        String mvcName = idx == 1? caption: "$caption ($idx)"
         def (m, v, c) = app.mvcGroupManager.createMVCGroup(mvcType, mvcName, args)
         addTab(mvcName, v.mainPanel)
         int tabIndex = tabCount-1

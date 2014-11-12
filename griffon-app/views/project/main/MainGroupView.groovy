@@ -55,39 +55,34 @@ def popupReturJual = {
     returJualPopup.show(returJualButton, 0, returJualButton.getHeight())
 }
 
-def switchPageWithArguments = { Map arguments ->
-    return { ActionEvent event ->
-        controller.switchPage(event, arguments)
-    }
-}
-
 actions {
-    action(id: 'penerimaanBarang', name: 'Terima Barang', smallIcon: imageIcon('/menu_penerimaan_barang.png'), mnemonic: KeyEvent.VK_T, closure: popupPenerimaanBarang)
+    action(id: 'penerimaanBarang', name: 'Terima Barang', smallIcon: imageIcon('/menu_penerimaan_barang.png'),
+        mnemonic: KeyEvent.VK_T, closure: popupPenerimaanBarang)
     action(id: 'penerimaanPembelian', name: 'Terima Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_P,
-        smallIcon: imageIcon('/menu_penerimaan_po.png'), closure: switchPageWithArguments([mode: POViewMode.PENERIMAAN]))
+        smallIcon: imageIcon('/menu_penerimaan_po.png'), closure: controller.switchPage.rcurry([mode: POViewMode.PENERIMAAN]))
     action(id: 'penerimaanReturBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
-        smallIcon: imageIcon('/menu_penerimaan_retur_beli.png'), closure: switchPageWithArguments([mode: ReturBeliViewMode.PENERIMAAN]))
+        smallIcon: imageIcon('/menu_penerimaan_retur_beli.png'), closure: controller.switchPage.rcurry([mode: ReturBeliViewMode.PENERIMAAN]))
     action(id: 'pengeluaranBarang', name: 'Antar Barang', actionCommandKey: 'pengeluaranBarang', mnemonic: KeyEvent.VK_A,
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
     action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.PENGELUARAN]))
+        smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.PENGELUARAN]))
     action(id: 'pengiriman', name: 'Kirim Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
     action(id: 'pengeluaranReturJualEceran', name: 'Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_C,
-        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_sales.png'), closure: switchPageWithArguments([mode: ReturJualViewMode.PENGELUARAN]))
+        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_sales.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
     action(id: 'pengeluaranReturJualSales', name: 'Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_eceran.png'), closure: switchPageWithArguments([mode: ReturJualViewMode.PENGELUARAN]))
+        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_eceran.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
     action(id: 'buktiTerima', name: 'Bukti Terima', actionCommandKey: 'buktiTerima', mnemonic: KeyEvent.VK_T,
         smallIcon: imageIcon('/menu_bukti_terima.png'), closure: controller.switchPage)
 
     action(id: 'purchaseOrder', name: 'Purchase Order', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_purchaseorder.png'), closure: switchPageWithArguments([mode: POViewMode.ALL]))
+        smallIcon: imageIcon('/menu_purchaseorder.png'), closure: controller.switchPage.rcurry([mode: POViewMode.ALL]))
     action(id: 'fakturBeli', name: 'Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_B,
-        smallIcon: imageIcon('/menu_pembelian.png'), closure: switchPageWithArguments([mode: POViewMode.FAKTUR_BELI]))
+        smallIcon: imageIcon('/menu_pembelian.png'), closure: controller.switchPage.rcurry([mode: POViewMode.FAKTUR_BELI]))
     action(id: 'fakturJual', name: 'Penjualan', actionCommandKey: 'penjualan', mnemonic: KeyEvent.VK_J,
         smallIcon: imageIcon('/menu_penjualan.png'), closure: popupPenjualan)
     action(id: 'fakturJualEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: switchPageWithArguments([mode: FakturEceranViewMode.FAKTUR]))
+        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.FAKTUR]))
     action(id: 'fakturJualOlehSales', name: 'Sales', actionCommandKey: 'fakturJualOlehSales', mnemonic: KeyEvent.VK_S,
         smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,

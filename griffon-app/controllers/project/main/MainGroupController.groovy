@@ -70,7 +70,7 @@ class MainGroupController {
         piutangService.periksaJatuhTempo()
 
         if (model.pesanVisible) {
-            view.mainTab.addMVCTab('pesan', [:])
+            view.mainTab.addMVCTab('pesan', [:], 'Pesan')
         }
     }
 
@@ -88,7 +88,8 @@ class MainGroupController {
             BusyLayerUI.instance.show()
 
             def groupId = event.actionCommand
-            view.mainTab.addMVCTab(groupId, arguments)
+            def caption = (event.source == view.pesanNotifikasi)? 'Pesan': event.source.text
+            view.mainTab.addMVCTab(groupId, arguments, caption)
 
             BusyLayerUI.instance.hide()
         }
