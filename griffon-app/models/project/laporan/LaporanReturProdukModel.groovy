@@ -23,7 +23,7 @@ class LaporanReturProdukModel {
 
     @Bindable LocalDate tanggalMulaiCari
     @Bindable LocalDate tanggalSelesaiCari
-    @Bindable Produk produkSearch
+    @Bindable String produkSearch
 
     List result
     Map params = [:]

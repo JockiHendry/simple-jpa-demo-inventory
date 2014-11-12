@@ -38,7 +38,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,gr
     label('Dan', constraints: 'wrap')
 
     label('Nama Produk')
-    label(text: bind { model.produkSearch? model.produkSearch.nama: '-'})
+    textField(text: bind('produkSearch', target: model, mutual: true), columns: 20)
     button(action: cariProduk, constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {

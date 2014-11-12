@@ -39,7 +39,7 @@ class LaporanPenjualanProdukController {
     def tampilkanLaporan = {
         String kriteriaNama = ''
         if (model.produkSearch) {
-            kriteriaNama = " AND i.produk.nama.id = ${model.produkSearch.id} "
+            kriteriaNama = " AND i.produk.nama LIKE '%${model.produkSearch}%' "
         }
 
         List result = fakturJualRepository.executeQuery("""
@@ -83,7 +83,7 @@ class LaporanPenjualanProdukController {
             def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (!v.table.selectionModel.isSelectionEmpty()) {
-                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                    model.produkSearch = v.view.table.selectionModel.selected[0].nama
                 }
             }
         }

@@ -24,7 +24,7 @@ import groovy.beans.Bindable
 
 class LaporanStokModel {
 
-    @Bindable Produk produkSearch
+    @Bindable String produkSearch
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Supplier> supplier = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(supplierList)
 

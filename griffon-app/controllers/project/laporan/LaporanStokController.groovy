@@ -38,7 +38,7 @@ class LaporanStokController {
     def tampilkanLaporan = {
         model.result = produkRepository.findAllProdukByDsl([orderBy: 'nama']) {
             if (model.produkSearch) {
-                id eq(model.produkSearch.id)
+                nama like("%${model.produkSearch}%")
             }
             if (model.supplier.selectedItem) {
                 and()
@@ -54,7 +54,7 @@ class LaporanStokController {
             def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (!v.table.selectionModel.isSelectionEmpty()) {
-                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                    model.produkSearch = v.view.table.selectionModel.selected[0].nama
                 }
             }
         }

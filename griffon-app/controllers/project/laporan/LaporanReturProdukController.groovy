@@ -45,8 +45,7 @@ class LaporanReturProdukController {
         String kriteriaNama = ''
         Map params = [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari]
         if (model.produkSearch) {
-            kriteriaNama = " AND i.produk = :produkSearch "
-            params.produkSearch = model.produkSearch
+            kriteriaNama = " AND i.produk.nama LIKE '%${model.produkSearch}%' "
         }
 
         Map<Produk, ReturProduk> returProduk = [:]
@@ -56,7 +55,7 @@ class LaporanReturProdukController {
             WHERE r.deleted != 'Y' AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai $kriteriaNama
         """, [:], params).each { ReturJualOlehSales r ->
             r.items.each { ItemRetur i ->
-                if (model.produkSearch && (i.produk != model.produkSearch)) return
+                if (model.produkSearch && !i.produk.nama.contains(model.produkSearch)) return
                 ReturProduk rp = returProduk[i.produk]
                 if (rp) {
                     rp.jumlahReturJualSales += i.jumlah
@@ -71,7 +70,7 @@ class LaporanReturProdukController {
             WHERE r.deleted != 'Y' AND r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai $kriteriaNama
         """, [:], params).each { ReturJualEceran r ->
             r.items.each { ItemRetur i ->
-                if (model.produkSearch && (i.produk != model.produkSearch)) return
+                if (model.produkSearch && !i.produk.nama.contains(model.produkSearch)) return
                 ReturProduk rp = returProduk[i.produk]
                 if (rp) {
                     rp.jumlahReturJualEceran += i.jumlah
@@ -87,7 +86,7 @@ class LaporanReturProdukController {
         """, [:], params).each { ReturBeli r ->
             r.items.each { Kemasan k ->
                 k.items.each { ItemBarang i ->
-                    if (model.produkSearch && (i.produk != model.produkSearch)) return
+                    if (model.produkSearch && !i.produk.nama.contains(model.produkSearch)) return
                     ReturProduk rp = returProduk[i.produk]
                     if (rp) {
                         rp.jumlahReturBeli += i.jumlah
@@ -110,7 +109,7 @@ class LaporanReturProdukController {
             def dialogProps = [title: 'Cari Produk...', preferredSize: new Dimension(900, 600)]
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (!v.table.selectionModel.isSelectionEmpty()) {
-                    model.produkSearch = v.view.table.selectionModel.selected[0]
+                    model.produkSearch = v.view.table.selectionModel.selected[0].nama
                 }
             }
         }
