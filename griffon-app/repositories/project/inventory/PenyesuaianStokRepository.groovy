@@ -33,9 +33,9 @@ class PenyesuaianStokRepository {
 
     List cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String gudangSearch) {
         findAllPenyesuaianStokByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (gudangSearch) {

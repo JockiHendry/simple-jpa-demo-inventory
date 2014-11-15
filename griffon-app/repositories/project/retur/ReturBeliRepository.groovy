@@ -34,9 +34,9 @@ class ReturBeliRepository {
 
     List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiterimaSearch, boolean excludeDeleted = false) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (supplierSearch) {
@@ -54,9 +54,9 @@ class ReturBeliRepository {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             supplier eq(supplierSearch)
             and()
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (sudahDiterimaSearch != null) {

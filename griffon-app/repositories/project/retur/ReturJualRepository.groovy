@@ -45,9 +45,9 @@ class ReturJualRepository {
     
     List<ReturJual> cariReturOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
         findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {
@@ -63,9 +63,9 @@ class ReturJualRepository {
 
     List<ReturJual> cariReturEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
         findAllReturJualEceranByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {

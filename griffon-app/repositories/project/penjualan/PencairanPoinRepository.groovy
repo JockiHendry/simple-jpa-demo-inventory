@@ -32,9 +32,9 @@ class PencairanPoinRepository {
 
     public List<PencairanPoin> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch) {
         findAllPencairanPoinByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {

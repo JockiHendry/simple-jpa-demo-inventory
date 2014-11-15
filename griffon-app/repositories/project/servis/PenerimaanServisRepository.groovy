@@ -30,9 +30,9 @@ class PenerimaanServisRepository {
 
     public List<PenerimaanServis> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch) {
         findAllPenerimaanServisByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
         }

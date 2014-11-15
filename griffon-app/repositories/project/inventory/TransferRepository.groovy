@@ -32,9 +32,9 @@ class TransferRepository {
     List<Transfer> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
                                String asalSearch, String tujuanSearch) {
         findAllTransferByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            if (nomorSearch) {
-                and()
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
                 nomor like("%${nomorSearch}%")
             }
             if (asalSearch) {

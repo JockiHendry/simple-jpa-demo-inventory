@@ -50,14 +50,14 @@ class FakturJualRepository {
 
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorSearch}%")
+            }
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorSearch) {
-                and()
-                nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {
                 and()
@@ -68,14 +68,14 @@ class FakturJualRepository {
 
     List<FakturJualEceran> cariFakturJualEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String namaPembeliSearch, def statusSearch) {
         findAllFakturJualEceranByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorSearch}%")
+            }
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorSearch) {
-                and()
-                nomor like("%${nomorSearch}%")
             }
             if (namaPembeliSearch) {
                 and()
@@ -86,14 +86,14 @@ class FakturJualRepository {
 
     List<FakturJualOlehSales> cariFakturJualOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorSearch}%")
+            }
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorSearch) {
-                and()
-                nomor like("%${nomorSearch}%")
             }
             if (salesSearch) {
                 and()
@@ -108,19 +108,15 @@ class FakturJualRepository {
 
     List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorSearch}%")
+            }
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
-            if (nomorSearch) {
-                and()
-                nomor like("%${nomorSearch}%")
-            }
-//            if (salesSearch) {
-//                and()
-//                sales__nama like("%${salesSearch}%")
-//            }
             if (konsumenSearch) {
                 and()
                 konsumen__nama like("%${konsumenSearch}%")
@@ -130,14 +126,14 @@ class FakturJualRepository {
 
     List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorFakturSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorFakturSearch}%")
+            }
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorFakturSearch) {
-                and()
-                nomor like("%${nomorFakturSearch}%")
             }
             if (nomorSuratJalanSearch) {
                 and()
@@ -153,7 +149,7 @@ class FakturJualRepository {
     public List<FakturJualOlehSales> cariPiutang(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch,
             String konsumenSearch, StatusPiutangSearch statusPiutangSearch = StatusPiutangSearch.SEMUA) {
         findAllFakturJualOlehSalesByDslFetchPiutang([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            if ((statusPiutangSearch != StatusPiutangSearch.AKAN_JATUH_TEMPO) && (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS)) {
+            if (!nomorSearch && (statusPiutangSearch != StatusPiutangSearch.AKAN_JATUH_TEMPO) && (statusPiutangSearch != StatusPiutangSearch.BELUM_LUNAS)) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             }
             if (nomorSearch) {

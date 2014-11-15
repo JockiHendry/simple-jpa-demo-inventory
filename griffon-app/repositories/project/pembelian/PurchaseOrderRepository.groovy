@@ -38,14 +38,15 @@ class PurchaseOrderRepository {
     public List<PurchaseOrder> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
             String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorPOSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorPOSearch}%")
+            }
+
             if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorPOSearch) {
-                and()
-                nomor like("%${nomorPOSearch}%")
             }
             if (nomorFakturSearch) {
                 and()
@@ -61,17 +62,18 @@ class PurchaseOrderRepository {
     public List<PurchaseOrder> cariPenerimaan(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
                                               String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorPOSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorPOSearch}%")
+            }
+
             if (statusSearch == SwingHelper.SEMUA) {
                 and()
                 status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.FAKTUR_DITERIMA])
             } else {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorPOSearch) {
-                and()
-                nomor like("%${nomorPOSearch}%")
             }
             if (nomorFakturSearch) {
                 and()
@@ -87,17 +89,18 @@ class PurchaseOrderRepository {
     public List<PurchaseOrder> cariFakturBeli(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorPOSearch,
                                               String nomorFakturSearch, String supplierSearch, def statusSearch) {
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (!nomorPOSearch) {
+                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            } else {
+                nomor like("%${nomorPOSearch}%")
+            }
+
             if (statusSearch == SwingHelper.SEMUA) {
                 and()
                 status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.BARANG_DITERIMA])
             } else {
                 and()
                 status eq(statusSearch)
-            }
-            if (nomorPOSearch) {
-                and()
-                nomor like("%${nomorPOSearch}%")
             }
             if (nomorFakturSearch) {
                 and()
@@ -116,7 +119,7 @@ class PurchaseOrderRepository {
            StatusHutangSearch statusHutangSearch = StatusHutangSearch.SEMUA) {
 
         findAllPurchaseOrderByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
-            if (statusHutangSearch != StatusHutangSearch.BELUM_LUNAS) {
+            if (!nomorSearch && (statusHutangSearch != StatusHutangSearch.BELUM_LUNAS)) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             }
             if (nomorSearch) {
