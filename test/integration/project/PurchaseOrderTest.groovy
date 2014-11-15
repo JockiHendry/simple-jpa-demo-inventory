@@ -45,13 +45,6 @@ class PurchaseOrderTest extends DbUnitTestCase {
         super.deleteAll()
     }
 
-    public void testTidakBolehDiUpdate() {
-        PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
-        shouldFail(DataTidakBolehDiubah) {
-            purchaseOrderRepository.update(p)
-        }
-    }
-
     public void testTidakBolehDiHapus() {
         PurchaseOrder p = purchaseOrderRepository.findPurchaseOrderById(-5l)
         shouldFail(DataTidakBolehDiubah) {

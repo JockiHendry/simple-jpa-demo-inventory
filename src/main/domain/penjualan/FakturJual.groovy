@@ -17,7 +17,6 @@ package domain.penjualan
 
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
@@ -63,7 +62,7 @@ abstract class FakturJual extends Faktur implements BolehPesanStok {
             throw new DataTidakBolehDiubah(this)
         }
         if (pengeluaranBarang == null) {
-            throw new DataTidakKonsisten(this)
+            throw new DataTidakBolehDiubah('Pengiriman belum dilakukan!', this)
         }
         pengeluaranBarang.diterima(buktiTerima)
         status = StatusFakturJual.DITERIMA
@@ -82,7 +81,7 @@ abstract class FakturJual extends Faktur implements BolehPesanStok {
             throw new DataTidakBolehDiubah(this)
         }
         if (pengeluaranBarang == null) {
-            throw new DataTidakKonsisten(this)
+            throw new DataTidakBolehDiubah('Pengeluaran tidak ditemukan!', this)
         }
         ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
         ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, isBolehPesanStok()))
@@ -95,7 +94,7 @@ abstract class FakturJual extends Faktur implements BolehPesanStok {
             throw new DataTidakBolehDiubah(this)
         }
         if (pengeluaranBarang == null) {
-            throw new DataTidakKonsisten(this)
+            throw new DataTidakBolehDiubah('Bukti terima tidak ditemukan!', this)
         }
         pengeluaranBarang.batalDiterima()
         status = StatusFakturJual.DIANTAR

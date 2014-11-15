@@ -15,6 +15,8 @@
  */
 package domain.faktur
 
+import domain.exception.DataTidakBolehDiubah
+import domain.exception.HargaSelisih
 import groovy.transform.*
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
@@ -49,14 +51,14 @@ class KewajibanPembayaran {
         def sisa = sisa(KRITERIA_PEMBAYARAN.SEMUA)
 
         if (pembayaran.jumlah > sisa) {
-            throw new IllegalArgumentException("Pembayaran ${pembayaran.jumlah} melebihi sisa sebesar ${sisa}")
+            throw new HargaSelisih('Pembayaran lebih dari sisa pembayaran!', pembayaran.jumlah, sisa)
         }
         listPembayaran << pembayaran
     }
 
     void hapus(Pembayaran pembayaran) {
         if (!listPembayaran.contains(pembayaran)) {
-            throw new IllegalArgumentException("Tidak menemukan pembayaran $pembayaran")
+            throw new DataTidakBolehDiubah("Tidak menemukan pembayaran $pembayaran")
         }
         listPembayaran.remove(pembayaran)
     }

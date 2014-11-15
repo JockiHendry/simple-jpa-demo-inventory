@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -76,7 +77,7 @@ class ItemRetur {
 
     void tambahKlaim(Klaim klaim) {
         if (klaims.contains(klaim)) {
-            throw new IllegalArgumentException("Sudah ada klaim yang sama untuk ${klaim}")
+            throw new DataTidakBolehDiubah("Sudah ada klaim yang sama untuk ${klaim}")
         }
         klaims << klaim
     }

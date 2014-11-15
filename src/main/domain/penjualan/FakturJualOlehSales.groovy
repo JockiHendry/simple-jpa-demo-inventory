@@ -17,9 +17,10 @@ package domain.penjualan
 
 import domain.event.BayarPiutang
 import domain.event.PerubahanStok
+import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
 import domain.exception.FakturTidakDitemukan
+import domain.exception.HargaSelisih
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
@@ -231,7 +232,7 @@ class FakturJualOlehSales extends FakturJual {
             throw new DataTidakBolehDiubah(this.bonusPenjualan)
         }
         if (!bonusPenjualan) {
-            throw new IllegalStateException('Bonus penjualan tidak ditemukan!')
+            throw new DataTidakBolehDiubah('Bonus penjualan tidak ditemukan!')
         }
         bonusPenjualan = null
     }
@@ -268,7 +269,7 @@ class FakturJualOlehSales extends FakturJual {
                 BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga
                 harga += itemFaktur.diskon? itemFaktur.diskon.hasil(hargaRetur): hargaRetur
             } else {
-                throw new DataTidakKonsisten("Tidak ada penjualan ${barangRetur.produk.nama} sejumlah ${barangRetur.jumlah} di faktur jual ${nomor}!")
+                throw new BarangSelisih("Tidak ada penjualan ${barangRetur.produk.nama} sejumlah ${barangRetur.jumlah} di faktur jual ${nomor}!")
             }
         }
 
@@ -333,7 +334,7 @@ class FakturJualOlehSales extends FakturJual {
                     BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga
                     total += itemFaktur.diskon? itemFaktur.diskon.hasil(hargaRetur): hargaRetur
                 } else {
-                    throw new DataTidakKonsisten('Barang retur melebihi batas yang ditentukan!', this)
+                    throw new HargaSelisih('Barang retur melebihi batas yang ditentukan!')
                 }
             }
         }

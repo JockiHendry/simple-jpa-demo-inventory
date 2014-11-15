@@ -16,8 +16,9 @@
 package project.pembelian
 
 import ast.NeedSupervisorPassword
+import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
+import domain.exception.HargaSelisih
 import domain.faktur.Diskon
 import domain.pembelian.*
 import javax.swing.*
@@ -71,7 +72,7 @@ class FakturBeliController {
             JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli berhasil disimpan!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
-        } catch (DataTidakKonsisten ex) {
+        } catch (BarangSelisih | HargaSelisih ex) {
             if (JOptionPane.showConfirmDialog(view.mainPanel, "${ex.message}.\nAnda yakin ingin melanjutkan?", 'Konfirmasi', JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, fakturBeli, false)
             }

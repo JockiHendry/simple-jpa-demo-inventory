@@ -17,6 +17,7 @@ package project.servis
 
 import domain.event.PerubahanRetur
 import domain.event.PerubahanStokTukar
+import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.ItemBarang
 import domain.servis.*
@@ -46,7 +47,7 @@ class PenerimaanServisRepository {
         penerimaanServis.items.each { ItemBarang i ->
             i.produk = findProdukById(i.produk.id)
             if (i.jumlah > i.produk.jumlahRetur) {
-                throw new IllegalArgumentException("Produk ${i.produk.nama} yang di-retur hanya [${i.produk.jumlahRetur}], tetapi yang akan di-servis sebanyak [${i.jumlah}]")
+                throw new BarangSelisih("Produk ${i.produk.nama} yang di-retur hanya [${i.produk.jumlahRetur}], tetapi yang akan di-servis sebanyak [${i.jumlah}]")
             }
         }
 

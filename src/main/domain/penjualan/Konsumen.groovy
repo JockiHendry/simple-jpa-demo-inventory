@@ -16,6 +16,7 @@
 package domain.penjualan
 
 import domain.exception.FakturTidakDitemukan
+import domain.exception.HargaSelisih
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
@@ -135,7 +136,7 @@ class Konsumen implements Comparable {
         Set<Referensi> hasil = [] as Set
         BigDecimal jumlahPiutangYangDapatDibayar = listFakturBelumLunas.sum {it.piutang? it.sisaPiutang(): 0}?: 0
         if (jumlah > jumlahPiutangYangDapatDibayar) {
-            throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(jumlahPiutangYangDapatDibayar)}!")
+            throw new HargaSelisih('Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar.',  jumlah, jumlahPiutangYangDapatDibayar)
         }
 
         // Mengubah daftar faktur menjadi berurut berdasarkan tanggal
@@ -166,7 +167,7 @@ class Konsumen implements Comparable {
             throw new FakturTidakDitemukan(faktur.nomor, "Tidak ada faktur belum lunas ini untuk konsumen ${nama}!")
         }
         if (jumlah > faktur.jumlahPiutang()) {
-            throw new IllegalStateException("Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar: ${NumberFormat.currencyInstance.format(faktur.jumlahPiutang())}")
+            throw new HargaSelisih('Jumlah piutang yang akan dipotong melebihi jumlah piutang yang dapat dibayar.', jumlah, faktur.jumlahPiutang())
         }
 
         faktur.bayar(new Pembayaran(tanggal: LocalDate.now(), jumlah: jumlah, potongan: true, referensi: referensi))

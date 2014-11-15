@@ -17,6 +17,7 @@ package project.pembelian
 
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.HargaSelisih
 import domain.faktur.Pembayaran
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
@@ -56,7 +57,7 @@ class PembayaranHutangAsChildController {
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dilakukan lagi!', 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | HargaSelisih ex) {
             model.errors['jumlah'] = ex.message
         }
     }

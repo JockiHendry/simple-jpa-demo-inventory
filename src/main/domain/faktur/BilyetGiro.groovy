@@ -16,6 +16,7 @@
 package domain.faktur
 
 import domain.event.BilyetGiroCleared
+import domain.exception.DataTidakBolehDiubah
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -49,7 +50,7 @@ class BilyetGiro implements Comparable {
 
     void cairkan(LocalDate tanggalPencairan) {
         if (!sudahJatuhTempo(tanggalPencairan)) {
-            throw new IllegalStateException('Tidak boleh mencairkan bilyet giro yang belum efektif!')
+            throw new DataTidakBolehDiubah('Tidak boleh mencairkan bilyet giro yang belum efektif!')
         }
         this.tanggalPencairan = tanggalPencairan
         ApplicationHolder.application?.event(new BilyetGiroCleared(this))

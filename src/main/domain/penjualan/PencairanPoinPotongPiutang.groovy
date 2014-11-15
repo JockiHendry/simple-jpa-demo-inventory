@@ -42,7 +42,7 @@ class PencairanPoinPotongPiutang extends PencairanPoin {
 
     @Override
     void hapus() {
-        throw new RuntimeException('Untuk saat ini, proses hapus pencairan poin untuk potong piutang belum di-implementasi-kan!')
+        throw new UnsupportedOperationException('Untuk saat ini, proses hapus pencairan poin untuk potong piutang belum di-implementasi-kan!')
     }
 }
 

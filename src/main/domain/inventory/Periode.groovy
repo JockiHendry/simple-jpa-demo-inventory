@@ -32,7 +32,7 @@ class Periode {
         this.tanggalMulai = tanggalMulai
         this.tanggalSelesai = tanggalSelesai
         if (tanggalMulai.isAfter(tanggalSelesai)) {
-            throw new RuntimeException("Tanggal mulai [$tanggalMulai] tidak boleh setelah tanggal selesai [$tanggalSelesai]")
+            throw new IllegalArgumentException("Tanggal mulai [$tanggalMulai] tidak boleh setelah tanggal selesai [$tanggalSelesai]")
         }
     }
 

@@ -15,7 +15,6 @@
  */
 package domain.retur
 
-import domain.exception.DataTidakKonsisten
 import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
 import domain.inventory.BolehPesanStok
@@ -28,7 +27,6 @@ import project.user.NomorService
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
-
 import org.joda.time.*
 import griffon.util.*
 

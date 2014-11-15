@@ -15,6 +15,7 @@
  */
 package project.retur
 
+import domain.exception.HargaSelisih
 import domain.exception.StokTidakCukup
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
@@ -41,7 +42,7 @@ class ReturJualService {
                 Konsumen konsumen = findKonsumenById(returJual.konsumen.id)
                 BigDecimal jumlahPiutang = sisaBelumDitukar * konsumen.hargaTerakhir(i.produk)
                 if (jumlahPiutang > konsumen.jumlahPiutang()) {
-                    throw new IllegalArgumentException("Jumlah piutang konsumen (${NumberFormat.currencyInstance.format(konsumen.jumlahPiutang())}) tidak cukup untuk potongan sebesar ${NumberFormat.currencyInstance.format(jumlahPiutang)}!")
+                    throw new HargaSelisih('Jumlah piutang konsumen tidak cukup untuk potongan', konsumen.jumlahPiutang(), jumlahPiutang)
                 }
                 i.hapusSemuaKlaimPotongPiutang()
                 i.tambahKlaim(new KlaimPotongPiutang(jumlahPiutang))

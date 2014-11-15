@@ -21,7 +21,6 @@ import domain.event.PerubahanStokTukar
 import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang

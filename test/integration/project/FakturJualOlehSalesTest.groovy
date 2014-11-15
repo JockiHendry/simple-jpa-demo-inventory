@@ -16,7 +16,7 @@
 package project
 
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
+import domain.exception.HargaSelisih
 import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.BilyetGiro
@@ -398,7 +398,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         assertEquals(10000, fakturJualOlehSales.piutang.sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR))
         assertFalse(fakturJualOlehSales.piutang.lunas)
 
-        shouldFail(IllegalArgumentException) {
+        shouldFail(HargaSelisih) {
             fakturJualRepository.bayar(fakturJualOlehSales, new Pembayaran(LocalDate.now(), 100000))
         }
 

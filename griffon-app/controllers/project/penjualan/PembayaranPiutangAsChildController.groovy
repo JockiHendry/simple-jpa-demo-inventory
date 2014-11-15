@@ -18,6 +18,7 @@ package project.penjualan
 import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.FakturTidakDitemukan
+import domain.exception.HargaSelisih
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import simplejpa.swing.DialogUtils
@@ -61,7 +62,7 @@ class PembayaranPiutangAsChildController {
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dilakukan lagi!', 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | HargaSelisih ex) {
             model.errors['jumlah'] = ex.message
         } catch (FakturTidakDitemukan ex) {
             model.errors['nomorReferensi'] = ex.message
@@ -83,8 +84,6 @@ class PembayaranPiutangAsChildController {
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dihapus lagi!', 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
-        } catch (IllegalArgumentException ex) {
-            model.errors['jumlah'] = ex.message
         }
     }
 

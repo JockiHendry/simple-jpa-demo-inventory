@@ -13,20 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.exception;
+package domain.exception
 
-class DataTidakKonsisten extends RuntimeException {
+import java.text.NumberFormat
 
-    Object target
+class HargaSelisih extends RuntimeException {
 
-    DataTidakKonsisten(Object object) {
-        super("Data tidak konsisten untuk " + object)
-        this.target = object;
-    }
-
-    DataTidakKonsisten(String pesan, Object object) {
-        super(pesan)
-        this.target = object
+    HargaSelisih(String pesan, BigDecimal... harga) {
+        super(pesan + (harga.length > 0) ? ' (' + harga.collect { NumberFormat.currencyInstance.format(it) }.join(',') + ')': '')
     }
 
 }

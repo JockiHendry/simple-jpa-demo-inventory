@@ -16,6 +16,7 @@
 package project.servis
 
 import ast.NeedSupervisorPassword
+import domain.exception.BarangSelisih
 import domain.servis.*
 import domain.inventory.*
 import domain.inventory.*
@@ -91,7 +92,7 @@ class PenerimaanServisController {
             }
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException | BarangSelisih ex) {
             model.errors['items'] = ex.message
         }
     }

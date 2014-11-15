@@ -48,7 +48,7 @@ class PencairanPoinRepository {
         pencairanPoin.konsumen = findKonsumenById(pencairanPoin.konsumen.id)
         // Apakah poin cukup?
         if (pencairanPoin.konsumen.poinTerkumpul < pencairanPoin.jumlahPoin) {
-            throw new IllegalArgumentException("Jumlah poin konsumen [${pencairanPoin.konsumen.poinTerkumpul}] tidak mencukupi!")
+            throw new DataTidakBolehDiubah("Jumlah poin konsumen [${pencairanPoin.konsumen.poinTerkumpul}] tidak mencukupi!")
         }
         if (pencairanPoin instanceof PencairanPoinTukarBarang) {
             pencairanPoin.listItemBarang.each { it.produk = findProdukById(it.produk.id) }

@@ -20,7 +20,6 @@ import domain.faktur.Pembayaran
 import util.SwingHelper
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakLengkap
 import domain.inventory.ItemBarang
 import domain.pembelian.FakturBeli
 import domain.pembelian.PenerimaanBarang
@@ -175,7 +174,7 @@ class PurchaseOrderRepository {
             throw new DataDuplikat(penerimaanBarang)
         }
         if (listItemBarang.isEmpty()) {
-            throw new DataTidakLengkap('Daftar barang yang diterima tidak boleh kosong!')
+            throw new DataTidakBolehDiubah('Daftar barang yang diterima tidak boleh kosong!', this)
         }
         purchaseOrder = findPurchaseOrderByIdFetchItems(purchaseOrder.id)
         listItemBarang.each {

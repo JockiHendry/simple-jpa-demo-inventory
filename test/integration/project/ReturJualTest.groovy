@@ -15,7 +15,6 @@
  */
 package project
 
-import domain.exception.DataTidakKonsisten
 import domain.exception.StokTidakCukup
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi

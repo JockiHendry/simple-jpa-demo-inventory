@@ -13,16 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package domain.exception;
 
-class DataTidakLengkap extends RuntimeException {
+class LebihDariSatuGudangUtama extends RuntimeException {
 
-    DataTidakLengkap(Object object) {
-        super("Data tidak lengkap untuk " + object)
-    }
-
-    DataTidakLengkap(String pesan) {
-        super(pesan)
+    LebihDariSatuGudangUtama() {
+        super("Tidak boleh ada lebih dari satu gudang utama!")
     }
 
 }

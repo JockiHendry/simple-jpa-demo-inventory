@@ -15,7 +15,7 @@
  */
 package project
 
-import domain.exception.DataTidakKonsisten
+import domain.exception.BarangSelisih
 import domain.faktur.Diskon
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
@@ -123,7 +123,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         assertEquals(1, p.sisaBelumDiterima().size())
         assertEquals(new ItemBarang(produkC, 10), p.sisaBelumDiterima()[0])
 
-        shouldFail(DataTidakKonsisten) {
+        shouldFail(BarangSelisih) {
             PenerimaanBarang penerimaan3 = new PenerimaanBarang()
             penerimaan3.tambah(new ItemBarang(produk: produkC, jumlah: 15))
             p.tambah(penerimaan3)
@@ -295,7 +295,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         penerimaanBarang.tambah(new ItemBarang(produkA, 5))
         penerimaanBarang.tambah(new ItemBarang(produkB, 3))
         penerimaanBarang.tambah(new ItemBarang(produkC, 4))
-        GroovyAssert.shouldFail(DataTidakKonsisten) {
+        shouldFail(BarangSelisih) {
             p.tambah(penerimaanBarang)
         }
     }
@@ -313,7 +313,7 @@ class PurchaseOrderTests extends GriffonUnitTestCase {
         FakturBeli fakturBeli = new FakturBeli(tanggal: LocalDate.now(), diskon: new Diskon(1))
         fakturBeli.tambah(new ItemFaktur(produkA, 3, 1000, null, new Diskon(1, 100)))
         fakturBeli.tambah(new ItemFaktur(produkB, 5, 2000, null, new Diskon(2)))
-        shouldFail(DataTidakKonsisten) {
+        shouldFail(BarangSelisih) {
             p.tambah(fakturBeli)
         }
     }

@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package domain.exception
 
-package domain.exception;
+class BarangSelisih extends RuntimeException {
 
-class GudangUtamaTidakKonsisten extends RuntimeException {
-
-    GudangUtamaTidakKonsisten() {
-        super("Nilai gudang utama tidak konsisten!")
+    BarangSelisih(String pesan) {
+        super(pesan)
     }
 
-    GudangUtamaTidakKonsisten(String pesan) {
-        super(pesan)
+    BarangSelisih(Object... objects) {
+        super("Terdapat selisih barang pada ${objects.join(', ')}")
     }
 
 }

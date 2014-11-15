@@ -17,7 +17,8 @@ package domain.pembelian
 
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
+import domain.exception.BarangSelisih
+import domain.exception.HargaSelisih
 import domain.faktur.Faktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.Pembayaran
@@ -87,7 +88,7 @@ class PurchaseOrder extends Faktur {
 
         // Melakukan pemeriksaan apakah barang yang ditambahkan adalah bagian dari yang dipesan.
         if (!penerimaanBarang.bagianDari(new DaftarBarangSementara(sisaBelumDiterima()))) {
-            throw new DataTidakKonsisten("Barang yang diterima tidak sesuai dengan yang ada di Purchase Order atau Faktur Beli!", penerimaanBarang)
+            throw new BarangSelisih("Barang yang diterima tidak sesuai dengan yang ada di Purchase Order atau Faktur Beli!")
         }
 
         penerimaanBarang.gudang = (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
@@ -127,7 +128,7 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         if (!fakturBeli.hutang) {
-            throw new IllegalStateException('Pembayaran hutang tidak dapat dibayar untuk purchase order ini')
+            throw new DataTidakBolehDiubah('Pembayaran hutang tidak dapat dibayar untuk purchase order ini')
         }
         fakturBeli.hutang.hapus(pembayaranHutang)
     }
@@ -141,12 +142,10 @@ class PurchaseOrder extends Faktur {
         if (strictMode) {
             // Memeriksa apakah isi faktur baru sama dengan isi barang yang dipesan
             if (!toDaftarBarang().isiSamaDengan(f.toDaftarBarang())) {
-                throw new DataTidakKonsisten("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!", f)
+                throw new BarangSelisih("Faktur ${f.nomor} berbeda dengan yang dipesan untuk PO ${nomor}!")
             }
             if (f.total().compareTo(this.total()) != 0) {
-                throw new DataTidakKonsisten("Total untuk faktur ${f.nomor} sebesar ${NumberFormat.currencyInstance.format(f.total())} " +
-                    "berbeda dengan yang dipesan untuk PO ${nomor} sebesar " +
-                    "${NumberFormat.currencyInstance.format(total())}!", f)
+                throw new HargaSelisih('Total faktur berbeda dengan yang dipesan pada PO!', f.total(), total())
             }
         }
 
@@ -176,7 +175,7 @@ class PurchaseOrder extends Faktur {
             throw new DataTidakBolehDiubah(this)
         }
         if (!fakturBeli.hutang) {
-            throw new IllegalStateException('Hutang belum dapat dibayar untuk purchase order ini')
+            throw new DataTidakBolehDiubah('Hutang belum dapat dibayar untuk purchase order ini')
         }
         fakturBeli.hutang.bayar(pembayaranHutang)
         if (fakturBeli.hutang.lunas) {

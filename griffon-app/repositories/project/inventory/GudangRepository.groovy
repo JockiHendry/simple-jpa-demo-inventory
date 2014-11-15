@@ -17,7 +17,7 @@
 package project.inventory
 
 import domain.exception.DataDuplikat
-import domain.exception.GudangUtamaTidakKonsisten
+import domain.exception.LebihDariSatuGudangUtama
 import domain.inventory.Gudang
 import simplejpa.transaction.Transaction
 
@@ -30,7 +30,7 @@ class GudangRepository {
         if (!gudangUtama) {
             Gudang gudangUtama = findGudangByUtama(true)
             if (!gudangUtama) {
-                throw new GudangUtamaTidakKonsisten()
+                throw new LebihDariSatuGudangUtama()
             }
             this.gudangUtama = gudangUtama
         }
@@ -51,7 +51,7 @@ class GudangRepository {
         }
         if (gudang.utama) {
             if (findGudangByUtama(true)) {
-                throw new GudangUtamaTidakKonsisten("Tidak boleh ada lebih dari satu gudang utama")
+                throw new LebihDariSatuGudangUtama()
             }
         }
         persist(gudang)
@@ -60,7 +60,7 @@ class GudangRepository {
 
     public Gudang update(Gudang gudang) {
         if (gudang.utama && findGudangByIdNeAndUtama(gudang.id, true)) {
-            throw new GudangUtamaTidakKonsisten("Tidak boleh ada lebih dari satu gudang utama")
+            throw new LebihDariSatuGudangUtama()
         }
         return merge(gudang)
     }

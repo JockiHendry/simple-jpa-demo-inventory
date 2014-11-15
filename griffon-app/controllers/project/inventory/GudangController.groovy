@@ -17,7 +17,7 @@
 package project.inventory
 
 import domain.exception.DataDuplikat
-import domain.exception.GudangUtamaTidakKonsisten
+import domain.exception.LebihDariSatuGudangUtama
 import domain.inventory.Gudang
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -63,7 +63,7 @@ class GudangController {
             }
         } catch (DataDuplikat ex) {
             model.errors['nama'] = app.getMessage("simplejpa.error.alreadyExist.message")
-        } catch (GudangUtamaTidakKonsisten ex) {
+        } catch (LebihDariSatuGudangUtama ex) {
             model.errors['utama'] = ex.message
         }
     }

@@ -15,6 +15,7 @@
  */
 package project
 
+import domain.exception.BarangSelisih
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -92,7 +93,7 @@ class PenerimaanServisTest extends DbUnitTestCase {
         penerimaanServis.tambah(new ItemBarang(p1, 10))
         penerimaanServis.tambah(new ItemBarang(p2, 20))
         penerimaanServis.tambah(new ItemBarang(p3, 30))
-        shouldFail(IllegalArgumentException) {
+        shouldFail(BarangSelisih) {
             penerimaanServisRepository.buat(penerimaanServis)
         }
     }

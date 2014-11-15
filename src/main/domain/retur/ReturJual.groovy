@@ -16,8 +16,8 @@
 package domain.retur
 
 import domain.event.PerubahanStok
+import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
-import domain.exception.DataTidakKonsisten
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
@@ -64,7 +64,7 @@ abstract class ReturJual implements SebuahDaftarBarang {
     void tambah(ItemRetur itemRetur) {
         // Periksa klaim untuk item retur ini
         if (itemRetur.jumlahBarangDitukar() > itemRetur.jumlah) {
-            throw new DataTidakKonsisten("${itemRetur.produk.nama}: jumlah yang ditukar (${itemRetur.jumlahBarangDitukar()}) melebihi jumlah yang diterima (${itemRetur.jumlah})!")
+            throw new BarangSelisih("${itemRetur.produk.nama}: jumlah yang ditukar (${itemRetur.jumlahBarangDitukar()}) melebihi jumlah yang diterima (${itemRetur.jumlah})!")
         }
         items << itemRetur
     }
@@ -128,7 +128,7 @@ abstract class ReturJual implements SebuahDaftarBarang {
 
     void hapusPenukaran() {
         if (!pengeluaranBarang) {
-            throw IllegalArgumentException("Tidak ada pengeluaran barang yang bisa dihapus!")
+            throw DataTidakBolehDiubah("Tidak ada pengeluaran barang yang bisa dihapus!")
         }
         pengeluaranBarang.items.each { ItemBarang i ->
             for (KlaimTukar k : getKlaimsTukar()) {
