@@ -26,7 +26,7 @@ import org.joda.time.*
 import griffon.util.ApplicationHolder
 
 @DomainClass @Entity @Canonical
-class BilyetGiro {
+class BilyetGiro implements Comparable {
 
     @NotEmpty @Size(min=2, max=50)
     String nomorSeri
@@ -59,5 +59,16 @@ class BilyetGiro {
         tanggalPencairan != null
     }
 
+    @Override
+    int compareTo(Object o) {
+        if ((o != null) && (o instanceof BilyetGiro)) {
+            if (!nomorSeri || !o.nomorSeri) {
+                return -1
+            } else {
+                return nomorSeri.compareTo(o.nomorSeri)
+            }
+        }
+        -1
+    }
 }
 
