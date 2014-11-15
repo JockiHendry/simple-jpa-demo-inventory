@@ -41,7 +41,7 @@ class ReturJualOlehSalesModel {
     @Bindable String konsumenSearch
     EnumComboBoxModel statusSearch = new EnumComboBoxModel(StatusReturJual)
     BasicEventList<Gudang> gudangList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
+    DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
 
     @Bindable String nomor
     @Bindable LocalDate tanggal

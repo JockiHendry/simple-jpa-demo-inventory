@@ -65,15 +65,13 @@ class PurchaseOrderController {
     }
 
     def init = {
-        nomorService.refreshAll()
         execInsideUISync {
+            List supplier = purchaseOrderRepository.findAllSupplier([orderBy: 'nama'])
             model.supplierList.clear()
-        }
-        List supplier = purchaseOrderRepository.findAllSupplier([orderBy: 'nama'])
-        execInsideUISync {
             model.supplierList.addAll(supplier)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
+            nomorService.refreshAll()
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
             model.statusSearch.selectedItem = SwingHelper.SEMUA
         }
@@ -82,20 +80,14 @@ class PurchaseOrderController {
     def search = {
         List result = []
         if (model.mode == POViewMode.ALL) {
-
             result = purchaseOrderRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
-
         } else if (model.mode == POViewMode.FAKTUR_BELI) {
-
             result = purchaseOrderRepository.cariFakturBeli(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
-
         } else if (model.mode == POViewMode.PENERIMAAN) {
-
             result = purchaseOrderRepository.cariPenerimaan(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
                 model.nomorPOSearch, model.nomorFakturSearch, model.supplierSearch, model.statusSearch.selectedItem)
-
         }
         execInsideUISync {
             model.purchaseOrderList.clear()

@@ -48,7 +48,16 @@ class ReturJualOlehSalesController {
             model.showPiutang = false
             model.excludeDeleted = true
         }
-        init()
+        List gudangResult = returJualRepository.findAllGudang([orderBy: 'nama'])
+        execInsideUISync {
+            model.nomorSearch = null
+            model.konsumenSearch = null
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
+            model.tanggalSelesaiSearch = LocalDate.now()
+            model.gudangList.clear()
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
+            model.gudangList.addAll(gudangResult)
+        }
         search()
     }
 
@@ -56,26 +65,16 @@ class ReturJualOlehSalesController {
     }
 
     def init = {
-        execInsideUISync {
-            model.nomorSearch = null
-            model.konsumenSearch = null
-            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
-            model.tanggalSelesaiSearch = LocalDate.now()
-            model.gudangList.clear()
-        }
-        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
-        List gudangResult = returJualRepository.findAllGudang([orderBy: 'nama'])
-        execInsideUISync {
-            model.gudangList.addAll(gudangResult)
-        }
     }
 
     def search = {
         Boolean sudahDiproses = null
-        if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
-            sudahDiproses = true
-        } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
-            sudahDiproses = false
+        execInsideUISync {
+            if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
+                sudahDiproses = true
+            } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
+                sudahDiproses = false
+            }
         }
         List result = returJualRepository.cariReturOlehSales(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
         execInsideUISync {

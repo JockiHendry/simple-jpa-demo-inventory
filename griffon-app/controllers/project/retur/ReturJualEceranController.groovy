@@ -60,16 +60,18 @@ class ReturJualEceranController {
             model.konsumenSearch = null
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
         }
-        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
     }
 
     def search = {
         Boolean sudahDiproses = null
-        if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
-            sudahDiproses = true
-        } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
-            sudahDiproses = false
+        execInsideUISync {
+            if (model.statusSearch.selectedItem == StatusReturJual.SUDAH_DIPROSES) {
+                sudahDiproses = true
+            } else if (model.statusSearch.selectedItem == StatusReturJual.BELUM_DIPROSES) {
+                sudahDiproses = false
+            }
         }
         List result = returJualRepository.cariReturEceran(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
         execInsideUISync {

@@ -52,34 +52,34 @@ class ReturBeliController {
             model.statusSearch.selectedItem = StatusReturBeli.BELUM_DIPROSES
         }
         model.forSupplier = args.forSupplier?: null
-        listAll()
+        init()
         search()
     }
 
     void mvcGroupDestroy() {
     }
 
-    def listAll = {
+    def init = {
         execInsideUISync {
-            model.supplierList.clear()
-        }
-        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_BELI)
-        List supplierResult = returBeliRepository.findAllSupplier([orderBy: 'nama'])
-        execInsideUISync {
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_BELI)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomorSearch = null
             model.supplierSearch = null
+            List supplierResult = returBeliRepository.findAllSupplier([orderBy: 'nama'])
+            model.supplierList.clear()
             model.supplierList.addAll(supplierResult)
         }
     }
 
     def search = {
         Boolean sudahDiproses = null
-        if (model.statusSearch.selectedItem == StatusReturBeli.SUDAH_DIPROSES) {
-            sudahDiproses = true
-        } else if (model.statusSearch.selectedItem == StatusReturBeli.BELUM_DIPROSES) {
-            sudahDiproses = false
+        execInsideUISync {
+            if (model.statusSearch.selectedItem == StatusReturBeli.SUDAH_DIPROSES) {
+                sudahDiproses = true
+            } else if (model.statusSearch.selectedItem == StatusReturBeli.BELUM_DIPROSES) {
+                sudahDiproses = false
+            }
         }
         List result
         if (model.forSupplier) {

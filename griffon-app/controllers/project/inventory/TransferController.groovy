@@ -39,12 +39,10 @@ class TransferController {
     }
 
     def init = {
-        nomorService.refreshAll()
         execInsideUISync {
             model.transferList.clear()
-        }
-        List gudang = transferRepository.findAllGudang([orderBy: 'nama'])
-        execInsideUISync {
+            nomorService.refreshAll()
+            List gudang = transferRepository.findAllGudang([orderBy: 'nama'])
             model.gudangList.addAll(gudang)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()

@@ -126,7 +126,7 @@ panel(id: 'mainPanel') {
                     }
                 }
                 controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
+                form.getFocusTraversalPolicy().getFirstComponent(form)?.requestFocusInWindow()
             })
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowAddPO}))
             mvcPopupButton(id: 'penerimaanBarang', text: 'Penerimaan Barang', mvcGroup: 'penerimaanBarang',

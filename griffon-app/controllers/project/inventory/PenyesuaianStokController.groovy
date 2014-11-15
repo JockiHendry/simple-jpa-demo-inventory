@@ -39,12 +39,10 @@ class PenyesuaianStokController {
     }
 
     def init = {
-        nomorService.refreshAll()
         execInsideUISync {
+            nomorService.refreshAll()
+            List gudang = penyesuaianStokRepository.findAllGudang([orderBy: 'nama'])
             model.gudangList.clear()
-        }
-        List gudang = penyesuaianStokRepository.findAllGudang([orderBy: 'nama'])
-        execInsideUISync {
             model.gudangList.addAll(gudang)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
