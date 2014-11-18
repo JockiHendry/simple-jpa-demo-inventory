@@ -39,15 +39,10 @@ class FakturJualEceranTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xls")
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         nomorService = app.serviceManager.findService('Nomor')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testBuat() {

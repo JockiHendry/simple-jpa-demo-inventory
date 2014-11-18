@@ -31,13 +31,8 @@ class GudangTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("gudang", "/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xls")
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testCariGudangUtama() {

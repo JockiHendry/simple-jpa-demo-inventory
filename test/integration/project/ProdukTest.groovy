@@ -45,15 +45,10 @@ class ProdukTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("produk", "/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xls")
         produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
         pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
         penyesuaianStokRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenyesuaianStok')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testStokProduk() {
@@ -137,7 +132,7 @@ class ProdukTest extends DbUnitTestCase {
         produkRepository.arsipItemStok(3)
         log.debug "Proses pengarsipan selesai."
 
-        ITable aktualItemStok = getConnection().createQueryTable("AktualItemStok",
+        ITable aktualItemStok = CONNECTION.createQueryTable("AktualItemStok",
                 "SELECT * FROM PeriodeItemStok_listItem WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 

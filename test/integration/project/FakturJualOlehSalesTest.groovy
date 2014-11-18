@@ -60,18 +60,13 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("fakturJual", "/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xls")
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
         produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
         nomorService = app.serviceManager.findService('Nomor')
         (SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan') as PengaturanRepository).refreshAll()
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testBuatPenjualanLuarKota() {

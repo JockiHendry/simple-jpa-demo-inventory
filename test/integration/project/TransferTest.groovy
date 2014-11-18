@@ -30,13 +30,8 @@ class TransferTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("gudang", "/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xls")
         transferRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Transfer')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testBuatDanHapus() {

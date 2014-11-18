@@ -28,13 +28,8 @@ class KonsumenTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("konsumen", "/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xls")
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testPotongPiutang() {

@@ -33,13 +33,8 @@ class PengaturanTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("produk", "/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xls")
         pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     void testSerializing() {

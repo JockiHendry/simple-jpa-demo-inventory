@@ -30,13 +30,8 @@ class PenyesuaianStokTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("gudang", "/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xls")
         penyesuaianStokRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenyesuaianStok')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testBuatBertambahDanHapus() {

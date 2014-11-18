@@ -38,14 +38,9 @@ class ReturBeliTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("returBeli", "/project/data_pembelian.xls")
+        setUpDatabase("/project/data_pembelian.xls")
         returBeliRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturBeli')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testJumlahReturDiProduk() {

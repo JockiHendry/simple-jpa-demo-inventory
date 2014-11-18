@@ -36,13 +36,8 @@ class PurchaseOrderTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("penerimaanBarang", "/project/data_pembelian.xls")
+        setUpDatabase("/project/data_pembelian.xls")
         purchaseOrderRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PurchaseOrder')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testTidakBolehDiHapus() {

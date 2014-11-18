@@ -39,15 +39,10 @@ class BilyetGiroTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("fakturJual", "/project/data_bilyet_giro.xls")
+        setUpDatabase("/project/data_bilyet_giro.xls")
         bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
         pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
         bilyetGiroService = app.serviceManager.findService('BilyetGiro')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testPencairan() {

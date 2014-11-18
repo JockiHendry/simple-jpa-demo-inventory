@@ -40,13 +40,8 @@ class ReturJualServiceTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("returJual", "/project/data_retur_jual.xls")
+        setUpDatabase("/project/data_retur_jual.xls")
         returJualService = app.serviceManager.findService('ReturJual')
-    }
-
-    protected void tearDown() {
-        super.tearDown()
-        super.deleteAll()
     }
 
     public void testHitungPotonganPiutang() {
