@@ -35,7 +35,7 @@ class PencairanPoinTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xlsx")
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         pencairanPoinRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PencairanPoin')
         pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')

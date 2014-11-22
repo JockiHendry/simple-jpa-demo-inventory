@@ -28,7 +28,7 @@ class KonsumenTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xlsx")
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
     }
 

@@ -30,7 +30,7 @@ class NomorServiceTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_penjualan.xls")
+        setUpDatabase("/project/data_penjualan.xlsx")
         nomorService = app.serviceManager.findService('Nomor')
     }
 

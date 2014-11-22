@@ -38,7 +38,7 @@ class ReturBeliTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_pembelian.xls")
+        setUpDatabase("/project/data_pembelian.xlsx")
         returBeliRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturBeli')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
     }

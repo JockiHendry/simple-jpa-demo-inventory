@@ -27,7 +27,7 @@ class UserTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xlsx")
         userRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('User')
     }
 

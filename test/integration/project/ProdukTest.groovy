@@ -45,7 +45,7 @@ class ProdukTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_inventory.xls")
+        setUpDatabase("/project/data_inventory.xlsx")
         produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
         pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
         penyesuaianStokRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenyesuaianStok')

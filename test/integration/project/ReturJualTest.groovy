@@ -53,7 +53,7 @@ class ReturJualTest extends DbUnitTestCase {
 
 	protected void setUp() {
 		super.setUp()
-		setUpDatabase("/project/data_retur_jual.xls")
+		setUpDatabase("/project/data_retur_jual.xlsx")
         returJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturJual')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')

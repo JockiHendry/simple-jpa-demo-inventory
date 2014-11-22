@@ -39,7 +39,7 @@ class BilyetGiroTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_bilyet_giro.xls")
+        setUpDatabase("/project/data_bilyet_giro.xlsx")
         bilyetGiroRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('BilyetGiro')
         pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pesan')
         bilyetGiroService = app.serviceManager.findService('BilyetGiro')

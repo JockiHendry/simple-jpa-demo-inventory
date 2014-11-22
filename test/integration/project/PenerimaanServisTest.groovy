@@ -37,7 +37,7 @@ class PenerimaanServisTest extends DbUnitTestCase {
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_retur_jual.xls")
+        setUpDatabase("/project/data_retur_jual.xlsx")
         penerimaanServisRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PenerimaanServisRepository')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository')
     }
