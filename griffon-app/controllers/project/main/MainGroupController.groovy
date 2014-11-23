@@ -22,9 +22,9 @@ import project.penjualan.PiutangService
 import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
 import javax.swing.JButton
-import java.awt.*
 import java.awt.event.*
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class MainGroupController {
 
     MainGroupModel model

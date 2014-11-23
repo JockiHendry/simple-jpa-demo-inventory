@@ -32,7 +32,6 @@ class NeedSupervisorPasswordTransformation extends AbstractASTTransformation{
 
     @Override
     void visit(ASTNode[] astNodes, SourceUnit sourceUnit) {
-        AnnotationNode annotation = astNodes[0]
         AnnotatedNode node = astNodes[1]
         log.debug "Performing @NeedSupervisorPassword transformation for ${node}..."
 
@@ -50,6 +49,7 @@ class NeedSupervisorPasswordTransformation extends AbstractASTTransformation{
         }
     }
 
+    @SuppressWarnings(["GroovyUnusedAssignment", "UnnecessaryQualifiedReference", "GroovyUnusedDeclaration"])
     private static void wrapStatements(def method, AnnotatedNode node) {
         Statement code = method.getCode()
 

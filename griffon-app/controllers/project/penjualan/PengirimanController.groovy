@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PengirimanController {
 
     PengirimanModel model
@@ -51,7 +52,7 @@ class PengirimanController {
 
     def search = {
         List result = fakturJualRepository.cariFakturJualUntukPengiriman(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-                model.nomorSearch, model.salesSearch, model.konsumenSearch, model.statusSearch.selectedItem)
+                model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             model.fakturJualOlehSalesList.addAll(result)

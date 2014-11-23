@@ -16,10 +16,8 @@
 package project.inventory
 
 import net.miginfocom.swing.MigLayout
-
 import javax.swing.SwingConstants
 import java.awt.FlowLayout
-
 
 actions {
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)

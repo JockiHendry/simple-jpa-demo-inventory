@@ -25,7 +25,7 @@ import java.beans.PropertyChangeEvent
 
 class BusyLayerUI extends LayerUI<JPanel> {
 
-    public static final BusyLayerUI instance = new BusyLayerUI()
+    public static final BusyLayerUI instance
 
     static {
         instance = new BusyLayerUI()

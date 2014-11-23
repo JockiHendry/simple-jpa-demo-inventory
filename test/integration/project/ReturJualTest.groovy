@@ -20,12 +20,9 @@ import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
 import domain.inventory.Produk
-import domain.pembelian.Supplier
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
-import domain.penjualan.PengeluaranBarang
 import domain.retur.ItemRetur
 import domain.retur.Klaim
 import domain.retur.KlaimPotongPiutang
@@ -35,8 +32,6 @@ import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
 import project.penjualan.FakturJualRepository
 import project.retur.ReturJualRepository
@@ -44,8 +39,6 @@ import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class ReturJualTest extends DbUnitTestCase {
-
-	private static final Logger log = LoggerFactory.getLogger(ReturJualTest)
 
     ReturJualRepository returJualRepository
     FakturJualRepository fakturJualRepository
@@ -310,7 +303,7 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(0, produk1.jumlahAkanDikirim)
         assertEquals(0, produk2.jumlahAkanDikirim)
 
-        retur = returJualRepository.hapusPengeluaranBarang(retur)
+        returJualRepository.hapusPengeluaranBarang(retur)
         // Pastikan jumlah akan dikirim bertambah kembali setelah penukaran dihapus.
         produk1 = returJualRepository.findProdukById(-1l)
         produk2 = returJualRepository.findProdukById(-2l)
@@ -334,7 +327,7 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(8, produk1.jumlahAkanDikirim)
         assertEquals(10, produk2.jumlahAkanDikirim)
 
-        retur = returJualRepository.hapus(retur)
+        returJualRepository.hapus(retur)
         // Pastikan jumlah akan dikirim berkurang setelah retur dihapus.
         produk1 = returJualRepository.findProdukById(-1l)
         produk2 = returJualRepository.findProdukById(-2l)
@@ -356,7 +349,7 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(8, produk1.jumlahAkanDikirim)
         assertEquals(10, produk2.jumlahAkanDikirim)
 
-        retur = returJualRepository.tukar(retur)
+        returJualRepository.tukar(retur)
         // Pastikan jumlah akan dikirim berkurang setelah penukaran dilakukan.
         produk1 = returJualRepository.findProdukById(-1l)
         produk2 = returJualRepository.findProdukById(-2l)
@@ -367,8 +360,6 @@ class ReturJualTest extends DbUnitTestCase {
     public void testQtyReadyReturJualEceran2() {
         Produk produk1 = returJualRepository.findProdukById(-1l)
         Produk produk2 = returJualRepository.findProdukById(-2l)
-        Konsumen k = returJualRepository.findKonsumenById(-1l)
-        Gudang g = gudangRepository.cariGudangUtama()
         ReturJualEceran retur = new ReturJualEceran(tanggal: LocalDate.now(), nomor: 'TEST-1', namaKonsumen: 'Anonym')
         retur.tambah(new ItemRetur(produk1, 8, [new KlaimTukar(produk1, 8)] as Set))
         retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
@@ -380,7 +371,7 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(8, produk1.jumlahAkanDikirim)
         assertEquals(10, produk2.jumlahAkanDikirim)
 
-        retur = returJualRepository.hapus(retur)
+        returJualRepository.hapus(retur)
         // Pastikan jumlah akan dikirim berkurang setelah retur dihapus.
         produk1 = returJualRepository.findProdukById(-1l)
         produk2 = returJualRepository.findProdukById(-2l)
@@ -431,7 +422,7 @@ class ReturJualTest extends DbUnitTestCase {
         assertTrue(retur.fakturPotongPiutang.empty)
 
         // Tambah pembayaran piutang secara manual
-        f = fakturJualRepository.bayar(f, new Pembayaran(LocalDate.now(), 1200, true, null, new Referensi(ReturJual, retur.nomor)))
+        fakturJualRepository.bayar(f, new Pembayaran(LocalDate.now(), 1200, true, null, new Referensi(ReturJual, retur.nomor)))
         retur = returJualRepository.findReturJualOlehSalesById(retur.id)
         assertEquals(1, retur.fakturPotongPiutang.size())
         assertTrue(retur.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, '000004/042014/SA')))

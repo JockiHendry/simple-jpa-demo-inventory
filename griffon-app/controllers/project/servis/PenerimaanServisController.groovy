@@ -18,8 +18,6 @@ package project.servis
 import ast.NeedSupervisorPassword
 import domain.exception.BarangSelisih
 import domain.servis.*
-import domain.inventory.*
-import domain.inventory.*
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import project.user.NomorService
@@ -30,6 +28,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PenerimaanServisController {
 
     PenerimaanServisModel model

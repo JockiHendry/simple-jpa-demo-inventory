@@ -22,16 +22,12 @@ import project.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.penjualan.BilyetGiroService
 import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class BilyetGiroTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(BilyetGiroTest)
 
     BilyetGiroRepository bilyetGiroRepository
     BilyetGiroService bilyetGiroService

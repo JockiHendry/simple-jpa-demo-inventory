@@ -16,8 +16,6 @@
 package project.inventory
 
 import net.miginfocom.swing.MigLayout
-
-import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
 

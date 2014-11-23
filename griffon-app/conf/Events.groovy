@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.user.User
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
@@ -22,6 +21,7 @@ import util.HttpUtil
 import util.SplashScreen
 import javax.validation.ConstraintViolationException
 
+//noinspection GroovyUnusedAssignment
 onUncaughtExceptionThrown = { Exception e ->
     BusyLayerUI.instance.hide()
     if (e instanceof org.codehaus.groovy.runtime.InvokerInvocationException) e = e.cause
@@ -53,14 +53,17 @@ onUncaughtExceptionThrown = { Exception e ->
     }
 }
 
+//noinspection GroovyUnusedAssignment
 onSimpleJpaNewTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.show()
 }
 
+//noinspection GroovyUnusedAssignment
 onSimpleJpaCommitTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.hide()
 }
 
+//noinspection GroovyUnusedAssignment
 onSimpleJpaRollbackTransaction = { TransactionHolder th ->
     BusyLayerUI.instance.hide()
 }

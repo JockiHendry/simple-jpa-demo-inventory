@@ -106,7 +106,7 @@ class FakturJualRepository {
         }
     }
 
-    List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String salesSearch, String konsumenSearch, def statusSearch) {
+    List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
             if (!nomorSearch) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)

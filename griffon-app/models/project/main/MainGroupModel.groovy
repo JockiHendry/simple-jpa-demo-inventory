@@ -16,8 +16,6 @@
 
 package project.main
 
-import groovy.beans.Bindable
-
 class MainGroupModel {
 
     @Bindable String status

@@ -15,10 +15,9 @@
  */
 package domain.event
 
-import domain.faktur.Faktur
 import domain.faktur.Pembayaran
 import domain.penjualan.FakturJualOlehSales
-import griffon.core.Event
+import griffon.core.*
 
 class BayarPiutang extends Event {
 

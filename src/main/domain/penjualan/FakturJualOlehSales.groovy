@@ -27,7 +27,6 @@ import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
-import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
@@ -102,8 +101,8 @@ class FakturJualOlehSales extends FakturJual {
             throw new DataTidakBolehDiubah(this)
         }
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-                nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-                tanggal: LocalDate.now(), gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
+            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
+            tanggal: tanggal, gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
         tambah(pengeluaranBarang)
@@ -112,7 +111,7 @@ class FakturJualOlehSales extends FakturJual {
     void buatSuratJalan(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: LocalDate.now(), gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
+            tanggal: tanggal, gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
         )
         pengeluaranBarang.items = barangYangHarusDikirim().items
         tambah(pengeluaranBarang, false)
@@ -211,6 +210,7 @@ class FakturJualOlehSales extends FakturJual {
         piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void tambahBonus(DaftarBarangSementara daftarBarang) {
         tambahBonus(daftarBarang.items)
     }

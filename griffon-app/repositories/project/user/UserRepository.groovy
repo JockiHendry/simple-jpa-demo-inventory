@@ -25,7 +25,7 @@ import simplejpa.transaction.Transaction
 @Transaction
 class UserRepository {
 
-    private static final String DEFAULT_PASSWORD = '12345'
+    public static final String DEFAULT_PASSWORD = '12345'
 
     PasswordService passwordService
 
@@ -55,9 +55,9 @@ class UserRepository {
         user
     }
 
-    User resetPassword(User user) {
-        setPassword(user, DEFAULT_PASSWORD)
-    }
+//    User resetPassword(User user) {
+//        setPassword(user, DEFAULT_PASSWORD)
+//    }
 
     User login(String namaUser, String inputPassword) {
         User user = findUserByNama(namaUser)

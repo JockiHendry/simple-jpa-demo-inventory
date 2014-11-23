@@ -23,14 +23,10 @@ import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
 import domain.pembelian.StatusPurchaseOrder
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PurchaseOrderTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(PurchaseOrderTest)
 
     PurchaseOrderRepository purchaseOrderRepository
 

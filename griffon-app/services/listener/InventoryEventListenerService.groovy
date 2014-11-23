@@ -33,10 +33,12 @@ import org.joda.time.LocalDate
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class InventoryEventListenerService {
 
     PesanRepository pesanRepository
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     @Transaction
     void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
         log.info "Event onPerubahanStokTukar mulai dikerjakan..."
@@ -56,6 +58,7 @@ class InventoryEventListenerService {
         log.info "Event onPerubahanStokTukar selesai dikerjakan!"
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
         log.info "Event onPerubahanRetur mulai dikerjakan..."
 
@@ -73,6 +76,7 @@ class InventoryEventListenerService {
         log.info "Event onPerubahanRetur selesai dikerjakan!"
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     @Transaction
     void onPesanStok(PesanStok pesanStok) {
         log.info "Event onPesanStok mulai dikerjakan..."
@@ -89,6 +93,7 @@ class InventoryEventListenerService {
         log.info "Event onPesanStok selesai dikerjakan!"
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanStok(PerubahanStok perubahanStok) {
         log.info "Event onPerubahanStok mulai dikerjakan..."
 
@@ -118,6 +123,7 @@ class InventoryEventListenerService {
         log.info "Event onPerubahanStok selesai dikerjakan!"
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void onTransferStok(TransferStok transferStok) {
         log.info "Event onTransferStok mulai dikerjakan..."
 

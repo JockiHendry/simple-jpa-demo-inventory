@@ -15,13 +15,11 @@
  */
 package domain.faktur
 
-import domain.exception.DataTidakBolehDiubah
 import groovy.transform.*
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.joda.time.*
-
 
 @Embeddable @Canonical
 class Pembayaran {
@@ -41,12 +39,12 @@ class Pembayaran {
     @Embedded
     Referensi referensi
 
-    public void melaluiGiro(String nomorSeri, LocalDate tanggalPenerbitan, LocalDate tanggalEfektif) {
-        if (bilyetGiro) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        bilyetGiro = new BilyetGiro(nomorSeri, tanggalPenerbitan, tanggalEfektif)
-    }
+//    public void melaluiGiro(String nomorSeri, LocalDate tanggalPenerbitan, LocalDate tanggalEfektif) {
+//        if (bilyetGiro) {
+//            throw new DataTidakBolehDiubah(this)
+//        }
+//        bilyetGiro = new BilyetGiro(nomorSeri, tanggalPenerbitan, tanggalEfektif)
+//    }
 
     public boolean matches(KRITERIA_PEMBAYARAN kriteria) {
         if (kriteria == KRITERIA_PEMBAYARAN.SEMUA) {

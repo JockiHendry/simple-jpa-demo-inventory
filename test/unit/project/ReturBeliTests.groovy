@@ -21,11 +21,8 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
 import domain.pembelian.Supplier
-import domain.retur.ItemRetur
 import domain.retur.Kemasan
-import domain.retur.KlaimPotongPiutang
 import domain.retur.ReturBeli
-import domain.retur.ReturJual
 import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
 import org.joda.time.LocalDate

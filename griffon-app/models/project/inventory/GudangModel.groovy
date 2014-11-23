@@ -27,7 +27,6 @@ class GudangModel {
 	@Bindable String keterangan
 
     @Bindable String namaSearch
-    @Bindable String searchMessage
 
     BasicEventList<Gudang> gudangList = new BasicEventList<>()
 

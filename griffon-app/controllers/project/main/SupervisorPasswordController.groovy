@@ -21,6 +21,7 @@ import project.user.PasswordService
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class SupervisorPasswordController {
 
     SupervisorPasswordModel model

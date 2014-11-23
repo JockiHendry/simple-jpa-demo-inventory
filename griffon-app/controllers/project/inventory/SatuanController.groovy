@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class SatuanController {
 
     SatuanModel model

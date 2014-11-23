@@ -20,6 +20,7 @@ import project.pembelian.PurchaseOrderRepository
 
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanPembelianPerSupplierController {
 
     LaporanPembelianPerSupplierModel model

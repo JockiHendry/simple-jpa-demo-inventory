@@ -17,7 +17,6 @@ package project.faktur
 
 import ca.odell.glazedlists.BasicEventList
 import domain.faktur.BilyetGiro
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class BilyetGiroModel {

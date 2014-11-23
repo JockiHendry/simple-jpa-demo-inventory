@@ -15,7 +15,6 @@
  */
 package project.laporan
 
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class LaporanModel {

@@ -20,7 +20,6 @@ import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.penjualan.FakturJualOlehSales
 import domain.retur.ReturJual
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 

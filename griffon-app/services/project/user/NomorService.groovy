@@ -28,6 +28,7 @@ class NomorService {
 
     private final Logger log = LoggerFactory.getLogger(NomorService)
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     public void serviceInit() {
         refreshAll()
     }

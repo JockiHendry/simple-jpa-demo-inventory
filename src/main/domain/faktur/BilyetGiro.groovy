@@ -24,7 +24,7 @@ import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 import org.joda.time.*
-import griffon.util.ApplicationHolder
+import griffon.util.*
 
 @DomainClass @Entity @Canonical
 class BilyetGiro implements Comparable {

@@ -16,7 +16,7 @@
 package domain.event
 
 import domain.inventory.Transfer
-import griffon.core.Event
+import griffon.core.*
 
 class TransferStok extends Event {
 

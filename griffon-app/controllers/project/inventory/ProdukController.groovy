@@ -19,14 +19,12 @@ package project.inventory
 import ast.NeedSupervisorPassword
 import domain.exception.DataDuplikat
 import domain.inventory.Produk
-import domain.pembelian.Supplier
 import simplejpa.swing.DialogUtils
-import simplejpa.transaction.Transaction
-import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ProdukController {
 
     ProdukModel model

@@ -21,6 +21,7 @@ class BarangSelisih extends RuntimeException {
         super(pesan)
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     BarangSelisih(Object... objects) {
         super("Terdapat selisih barang pada ${objects.join(', ')}")
     }

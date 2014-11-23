@@ -15,16 +15,10 @@
  */
 package project.penjualan
 
-import net.miginfocom.swing.MigLayout
 import org.joda.time.LocalDate
-
 import java.awt.Color
-import java.awt.FlowLayout
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.CENTER
-import static javax.swing.SwingConstants.CENTER
-import static javax.swing.SwingConstants.RIGHT
 import static javax.swing.SwingConstants.RIGHT
 
 actions {

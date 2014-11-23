@@ -28,7 +28,7 @@ import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import griffon.core.GriffonApplication
+import griffon.core.*
 import griffon.util.*
 
 class MainTabbedPane extends JTabbedPane {
@@ -42,6 +42,7 @@ class MainTabbedPane extends JTabbedPane {
     void addMVCTab(String mvcType, def args, String caption) {
         int idx = app.mvcGroupManager.groups.keySet().findAll { it.replaceAll('\\(\\d+\\)','').trim().equals(caption)}.size() + 1
         String mvcName = idx == 1? caption: "$caption ($idx)"
+        //noinspection GroovyUnusedAssignment
         def (m, v, c) = app.mvcGroupManager.createMVCGroup(mvcType, mvcName, args)
         addTab(mvcName, v.mainPanel)
         int tabIndex = tabCount-1

@@ -16,7 +16,7 @@
 package domain.exception;
 
 import domain.penjualan.Konsumen
-import griffon.util.GriffonNameUtils
+import griffon.util.*
 
 class MelebihiBatasKredit extends RuntimeException {
 

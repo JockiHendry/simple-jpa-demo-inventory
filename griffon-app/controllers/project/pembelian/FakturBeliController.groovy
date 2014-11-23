@@ -26,6 +26,7 @@ import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import java.text.NumberFormat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class FakturBeliController {
 
     FakturBeliModel model

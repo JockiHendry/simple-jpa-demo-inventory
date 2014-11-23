@@ -19,8 +19,6 @@ import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.Gudang
-import domain.inventory.Produk
-import groovy.beans.Bindable
 
 class LaporanStokGudangModel {
 

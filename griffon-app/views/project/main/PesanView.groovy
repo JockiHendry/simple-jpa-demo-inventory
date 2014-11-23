@@ -15,9 +15,6 @@
  */
 package project.main
 
-import java.awt.FlowLayout
-import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
-
 panel(id: 'mainPanel') {
     borderLayout()
 

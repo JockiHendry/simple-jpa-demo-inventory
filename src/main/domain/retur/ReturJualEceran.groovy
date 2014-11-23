@@ -16,19 +16,15 @@
 package domain.retur
 
 import domain.inventory.BolehPesanStok
-import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
 import project.inventory.GudangRepository
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
-
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
 class ReturJualEceran extends ReturJual implements BolehPesanStok {

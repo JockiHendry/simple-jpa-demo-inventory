@@ -17,12 +17,6 @@ package project.inventory
 
 import domain.inventory.*
 import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
-import groovy.beans.Bindable
-import org.joda.time.*
-import javax.swing.event.*
-import simplejpa.swing.*
-import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class SatuanModel {
 
@@ -31,7 +25,6 @@ class SatuanModel {
     @Bindable String singkatan
 
     @Bindable String namaSearch
-    @Bindable String searchMessage
 
     BasicEventList<Satuan> satuanList = new BasicEventList<>()
 

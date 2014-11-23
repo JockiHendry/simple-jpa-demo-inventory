@@ -19,6 +19,7 @@ import project.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanPenjualanPerRegionController {
 
     LaporanPenjualanPerRegionModel model

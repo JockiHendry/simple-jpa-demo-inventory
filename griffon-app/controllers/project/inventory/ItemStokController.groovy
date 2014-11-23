@@ -17,6 +17,7 @@ package project.inventory
 
 import domain.inventory.PeriodeItemStok
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ItemStokController {
 
     ItemStokModel model

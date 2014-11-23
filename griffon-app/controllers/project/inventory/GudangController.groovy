@@ -22,6 +22,7 @@ import domain.inventory.Gudang
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class GudangController {
 
     GudangModel model

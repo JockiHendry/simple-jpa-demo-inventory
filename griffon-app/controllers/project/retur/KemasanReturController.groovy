@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class KemasanReturController {
 
     KemasanReturModel model

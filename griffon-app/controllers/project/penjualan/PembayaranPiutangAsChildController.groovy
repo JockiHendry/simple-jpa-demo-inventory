@@ -28,6 +28,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PembayaranPiutangAsChildController {
 
     PembayaranPiutangAsChildModel model
@@ -131,7 +132,7 @@ class PembayaranPiutangAsChildController {
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah
-                model.potongan = selected.potongan? true: false
+                model.potongan = selected.potongan as boolean
                 model.bilyetGiro = selected.bilyetGiro
             }
         }

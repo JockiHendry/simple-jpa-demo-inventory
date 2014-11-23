@@ -20,7 +20,6 @@ import domain.user.PesanPiutangJatuhTempo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.user.PesanRepository
-import simplejpa.transaction.Transaction
 
 class PiutangService {
 

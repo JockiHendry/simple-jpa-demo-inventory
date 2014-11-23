@@ -72,6 +72,7 @@ class ReferensiStokBuilder {
         this
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     ReferensiStokBuilder refer(DaftarBarangSementara daftarBarangSementara) {
         this
     }

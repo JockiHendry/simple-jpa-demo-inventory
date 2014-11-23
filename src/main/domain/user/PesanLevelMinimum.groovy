@@ -29,12 +29,13 @@ class PesanLevelMinimum extends Pesan {
     @NotNull @ManyToOne
     Produk produk
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     PesanLevelMinimum() {}
 
     PesanLevelMinimum(Produk produk, int jumlahAktual, int levelMinimum) {
         this.tanggal = LocalDateTime.now()
         this.produk = produk
-        this.pesan = "Stok <span class='info'>${produk.nama}</span> mencapai level minimum <span class='info'>$levelMinimum</span>."
+        this.pesan = "Stok <span class='info'>${produk.nama}</span> ($jumlahAktual) mencapai level minimum <span class='info'>$levelMinimum</span>."
     }
 
     @Override

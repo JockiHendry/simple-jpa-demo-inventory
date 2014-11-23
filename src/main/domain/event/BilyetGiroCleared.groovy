@@ -16,8 +16,8 @@
 package domain.event
 
 import domain.faktur.BilyetGiro
-import griffon.core.Event
 import groovy.transform.Canonical
+import griffon.core.*
 
 @Canonical
 class BilyetGiroCleared extends Event {

@@ -15,7 +15,6 @@
  */
 package project
 
-import domain.faktur.Faktur
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang

@@ -66,7 +66,7 @@ class PengaturanRepository {
     public void refreshAll() {
         KeyPengaturan.values().each { KeyPengaturan keyPengaturan ->
             Pengaturan pengaturan = findPengaturanByKeyPengaturan(keyPengaturan)
-            def value = null
+            def value
             if (pengaturan?.nilai != null) {
                 value = deserialize(pengaturan.nilai, keyPengaturan.jenisNilai)
             } else {

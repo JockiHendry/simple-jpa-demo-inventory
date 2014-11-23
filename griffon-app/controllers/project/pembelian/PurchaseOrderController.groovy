@@ -28,9 +28,9 @@ import util.SwingHelper
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
-import java.text.DateFormat
 import java.text.NumberFormat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PurchaseOrderController {
 
     PurchaseOrderModel model

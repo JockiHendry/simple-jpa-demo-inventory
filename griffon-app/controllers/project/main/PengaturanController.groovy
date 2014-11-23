@@ -20,6 +20,7 @@ import domain.pengaturan.KeyPengaturan
 import project.pengaturan.PengaturanRepository
 import javax.swing.event.ListSelectionEvent
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PengaturanController {
 
     PengaturanModel model

@@ -20,7 +20,6 @@ import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.Gudang
 import domain.inventory.Produk
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 import javax.validation.constraints.NotNull

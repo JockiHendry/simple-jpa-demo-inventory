@@ -22,6 +22,7 @@ import org.joda.time.LocalDate
 import project.penjualan.KonsumenRepository
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanSisaPiutangController {
 
     LaporanSisaPiutangModel model

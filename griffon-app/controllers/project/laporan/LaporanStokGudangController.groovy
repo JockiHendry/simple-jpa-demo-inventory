@@ -15,13 +15,12 @@
  */
 package project.laporan
 
-import org.joda.time.LocalDate
 import project.inventory.ProdukRepository
 import simplejpa.swing.DialogUtils
-
 import javax.swing.SwingUtilities
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanStokGudangController {
 
     LaporanStokGudangModel model

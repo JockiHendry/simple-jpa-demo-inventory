@@ -16,11 +16,9 @@
 
 package domain.inventory
 
-import domain.faktur.Faktur
 import domain.pembelian.Supplier
 import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Sales
-import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
 import javax.persistence.*

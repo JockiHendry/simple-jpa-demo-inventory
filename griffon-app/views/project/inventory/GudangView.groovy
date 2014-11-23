@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
 package project.inventory
 
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
-import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
@@ -34,16 +30,10 @@ panel(id: 'mainPanel') {
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
     }
 
-    panel(constraints: CENTER) {
-        borderLayout()
-        panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
-            label(text: bind('searchMessage', source: model))
-        }
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.gudangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                glazedColumn(name: 'Nama', expression: { it.nama + (it.utama?' [Pusat]':'') })
-                glazedColumn(name: 'Keterangan', property: 'keterangan')
-            }
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.gudangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+            glazedColumn(name: 'Nama', expression: { it.nama + (it.utama?' [Pusat]':'') })
+            glazedColumn(name: 'Keterangan', property: 'keterangan')
         }
     }
 

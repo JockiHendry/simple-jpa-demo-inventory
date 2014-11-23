@@ -20,7 +20,6 @@ import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.inventory.Produk
 import domain.penjualan.Konsumen
-import groovy.beans.Bindable
 
 class ItemFakturAsChildModel {
 

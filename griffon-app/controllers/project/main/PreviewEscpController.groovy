@@ -21,7 +21,9 @@ import simple.escp.data.DataSources
 import simple.escp.json.JsonTemplate
 import simple.escp.swing.PrintPreviewPane
 import simplejpa.SimpleJpaUtil
+import griffon.util.*
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PreviewEscpController {
 
     def model
@@ -29,7 +31,7 @@ class PreviewEscpController {
     PengaturanRepository pengaturanRepository
 
     void mvcGroupInit(Map args) {
-        JsonTemplate template = new JsonTemplate(getResourceAsStream("escp/${args.'template'}"))
+        JsonTemplate template = new JsonTemplate(ApplicationHolder.application.getResourceAsStream("escp/${args.'template'}"))
         def source = args.'dataSource'
         Map options = args.containsKey('options')? args.options: [:]
         options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null)?: SimpleJpaUtil.instance.user.userName

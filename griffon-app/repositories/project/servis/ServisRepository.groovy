@@ -17,9 +17,6 @@ package project.servis
 
 import domain.exception.DataTidakBolehDiubah
 import domain.servis.*
-import groovy.transform.*
-import org.joda.time.*
-import simplejpa.exception.DuplicateEntityException
 import simplejpa.exception.EntityNotFoundException
 import simplejpa.transaction.Transaction
 

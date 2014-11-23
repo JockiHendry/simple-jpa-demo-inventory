@@ -20,7 +20,6 @@ import domain.faktur.ItemFaktur
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.PenerimaanBarang
-import domain.pembelian.Supplier
 import griffon.test.*
 
 class PenerimaanBarangTests extends GriffonUnitTestCase {
@@ -38,7 +37,6 @@ class PenerimaanBarangTests extends GriffonUnitTestCase {
         Produk produkB = new Produk('Produk B')
         Produk produkC = new Produk('Produk C')
 
-        Supplier s = new Supplier()
         PenerimaanBarang penerimaanBarang1 = new PenerimaanBarang(nomor: 'P1')
         penerimaanBarang1.tambah(new ItemBarang(produkA, 10))
         penerimaanBarang1.tambah(new ItemBarang(produkB, 20))

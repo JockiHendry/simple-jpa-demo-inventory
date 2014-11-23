@@ -19,7 +19,6 @@ import domain.faktur.ItemFaktur
 import domain.inventory.ItemBarang
 import domain.penjualan.*
 import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
 import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.*
 import util.SwingHelper

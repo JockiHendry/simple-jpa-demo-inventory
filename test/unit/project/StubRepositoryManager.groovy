@@ -34,7 +34,7 @@ class StubRepositoryManager implements RepositoryManager {
 
     @Override
     Object doInstantiate(String name, boolean triggerEvent) {
-        return instances.get(name)
+        return instances[name]
     }
 
     @Override

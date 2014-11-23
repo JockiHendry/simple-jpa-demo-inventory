@@ -50,7 +50,6 @@ import javax.persistence.OneToOne
 import javax.persistence.OrderColumn
 import javax.validation.constraints.NotNull
 import javax.validation.groups.Default
-import java.text.NumberFormat
 
 @NamedEntityGraphs([
     @NamedEntityGraph(name='PurchaseOrder.Complete', attributeNodes = [

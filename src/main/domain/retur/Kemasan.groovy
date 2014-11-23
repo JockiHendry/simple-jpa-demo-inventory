@@ -20,7 +20,6 @@ import domain.inventory.DaftarBarangSementara
 import domain.inventory.ItemBarang
 import domain.inventory.SebuahDaftarBarang
 import groovy.transform.Canonical
-import groovy.transform.EqualsAndHashCode
 import org.hibernate.annotations.Type
 import org.hibernate.validator.constraints.NotEmpty
 import org.joda.time.LocalDate

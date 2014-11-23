@@ -46,7 +46,7 @@ class FakturBeliTests extends GriffonUnitTestCase {
         assertEquals(Periode.format.parseLocalDate('16-01-2010'), fakturBeli.jatuhTempo)
         assertEquals(185000, fakturBeli.hutang.jumlah)
 
-        GroovyAssert.shouldFail(DataTidakBolehDiubah) {
+        shouldFail(DataTidakBolehDiubah) {
             fakturBeli.buatHutang()
         }
     }

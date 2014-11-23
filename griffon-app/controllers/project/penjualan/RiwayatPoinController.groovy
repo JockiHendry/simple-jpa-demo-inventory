@@ -20,6 +20,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.*
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class RiwayatPoinController {
 
     RiwayatPoinModel model

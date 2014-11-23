@@ -22,21 +22,13 @@ import domain.pembelian.FakturBeli
 import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
 import project.penjualan.KonsumenRepository
-import project.inventory.ProdukController
 import simplejpa.swing.DialogUtils
-import javax.swing.JComponent
-import javax.swing.JDialog
 import javax.swing.JOptionPane
-import javax.swing.KeyStroke
-import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import java.awt.Dialog
 import java.awt.Dimension
-import java.awt.Window
-import java.awt.event.ActionEvent
-import java.awt.event.KeyEvent
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ItemFakturAsChildController {
 
     ItemFakturAsChildModel model

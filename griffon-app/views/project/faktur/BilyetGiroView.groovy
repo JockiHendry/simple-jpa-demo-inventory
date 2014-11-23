@@ -18,13 +18,10 @@ package project.faktur
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
 import org.joda.time.LocalDate
-import javax.swing.ImageIcon
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
-import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.RIGHT

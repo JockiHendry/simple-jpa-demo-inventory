@@ -15,12 +15,8 @@
  */
 package domain.penjualan
 
-import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity
@@ -28,6 +24,7 @@ class PencairanPoinTukarUang extends PencairanPoin {
 
     public PencairanPoinTukarUang() {}
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     public PencairanPoinTukarUang(LocalDate tanggal, Integer jumlahPoin, BigDecimal rate) {
         super(tanggal, jumlahPoin, rate)
     }

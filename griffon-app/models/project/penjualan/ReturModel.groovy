@@ -19,7 +19,6 @@ import ca.odell.glazedlists.BasicEventList
 import domain.inventory.ItemBarang
 import domain.pembelian.PenerimaanBarang
 import domain.penjualan.FakturJualOlehSales
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class ReturModel {

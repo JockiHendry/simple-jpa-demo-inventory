@@ -16,10 +16,8 @@
 package project.faktur
 
 import net.miginfocom.swing.MigLayout
-
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.RIGHT
 

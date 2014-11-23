@@ -23,6 +23,7 @@ import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class BilyetGiroController {
 
     BilyetGiroModel model

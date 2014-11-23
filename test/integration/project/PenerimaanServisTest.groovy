@@ -65,7 +65,7 @@ class PenerimaanServisTest extends DbUnitTestCase {
         assertEquals(2, p3.jumlahRetur)
 
         // Hapus
-        penerimaanServis = penerimaanServisRepository.hapus(penerimaanServis)
+        penerimaanServisRepository.hapus(penerimaanServis)
 
         // Periksa apakah qty retur bertambah
         p1 = penerimaanServisRepository.findProdukById(-1l)

@@ -20,11 +20,13 @@ import domain.inventory.Produk
 import groovy.transform.Canonical
 
 @Canonical
+@SuppressWarnings("GroovyUnusedDeclaration")
 public class PenjualanProduk {
 
     Produk produk
     Gudang gudang
     long jumlahPenjualan
+
 
     PenjualanProduk(Produk produk, Gudang gudang, long jumlahPenjualan) {
         this.produk = produk

@@ -15,7 +15,6 @@
  */
 package project.main
 
-import ca.odell.glazedlists.BasicEventList
 import domain.user.Pesan
 
 class PesanModel {

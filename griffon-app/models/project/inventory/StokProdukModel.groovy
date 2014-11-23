@@ -16,12 +16,8 @@
 package project.inventory
 
 import ca.odell.glazedlists.BasicEventList
-import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
-import ca.odell.glazedlists.swing.GlazedListsSwing
-import domain.inventory.Gudang
 import domain.inventory.Produk
 import domain.inventory.StokProduk
-import groovy.beans.Bindable
 
 class StokProdukModel {
 

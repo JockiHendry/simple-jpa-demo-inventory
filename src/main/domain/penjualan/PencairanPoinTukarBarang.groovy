@@ -17,7 +17,6 @@ package domain.penjualan
 
 import domain.event.PerubahanStok
 import domain.inventory.DaftarBarangSementara
-import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
@@ -25,11 +24,8 @@ import domain.validation.InputPencairanPoin
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
-import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-import org.joda.time.*
-import griffon.util.ApplicationHolder
+import griffon.util.*
 
 import javax.validation.groups.Default
 

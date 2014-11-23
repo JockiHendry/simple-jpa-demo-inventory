@@ -21,6 +21,7 @@ import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class Periode {
 
     public static final DateTimeFormatter format = DateTimeFormat.forPattern("dd-MM-YYYY")

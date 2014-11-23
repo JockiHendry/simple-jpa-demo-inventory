@@ -16,13 +16,13 @@
 package project.penjualan
 
 import domain.penjualan.Konsumen
-import project.pembelian.PurchaseOrderRepository
 import domain.penjualan.FakturJualOlehSales
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PiutangController {
 
     PiutangModel model

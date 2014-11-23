@@ -27,7 +27,6 @@ class SupplierModel {
 	@Bindable String nomorTelepon
 
     @Bindable String namaSearch
-    @Bindable String searchMessage
 
     BasicEventList<Supplier> supplierList = new BasicEventList<>()
 

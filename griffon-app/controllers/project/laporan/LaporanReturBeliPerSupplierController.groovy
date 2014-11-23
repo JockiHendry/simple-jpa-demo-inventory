@@ -20,6 +20,7 @@ import project.retur.ReturBeliRepository
 
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanReturBeliPerSupplierController {
 
     LaporanReturBeliPerSupplierModel model

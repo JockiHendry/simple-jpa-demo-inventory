@@ -18,7 +18,6 @@ package project.penjualan
 import ca.odell.glazedlists.BasicEventList
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
-import groovy.beans.Bindable
 
 class FakturJualOlehSalesAsChildModel {
 

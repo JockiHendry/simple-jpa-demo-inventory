@@ -30,6 +30,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.SwingUtilities
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanReturProdukController {
 
     LaporanReturProdukModel model

@@ -18,6 +18,7 @@ package project.inventory
 import simplejpa.swing.DialogUtils
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class StokProdukController {
 
     StokProdukModel model

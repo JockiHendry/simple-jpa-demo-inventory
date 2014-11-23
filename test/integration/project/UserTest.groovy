@@ -36,7 +36,7 @@ class UserTest extends DbUnitTestCase {
         userA = userRepository.buat(userA)
         assertEquals('userA', userA.nama)
         assertTrue(userA.password.length > 0)
-        assertEquals(userA, userRepository.login('userA', userRepository.DEFAULT_PASSWORD))
+        assertEquals(userA, userRepository.login('userA', UserRepository.DEFAULT_PASSWORD))
 
         User userB = new User(nama: 'userB', hakAkses: [Menu.MAINTENANCE])
         userB = userRepository.buat(userB, 'mysolidpassword')

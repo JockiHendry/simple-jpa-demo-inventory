@@ -17,12 +17,9 @@ package project.pembelian
 
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
-
 import javax.swing.JOptionPane
-import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.FlowLayout
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.*
 

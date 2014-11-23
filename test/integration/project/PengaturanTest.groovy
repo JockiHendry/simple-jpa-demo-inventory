@@ -20,14 +20,10 @@ import domain.pengaturan.KeyPengaturan
 import domain.pengaturan.Pengaturan
 import project.pengaturan.PengaturanRepository
 import project.user.PasswordService
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class PengaturanTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(ProdukTest)
 
     PengaturanRepository pengaturanRepository
 

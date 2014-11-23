@@ -15,10 +15,10 @@
  */
 package project.main
 
-import domain.user.Pesan
 import domain.user.PesanGiroJatuhTempo
 import domain.user.PesanLevelMinimum
 import domain.user.PesanPiutangJatuhTempo
+import groovy.xml.MarkupBuilder
 import project.penjualan.FakturJualRepository
 import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
@@ -28,6 +28,7 @@ import javax.swing.JOptionPane
 import javax.swing.event.HyperlinkEvent
 import javax.swing.text.html.FormSubmitEvent
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PesanController {
 
     PesanModel model
@@ -43,7 +44,7 @@ class PesanController {
         JEditorPane dashboard = view.dashboard
 
         def htmlOutput = new StringWriter()
-        def builder = new groovy.xml.MarkupBuilder(htmlOutput)
+        def builder = new MarkupBuilder(htmlOutput)
         builder.html {
             head {
                 style(type: 'text/css') {

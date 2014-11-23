@@ -13,23 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
 package project.inventory
 
 import org.jdesktop.swingx.prompt.PromptSupport
-
-import javax.swing.JComponent
-import javax.swing.KeyStroke
-import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
-import org.joda.time.*
 import java.awt.*
 
 actions {

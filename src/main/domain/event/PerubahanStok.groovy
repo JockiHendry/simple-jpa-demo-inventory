@@ -15,11 +15,10 @@
  */
 package domain.event
 
-import domain.faktur.Faktur
 import domain.inventory.ReferensiStok
-import griffon.core.Event
 import domain.inventory.DaftarBarang
 import groovy.transform.Canonical
+import griffon.core.*
 
 @Canonical
 class PerubahanStok extends Event {

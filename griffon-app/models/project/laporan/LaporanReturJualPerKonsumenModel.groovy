@@ -16,7 +16,6 @@
 package project.laporan
 
 import domain.penjualan.Konsumen
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class LaporanReturJualPerKonsumenModel {

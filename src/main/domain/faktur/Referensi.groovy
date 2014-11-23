@@ -17,8 +17,8 @@ package domain.faktur
 
 import groovy.transform.Canonical
 import org.hibernate.validator.constraints.NotEmpty
-
 import javax.persistence.Embeddable
+import griffon.util.*
 
 @Embeddable @Canonical
 class Referensi {
@@ -43,7 +43,7 @@ class Referensi {
 
     @Override
     String toString() {
-        "${griffon.util.GriffonNameUtils.getNaturalName(namaClass)}: $nomor"
+        "${GriffonNameUtils.getNaturalName(namaClass)}: $nomor"
     }
 
 }

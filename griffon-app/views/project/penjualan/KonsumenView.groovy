@@ -20,7 +20,6 @@ import java.text.NumberFormat
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
-import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 

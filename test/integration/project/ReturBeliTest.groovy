@@ -22,16 +22,12 @@ import domain.pembelian.Supplier
 import domain.retur.Kemasan
 import domain.retur.ReturBeli
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
 import project.retur.ReturBeliRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class ReturBeliTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(ReturBeliTest)
 
     ReturBeliRepository returBeliRepository
     GudangRepository gudangRepository

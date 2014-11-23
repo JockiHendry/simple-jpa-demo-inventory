@@ -32,11 +32,13 @@ abstract class Pesan implements Comparable {
     @NotBlank
     String pesan
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     @NotNull
     Integer prioritas = 1
 
     abstract boolean masihBerlaku()
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     abstract String jenisPesan()
 
     @Override

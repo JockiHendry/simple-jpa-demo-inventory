@@ -28,7 +28,6 @@ import domain.retur.ReturJualOlehSales
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import simplejpa.transaction.Transaction
-import java.text.NumberFormat
 
 @Transaction
 class ReturJualService {

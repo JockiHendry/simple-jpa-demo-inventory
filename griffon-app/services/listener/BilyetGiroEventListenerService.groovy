@@ -29,6 +29,7 @@ class BilyetGiroEventListenerService {
 
     BilyetGiroService bilyetGiroService
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void onBilyetGiroCleared(BilyetGiroCleared bilyetGiroCleared) {
         log.info "Event onBilyetGiroCleared mulai dikerjakan..."
 

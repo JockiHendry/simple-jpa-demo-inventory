@@ -21,7 +21,6 @@ import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.PenyesuaianStok
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class PenyesuaianStokModel {

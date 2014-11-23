@@ -16,11 +16,9 @@
 package project.inventory
 
 import ca.odell.glazedlists.BasicEventList
-import domain.inventory.DaftarBarang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pembelian.Supplier
-import groovy.beans.Bindable
 
 class ItemBarangAsChildModel {
 

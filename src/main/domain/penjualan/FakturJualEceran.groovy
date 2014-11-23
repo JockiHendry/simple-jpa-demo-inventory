@@ -15,10 +15,8 @@
  */
 package domain.penjualan
 
-import domain.event.PesanStok
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
-import domain.inventory.BolehPesanStok
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import project.user.NomorService

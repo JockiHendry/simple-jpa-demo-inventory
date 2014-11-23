@@ -24,6 +24,7 @@ import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class HutangController {
 
     HutangModel model

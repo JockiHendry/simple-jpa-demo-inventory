@@ -18,13 +18,9 @@ package project
 import domain.penjualan.Sales
 import project.user.NomorService
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import simplejpa.testing.DbUnitTestCase
 
 class NomorServiceTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(NomorServiceTest)
 
     NomorService nomorService
 

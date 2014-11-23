@@ -26,6 +26,7 @@ import simplejpa.SimpleJpaUtil
 import javax.imageio.ImageIO
 import java.awt.BorderLayout
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PreviewFakturController {
 
     def model

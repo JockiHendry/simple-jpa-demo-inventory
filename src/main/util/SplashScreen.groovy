@@ -24,8 +24,8 @@ import javax.swing.JWindow
 import java.awt.Color
 import java.awt.Graphics
 import java.awt.Image
-import griffon.core.GriffonApplication
-import griffon.util.ApplicationHolder
+import griffon.core.*
+import griffon.util.*
 
 class SplashScreen {
 

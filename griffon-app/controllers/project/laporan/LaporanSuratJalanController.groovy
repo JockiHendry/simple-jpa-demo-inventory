@@ -20,6 +20,7 @@ import project.inventory.ProdukRepository
 
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanSuratJalanController {
 
     LaporanSuratJalanModel model

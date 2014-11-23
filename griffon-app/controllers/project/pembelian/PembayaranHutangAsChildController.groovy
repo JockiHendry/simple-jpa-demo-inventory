@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PembayaranHutangAsChildController {
 
     PembayaranHutangAsChildModel model
@@ -56,7 +57,7 @@ class PembayaranHutangAsChildController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dilakukan lagi!', 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
+            JOptionPane.showMessageDialog(view.mainPanel, "Pembayaran tidak dapat dilakukan lagi!", 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException | HargaSelisih ex) {
             model.errors['jumlah'] = ex.message
         }
@@ -120,7 +121,7 @@ class PembayaranHutangAsChildController {
                 model.errors.clear()
                 model.tanggal = selected.tanggal
                 model.jumlah = selected.jumlah
-                model.potongan = selected.potongan? true: false
+                model.potongan = selected.potongan as boolean
                 model.bilyetGiro = selected.bilyetGiro
             }
         }

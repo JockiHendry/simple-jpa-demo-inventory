@@ -17,8 +17,6 @@ package project.inventory
 
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
-import domain.pembelian.FakturBeli
-import domain.pembelian.PurchaseOrder
 import project.pembelian.PurchaseOrderRepository
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
@@ -26,6 +24,7 @@ import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ItemBarangAsChildController {
 
     ItemBarangAsChildModel model

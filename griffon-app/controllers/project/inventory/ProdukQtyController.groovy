@@ -17,6 +17,7 @@ package project.inventory
 
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ProdukQtyController {
 
     ProdukQtyModel model

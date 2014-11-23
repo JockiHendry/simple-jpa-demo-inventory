@@ -16,18 +16,17 @@
 package project.penjualan
 
 import ast.NeedSupervisorPassword
-import domain.exception.DataTidakBolehDiubah
 import domain.pembelian.PenerimaanBarang
 import domain.validation.TanpaGudang
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.swing.DialogUtils
-
 import javax.swing.JOptionPane
 import javax.swing.SwingUtilities
 import javax.swing.event.ListSelectionEvent
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ReturController {
 
     ReturModel model

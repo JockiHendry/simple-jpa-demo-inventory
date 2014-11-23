@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionEvent
 import domain.exception.DataDuplikat
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PenerimaanBarangController {
 
     PenerimaanBarangModel model

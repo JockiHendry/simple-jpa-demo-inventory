@@ -17,7 +17,7 @@ package domain.inventory
 
 import groovy.transform.*
 import javax.persistence.*
-import griffon.util.GriffonNameUtils
+import griffon.util.*
 
 @Embeddable @Canonical
 class ReferensiStok {

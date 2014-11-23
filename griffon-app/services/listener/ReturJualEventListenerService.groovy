@@ -16,19 +16,19 @@
 package listener
 
 import domain.event.BayarPiutang
-import domain.exception.DataTidakBolehDiubah
 import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
 import domain.penjualan.FakturJualOlehSales
 import domain.retur.ReturJual
 import domain.retur.ReturJualOlehSales
 import project.retur.ReturJualRepository
-import simplejpa.transaction.Transaction
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ReturJualEventListenerService {
 
     ReturJualRepository returJualRepository
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     void onBayarPiutang(BayarPiutang bayarPiutang) {
         Referensi referensi = bayarPiutang.pembayaran.referensi
 

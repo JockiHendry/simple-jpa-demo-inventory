@@ -13,8 +13,11 @@
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/lifecycle" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/services" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/repositories" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/staging" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/wrapper" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -33,4 +36,3 @@
     <orderEntry type="module" module-name="simple-jpa-demo-inventory-griffonPlugins" />
   </component>
 </module>
-

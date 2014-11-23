@@ -28,7 +28,6 @@ import org.hibernate.validator.constraints.NotBlank
 import project.user.NomorService
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
-
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.joda.time.*

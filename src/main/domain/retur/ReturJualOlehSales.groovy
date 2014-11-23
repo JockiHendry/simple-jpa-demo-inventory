@@ -23,12 +23,9 @@ import domain.inventory.ItemBarang
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
-import project.user.NomorService
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
-import org.joda.time.*
-import griffon.util.*
 
 @DomainClass @Entity @Canonical
 class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
@@ -68,10 +65,6 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
 
     BigDecimal sisaPotongPiutang() {
         getKlaimsPotongPiutang(true).sum { KlaimPotongPiutang k -> k.jumlah }?: 0
-    }
-
-    void prosesKlaimPotongPiutang() {
-        getKlaimsPotongPiutang(true).each { it.proses() }
     }
 
     PengeluaranBarang tukar() {

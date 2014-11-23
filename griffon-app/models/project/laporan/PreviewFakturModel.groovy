@@ -15,8 +15,7 @@
  */
 package project.laporan
 
-import groovy.beans.Bindable
-
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PreviewFakturModel {
     // @Bindable String propName
 }

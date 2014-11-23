@@ -17,17 +17,11 @@
 package project.inventory
 
 import domain.exception.DataDuplikat
-import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.pembelian.Supplier
-import domain.penjualan.FakturJual
-import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.StatusFakturJual
-import domain.retur.ReturJual
 import simplejpa.transaction.Transaction
 
 @Transaction

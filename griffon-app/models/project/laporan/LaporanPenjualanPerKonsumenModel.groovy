@@ -20,7 +20,6 @@ import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.penjualan.Konsumen
 import domain.penjualan.Sales
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class LaporanPenjualanPerKonsumenModel {

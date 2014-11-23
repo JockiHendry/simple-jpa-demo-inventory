@@ -15,8 +15,6 @@
  */
 package project.laporan
 
-import domain.inventory.Produk
-import groovy.beans.Bindable
 import org.joda.time.LocalDate
 
 class LaporanPenjualanProdukModel {

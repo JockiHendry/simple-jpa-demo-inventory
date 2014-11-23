@@ -193,6 +193,7 @@ griffon.project.dependency.resolution = {
         }
         runtime 'mysql:mysql-connector-java:5.1.33'
         runtime 'jockihendry:hibernate-entitymanager:4.3.7-EXPERIMENT'
+        runtime 'org.apache.poi:poi:3.8'
         compile 'org.hibernate:hibernate-validator:4.3.0.Final'
         compile('net.sf.jasperreports:jasperreports:5.6.1') {
             exclude 'commons-collections'
@@ -205,6 +206,7 @@ griffon.project.dependency.resolution = {
     }
 }
 
+//noinspection GroovyUnusedAssignment
 log4j = {
     // Example of changing the log pattern for the default console
     // appender:

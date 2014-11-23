@@ -29,9 +29,9 @@ import javax.swing.event.ListSelectionEvent
 import domain.exception.DataDuplikat
 import util.SwingHelper
 import java.awt.Dimension
-import java.text.DateFormat
 import java.text.NumberFormat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class FakturJualOlehSalesController {
 
     FakturJualOlehSalesModel model
@@ -73,7 +73,7 @@ class FakturJualOlehSalesController {
                 try {
                     fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, false, !model.listBonus.empty? model.listBonus: [])
                 } catch (MelebihiBatasKredit ex) {
-                    DialogUtils.showMVCGroup('supervisorPassword', [pesan: ex.getHTMLMessage()], view, ['title': 'Password Supervisor', 'size': new java.awt.Dimension(500, 150)]) { m, v, c ->
+                    DialogUtils.showMVCGroup('supervisorPassword', [pesan: ex.getHTMLMessage()], view, ['title': 'Password Supervisor', 'size': new Dimension(500, 150)]) { m, v, c ->
                         if (m.ok) {
                             fakturJualOlehSales.bonusPenjualan = null
                             fakturJualOlehSales = fakturJualRepository.buat(fakturJualOlehSales, true, (!model.listBonus.empty)? model.listBonus: [])

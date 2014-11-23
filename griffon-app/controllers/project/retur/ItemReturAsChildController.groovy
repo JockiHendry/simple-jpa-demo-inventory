@@ -18,14 +18,12 @@ package project.retur
 import domain.retur.*
 import domain.inventory.*
 import domain.validation.InputReturJual
-import project.retur.*
 import simplejpa.swing.DialogUtils
-import simplejpa.transaction.Transaction
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
-import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class ItemReturAsChildController {
 
     ItemReturAsChildModel model

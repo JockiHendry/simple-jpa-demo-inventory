@@ -23,6 +23,7 @@ import project.penjualan.FakturJualRepository
 import javax.imageio.ImageIO
 import javax.swing.SwingUtilities
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanPenjualanTriwulanController {
 
     LaporanPenjualanTriwulanModel model

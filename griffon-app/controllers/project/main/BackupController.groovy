@@ -24,6 +24,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class BackupController {
 
     BackupModel model

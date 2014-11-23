@@ -28,6 +28,7 @@ import javax.imageio.ImageIO
 import javax.swing.JOptionPane
 import java.awt.BorderLayout
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class LaporanController {
 
     LaporanModel model

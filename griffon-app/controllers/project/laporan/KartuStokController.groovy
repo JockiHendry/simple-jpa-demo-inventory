@@ -28,6 +28,7 @@ import javax.swing.SwingUtilities
 import javax.validation.groups.Default
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class KartuStokController {
 
     KartuStokModel model

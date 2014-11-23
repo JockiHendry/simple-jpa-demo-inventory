@@ -25,6 +25,7 @@ import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import java.awt.Dimension
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class KonsumenController {
 
     KonsumenModel model

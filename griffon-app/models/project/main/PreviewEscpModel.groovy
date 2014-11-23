@@ -15,8 +15,7 @@
  */
 package project.main
 
-import groovy.beans.Bindable
-
+@SuppressWarnings("GroovyUnusedDeclaration")
 class PreviewEscpModel {
     // @Bindable String propName
 }

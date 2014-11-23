@@ -15,8 +15,6 @@
  */
 package project.main
 
-import groovy.beans.Bindable
-
 class RestoreModel {
 
     @Bindable File fileRestore

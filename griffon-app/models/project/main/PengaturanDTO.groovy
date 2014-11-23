@@ -15,12 +15,8 @@
  */
 package project.main
 
-import ca.odell.glazedlists.BasicEventList
 import domain.pengaturan.KeyPengaturan
-import domain.pengaturan.Pengaturan
-import groovy.beans.Bindable
 import groovy.transform.Canonical
-
 
 @Canonical
 public class PengaturanDTO {

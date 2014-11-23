@@ -16,27 +16,16 @@
 package domain.retur
 
 import domain.exception.DataTidakBolehDiubah
-import domain.inventory.DaftarBarangSementara
-import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.validation.InputReturJual
 import groovy.transform.Canonical
 import org.hibernate.validator.constraints.NotEmpty
 import simplejpa.DomainClass
-import javax.persistence.AttributeOverride
-import javax.persistence.AttributeOverrides
 import javax.persistence.CascadeType
-import javax.persistence.Column
-import javax.persistence.ElementCollection
-import javax.persistence.Embeddable
-import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.FetchType
-import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
-import javax.persistence.OrderColumn
-import javax.persistence.Table
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
 import javax.validation.groups.Default

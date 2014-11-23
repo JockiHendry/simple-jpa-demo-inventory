@@ -16,13 +16,9 @@
 package project.inventory
 
 import net.miginfocom.swing.MigLayout
-
-import java.awt.Dimension
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
-import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.CENTER
 
 panel(id: 'mainPanel') {

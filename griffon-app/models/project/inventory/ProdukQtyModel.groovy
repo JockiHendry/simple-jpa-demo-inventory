@@ -16,8 +16,6 @@
 package project.inventory
 
 import domain.inventory.Produk
-import griffon.transform.PropertyListener
-import groovy.beans.Bindable
 
 class ProdukQtyModel {
 

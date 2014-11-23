@@ -18,6 +18,7 @@ package project.penjualan
 import javax.swing.SwingUtilities
 import java.text.NumberFormat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class FakturJualOlehSalesAsChildController {
 
     FakturJualOlehSalesAsChildModel model

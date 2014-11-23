@@ -18,7 +18,6 @@ package domain.retur
 import domain.event.PerubahanStok
 import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
-import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
@@ -26,7 +25,6 @@ import domain.inventory.ItemBarang
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.inventory.SebuahDaftarBarang
-import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
 import org.hibernate.annotations.Type

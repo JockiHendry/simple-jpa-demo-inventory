@@ -18,6 +18,7 @@ package project.user
 import org.jdesktop.swingx.auth.LoginService
 import simplejpa.SimpleJpaUtil
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class UserService extends LoginService {
 
     UserRepository userRepository
@@ -25,7 +26,7 @@ class UserService extends LoginService {
     @Override
     boolean authenticate(String nama, char[] password, String server) throws Exception {
         SimpleJpaUtil.instance.user = userRepository.login(nama, new String(password))
-        return (SimpleJpaUtil.instance.user != null)? true: false
+        return (SimpleJpaUtil.instance.user != null)
     }
 
 }

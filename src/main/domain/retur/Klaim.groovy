@@ -15,15 +15,10 @@
  */
 package domain.retur
 
-import domain.inventory.ItemBarang
-import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
 @DomainClass @Entity @Canonical
 abstract class Klaim implements Cloneable {

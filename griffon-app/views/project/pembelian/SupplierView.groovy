@@ -19,7 +19,6 @@ package project.pembelian
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
-import org.joda.time.*
 import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
@@ -32,17 +31,11 @@ panel(id: 'mainPanel') {
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
     }
 
-    panel(constraints: CENTER) {
-        borderLayout()
-        panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
-            label(text: bind('searchMessage', source: model))
-        }
-        scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.supplierList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-                glazedColumn(name: 'Nama', property: 'nama')
-                glazedColumn(name: 'Alamat', property: 'alamat')
-                glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
-            }
+    scrollPane(constraints: CENTER) {
+        glazedTable(id: 'table', list: model.supplierList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
+            glazedColumn(name: 'Nama', property: 'nama')
+            glazedColumn(name: 'Alamat', property: 'alamat')
+            glazedColumn(name: 'Nomor Telepon', property: 'nomorTelepon')
         }
     }
 

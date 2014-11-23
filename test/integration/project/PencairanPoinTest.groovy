@@ -159,7 +159,7 @@ class PencairanPoinTest extends DbUnitTestCase {
             konsumen = findKonsumenById(-1l)
             assertEquals(30, konsumen.poinTerkumpul)
 
-            p = pencairanPoinRepository.hapus(p)
+            pencairanPoinRepository.hapus(p)
             assertEquals(50, konsumen.poinTerkumpul)
 
             // Periksa jumlah barang apakah bertambah kembali

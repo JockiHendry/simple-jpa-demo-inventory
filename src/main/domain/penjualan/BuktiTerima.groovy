@@ -16,7 +16,6 @@
 package domain.penjualan
 
 import groovy.transform.*
-import simplejpa.DomainClass
 import javax.persistence.*
 import org.hibernate.annotations.Type
 import javax.validation.constraints.*

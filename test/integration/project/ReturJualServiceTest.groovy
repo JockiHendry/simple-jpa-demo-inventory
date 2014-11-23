@@ -27,14 +27,10 @@ import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.retur.ReturJualService
 import simplejpa.testing.DbUnitTestCase
 
 class ReturJualServiceTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(ReturJualServiceTest)
 
     ReturJualService returJualService
 

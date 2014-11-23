@@ -18,14 +18,10 @@ package project
 
 import domain.inventory.Gudang
 import project.inventory.GudangRepository
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class GudangTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(GudangTest)
 
     GudangRepository gudangRepository
 

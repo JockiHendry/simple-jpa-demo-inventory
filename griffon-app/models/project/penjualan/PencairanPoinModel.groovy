@@ -16,19 +16,11 @@
 package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
-import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
-import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.ItemBarang
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
-import domain.penjualan.PencairanPoin
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
-import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
-
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotNull
 
 class PencairanPoinModel {
 

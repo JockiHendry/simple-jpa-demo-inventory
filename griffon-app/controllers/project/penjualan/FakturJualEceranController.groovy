@@ -29,9 +29,9 @@ import javax.validation.groups.Default
 import domain.exception.DataDuplikat
 import util.SwingHelper
 import java.awt.Dimension
-import java.text.DateFormat
 import java.text.NumberFormat
 
+@SuppressWarnings("GroovyUnusedDeclaration")
 class FakturJualEceranController {
 
     FakturJualEceranModel model
