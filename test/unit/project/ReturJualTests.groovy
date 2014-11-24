@@ -16,7 +16,10 @@
 package project
 
 import domain.exception.FakturTidakDitemukan
+import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
+import domain.faktur.KRITERIA_PEMBAYARAN
+import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
@@ -161,6 +164,65 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertEquals(250000, konsumen.jumlahPiutang())
         assertEquals(1, r.fakturPotongPiutang.size())
         assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-01')))
+    }
+
+    public void testPotongPiutangDenganPelunasanGiroBelumJatuhTempo() {
+        Gudang gudang = new Gudang()
+        Sales sales = new Sales(gudang: gudang)
+        Konsumen konsumen = new Konsumen(sales: sales)
+        Produk produk1 = new Produk(jumlah: 10)
+        Produk produk2 = new Produk(jumlah: 20)
+
+        // Sudah dibayar sepenuhnya dengan BG, tapi belum lunas karena BG belum jatuh tempo
+        FakturJualOlehSales f1 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-01'), nomor: 'F-01', konsumen: konsumen)
+        f1.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
+        f1.kirim("test")
+        f1.tambah(new BuktiTerima())
+        f1.bayar(new Pembayaran(LocalDate.now(), 100000, null, new BilyetGiro('BG-001', 100000, LocalDate.now().plusMonths(1))))
+        konsumen.tambahFakturBelumLunas(f1)
+
+        // Sudah dibayar sebagian dengan BG yang belum jatuh tempo
+        FakturJualOlehSales f2 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-02'), nomor: 'F-02', konsumen: konsumen)
+        f2.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
+        f2.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
+        f2.kirim("test")
+        f2.tambah(new BuktiTerima())
+        f2.bayar(new Pembayaran(LocalDate.now(), 100000, null, new BilyetGiro('BG-002', 100000, LocalDate.now().plusMonths(1))))
+        konsumen.tambahFakturBelumLunas(f2)
+
+        // Belum dibayar sama sekali
+        FakturJualOlehSales f3 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-03'), nomor: 'F-03', konsumen: konsumen)
+        f3.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
+        f3.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
+        f3.kirim("test")
+        f3.tambah(new BuktiTerima())
+        konsumen.tambahFakturBelumLunas(f3)
+
+
+        ReturJual r = new ReturJualOlehSales(konsumen: konsumen)
+        r.tambah(new ItemRetur(produk1, 10, [new KlaimPotongPiutang(250000)] as Set))
+        assertEquals(250000, r.sisaPotongPiutang())
+        r.potongPiutang()
+        assertEquals(0, r.sisaPotongPiutang())
+        assertEquals(1, r.fakturPotongPiutang.size())
+        assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-02')))
+        assertEquals(0     , f1.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+        assertEquals(250000, f2.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+        assertEquals(0     , f3.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+
+        r = new ReturJualOlehSales(konsumen: konsumen)
+        r.tambah(new ItemRetur(produk1, 10, [new KlaimPotongPiutang(500000)] as Set))
+        assertEquals(500000, r.sisaPotongPiutang())
+        r.potongPiutang()
+        assertEquals(0, r.sisaPotongPiutang())
+        assertEquals(2, r.fakturPotongPiutang.size())
+        assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-02')))
+        assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-03')))
+        assertEquals(0     , f1.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+        assertEquals(400000, f2.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+        assertEquals(350000, f3.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN))
+
+
     }
 
     public void testToDaftarBarang() {

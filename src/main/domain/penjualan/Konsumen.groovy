@@ -140,10 +140,10 @@ class Konsumen implements Comparable {
         }
 
         // Mengubah daftar faktur menjadi berurut berdasarkan tanggal
-        List daftarFaktur = (listFakturBelumLunas as List).sort { f1, f2 -> (!f1?.tanggal || !f2?.tanggal)? -1: f1.tanggal.compareTo(f2.tanggal)}
+        List daftarFaktur = (listFakturBelumLunas as List).sort { f1, f2 -> (!f1?.tanggal || !f2?.tanggal)? 1: f1.tanggal.compareTo(f2.tanggal)}
 
         for (FakturJualOlehSales faktur: daftarFaktur) {
-            if (!faktur.piutang) continue
+            if (!faktur.piutang || (faktur.sisaPiutang() == 0)) continue
             BigDecimal sisaPiutang = faktur.sisaPiutang()
             if (jumlah >= sisaPiutang) {
                 // Lunasi seluruh piutang untuk faktur ini

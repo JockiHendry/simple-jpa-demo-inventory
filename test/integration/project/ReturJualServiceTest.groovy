@@ -15,6 +15,7 @@
  */
 package project
 
+import domain.exception.HargaSelisih
 import domain.exception.StokTidakCukup
 import domain.inventory.Gudang
 import domain.inventory.Produk
@@ -91,6 +92,29 @@ class ReturJualServiceTest extends DbUnitTestCase {
         assertEquals(1000, r5.items[0].jumlahPotongPiutang())
         assertEquals(3000, r5.items[1].jumlahPotongPiutang())
         assertEquals(7500, r5.items[2].jumlahPotongPiutang())
+    }
+
+    public void testHitungPotonganPiutangDenganGiro() {
+        Produk produk1 = returJualService.findProdukById(-1l)
+        Konsumen konsumen = returJualService.findKonsumenById(-5l)
+        Gudang gudang = returJualService.findGudangById(-1l)
+
+        ReturJual r1 = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
+        r1.tambah(new ItemRetur(produk1, 20))
+        shouldFail(HargaSelisih) {
+            returJualService.potongPiutang(r1)
+        }
+
+        r1 = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
+        r1.tambah(new ItemRetur(produk1, 17))
+        shouldFail(HargaSelisih) {
+            returJualService.potongPiutang(r1)
+        }
+
+        r1 = new ReturJualOlehSales(nomor: 'R-01', tanggal: LocalDate.now(), konsumen: konsumen, gudang: gudang)
+        r1.tambah(new ItemRetur(produk1, 10))
+        returJualService.potongPiutang(r1)
+        assertEquals(100000, r1.jumlahPotongPiutang())
     }
 
     public void testAutoKlaimReturJualOlehSales() {
