@@ -64,6 +64,11 @@ class ItemRetur {
         getKlaims(KlaimPotongPiutang, hanyaBelumDiproses).sum { KlaimPotongPiutang k -> k.jumlah }?: 0
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    Integer qtyPotongPiutang() {
+        (jumlah - (jumlahBarangDitukar() + jumlahBarangDiservis()))?: 0
+    }
+
     void tambahKlaim(Klaim klaim) {
         if (klaims.contains(klaim)) {
             throw new DataTidakBolehDiubah("Sudah ada klaim yang sama untuk ${klaim}")
