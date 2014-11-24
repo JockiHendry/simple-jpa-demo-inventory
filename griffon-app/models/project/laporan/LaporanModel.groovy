@@ -32,6 +32,7 @@ public enum JenisLaporan {
     LAPORAN_PENJUALAN_PRODUK('Laporan Penjualan Produk', 'laporan_penjualan_produk', 'laporanPenjualanProduk'),
     LAPORAN_PENJUALAN_TRIWULAN('Laporan Penjualan Triwulan', 'laporan_penjualan_sales_triwulan', 'laporanPenjualanTriwulan'),
     LAPORAN_SISA_PIUTANG('Laporan Sisa Piutang', 'laporan_sisa_piutang', 'laporanSisaPiutang'),
+    LAPORAN_SISA_HUTANG('Laporan Sisa Hutang', 'laporan_sisa_hutang', 'laporanSisaHutang'),
     LAPORAN_PEMBAYARAN_PIUTANG('Laporan Pembayaran Piutang', 'laporan_pembayaran_piutang_per_sales', 'laporanPembayaranPiutang'),
     LAPORAN_STOK('Laporan Summary Stok', 'laporan_stok', 'laporanStok'),
     KARTU_STOK('Kartu Stok', 'kartu_stok', 'kartuStok'),

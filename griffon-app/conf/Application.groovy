@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "laporanSisaHutang"
+    'laporanSisaHutang' {
+        model      = 'project.laporan.LaporanSisaHutangModel'
+        view       = 'project.laporan.LaporanSisaHutangView'
+        controller = 'project.laporan.LaporanSisaHutangController'
+    }
+
     // MVC Group for "produkQty"
     'produkQty' {
         model      = 'project.inventory.ProdukQtyModel'
