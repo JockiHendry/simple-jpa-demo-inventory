@@ -55,10 +55,12 @@ class BilyetGiroRepository {
         BilyetGiro old = findBilyetGiroByNomorSeri(bilyetGiro.nomorSeri)
         if (old.sudahDicairkan()) {
             old.namaBank = bilyetGiro.namaBank
+            old.diterimaDari = bilyetGiro.diterimaDari
         } else {
             old.nomorSeri = bilyetGiro.nomorSeri
             old.nominal = bilyetGiro.nominal
             old.jatuhTempo = bilyetGiro.jatuhTempo
+            old.diterimaDari = bilyetGiro.diterimaDari
         }
         old
     }

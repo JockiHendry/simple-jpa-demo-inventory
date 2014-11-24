@@ -29,6 +29,7 @@ class BilyetGiroModel {
     @Bindable LocalDate jatuhTempo
     @Bindable LocalDate tanggalPencairan
     @Bindable String namaBank
+    @Bindable String diterimaDari
 
     @Bindable String nomorSeriSearch
 

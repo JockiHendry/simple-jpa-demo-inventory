@@ -64,6 +64,7 @@ panel(id: 'mainPanel') {
                 templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
             }
             glazedColumn(name: 'Nama Bank', property: 'namaBank')
+            glazedColumn(name: 'Diterima Dari', property: 'diterimaDari')
             glazedColumn(name: 'Tanggal Pencairan', property: 'tanggalPencairan') {
                 templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
             }
@@ -83,6 +84,9 @@ panel(id: 'mainPanel') {
         label('Nama Bank:')
         textField(id: 'namaBank', columns: 50, text: bind('namaBank', target: model, mutual: true), errorPath: 'namaBank')
         errorLabel(path: 'namaBank', constraints: 'wrap')
+        label('Diterima Dari:')
+        textField(id: 'diterimaDari', columns: 50, text: bind('diterimaDari', target: model, mutual: true), errorPath: 'diterimaDari')
+        errorLabel(path: 'diterimaDari', constraints: 'wrap')
 
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)

@@ -44,6 +44,9 @@ class BilyetGiro implements Comparable {
     @Size(min=2, max=50)
     String namaBank
 
+    @Size(min=2, max=50)
+    String diterimaDari
+
     boolean sudahJatuhTempo(LocalDate tanggal = LocalDate.now()) {
         jatuhTempo.isEqual(tanggal) || jatuhTempo.isBefore(tanggal)
     }
