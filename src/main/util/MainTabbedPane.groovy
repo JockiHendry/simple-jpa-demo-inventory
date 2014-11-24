@@ -15,10 +15,14 @@
  */
 package util
 
+import javax.swing.AbstractAction
+import javax.swing.Action
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JLabel
+import javax.swing.JMenuItem
 import javax.swing.JPanel
+import javax.swing.JPopupMenu
 import javax.swing.JTabbedPane
 import java.awt.BasicStroke
 import java.awt.Color
@@ -30,24 +34,64 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import griffon.core.*
 import griffon.util.*
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 
 class MainTabbedPane extends JTabbedPane {
 
     GriffonApplication app
+    JPopupMenu closePopup
+    Action closeAllAction
+    Action closeOtherAction
+    ButtonTabComponent currentButtonTab
 
     MainTabbedPane() {
-        this.app = ApplicationHolder.application
+        app = ApplicationHolder.application
+        closeAllAction = new AbstractAction('Tutup Semua') {
+            @Override
+            void actionPerformed(ActionEvent e) {
+                while (tabCount > 0) {
+                    removeTabAt(0)
+                }
+            }
+        }
+        closeOtherAction = new AbstractAction('Tutup Lainnya') {
+            @Override
+            void actionPerformed(ActionEvent e) {
+                int firstIndex = 0
+                while (tabCount > 1) {
+                    if (getTabComponentAt(firstIndex) == currentButtonTab) {
+                        firstIndex++
+                    } else {
+                        removeTabAt(firstIndex)
+                    }
+                }
+            }
+        }
+        closePopup = new JPopupMenu()
+        closePopup.add(new JMenuItem(closeAllAction))
+        closePopup.add(new JMenuItem(closeOtherAction))
     }
 
     void addMVCTab(String mvcType, def args, String caption) {
         int idx = app.mvcGroupManager.groups.keySet().findAll { it.replaceAll('\\(\\d+\\)','').trim().equals(caption)}.size() + 1
         String mvcName = idx == 1? caption: "$caption ($idx)"
+        while (app.mvcGroupManager.findGroup(mvcName)) {
+            mvcName = "$caption (${++idx})"
+        }
         //noinspection GroovyUnusedAssignment
         def (m, v, c) = app.mvcGroupManager.createMVCGroup(mvcType, mvcName, args)
         addTab(mvcName, v.mainPanel)
         int tabIndex = tabCount-1
         setTabComponentAt(tabIndex, new ButtonTabComponent(mvcName))
         setSelectedIndex(tabIndex)
+    }
+
+    @Override
+    void removeTabAt(int index) {
+        ButtonTabComponent buttonTab = getTabComponentAt(index)
+        app.mvcGroupManager.destroyMVCGroup(buttonTab.mvcName)
+        super.removeTabAt(index)
     }
 
     class ButtonTabComponent extends JPanel {
@@ -69,6 +113,15 @@ class MainTabbedPane extends JTabbedPane {
             add(label)
             add(new CloseButton())
             setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0))
+            addMouseListener(new MouseAdapter() {
+                @Override
+                void mouseReleased(MouseEvent e) {
+                    if (e.isPopupTrigger()) {
+                        currentButtonTab = ButtonTabComponent.this
+                        closePopup.show(e.source, e.x, e.y)
+                    }
+                }
+            })
         }
 
         class CloseButton extends JButton implements ActionListener {
@@ -103,8 +156,7 @@ class MainTabbedPane extends JTabbedPane {
             void actionPerformed(ActionEvent e) {
                 int i = indexOfTabComponent(ButtonTabComponent.this)
                 if (i != -1) {
-                    MainTabbedPane.this.app.mvcGroupManager.destroyMVCGroup(mvcName)
-                    MainTabbedPane.this.remove(i)
+                    removeTabAt(i)
                 }
             }
         }
