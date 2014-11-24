@@ -16,7 +16,6 @@
 package project.faktur
 
 import domain.exception.DataDuplikat
-import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
 import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
@@ -55,12 +54,12 @@ class BilyetGiroRepository {
     BilyetGiro update(BilyetGiro bilyetGiro) {
         BilyetGiro old = findBilyetGiroByNomorSeri(bilyetGiro.nomorSeri)
         if (old.sudahDicairkan()) {
-            throw new DataTidakBolehDiubah(old)
+            old.namaBank = bilyetGiro.namaBank
+        } else {
+            old.nomorSeri = bilyetGiro.nomorSeri
+            old.nominal = bilyetGiro.nominal
+            old.jatuhTempo = bilyetGiro.jatuhTempo
         }
-        old.nomorSeri = bilyetGiro.nomorSeri
-        old.nominal = bilyetGiro.nominal
-        old.jatuhTempo = bilyetGiro.jatuhTempo
-        old.namaBank = bilyetGiro.namaBank
         old
     }
 
