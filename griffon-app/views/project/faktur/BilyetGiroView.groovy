@@ -60,7 +60,9 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Nominal', property: 'nominal', columnClass: Integer) {
                 templateRenderer(exp: {!it?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
             }
-            glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo')
+            glazedColumn(name: 'Jatuh Tempo', property: 'jatuhTempo') {
+                templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
+            }
             glazedColumn(name: 'Nama Bank', property: 'namaBank')
             glazedColumn(name: 'Tanggal Pencairan', property: 'tanggalPencairan') {
                 templateRenderer(exp: {it?.toString('dd-MM-yyyy')})
