@@ -266,8 +266,7 @@ class FakturJualOlehSales extends FakturJual {
         penerimaanBarang.normalisasi().each { ItemBarang barangRetur ->
             ItemFaktur itemFaktur = listItemFaktur.find { (it.produk == barangRetur.produk) && (it.jumlah >= barangRetur.jumlah) }
             if (itemFaktur) {
-                BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga
-                harga += itemFaktur.diskon? itemFaktur.diskon.hasil(hargaRetur): hargaRetur
+                harga += (barangRetur.jumlah * (itemFaktur.diskon? itemFaktur.diskon.hasil(itemFaktur.harga): itemFaktur.harga))
             } else {
                 throw new BarangSelisih("Tidak ada penjualan ${barangRetur.produk.nama} sejumlah ${barangRetur.jumlah} di faktur jual ${nomor}!")
             }
