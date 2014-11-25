@@ -119,6 +119,8 @@ class MainTabbedPane extends JTabbedPane {
                     if (e.isPopupTrigger()) {
                         currentButtonTab = ButtonTabComponent.this
                         closePopup.show(e.source, e.x, e.y)
+                    } else {
+                        setSelectedIndex(indexOfTabComponent(ButtonTabComponent.this))
                     }
                 }
             })
