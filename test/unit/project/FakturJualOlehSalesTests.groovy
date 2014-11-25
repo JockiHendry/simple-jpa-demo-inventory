@@ -21,7 +21,7 @@ import domain.faktur.Pembayaran
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
-import domain.pembelian.PenerimaanBarang
+import domain.penjualan.ReturFaktur
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Periode
@@ -262,7 +262,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(340000, f.piutang.jumlah)
         assertEquals(110, konsumen.poinTerkumpul)
 
-        PenerimaanBarang retur1 = new PenerimaanBarang()
+        ReturFaktur retur1 = new ReturFaktur()
         retur1.tambah(new ItemBarang(produkA, 5))
         f.tambahRetur(retur1)
         assertEquals(1, f.retur.size())
@@ -276,7 +276,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(110, konsumen.listRiwayatPoin[0].poin)
         assertEquals(-15, konsumen.listRiwayatPoin[1].poin)
 
-        PenerimaanBarang retur2 = new PenerimaanBarang()
+        ReturFaktur retur2 = new ReturFaktur()
         retur2.tambah(new ItemBarang(produkB, 20))
         f.tambahRetur(retur2)
         assertEquals(2, f.retur.size())
@@ -304,7 +304,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkB, 20, 12000))
         f.kirim('Tujuan')
 
-        PenerimaanBarang retur1 = new PenerimaanBarang()
+        ReturFaktur retur1 = new ReturFaktur()
         retur1.tambah(new ItemBarang(produkA, 5))
         f.tambahRetur(retur1)
         assertEquals(1, f.retur.size())
@@ -312,7 +312,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertNull(f.piutang)
         assertEquals(0, konsumen.poinTerkumpul)
 
-        PenerimaanBarang retur2 = new PenerimaanBarang()
+        ReturFaktur retur2 = new ReturFaktur()
         retur2.tambah(new ItemBarang(produkB, 20))
         f.tambahRetur(retur2)
         assertEquals(2, f.retur.size())
@@ -338,11 +338,11 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         f.tambah(new ItemFaktur(produkB, 20, 12000))
         f.kirim('Tujuan')
 
-        PenerimaanBarang retur1 = new PenerimaanBarang()
+        ReturFaktur retur1 = new ReturFaktur()
         retur1.tambah(new ItemBarang(produkA, 5))
         f.tambahRetur(retur1)
 
-        PenerimaanBarang retur2 = new PenerimaanBarang()
+        ReturFaktur retur2 = new ReturFaktur()
         retur2.tambah(new ItemBarang(produkB, 20))
         f.tambahRetur(retur2)
 

@@ -21,6 +21,7 @@ import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PencairanPoinTukarBarang
 import domain.penjualan.PengeluaranBarang
+import domain.penjualan.ReturFaktur
 import domain.retur.ReturBeli
 import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
@@ -54,6 +55,13 @@ class ReferensiStokBuilder {
         hasil.classGudang = PenerimaanBarang.simpleName
         hasil.nomorGudang = penerimaanBarang.nomor
         informasiAudit(penerimaanBarang)
+        this
+    }
+
+    ReferensiStokBuilder refer(ReturFaktur returFaktur) {
+        hasil.classGudang = ReturFaktur.simpleName
+        hasil.nomorGudang = returFaktur.nomor
+        informasiAudit(returFaktur)
         this
     }
 

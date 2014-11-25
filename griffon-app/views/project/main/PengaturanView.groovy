@@ -57,7 +57,7 @@ panel(id: 'mainPanel') {
                     return
                 }
                 controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
+                //form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
             }, visible: bind{table.isRowSelected})
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
         }

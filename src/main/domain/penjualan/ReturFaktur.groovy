@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.penjualan
+package domain.penjualan
 
-import ca.odell.glazedlists.BasicEventList
-import domain.inventory.ItemBarang
-import domain.pembelian.PenerimaanBarang
-import domain.penjualan.FakturJualOlehSales
-import org.joda.time.LocalDate
+import domain.inventory.DaftarBarang
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
 
-class ReturModel {
+@DomainClass  @Entity @Canonical @EqualsAndHashCode(callSuper=true)
+class ReturFaktur extends DaftarBarang {
 
-    FakturJualOlehSales fakturJualOlehSales
+    @Override
+    int faktor() {
+        1
+    }
 
-    @Bindable Long id
-    @Bindable String nomor
-    @Bindable LocalDate tanggal
-    @Bindable String keterangan
-    List<ItemBarang> listItemBarang = []
-
-    BasicEventList<PenerimaanBarang> returFakturList = new BasicEventList<>()
 }
+

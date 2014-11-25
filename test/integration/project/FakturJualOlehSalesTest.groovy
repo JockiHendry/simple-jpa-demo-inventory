@@ -26,9 +26,8 @@ import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
-import domain.pembelian.PenerimaanBarang
-import domain.pengaturan.Pengaturan
 import domain.penjualan.FakturJualEceran
+import domain.penjualan.ReturFaktur
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
@@ -42,15 +41,11 @@ import project.penjualan.KonsumenRepository
 import domain.penjualan.Sales
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class FakturJualOlehSalesTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(FakturJualOlehSalesTest)
 
     GudangRepository gudangRepository
     FakturJualRepository fakturJualRepository
@@ -550,7 +545,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         f = fakturJualRepository.kirim(f, 'Destination')
         f = fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'Receiver', 'Driver'))
 
-        PenerimaanBarang retur = new PenerimaanBarang(nomor: 'NOMOR', tanggal: LocalDate.now())
+        ReturFaktur retur = new ReturFaktur(nomor: 'NOMOR', tanggal: LocalDate.now())
         retur.tambah(new ItemBarang(p1, 10))
         retur.tambah(new ItemBarang(p2, 5))
         f = fakturJualRepository.retur(f, retur)
@@ -626,7 +621,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         f = fakturJualRepository.buat(f, true)
         f = fakturJualRepository.kirim(f, 'Destination')
 
-        PenerimaanBarang retur = new PenerimaanBarang(nomor: 'NOMOR', tanggal: LocalDate.now())
+        ReturFaktur retur = new ReturFaktur(nomor: 'NOMOR', tanggal: LocalDate.now())
         retur.tambah(new ItemBarang(p1, 10))
         retur.tambah(new ItemBarang(p2, 5))
         f = fakturJualRepository.retur(f, retur)
@@ -753,9 +748,9 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
 
         fakturJualOlehSales = fakturJualRepository.buatSuratJalan(fakturJualOlehSales, 'Test')
         fakturJualOlehSales = fakturJualRepository.kirimSuratJalan(fakturJualOlehSales)
-        PenerimaanBarang p = new PenerimaanBarang(nomor: 'TEST', tanggal: LocalDate.now())
-        p.tambah(new ItemBarang(produkA, 3))
-        fakturJualRepository.retur(fakturJualOlehSales, p)
+        ReturFaktur r = new ReturFaktur(nomor: 'TEST', tanggal: LocalDate.now())
+        r.tambah(new ItemBarang(produkA, 3))
+        fakturJualRepository.retur(fakturJualOlehSales, r)
         // Pastikan jumlah akan dikirim tidak berubah setelah retur dilakukan.
         produkA = fakturJualRepository.findProdukById(-1l)
         produkB = fakturJualRepository.findProdukById(-2l)

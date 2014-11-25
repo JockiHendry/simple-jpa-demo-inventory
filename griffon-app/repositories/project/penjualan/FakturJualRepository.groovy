@@ -24,12 +24,12 @@ import domain.faktur.BilyetGiro
 import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
-import domain.pembelian.PenerimaanBarang
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
+import domain.penjualan.ReturFaktur
 import domain.penjualan.StatusFakturJual
 import project.inventory.GudangRepository
 import domain.inventory.ItemBarang
@@ -179,6 +179,7 @@ class FakturJualRepository {
         }
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
     public List<FakturJualOlehSales> cariPiutang(String nomorReferensi) {
         executeQuery("SELECT f FROM FakturJualOlehSales f JOIN FETCH f.piutang.listPembayaran p WHERE p.referensi.nomor = :nomorReferensi",
             [:], [nomorReferensi: nomorReferensi])
@@ -394,23 +395,23 @@ class FakturJualRepository {
         faktur
     }
 
-    FakturJualOlehSales retur(FakturJualOlehSales faktur, PenerimaanBarang penerimaanBarang) {
+    FakturJualOlehSales retur(FakturJualOlehSales faktur, ReturFaktur returFaktur) {
         faktur = findFakturJualOlehSalesByIdFetchItems(faktur.id)
         if (!faktur) {
             throw new DataTidakBolehDiubah(faktur)
         }
-        penerimaanBarang.items.each { it.produk = findProdukById(it.produk.id) }
-        faktur.tambahRetur(penerimaanBarang)
-        persist(penerimaanBarang)
+        returFaktur.items.each { it.produk = findProdukById(it.produk.id) }
+        faktur.tambahRetur(returFaktur)
+        persist(returFaktur)
         faktur
     }
 
-    FakturJualOlehSales hapusRetur(FakturJualOlehSales faktur, String nomorPenerimaanBarang) {
+    FakturJualOlehSales hapusRetur(FakturJualOlehSales faktur, String nomorReturFaktur) {
         faktur = findFakturJualOlehSalesByIdFetchItems(faktur.id)
         if (!faktur) {
             throw new DataTidakBolehDiubah(faktur)
         }
-        faktur.hapusRetur(nomorPenerimaanBarang)
+        faktur.hapusRetur(nomorReturFaktur)
         faktur
     }
 

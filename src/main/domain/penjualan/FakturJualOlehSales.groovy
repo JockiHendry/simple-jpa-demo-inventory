@@ -33,7 +33,6 @@ import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
-import domain.pembelian.PenerimaanBarang
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import project.inventory.GudangRepository
@@ -94,7 +93,7 @@ class FakturJualOlehSales extends FakturJual {
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur')
     @Fetch(FetchMode.SUBSELECT) @OrderColumn
-    List<PenerimaanBarang> retur = []
+    List<ReturFaktur> retur = []
 
     void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
         if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
@@ -253,7 +252,7 @@ class FakturJualOlehSales extends FakturJual {
         hasil
     }
 
-    void tambahRetur(PenerimaanBarang penerimaanBarang) {
+    void tambahRetur(ReturFaktur returFaktur) {
         // Periksa apakah barang yang dikembalikan adalah barang yang sudah dipesan sebelumnya.
         if (status == StatusFakturJual.LUNAS) {
             throw new DataTidakBolehDiubah('Faktur jual yang telah lunas tidak boleh di-retur!', this)
@@ -262,8 +261,8 @@ class FakturJualOlehSales extends FakturJual {
             throw new DataTidakBolehDiubah('Faktur jual yang telah dibayar tidak boleh di-retur!', this)
         }
         BigDecimal harga = 0
-        penerimaanBarang.gudang = kirimDari()
-        penerimaanBarang.normalisasi().each { ItemBarang barangRetur ->
+        returFaktur.gudang = kirimDari()
+        returFaktur.normalisasi().each { ItemBarang barangRetur ->
             ItemFaktur itemFaktur = listItemFaktur.find { (it.produk == barangRetur.produk) && (it.jumlah >= barangRetur.jumlah) }
             if (itemFaktur) {
                 harga += (barangRetur.jumlah * (itemFaktur.diskon? itemFaktur.diskon.hasil(itemFaktur.harga): itemFaktur.harga))
@@ -273,21 +272,21 @@ class FakturJualOlehSales extends FakturJual {
         }
 
         // Tambahkan pada retur
-        retur.add(penerimaanBarang)
+        retur.add(returFaktur)
 
         // Kurangi piutang bila ada
         if (piutang) {
-            bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(RETUR_FAKTUR, penerimaanBarang.nomor)))
+            bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(RETUR_FAKTUR, returFaktur.nomor)))
         }
 
         // Kurangi bonus untuk konsumen tersebut
         if (status == StatusFakturJual.DITERIMA) {
-            konsumen.hapusPoin(penerimaanBarang)
+            konsumen.hapusPoin(returFaktur)
         }
 
         // Lakukan Perubahan stok (bertambah)
-        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
+        ReferensiStok ref = new ReferensiStokBuilder(returFaktur, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(returFaktur, ref))
     }
 
     void hapusRetur(String nomor) {
@@ -303,11 +302,11 @@ class FakturJualOlehSales extends FakturJual {
                 'Solusi: Hapus faktur ini dan buat faktur baru dengan nilai yang aktual.', this)
         }
 
-        PenerimaanBarang penerimaanBarang = retur.find { it.nomor == nomor }
-        if (!penerimaanBarang) {
+        ReturFaktur returFaktur = retur.find { it.nomor == nomor }
+        if (!returFaktur) {
             throw new FakturTidakDitemukan(nomor)
         }
-        retur.remove(penerimaanBarang)
+        retur.remove(returFaktur)
 
         // Hapus potongan piutang bila perlu
         if (piutang) {
@@ -316,18 +315,18 @@ class FakturJualOlehSales extends FakturJual {
 
         // Tambah bonus untuk konsumen tersebut bila perlu
         if (status == StatusFakturJual.DITERIMA) {
-            konsumen.tambahPoin(penerimaanBarang)
+            konsumen.tambahPoin(returFaktur)
         }
 
         // Lakukan Perubahan stok (berkurang akibat invers)
-        ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref, true))
+        ReferensiStok ref = new ReferensiStokBuilder(returFaktur, this).buat()
+        ApplicationHolder.application?.event(new PerubahanStok(returFaktur, ref, true))
     }
 
     BigDecimal totalRetur() {
         BigDecimal total = 0
-        retur.each { PenerimaanBarang penerimaanBarang ->
-            penerimaanBarang.items.each { ItemBarang barangRetur ->
+        retur.each { ReturFaktur returFaktur ->
+            returFaktur.items.each { ItemBarang barangRetur ->
                 ItemFaktur itemFaktur = listItemFaktur.find { (it.produk == barangRetur.produk) && (it.jumlah >= barangRetur.jumlah) }
                 if (itemFaktur) {
                     BigDecimal hargaRetur = barangRetur.jumlah * itemFaktur.harga

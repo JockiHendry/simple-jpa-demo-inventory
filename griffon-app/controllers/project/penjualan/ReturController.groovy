@@ -16,7 +16,7 @@
 package project.penjualan
 
 import ast.NeedSupervisorPassword
-import domain.pembelian.PenerimaanBarang
+import domain.penjualan.ReturFaktur
 import domain.validation.TanpaGudang
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
@@ -40,22 +40,22 @@ class ReturController {
     }
 
     def init = {
-        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PENERIMAAN_BARANG)
+        model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_FAKTUR)
         execInsideUISync {
-            model.penerimaanBarangList.clear()
-            model.penerimaanBarangList.addAll(model.fakturJualOlehSales.retur)
+            model.returFakturList.clear()
+            model.returFakturList.addAll(model.fakturJualOlehSales.retur)
         }
     }
 
     @NeedSupervisorPassword
     def save = {
-        PenerimaanBarang penerimaanBarang = new PenerimaanBarang(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, createdBy: SimpleJpaUtil.instance.user)
-        penerimaanBarang.items.addAll(model.listItemBarang)
-        if (!fakturJualRepository.validate(penerimaanBarang, TanpaGudang, model)) return
-        model.fakturJualOlehSales = fakturJualRepository.retur(model.fakturJualOlehSales, penerimaanBarang)
+        ReturFaktur returFaktur = new ReturFaktur(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, createdBy: SimpleJpaUtil.instance.user)
+        returFaktur.items.addAll(model.listItemBarang)
+        if (!fakturJualRepository.validate(returFaktur, TanpaGudang, model)) return
+        model.fakturJualOlehSales = fakturJualRepository.retur(model.fakturJualOlehSales, returFaktur)
         execInsideUISync {
-            model.penerimaanBarangList << penerimaanBarang
-            view.table.changeSelection(model.penerimaanBarangList.size() - 1, 0, false, false)
+            model.returFakturList << returFaktur
+            view.table.changeSelection(model.returFakturList.size() - 1, 0, false, false)
             clear()
         }
         execInsideUISync {
@@ -88,10 +88,10 @@ class ReturController {
         if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
             return
         }
-        PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
-        model.fakturJualOlehSales = fakturJualRepository.hapusRetur(model.fakturJualOlehSales, penerimaanBarang.nomor)
+        ReturFaktur returFaktur = view.table.selectionModel.selected[0]
+        model.fakturJualOlehSales = fakturJualRepository.hapusRetur(model.fakturJualOlehSales, returFaktur.nomor)
         execInsideUISync {
-            model.penerimaanBarangList.remove(penerimaanBarang)
+            model.returFakturList.remove(returFaktur)
             clear()
         }
     }
@@ -99,7 +99,7 @@ class ReturController {
     def clear = {
         execInsideUISync {
             model.id = null
-            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PENERIMAAN_BARANG)
+            model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_FAKTUR)
             model.tanggal = null
             model.keterangan = null
             model.listItemBarang.clear()
@@ -114,7 +114,7 @@ class ReturController {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 clear()
             } else {
-                PenerimaanBarang selected = view.table.selectionModel.selected[0]
+                ReturFaktur selected = view.table.selectionModel.selected[0]
                 model.errors.clear()
                 model.id = selected.id
                 model.nomor = selected.nomor

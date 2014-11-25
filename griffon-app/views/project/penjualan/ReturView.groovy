@@ -34,7 +34,7 @@ panel(id: 'mainPanel') {
     borderLayout()
 
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.penerimaanBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
+        glazedTable(id: 'table', list: model.returFakturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
                 doubleClickAction: showItemBarang, enterKeyAction: showItemBarang) {
             glazedColumn(name: 'Nomor', property: 'nomor')
             glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
