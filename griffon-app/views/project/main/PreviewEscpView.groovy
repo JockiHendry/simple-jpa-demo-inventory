@@ -20,5 +20,8 @@ import java.awt.BorderLayout
 
 panel(id: 'mainPanel') {
     borderLayout()
+    panel(constraints: BorderLayout.PAGE_START, visible: bind { model.showParameter }) {
+        checkBox('Cetak Jatuh Tempo', selected: bind('cetakJatuhTempo', target: model, mutual: true), actionPerformed: controller.refresh)
+    }
     widget(new PrintPreviewPane(), constraints: BorderLayout.CENTER, id: 'printPreviewPane')
 }

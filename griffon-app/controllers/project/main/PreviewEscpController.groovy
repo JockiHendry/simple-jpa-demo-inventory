@@ -31,13 +31,20 @@ class PreviewEscpController {
     PengaturanRepository pengaturanRepository
 
     void mvcGroupInit(Map args) {
-        JsonTemplate template = new JsonTemplate(ApplicationHolder.application.getResourceAsStream("escp/${args.'template'}"))
-        def source = args.'dataSource'
-        Map options = args.containsKey('options')? args.options: [:]
-        options['createdBy'] = (source.hasProperty('createdBy')? source.createdBy: null)?: SimpleJpaUtil.instance.user.userName
-        options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
+        model.fileLaporan = "escp/${args.template}"
+        model.dataSource = args.dataSource
+        model.options = args.containsKey('options')? args.options: [:]
+        model.showParameter = args.containsKey('showParameter')?: false
+        refresh()
+    }
+
+    def refresh = {
+        JsonTemplate template = new JsonTemplate(ApplicationHolder.application.getResourceAsStream(model.fileLaporan))
+        model.options['createdBy'] = (model.dataSource.hasProperty('createdBy')? model.dataSource.createdBy: null)?: SimpleJpaUtil.instance.user.userName
+        model.options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
+        model.options['cetakJatuhTempo'] = model.cetakJatuhTempo
         PrintPreviewPane printPreviewPane = view.printPreviewPane
-        printPreviewPane.display(template, DataSources.from(source, options))
+        printPreviewPane.display(template, DataSources.from(model.dataSource, model.options))
     }
 
 }

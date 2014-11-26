@@ -17,5 +17,11 @@ package project.main
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class PreviewEscpModel {
-    // @Bindable String propName
+
+    @Bindable Boolean cetakJatuhTempo
+    @Bindable boolean showParameter
+    String fileLaporan
+    def dataSource
+    def options
+
 }

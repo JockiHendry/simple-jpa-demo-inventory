@@ -180,7 +180,7 @@ class FakturJualOlehSalesController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json', showParameter: true]
             if (e instanceof FakturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
