@@ -22,3 +22,4 @@ project.retur.ReturJualRepository
 project.retur.ReturJualService
 project.servis.ServisRepository
 project.servis.PenerimaanServisRepository
+project.labarugi.KategoriKasRepository

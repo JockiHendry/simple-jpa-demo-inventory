@@ -16,17 +16,24 @@
 
 package domain.inventory
 
+import groovy.transform.Canonical
+import org.hibernate.annotations.Type
 import org.joda.time.Interval
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
+import javax.persistence.Embeddable
+import javax.validation.constraints.NotNull
 
-@SuppressWarnings("GroovyUnusedDeclaration")
+@Embeddable @Canonical @SuppressWarnings("GroovyUnusedDeclaration")
 class Periode {
 
     public static final DateTimeFormatter format = DateTimeFormat.forPattern("dd-MM-YYYY")
 
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalMulai
+
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalSelesai
 
     public Periode(LocalDate tanggalMulai, LocalDate tanggalSelesai) {

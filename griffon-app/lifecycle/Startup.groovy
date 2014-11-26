@@ -43,6 +43,7 @@ execOutsideUI {
     serviceManager.findService('InventoryEventListener')
     serviceManager.findService('ReturJualEventListener')
     serviceManager.findService('Nomor')
+    serviceManager.findService('KategoriKas')
 
     // Create repository
     PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')

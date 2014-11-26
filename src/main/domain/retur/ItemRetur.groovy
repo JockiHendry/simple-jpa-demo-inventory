@@ -19,7 +19,6 @@ import domain.exception.DataTidakBolehDiubah
 import domain.inventory.Produk
 import domain.validation.InputReturJual
 import groovy.transform.Canonical
-import org.hibernate.validator.constraints.NotEmpty
 import simplejpa.DomainClass
 import javax.persistence.CascadeType
 import javax.persistence.Entity
@@ -39,7 +38,7 @@ class ItemRetur {
     @NotNull(groups=[Default,InputReturJual]) @Min(value=1l, groups=[Default,InputReturJual])
     Integer jumlah
 
-    @NotEmpty(groups=[Default]) @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
     Set<Klaim> klaims = [] as Set
 
     Boolean isSudahDiproses() {
