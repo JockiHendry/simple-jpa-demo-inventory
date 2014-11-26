@@ -43,12 +43,12 @@ class KewajibanPembayaran {
     }
 
     boolean isLunas() {
-        sisa(KRITERIA_PEMBAYARAN.TANPA_GIRO_BELUM_CAIR).compareTo(BigDecimal.ZERO) == 0
+        sisa().compareTo(BigDecimal.ZERO) == 0
     }
 
     void bayar(Pembayaran pembayaran) {
         // Sisa pembayaran termasuk giro yang belum jatuh tempo
-        def sisa = sisa(KRITERIA_PEMBAYARAN.SEMUA)
+        def sisa = sisa()
 
         if (pembayaran.jumlah > sisa) {
             throw new HargaSelisih('Pembayaran lebih dari sisa pembayaran!', pembayaran.jumlah, sisa)
