@@ -114,6 +114,7 @@ class KonsumenController {
         }
     }
 
+    @NeedSupervisorPassword
     def delete = {
         Konsumen konsumen = view.table.selectionModel.selected[0]
         konsumenRepository.remove(konsumen)

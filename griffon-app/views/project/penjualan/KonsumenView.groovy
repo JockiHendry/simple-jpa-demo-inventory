@@ -73,7 +73,7 @@ panel(id: 'mainPanel') {
         }
     }
 
-    panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true, visible: bind {!model.popupMode}) {
+    panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END, focusCycleRoot: true) {
         label('Nama:')
         textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
         errorLabel(path: 'nama', constraints: 'wrap')
