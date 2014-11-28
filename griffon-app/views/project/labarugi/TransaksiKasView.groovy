@@ -39,7 +39,6 @@ panel(id: 'mainPanel') {
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), action: search)
         textField(id: 'pihakTerkaitSearch', columns: 10, text: bind('pihakTerkaitSearch', target: model, mutual: true), action: search)
         textField(id: 'kategoriKasSearch', columns: 10, text: bind('kategoriKasSearch', target: model, mutual: true), action: search)
-        comboBox(id: 'statusSearch', model: model.jenisTransaksiSearch)
         button(action: search)
     }
 

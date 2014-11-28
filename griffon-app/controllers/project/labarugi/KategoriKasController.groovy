@@ -126,7 +126,7 @@ class KategoriKasController {
 				model.nama = selected.nama
 				model.jenis.selectedItem = selected.jenis
 				model.listJumlahKas.clear()
-				model.listJumlahKas.addAll(selected.listJumlahKas)
+				model.listJumlahKas.addAll(selected.listSaldoKas)
 				model.created = selected.createdDate
 				model.createdBy = selected.createdBy?'('+selected.createdBy+')':null
 				model.modified = selected.modifiedDate

@@ -15,7 +15,6 @@
  */
 package project
 
-import domain.labarugi.JENIS_TRANSAKSI_KAS
 import domain.labarugi.KategoriKas
 import domain.labarugi.TransaksiKas
 import org.joda.time.LocalDate
@@ -36,37 +35,42 @@ class TransaksiKasTest extends DbUnitTestCase {
 
 	void testBuat() {
 		KategoriKas k = transaksiKasRepository.findKategoriKasById(-1l)
-		TransaksiKas t = new TransaksiKas('TR-003', LocalDate.parse('2014-01-02'), 'Unknown', k, 10000, JENIS_TRANSAKSI_KAS.DALAM_KOTA)
+		def dalamKota = transaksiKasRepository.findJenisTransaksiKasById(-1l)
+
+		TransaksiKas t = new TransaksiKas('TR-003', LocalDate.parse('2014-01-02'), 'Unknown', k, 10000, dalamKota)
 		transaksiKasRepository.buat(t)
 		k = transaksiKasRepository.findKategoriKasById(-1l)
-		assertEquals(20000, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
-		assertEquals(0, k.saldo(2, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
+		assertEquals(20000, k.saldo(1, 2014, dalamKota))
+		assertEquals(0, k.saldo(2, 2014, dalamKota))
 
-		t = new TransaksiKas('TR-004', LocalDate.parse('2014-02-01'), 'Unknown', k, 20000, JENIS_TRANSAKSI_KAS.DALAM_KOTA)
+		t = new TransaksiKas('TR-004', LocalDate.parse('2014-02-01'), 'Unknown', k, 20000, dalamKota)
 		transaksiKasRepository.buat(t)
 		k = transaksiKasRepository.findKategoriKasById(-1l)
-		assertEquals(20000, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
-		assertEquals(20000, k.saldo(2, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
+		assertEquals(20000, k.saldo(1, 2014, dalamKota))
+		assertEquals(20000, k.saldo(2, 2014, dalamKota))
 
 		k = transaksiKasRepository.findKategoriKasById(-2l)
-		t = new TransaksiKas('TR-005', LocalDate.parse('2014-02-01'), 'Unknown', k, 20000, JENIS_TRANSAKSI_KAS.DALAM_KOTA)
+		t = new TransaksiKas('TR-005', LocalDate.parse('2014-02-01'), 'Unknown', k, 20000, dalamKota)
 		transaksiKasRepository.buat(t)
 		k = transaksiKasRepository.findKategoriKasById(-2l)
-		assertEquals(20000, k.saldo(2, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
+		assertEquals(20000, k.saldo(2, 2014, dalamKota))
 	}
 
 	void testHapus() {
 		TransaksiKas t = transaksiKasRepository.findTransaksiKasById(-1l)
 		transaksiKasRepository.hapus(t)
 		KategoriKas k = transaksiKasRepository.findKategoriKasById(-1l)
-		assertEquals(0, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
-		assertEquals(12000, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.LUAR_KOTA))
+		def dalamKota = transaksiKasRepository.findJenisTransaksiKasById(-1l)
+		def luarKota = transaksiKasRepository.findJenisTransaksiKasById(-2l)
+
+		assertEquals(0, k.saldo(1, 2014, dalamKota))
+		assertEquals(12000, k.saldo(1, 2014, luarKota))
 
 		t = transaksiKasRepository.findTransaksiKasById(-2l)
 		transaksiKasRepository.hapus(t)
 		k = transaksiKasRepository.findKategoriKasById(-1l)
-		assertEquals(0, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
-		assertEquals(0, k.saldo(1, 2014, JENIS_TRANSAKSI_KAS.LUAR_KOTA))
+		assertEquals(0, k.saldo(1, 2014, dalamKota))
+		assertEquals(0, k.saldo(1, 2014, luarKota))
 
 	}
 

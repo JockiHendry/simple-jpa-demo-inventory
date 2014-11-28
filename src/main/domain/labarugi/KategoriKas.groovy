@@ -33,20 +33,20 @@ class KategoriKas implements Comparable {
     Boolean sistem = Boolean.FALSE
 
     @ElementCollection(fetch=FetchType.EAGER)
-    Set<SaldoKas> listJumlahKas = [] as Set
+    Set<SaldoKas> listSaldoKas = [] as Set
 
-    void perubahanSaldo(int bulan, int tahun, BigDecimal jumlahBerubah, JENIS_TRANSAKSI_KAS jenis) {
-        SaldoKas saldoKas = listJumlahKas.find { (it.bulan == bulan) && (it.tahun == tahun) && (it.jenis == jenis) }
+    void perubahanSaldo(int bulan, int tahun, BigDecimal jumlahBerubah, JenisTransaksiKas jenis) {
+        SaldoKas saldoKas = listSaldoKas.find { (it.bulan == bulan) && (it.tahun == tahun) && (it.jenis == jenis) }
         if (saldoKas) {
             saldoKas.saldo += jumlahBerubah
         } else {
             saldoKas = new SaldoKas(bulan, tahun, jumlahBerubah, jenis)
-            listJumlahKas << saldoKas
+            listSaldoKas << saldoKas
         }
     }
 
-    BigDecimal saldo(int bulan, int tahun, JENIS_TRANSAKSI_KAS jenisTransaksiKas = null) {
-        listJumlahKas.sum { SaldoKas j ->
+    BigDecimal saldo(int bulan, int tahun, JenisTransaksiKas jenisTransaksiKas = null) {
+        listSaldoKas.sum { SaldoKas j ->
             if ((j.bulan == bulan) && (j.tahun == tahun) && (jenisTransaksiKas? (j.jenis == jenisTransaksiKas): true)) {
                 return j.saldo
             }

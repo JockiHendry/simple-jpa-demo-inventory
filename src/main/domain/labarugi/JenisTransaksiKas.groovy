@@ -15,30 +15,22 @@
  */
 package domain.labarugi
 
-import domain.inventory.Periode
 import groovy.transform.*
-import org.hibernate.validator.constraints.Range
+import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
 
-@Embeddable @Canonical
-class SaldoKas {
+@DomainClass @Entity  @Canonical
+class JenisTransaksiKas {
 
-	@NotNull @Range(min=1l, max=12l)
-	Integer bulan
+    @NotBlank @Size(min=2, max=50)
+    String nama
 
-	@NotNull @Min(1970l)
-	Integer tahun
-
-	@NotNull @Min(0l)
-	BigDecimal saldo
-
-	@NotNull @ManyToOne
-	JenisTransaksiKas jenis
-
-	Periode getPeriode() {
-		Periode.bulan(bulan, tahun)
-	}
+    @Override
+    String toString() {
+        nama
+    }
 
 }
 

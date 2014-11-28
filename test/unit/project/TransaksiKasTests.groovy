@@ -15,7 +15,7 @@
  */
 package project
 
-import domain.labarugi.JENIS_TRANSAKSI_KAS
+import domain.labarugi.JenisTransaksiKas
 import domain.labarugi.KategoriKas
 import domain.labarugi.TransaksiKas
 import griffon.test.GriffonUnitTestCase
@@ -33,11 +33,12 @@ class TransaksiKasTests extends GriffonUnitTestCase {
 
     void testTambahKas() {
         KategoriKas k = new KategoriKas()
-        TransaksiKas t = new TransaksiKas(tanggal: LocalDate.now(), jumlah: 10000, kategoriKas: k, jenis: JENIS_TRANSAKSI_KAS.DALAM_KOTA)
+        JenisTransaksiKas dalamKota = new JenisTransaksiKas('Dalam Kota')
+        TransaksiKas t = new TransaksiKas(tanggal: LocalDate.now(), jumlah: 10000, kategoriKas: k, jenis: dalamKota)
         t.tambahKas()
-        assertEquals(10000, k.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
+        assertEquals(10000, k.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, dalamKota))
         t.tambahKas(true)
-        assertEquals(0, k.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, JENIS_TRANSAKSI_KAS.DALAM_KOTA))
+        assertEquals(0, k.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, dalamKota))
     }
 
 }

@@ -13,21 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.labarugi
+package project.labarugi
 
-enum JENIS_TRANSAKSI_KAS {
+import domain.labarugi.*
+import ca.odell.glazedlists.*
 
-    DALAM_KOTA('Dalam Kota'), LUAR_KOTA('Luar Kota')
+class JenisTransaksiKasModel {
 
-    String teks
+    @Bindable Long id
 
-    public JENIS_TRANSAKSI_KAS(String teks) {
-        this.teks = teks
-    }
+    @Bindable String nama
+    BasicEventList<JenisTransaksiKas> jenisTransaksiKasList = new BasicEventList<>()
 
-    @Override
-    String toString() {
-        teks
-    }
+    @Bindable String namaSearch
+
+    @Bindable String created
+    @Bindable String modified
+    @Bindable String createdBy
+    @Bindable String modifiedBy
 
 }

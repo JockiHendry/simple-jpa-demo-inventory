@@ -16,11 +16,10 @@
 package project.labarugi
 
 import ast.NeedSupervisorPassword
+import domain.exception.DataDuplikat
 import domain.labarugi.*
 import org.joda.time.LocalDate
 import project.user.NomorService
-import simplejpa.exception.DuplicateEntityException
-import util.SwingHelper
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -35,13 +34,15 @@ class TransaksiKasController {
 
     void mvcGroupInit(Map args) {
         List kategoriKasResult = transaksiKasRepository.findAllKategoriKas([orderBy: 'jenis,nama'])
+        List jenisTransaksiKasResult = transaksiKasRepository.findAllJenisTransaksiKas([orderBy: 'nama'])
         execInsideUISync {
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.jenisTransaksiSearch.selectedItem = SwingHelper.SEMUA
             model.nomorSearch = null
             model.kategoriKasList.clear()
             model.kategoriKasList.addAll(kategoriKasResult)
+            model.jenisTransaksiKasList.clear()
+            model.jenisTransaksiKasList.addAll(jenisTransaksiKasResult)
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.TRANSAKSI_KAS)
         }
         search()
@@ -49,7 +50,7 @@ class TransaksiKasController {
 
     def search = {
         List result = transaksiKasRepository.cari(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch,
-            model.pihakTerkaitSearch, model.kategoriKasSearch, model.jenisTransaksiSearch.selectedItem)
+            model.pihakTerkaitSearch, model.kategoriKasSearch)
         execInsideUISync {
             model.transaksiKasList.clear()
             model.transaksiKasList.addAll(result)
@@ -82,7 +83,7 @@ class TransaksiKasController {
                 transaksiKas = transaksiKasRepository.update(transaksiKas)
                 execInsideUISync { view.table.selectionModel.selected[0] = transaksiKas }
             }
-        } catch (DuplicateEntityException ex) {
+        } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
         }
         execInsideUISync {

@@ -41,8 +41,8 @@ class TransaksiKas {
     @NotNull @Min(0l)
     BigDecimal jumlah
 
-    @NotNull @Enumerated
-    JENIS_TRANSAKSI_KAS jenis
+    @NotNull @ManyToOne
+    JenisTransaksiKas jenis
 
     @Size(min=2, max=150)
     String keterangan

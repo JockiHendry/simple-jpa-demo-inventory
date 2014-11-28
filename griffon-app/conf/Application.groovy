@@ -23,6 +23,13 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "jenisTransaksiKas"
+    'jenisTransaksiKas' {
+        model      = 'project.labarugi.JenisTransaksiKasModel'
+        view       = 'project.labarugi.JenisTransaksiKasView'
+        controller = 'project.labarugi.JenisTransaksiKasController'
+    }
+
     // MVC Group for "transaksiKas"
     'transaksiKas' {
         model      = 'project.labarugi.TransaksiKasModel'

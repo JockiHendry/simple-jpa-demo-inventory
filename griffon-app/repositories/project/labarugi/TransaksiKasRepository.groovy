@@ -21,14 +21,13 @@ import domain.labarugi.*
 import org.joda.time.*
 import project.user.NomorService
 import simplejpa.transaction.Transaction
-import util.SwingHelper
 
 @Transaction
 class TransaksiKasRepository {
 
     NomorService nomorService
 
-    public List<TransaksiKas> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String pihakTerkaitSearch, String kategoriKasSearch, def jenisSearch) {
+    public List<TransaksiKas> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String pihakTerkaitSearch, String kategoriKasSearch) {
         findAllTransaksiKasByDsl([excludeDeleted: false, orderBy: 'tanggal,nomor']) {
             if (!nomorSearch) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
@@ -42,10 +41,6 @@ class TransaksiKasRepository {
             if (kategoriKasSearch) {
                 and()
                 kategoriKas__nama like("%${kategoriKasSearch}%")
-            }
-            if (jenisSearch && (jenisSearch != SwingHelper.SEMUA)) {
-                and()
-                jenis eq(jenisSearch)
             }
         }
     }

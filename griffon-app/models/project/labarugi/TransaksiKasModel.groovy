@@ -18,10 +18,7 @@ package project.labarugi
 import domain.labarugi.*
 import ca.odell.glazedlists.*
 import ca.odell.glazedlists.swing.*
-import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.*
-import util.SwingHelper
-import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class TransaksiKasModel {
 
@@ -33,14 +30,14 @@ class TransaksiKasModel {
     BasicEventList<KategoriKas> kategoriKasList = new BasicEventList<>()
     DefaultEventComboBoxModel<KategoriKas> kategoriKas = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(kategoriKasList)
     @Bindable BigDecimal jumlah
-    EnumComboBoxModel<JENIS_TRANSAKSI_KAS> jenisTransaksiKas = new EnumComboBoxModel<JENIS_TRANSAKSI_KAS>(JENIS_TRANSAKSI_KAS)
+    BasicEventList<JenisTransaksiKas> jenisTransaksiKasList = new BasicEventList<>()
+    DefaultEventComboBoxModel<JenisTransaksiKas> jenisTransaksiKas = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(jenisTransaksiKasList)
     @Bindable String keterangan
     BasicEventList<TransaksiKas> transaksiKasList = new BasicEventList<>()
 
     @Bindable String nomorSearch
     @Bindable String pihakTerkaitSearch
     @Bindable String kategoriKasSearch
-    ListComboBoxModel jenisTransaksiSearch = new ListComboBoxModel(SwingHelper.searchEnum(JENIS_TRANSAKSI_KAS))
     @Bindable LocalDate tanggalMulaiSearch
     @Bindable LocalDate tanggalSelesaiSearch
 
