@@ -46,7 +46,8 @@ class NomorService {
         PENERIMAAN_BARANG('PenerimaanBarang', '%06d-RV-KB-%s'),
         RETUR_JUAL_ECERAN('ReturJualEceran', '%06d-RE-KB-%s'),
         PENERIMAAN_SERVIS('PenerimaanServis', '%06d-SV-KB-%s'),
-        RETUR_FAKTUR('ReturFaktur', '%06d-RV-KB-%s')
+        RETUR_FAKTUR('ReturFaktur', '%06d-RV-KB-%s'),
+        TRANSAKSI_KAS('TransaksiKas', '%06d-KS-KB-%s')
 
         String format;
         String desc;

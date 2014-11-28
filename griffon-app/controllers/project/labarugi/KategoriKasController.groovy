@@ -22,6 +22,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.awt.Dimension
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class KategoriKasController {
@@ -94,7 +95,7 @@ class KategoriKasController {
 	def showJumlahKas = {
 		execInsideUISync {
 			def args = [parentList: model.listJumlahKas]
-			def props = [title: 'Saldo Kas']
+			def props = [title: 'Saldo Kas', preferredSize: new Dimension(900, 420)]
 			DialogUtils.showMVCGroup('jumlahKasAsChild', args, view, props)
 		}
 	}

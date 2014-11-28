@@ -17,20 +17,28 @@ package domain.labarugi
 
 import domain.inventory.Periode
 import groovy.transform.*
+import org.hibernate.validator.constraints.Range
 import javax.persistence.*
 import javax.validation.constraints.*
 
 @Embeddable @Canonical
 class SaldoKas {
 
-	@NotNull @Embedded
-	Periode periode
+	@NotNull @Range(min=1l, max=12l)
+	Integer bulan
+
+	@NotNull @Min(1970l)
+	Integer tahun
 
 	@NotNull @Min(0l)
 	BigDecimal saldo
 
 	@NotNull @Enumerated
 	JENIS_TRANSAKSI_KAS jenis
+
+	Periode getPeriode() {
+		Periode.bulan(bulan, tahun)
+	}
 
 }
 

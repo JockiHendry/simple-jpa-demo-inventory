@@ -33,9 +33,11 @@ panel(id: 'mainPanel') {
         }
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.jumlahKasList, sortingStrategy: SINGLE_COLUMN) {
-					glazedColumn(name: 'Periode', property: 'periode')
-					glazedColumn(name: 'Jumlah', property: 'saldo')
-					glazedColumn(name: 'Jenis', property: 'jenis')
+                glazedColumn(name: 'Periode', property: 'periode')
+                glazedColumn(name: 'Jumlah', property: 'saldo', columnClass: Integer) {
+                    templateRenderer(exp: { currencyFormat(it) }, horizontalAlignment: RIGHT)
+                }
+                glazedColumn(name: 'Jenis', property: 'jenis')
             }
         }
     }

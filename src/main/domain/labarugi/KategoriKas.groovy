@@ -15,14 +15,13 @@
  */
 package domain.labarugi
 
-import domain.inventory.Periode
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
 @DomainClass @Entity  @Canonical
-class KategoriKas {
+class KategoriKas implements Comparable {
 
     @NotNull @Size(min=3, max=100)
     String nama
@@ -34,16 +33,38 @@ class KategoriKas {
     Boolean sistem = Boolean.FALSE
 
     @ElementCollection(fetch=FetchType.EAGER)
-    List<SaldoKas> listJumlahKas = []
+    Set<SaldoKas> listJumlahKas = [] as Set
 
-    BigDecimal saldo(Periode periode, JENIS_TRANSAKSI_KAS jenisTransaksiKas = null) {
+    void perubahanSaldo(int bulan, int tahun, BigDecimal jumlahBerubah, JENIS_TRANSAKSI_KAS jenis) {
+        SaldoKas saldoKas = listJumlahKas.find { (it.bulan == bulan) && (it.tahun == tahun) && (it.jenis == jenis) }
+        if (saldoKas) {
+            saldoKas.saldo += jumlahBerubah
+        } else {
+            saldoKas = new SaldoKas(bulan, tahun, jumlahBerubah, jenis)
+            listJumlahKas << saldoKas
+        }
+    }
+
+    BigDecimal saldo(int bulan, int tahun, JENIS_TRANSAKSI_KAS jenisTransaksiKas = null) {
         listJumlahKas.sum { SaldoKas j ->
-            if (j.periode.overlaps(periode) && (jenisTransaksiKas? (j.jenis == jenisTransaksiKas): true)) {
+            if ((j.bulan == bulan) && (j.tahun == tahun) && (jenisTransaksiKas? (j.jenis == jenisTransaksiKas): true)) {
                 return j.saldo
             }
             0
         }?: 0
     }
 
+    @Override
+    String toString() {
+        "${jenis.teks} - $nama"
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (o && (o instanceof KategoriKas)) {
+            return nama.compareTo(o.nama)
+        }
+        1
+    }
 }
 

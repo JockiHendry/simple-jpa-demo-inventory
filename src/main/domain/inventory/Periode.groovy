@@ -17,23 +17,18 @@
 package domain.inventory
 
 import groovy.transform.Canonical
-import org.hibernate.annotations.Type
 import org.joda.time.Interval
 import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
-import javax.persistence.Embeddable
-import javax.validation.constraints.NotNull
 
-@Embeddable @Canonical @SuppressWarnings("GroovyUnusedDeclaration")
+@Canonical @SuppressWarnings("GroovyUnusedDeclaration")
 class Periode {
 
     public static final DateTimeFormatter format = DateTimeFormat.forPattern("dd-MM-YYYY")
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalMulai
 
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggalSelesai
 
     public Periode(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
@@ -58,4 +53,25 @@ class Periode {
         new Periode(format.parseLocalDate(tanggalMulai), format.parseLocalDate(tanggalSelesai))
     }
 
+    public static Periode bulan(LocalDate tanggal) {
+        new Periode(tanggal.dayOfMonth().withMinimumValue(), tanggal.dayOfMonth().withMaximumValue())
+    }
+
+    public static Periode bulan(int bulan, int tahun) {
+        LocalDate tanggal = new LocalDate(tahun, bulan, 1)
+        new Periode(tanggal, tanggal.dayOfMonth().withMaximumValue())
+    }
+
+    @Override
+    boolean equals(Object obj) {
+        if (obj && (obj instanceof Periode)) {
+            return (obj.tanggalMulai == tanggalMulai) && (obj.tanggalSelesai == tanggalSelesai)
+        }
+        false
+    }
+
+    @Override
+    String toString() {
+        "${tanggalMulai.toString('dd-MM-YYYY')} s/d ${tanggalSelesai.toString('dd-MM-YYYY')}"
+    }
 }

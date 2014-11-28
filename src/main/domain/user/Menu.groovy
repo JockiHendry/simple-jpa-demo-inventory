@@ -35,7 +35,8 @@ public enum Menu {
     MAINTENANCE("Maintenance"),
     PESAN("Pesan"),
     SERVIS("Servis"),
-    PENERIMAAN_SERVIS("Penerimaan Servis")
+    PENERIMAAN_SERVIS("Penerimaan Servis"),
+    TRANSAKSI_KAS("Kas")
 
     String naturalName
 
