@@ -20,6 +20,8 @@ import ca.odell.glazedlists.*
 
 class SaldoKasAsChildModel {
 
-	BasicEventList<SaldoKas> jumlahKasList = new BasicEventList<>()
+	BasicEventList<SaldoKas> saldoKasList = new BasicEventList<>()
+
+	KategoriKas kategoriKas
 
 }

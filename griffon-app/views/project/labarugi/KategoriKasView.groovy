@@ -69,7 +69,7 @@ panel(id: 'mainPanel') {
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save)
-			button(action: showJumlahKas)
+			button(action: showJumlahKas, visible: bind{table.isRowSelected})
             button(visible: bind{table.isRowSelected}, action: cancel)
             button(visible: bind{table.isRowSelected}, action: delete)
         }

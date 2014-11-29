@@ -17,6 +17,7 @@ package project.labarugi
 
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.KategoriKas
+import domain.labarugi.TransaksiKas
 import static project.labarugi.KategoriKasRepository.*
 
 @SuppressWarnings("GroovyUnusedDeclaration")
@@ -39,6 +40,17 @@ class KategoriKasService {
         }
         if (!kategoriKasRepository.getPengeluaranLain()) {
             kategoriKasRepository.buat(new KategoriKas(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true))
+        }
+    }
+
+    void refreshSaldoKas(KategoriKas kategoriKas) {
+        kategoriKasRepository.withTransaction {
+            kategoriKas = findKategoriKasById(kategoriKas.id)
+            kategoriKas.listSaldoKas.clear()
+            List<TransaksiKas> daftarTransaksi = findAllTransaksiKasByKategoriKas(kategoriKas)
+            for (TransaksiKas transaksiKas : daftarTransaksi) {
+                transaksiKas.tambahKas()
+            }
         }
     }
 

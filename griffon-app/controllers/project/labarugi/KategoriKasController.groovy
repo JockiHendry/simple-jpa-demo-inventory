@@ -94,7 +94,7 @@ class KategoriKasController {
 
 	def showJumlahKas = {
 		execInsideUISync {
-			def args = [parentList: model.listJumlahKas]
+			def args = [parentList: model.listJumlahKas, kategoriKas: view.table.selectionModel.selected[0]]
 			def props = [title: 'Saldo Kas', preferredSize: new Dimension(900, 420)]
 			DialogUtils.showMVCGroup('jumlahKasAsChild', args, view, props)
 		}

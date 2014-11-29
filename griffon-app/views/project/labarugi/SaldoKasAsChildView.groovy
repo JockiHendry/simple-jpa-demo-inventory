@@ -20,6 +20,7 @@ import static javax.swing.SwingConstants.*
 import java.awt.*
 
 actions {
+    action(id: 'refreshSaldo', name: 'Refresh Saldo', closure: controller.refreshSaldo)
     action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
 }
 
@@ -29,10 +30,11 @@ panel(id: 'mainPanel') {
     panel(constraints: CENTER) {
         borderLayout()
         panel(constraints: PAGE_START, layout: new FlowLayout(FlowLayout.LEADING)) {
+            button(action: refreshSaldo)
             button(action: close)
         }
         scrollPane(constraints: CENTER) {
-            glazedTable(id: 'table', list: model.jumlahKasList, sortingStrategy: SINGLE_COLUMN) {
+            glazedTable(id: 'table', list: model.saldoKasList, sortingStrategy: SINGLE_COLUMN) {
                 glazedColumn(name: 'Periode', property: 'periode')
                 glazedColumn(name: 'Jumlah', property: 'saldo', columnClass: Integer) {
                     templateRenderer(exp: { currencyFormat(it) }, horizontalAlignment: RIGHT)
