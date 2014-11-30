@@ -19,6 +19,7 @@ import domain.event.PerubahanRetur
 import domain.event.PerubahanStok
 import domain.event.PerubahanStokTukar
 import domain.event.PesanStok
+import domain.event.TransaksiSistem
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.StokTidakCukup
@@ -28,6 +29,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
+import domain.labarugi.KATEGORI_SISTEM
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
@@ -108,6 +110,16 @@ class ReturJualRepository {
             }
             app?.event(new PerubahanStokTukar(daftarKlaimServis))
             returJual.prosesKlaimServis()
+        }
+
+        // Proses tukar tambah dan tukar uang (bila ada)
+        returJual.getKlaims(KlaimTambahBayaran).each { KlaimTambahBayaran k ->
+            app?.event(new TransaksiSistem(k.jumlah, returJual.nomor, KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG))
+            returJual.proses(k)
+        }
+        returJual.getKlaims(KlaimTukarUang).each { KlaimTukarUang k ->
+            app?.event(new TransaksiSistem(k.jumlah, returJual.nomor, KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG))
+            returJual.proses(k)
         }
 
         returJual

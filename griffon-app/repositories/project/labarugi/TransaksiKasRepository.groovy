@@ -46,10 +46,10 @@ class TransaksiKasRepository {
     }
 
     public TransaksiKas buat(TransaksiKas transaksiKas) {
+        transaksiKas.nomor = nomorService.buatNomor(NomorService.TIPE.TRANSAKSI_KAS)
         if (findTransaksiKasByNomor(transaksiKas.nomor)) {
             throw new DataDuplikat(transaksiKas)
         }
-        transaksiKas.nomor = nomorService.buatNomor(NomorService.TIPE.TRANSAKSI_KAS)
         transaksiKas.kategoriKas = findKategoriKasById(transaksiKas.kategoriKas.id)
         persist(transaksiKas)
         transaksiKas.tambahKas()

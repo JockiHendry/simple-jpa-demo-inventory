@@ -15,15 +15,9 @@
  */
 package project.retur
 
-import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.retur.*
 import ca.odell.glazedlists.*
-import ca.odell.glazedlists.swing.*
-import groovy.beans.Bindable
-import org.joda.time.*
-import javax.swing.event.*
-import simplejpa.swing.*
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
 class KlaimAsChildModel {
@@ -47,7 +41,9 @@ enum JenisKlaim {
 
     TUKAR_BARU('Tukar Baru'),
     TUKAR_SERVIS('Tukar Hasil Servis'),
-    POTONG_PIUTANG('Potong Piutang')
+    POTONG_PIUTANG('Potong Piutang'),
+    TAMBAH_BAYARAN('Tambah Bayaran'),
+    TUKAR_UANG('Tukar Uang')
 
     String desc
 

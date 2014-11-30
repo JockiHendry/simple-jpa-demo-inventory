@@ -170,5 +170,15 @@ abstract class ReturJual implements SebuahDaftarBarang {
         new DaftarBarangSementara(getKlaimsTukar(true).collect { new ItemBarang(it.produk, it.jumlah) })
     }
 
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    BigDecimal jumlahTukarTambah() {
+        getKlaims(KlaimTambahBayaran).sum { Klaim k -> k.informasiHarga() }?: 0
+    }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    BigDecimal jumlahTukarUang() {
+        getKlaims(KlaimTukarUang).sum { Klaim k -> k.informasiHarga() }?: 0
+    }
+
 }
 

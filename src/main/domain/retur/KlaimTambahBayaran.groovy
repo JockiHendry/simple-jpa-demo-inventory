@@ -21,25 +21,38 @@ import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@DomainClass @Entity @Canonical
-abstract class Klaim implements Cloneable {
+@DomainClass @Entity @Canonical @AutoClone
+class KlaimTambahBayaran extends Klaim {
 
-    @NotNull
-    Boolean sudahDiproses = false
+    @Min(0l) @NotNull
+    BigDecimal jumlah
 
-    void proses() {
-        sudahDiproses = true
+    @Override
+    void merge(Klaim klaim) {
+        if (bolehMerge(klaim)) {
+            jumlah += klaim.jumlah
+        }
     }
 
-    abstract void merge(Klaim klaim)
+    @Override
+    boolean bolehMerge(Klaim klaim) {
+        klaim instanceof KlaimTambahBayaran
+    }
 
-    abstract boolean bolehMerge(Klaim klaim)
+    @Override
+    BigDecimal informasiHarga() {
+        jumlah
+    }
 
-    abstract BigDecimal informasiHarga()
+    @Override
+    Produk informasiProduk() {
+        null
+    }
 
-    abstract Produk informasiProduk()
-
-    abstract Integer informasiQty()
+    @Override
+    Integer informasiQty() {
+        null
+    }
 
 }
 

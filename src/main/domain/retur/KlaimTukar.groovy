@@ -43,6 +43,21 @@ class KlaimTukar extends Klaim {
         (klaim instanceof KlaimTukar) && (klaim.produk == produk)
     }
 
+    @Override
+    BigDecimal informasiHarga() {
+        null
+    }
+
+    @Override
+    Produk informasiProduk() {
+        produk
+    }
+
+    @Override
+    Integer informasiQty() {
+        jumlah
+    }
+
     Object asType(Class type) {
         if (type == ItemBarang) {
             return new ItemBarang(produk, jumlah)

@@ -39,7 +39,7 @@ panel(id: 'mainPanel') {
 
     scrollPane(constraints: CENTER) {
         glazedTable(id: 'table', list: model.jenisTransaksiKasList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
-            glazedColumn(name: 'Nama', property: 'nama')
+            glazedColumn(name: 'Nama', expression: { it.nama + (it.sistem?' [Sistem]':'') })
         }
     }
 
@@ -47,6 +47,9 @@ panel(id: 'mainPanel') {
         label('Nama:')
         textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
         errorLabel(path: 'nama', constraints: 'wrap')
+        label('Sistem:')
+        checkBox(id: 'sistem', selected: bind('sistem', target: model, mutual: true), errorPath: 'sistem')
+        errorLabel(path: 'sistem', constraints: 'wrap')
         panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             label('Created:')

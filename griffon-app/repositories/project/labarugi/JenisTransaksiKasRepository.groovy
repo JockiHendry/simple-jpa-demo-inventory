@@ -23,6 +23,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class JenisTransaksiKasRepository {
 
+    private JenisTransaksiKas jenisTransaksiKasUntukSistem
+
     public List<JenisTransaksiKas> cari(String namaSearch = null) {
         findAllJenisTransaksiKasByDsl([excludeDeleted: false, orderBy: 'nama']) {
             if (namaSearch) {
@@ -31,9 +33,24 @@ class JenisTransaksiKasRepository {
         }
     }
 
+    public JenisTransaksiKas cariUntukSistem() {
+        if (!jenisTransaksiKasUntukSistem) {
+            jenisTransaksiKasUntukSistem = findJenisTransaksiKasBySistem(true)
+            if (!jenisTransaksiKasUntukSistem) {
+                throw new IllegalStateException('Tidak menemukan jenis transaksi kas untuk sistem!')
+            }
+        }
+        jenisTransaksiKasUntukSistem
+    }
+
     public JenisTransaksiKas buat(JenisTransaksiKas jenisTransaksiKas) {
         if (findJenisTransaksiKasByNama(jenisTransaksiKas.nama)) {
             throw new DataDuplikat(jenisTransaksiKas)
+        }
+        if (jenisTransaksiKas.sistem) {
+            if (findJenisTransaksiKasBySistem(true)) {
+                throw new IllegalStateException('Lebih dari satu jenis transaksi kas untuk sistem!')
+            }
         }
         persist(jenisTransaksiKas)
         jenisTransaksiKas
@@ -46,6 +63,7 @@ class JenisTransaksiKasRepository {
         }
         mergedJenisTransaksiKas.with {
             nama = jenisTransaksiKas.nama
+            sistem = jenisTransaksiKas.sistem
         }
         mergedJenisTransaksiKas
     }

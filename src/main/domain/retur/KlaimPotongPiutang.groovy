@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.inventory.Produk
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
@@ -37,6 +38,21 @@ class KlaimPotongPiutang extends Klaim {
     @Override
     boolean bolehMerge(Klaim klaim) {
         klaim instanceof KlaimPotongPiutang
+    }
+
+    @Override
+    BigDecimal informasiHarga() {
+        jumlah
+    }
+
+    @Override
+    Produk informasiProduk() {
+        null
+    }
+
+    @Override
+    Integer informasiQty() {
+        null
     }
 
     @Override

@@ -43,6 +43,21 @@ class KlaimServis extends Klaim {
         (klaim instanceof KlaimServis) && (klaim.produk == produk)
     }
 
+    @Override
+    BigDecimal informasiHarga() {
+        null
+    }
+
+    @Override
+    Produk informasiProduk() {
+        produk
+    }
+
+    @Override
+    Integer informasiQty() {
+        jumlah
+    }
+
     Object asType(Class type) {
         if (type == ItemBarang) {
             return new ItemBarang(produk, jumlah)

@@ -42,6 +42,7 @@ execOutsideUI {
     serviceManager.findService('BilyetGiroEventListener')
     serviceManager.findService('InventoryEventListener')
     serviceManager.findService('ReturJualEventListener')
+    serviceManager.findService('LabaRugiEventListener')
     serviceManager.findService('Nomor')
     serviceManager.findService('KategoriKas')
 

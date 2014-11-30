@@ -41,8 +41,6 @@ class InventoryEventListenerService {
     @SuppressWarnings("GroovyUnusedDeclaration")
     @Transaction
     void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
-        log.info "Event onPerubahanStokTukar mulai dikerjakan..."
-
         DaftarBarang daftarBarang = (DaftarBarang) perubahanStokTukar.source
         int pengali = daftarBarang.faktor() * (perubahanStokTukar.invers? -1: 1)
         daftarBarang.items.each { ItemBarang itemBarang ->
@@ -54,14 +52,10 @@ class InventoryEventListenerService {
                 produk.jumlahTukar += jumlahTukar
             }
         }
-
-        log.info "Event onPerubahanStokTukar selesai dikerjakan!"
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
-        log.info "Event onPerubahanRetur mulai dikerjakan..."
-
         DaftarBarang daftarBarang = perubahanRetur.nilai()
         daftarBarang.items.each { ItemBarang itemBarang ->
             int pengali = (perubahanRetur.invers? -1: 1) * daftarBarang.faktor()
@@ -72,15 +66,11 @@ class InventoryEventListenerService {
                 itemBarang.produk.jumlahRetur += jumlahRetur
             }
         }
-
-        log.info "Event onPerubahanRetur selesai dikerjakan!"
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     @Transaction
     void onPesanStok(PesanStok pesanStok) {
-        log.info "Event onPesanStok mulai dikerjakan..."
-
         BolehPesanStok source = pesanStok.source
         if (!source.bolehPesanStok) return
 
@@ -89,48 +79,33 @@ class InventoryEventListenerService {
             Produk produk = findProdukById(it.produk.id)
             produk.jumlahAkanDikirim = (produk.jumlahAkanDikirim?:0) + (pengali * (it.jumlah?:0))
         }
-
-        log.info "Event onPesanStok selesai dikerjakan!"
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanStok(PerubahanStok perubahanStok) {
-        log.info "Event onPerubahanStok mulai dikerjakan..."
-
         DaftarBarang daftarBarang = perubahanStok.source
         ReferensiStok referensiStok = perubahanStok.referensiStok
 
         daftarBarang.normalisasi().each { ItemBarang i ->
-            log.info "Memproses item $i..."
             int pengali = daftarBarang.faktor()
             String keterangan = null
             if (perubahanStok.invers) {
                 pengali *= -1
                 keterangan = 'Invers Hapus'
-                log.info "Item ini adalah item negasi dengan pengali [${pengali}]"
             }
             ItemStok itemStok = new ItemStok(LocalDate.now(), referensiStok, pengali * i.jumlah, keterangan)
             i.produk.perubahanStok(daftarBarang.gudang, itemStok)
             if (perubahanStok.pakaiYangSudahDipesan) {
                 i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
             }
-
             periksaLevelMinimum(i.produk)
-
-            log.info "Selesai memproses item $i!"
         }
-
-        log.info "Event onPerubahanStok selesai dikerjakan!"
     }
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void onTransferStok(TransferStok transferStok) {
-        log.info "Event onTransferStok mulai dikerjakan..."
-
         Transfer transfer = transferStok.source
         transfer.normalisasi().each { ItemBarang i ->
-            log.info "Memproses item $i..."
-
             int pengali = -1
             String keterangan
             if (transferStok.invers) {
@@ -147,11 +122,7 @@ class InventoryEventListenerService {
             ItemStok itemStokTujuan = new ItemStok(LocalDate.now(), new ReferensiStokBuilder(transfer).buat(),
                 -pengali * i.jumlah, keterangan)
             i.produk.perubahanStok(transfer.tujuan, itemStokTujuan)
-
-            log.info "Selesai memproses item $i!"
         }
-
-        log.info "Event onTransferStok selesai dikerjakan!"
     }
 
     void periksaLevelMinimum(Produk produk) {

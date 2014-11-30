@@ -247,7 +247,7 @@ application(id: 'mainFrame',
                 button(action: penerimaanServis, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.penerimaanServisVisible})
                 button(action: transaksiKas, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    borderPainted: false, visible: bind {model.penerimaanKasVisible})
+                    borderPainted: false, visible: bind {model.transaksiKasVisible})
                 button(action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.laporanVisible})
                 button(action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,

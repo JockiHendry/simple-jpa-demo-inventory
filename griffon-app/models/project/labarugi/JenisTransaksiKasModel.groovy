@@ -23,6 +23,7 @@ class JenisTransaksiKasModel {
     @Bindable Long id
 
     @Bindable String nama
+    @Bindable Boolean sistem
     BasicEventList<JenisTransaksiKas> jenisTransaksiKasList = new BasicEventList<>()
 
     @Bindable String namaSearch

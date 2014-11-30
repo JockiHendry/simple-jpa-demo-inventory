@@ -47,7 +47,7 @@ class JenisTransaksiKasController {
             }
         }
 
-        JenisTransaksiKas jenisTransaksiKas = new JenisTransaksiKas(id: model.id, nama: model.nama)
+        JenisTransaksiKas jenisTransaksiKas = new JenisTransaksiKas(id: model.id, nama: model.nama, sistem: model.sistem)
 
         if (!jenisTransaksiKasRepository.validate(jenisTransaksiKas, Default, model)) return
 
@@ -89,6 +89,7 @@ class JenisTransaksiKasController {
         execInsideUISync {
             model.id = null
             model.nama = null
+            model.sistem = false
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -107,6 +108,7 @@ class JenisTransaksiKasController {
                 model.errors.clear()
                 model.id = selected.id
                 model.nama = selected.nama
+                model.sistem = selected.sistem
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate

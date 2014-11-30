@@ -21,6 +21,9 @@ import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.Produk
+import domain.labarugi.JenisTransaksiKas
+import domain.labarugi.KategoriKas
+import domain.labarugi.TransaksiKas
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.retur.ItemRetur
@@ -28,6 +31,8 @@ import domain.retur.Klaim
 import domain.retur.KlaimPotongPiutang
 import domain.retur.KlaimServis
 import domain.retur.KlaimTukar
+import domain.retur.KlaimTambahBayaran
+import domain.retur.KlaimTukarUang
 import domain.retur.ReturJual
 import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
@@ -426,6 +431,68 @@ class ReturJualTest extends DbUnitTestCase {
         retur = returJualRepository.findReturJualOlehSalesById(retur.id)
         assertEquals(1, retur.fakturPotongPiutang.size())
         assertTrue(retur.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, '000004/042014/SA')))
+    }
+
+    void testReturTukarTambah() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: '000001-RS-KB-112014', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk2, 6), new KlaimTambahBayaran(60000)] as Set))
+        retur = returJualRepository.buat(retur)
+        retur = returJualRepository.tukar(retur)
+        assertTrue(retur.sudahDiproses)
+
+        // Pastikan jumlah stok benar
+        produk1 = returJualRepository.findProdukById(-1l)
+        assertEquals(20, produk1.jumlahRetur)
+        assertEquals(37, produk1.jumlah)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(3, produk2.jumlahRetur)
+        assertEquals(21, produk2.jumlah)
+
+        // Pastikan pendapatan tukar dibuat
+        KategoriKas kk = returJualRepository.findKategoriKasById(1l)
+        TransaksiKas t = returJualRepository.findTransaksiKasByPihakTerkait(retur.nomor)
+        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
+        assertNotNull(t)
+        assertEquals(LocalDate.now(), t.tanggal)
+        assertEquals(kk, t.kategoriKas)
+        assertEquals(j, t.jenis)
+        assertEquals(60000, t.jumlah)
+        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+    }
+
+    void testReturTukarUang() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJualOlehSales retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: '000001-RS-KB-112014', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk2, 6), new KlaimTukarUang(60000)] as Set))
+        retur = returJualRepository.buat(retur)
+        retur = returJualRepository.tukar(retur)
+        assertTrue(retur.sudahDiproses)
+
+        // Pastikan jumlah stok benar
+        produk1 = returJualRepository.findProdukById(-1l)
+        assertEquals(20, produk1.jumlahRetur)
+        assertEquals(37, produk1.jumlah)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(3, produk2.jumlahRetur)
+        assertEquals(21, produk2.jumlah)
+
+        // Pastikan pendapatan tukar dibuat
+        KategoriKas kk = returJualRepository.findKategoriKasById(2l)
+        TransaksiKas t = returJualRepository.findTransaksiKasByPihakTerkait(retur.nomor)
+        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
+        assertNotNull(t)
+        assertEquals(LocalDate.now(), t.tanggal)
+        assertEquals(kk, t.kategoriKas)
+        assertEquals(j, t.jenis)
+        assertEquals(60000, t.jumlah)
+        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
     }
 
 }

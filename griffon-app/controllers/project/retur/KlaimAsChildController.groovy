@@ -56,6 +56,10 @@ class KlaimAsChildController {
             klaim = new KlaimTukar(model.produk, model.jumlah as Integer)
         } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_SERVIS) {
             klaim = new KlaimServis(model.produk, model.jumlah as Integer)
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TAMBAH_BAYARAN) {
+            klaim = new KlaimTambahBayaran(model.jumlah)
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_UANG) {
+            klaim = new KlaimTukarUang(model.jumlah)
         }
 
         if (!returJualRepository.validate(klaim, Default, model)) return
@@ -69,7 +73,7 @@ class KlaimAsChildController {
         } else {
             // Update operation
             Klaim selectedKlaim = view.table.selectionModel.selected[0]
-            if (selectedKlaim instanceof KlaimPotongPiutang) {
+            if ((selectedKlaim instanceof KlaimPotongPiutang) || (selectedKlaim instanceof KlaimTambahBayaran) || (selectedKlaim instanceof KlaimTukarUang)) {
                 selectedKlaim.jumlah = model.jumlah
             } else if ((selectedKlaim instanceof KlaimTukar) || (selectedKlaim instanceof KlaimServis)) {
                 selectedKlaim.produk = model.produk
@@ -117,6 +121,10 @@ class KlaimAsChildController {
             model.produkVisible = true
         } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_SERVIS) {
             model.produkVisible = true
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TAMBAH_BAYARAN) {
+            model.produkVisible = false
+        } else if (model.jenisKlaim.selectedItem == JenisKlaim.TUKAR_UANG) {
+            model.produkVisible = false
         }
     }
 
@@ -148,6 +156,12 @@ class KlaimAsChildController {
                 } else if (selected instanceof KlaimServis) {
                     model.jenisKlaim.selectedItem = JenisKlaim.TUKAR_SERVIS
                     model.produk = selected.produk
+                    model.jumlah = selected.jumlah
+                } else if (selected instanceof KlaimTambahBayaran) {
+                    model.jenisKlaim.selectedItem = JenisKlaim.TAMBAH_BAYARAN
+                    model.jumlah = selected.jumlah
+                } else if (selected instanceof KlaimTukarUang) {
+                    model.jenisKlaim.selectedItem = JenisKlaim.TUKAR_UANG
                     model.jumlah = selected.jumlah
                 }
             }

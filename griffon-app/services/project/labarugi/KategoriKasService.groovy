@@ -16,6 +16,7 @@
 package project.labarugi
 
 import domain.labarugi.JENIS_KATEGORI_KAS
+import domain.labarugi.KATEGORI_SISTEM
 import domain.labarugi.KategoriKas
 import domain.labarugi.TransaksiKas
 import static project.labarugi.KategoriKasRepository.*
@@ -27,18 +28,18 @@ class KategoriKasService {
 
     void serviceInit() {
         // Buat kategori pendapatan tukar barang bila perlu
-        if (!kategoriKasRepository.getPendapatanTukarBarang()) {
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG)) {
             kategoriKasRepository.buat(new KategoriKas(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENDAPATAN, true))
         }
-        if (!kategoriKasRepository.getPengeluaranTukarBarang()) {
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG)) {
             kategoriKasRepository.buat(new KategoriKas(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENGELUARAN, true))
         }
 
         // Buat kategori lain-lain bila perlu
-        if (!kategoriKasRepository.getPendapatanLain()) {
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENDAPATAN_LAIN)) {
             kategoriKasRepository.buat(new KategoriKas(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENDAPATAN, true))
         }
-        if (!kategoriKasRepository.getPengeluaranLain()) {
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENGELUARAN_LAIN)) {
             kategoriKasRepository.buat(new KategoriKas(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true))
         }
     }

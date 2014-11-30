@@ -13,33 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.retur
+package domain.labarugi
 
-import domain.inventory.Produk
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import javax.validation.constraints.*
+enum KATEGORI_SISTEM {
 
-@DomainClass @Entity @Canonical
-abstract class Klaim implements Cloneable {
-
-    @NotNull
-    Boolean sudahDiproses = false
-
-    void proses() {
-        sudahDiproses = true
-    }
-
-    abstract void merge(Klaim klaim)
-
-    abstract boolean bolehMerge(Klaim klaim)
-
-    abstract BigDecimal informasiHarga()
-
-    abstract Produk informasiProduk()
-
-    abstract Integer informasiQty()
+    PENDAPATAN_TUKAR_BARANG, PENGELUARAN_TUKAR_BARANG, PENDAPATAN_LAIN, PENGELUARAN_LAIN
 
 }
-

@@ -43,20 +43,17 @@ class KategoriKasRepository {
 		kategoriKas
 	}
 
-	public KategoriKas getPendapatanTukarBarang() {
-		findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENDAPATAN, true)
-	}
-
-	public KategoriKas getPengeluaranTukarBarang() {
-		findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENGELUARAN, true)
-	}
-
-	public KategoriKas getPendapatanLain() {
-		findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENDAPATAN, true)
-	}
-
-	public KategoriKas getPengeluaranLain() {
-		findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true)
+	public KategoriKas getKategoriSistem(KATEGORI_SISTEM kategoriSistem) {
+		if (kategoriSistem == KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG) {
+			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENDAPATAN, true)
+		} else if (kategoriSistem == KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG) {
+			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENGELUARAN, true)
+		} else if (kategoriSistem == KATEGORI_SISTEM.PENDAPATAN_LAIN) {
+			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENDAPATAN, true)
+		} else if (kategoriSistem == KATEGORI_SISTEM.PENGELUARAN_LAIN) {
+			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true)
+		}
+		throw new IllegalArgumentException('Kategori sistem tidak dikenal!')
 	}
 
 	public KategoriKas update(KategoriKas kategoriKas) {

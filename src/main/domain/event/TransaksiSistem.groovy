@@ -13,33 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.retur
+package domain.event
 
-import domain.inventory.Produk
-import groovy.transform.*
-import simplejpa.DomainClass
-import javax.persistence.*
-import javax.validation.constraints.*
+import domain.labarugi.KATEGORI_SISTEM
+import griffon.core.*
 
-@DomainClass @Entity @Canonical
-abstract class Klaim implements Cloneable {
+@SuppressWarnings("GroovyUnusedDeclaration")
+class TransaksiSistem extends Event {
 
-    @NotNull
-    Boolean sudahDiproses = false
+    BigDecimal jumlah
+    String nomorReferensi
+    KATEGORI_SISTEM kategori
+    boolean invers
 
-    void proses() {
-        sudahDiproses = true
+    TransaksiSistem(BigDecimal jumlah, String nomorReferensi, KATEGORI_SISTEM kategori, boolean invers = false) {
+        super(jumlah)
+        this.jumlah = jumlah
+        this.nomorReferensi = nomorReferensi
+        this.kategori = kategori
+        this.invers = invers
     }
 
-    abstract void merge(Klaim klaim)
-
-    abstract boolean bolehMerge(Klaim klaim)
-
-    abstract BigDecimal informasiHarga()
-
-    abstract Produk informasiProduk()
-
-    abstract Integer informasiQty()
-
 }
-

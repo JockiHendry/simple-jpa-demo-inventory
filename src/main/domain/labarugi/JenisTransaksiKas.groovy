@@ -27,6 +27,9 @@ class JenisTransaksiKas {
     @NotBlank @Size(min=2, max=50)
     String nama
 
+    @NotNull
+    Boolean sistem = Boolean.FALSE
+
     @Override
     String toString() {
         nama
