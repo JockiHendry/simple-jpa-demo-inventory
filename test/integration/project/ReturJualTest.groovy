@@ -527,4 +527,49 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(0, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
     }
 
+    void testReturTukarBisaDijualKembali() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJual retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: '000001-RS-KB-112014', konsumen: k, gudang: g, bisaDijualKembali: true)
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk2, 6), new KlaimTukarUang(60000)] as Set))
+        retur = returJualRepository.buat(retur)
+        retur = returJualRepository.tukar(retur)
+        assertTrue(retur.sudahDiproses)
+
+        // Pastikan stok benar
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(10, produk1.jumlahRetur)
+        assertEquals(47, produk1.jumlah)
+        assertEquals(3, produk2.jumlahRetur)
+        assertEquals(21, produk2.jumlah)
+
+        // Pastikan pedapatan tukar bertambah
+        KategoriKas kk = returJualRepository.findKategoriKasById(2l)
+        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
+        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+
+        // Lakukan percobaan pada retur jual eceran
+        retur = new ReturJualEceran(tanggal: LocalDate.now(), namaKonsumen: 'Test', bisaDijualKembali: true)
+        retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk2, 5), new KlaimTukarUang(60000)] as Set))
+        retur = returJualRepository.buat(retur)
+        retur = returJualRepository.tukar(retur)
+        assertTrue(retur.sudahDiproses)
+
+        // Pastikan stok benar
+        produk1 = returJualRepository.findProdukById(-1l)
+        produk2 = returJualRepository.findProdukById(-2l)
+        assertEquals(10, produk1.jumlahRetur)
+        assertEquals(57, produk1.jumlah)
+        assertEquals(3, produk2.jumlahRetur)
+        assertEquals(16, produk2.jumlah)
+
+        // Pastikan pedapatan tukar bertambah
+        kk = returJualRepository.findKategoriKasById(2l)
+        assertEquals(120000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+
+    }
+
 }

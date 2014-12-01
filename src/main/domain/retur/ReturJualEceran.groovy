@@ -15,6 +15,7 @@
  */
 package domain.retur
 
+import domain.inventory.DaftarBarang
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
 import project.inventory.GudangRepository
@@ -42,5 +43,11 @@ class ReturJualEceran extends ReturJual {
         super.tukar((SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang') as GudangRepository).cariGudangUtama(), namaKonsumen)
     }
 
+    @Override
+    DaftarBarang toDaftarBarang() {
+        DaftarBarang hasil = super.toDaftarBarang()
+        hasil.gudang = (SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang') as GudangRepository).cariGudangUtama()
+        hasil
+    }
 }
 

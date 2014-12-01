@@ -18,7 +18,6 @@ package project.retur
 import ca.odell.glazedlists.BasicEventList
 import domain.retur.ItemRetur
 import domain.retur.ReturJualEceran
-import groovy.beans.Bindable
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
 import org.joda.time.LocalDate
 
@@ -43,6 +42,7 @@ class ReturJualEceranModel {
     @Bindable String keterangan
     List<ItemRetur> items = []
     @Bindable String namaKonsumen
+    @Bindable Boolean bisaDijualKembali
 
     BasicEventList<ReturJualEceran> returJualList = new BasicEventList<>()
 

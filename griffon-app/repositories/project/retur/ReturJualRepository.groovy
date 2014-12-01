@@ -81,7 +81,7 @@ class ReturJualRepository {
     }
 
 	public ReturJual buat(ReturJual returJual) {
-		if (findReturJualByNomor(returJual.nomor)) {
+		if (returJual.nomor && findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
         if (returJual instanceof ReturJualOlehSales) {
@@ -91,11 +91,24 @@ class ReturJualRepository {
         }
 
         def app = ApplicationHolder.application
+
         // Khusus untuk retur jual yang bukan kirim dari gudang utama, barang yang ditukar dianggap langsung dikirim.
         if (returJual instanceof ReturJualOlehSales && !returJual.gudang.utama && !returJual.getKlaimsTukar().empty) {
             tukar(returJual)
+        }
+
+        if (returJual.bisaDijualKembali) {
+
+            // Khusus untuk barang retur yang masih dijual kembali, tidak perlu mempengaruhi qty retur (retur beli).
+            // Barang retur dalam kondisi bagus sehingga masuk kedalam inventory untuk dijual kembali.
+            ReferensiStok ref = new ReferensiStokBuilder(returJual).buat()
+            app?.event(new PerubahanStok(returJual.toDaftarBarang(), ref))
+
         } else {
+
+            // Barang retur perlu menambah qty retur beli karena perlu diproses untuk di-retur beli.
             app?.event(new PerubahanRetur(returJual))
+
         }
 
         app?.event(new PesanStok(returJual))

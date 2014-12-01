@@ -88,7 +88,8 @@ class ReturJualEceranController {
             }
         }
 
-        ReturJualEceran returJual = new ReturJualEceran(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, namaKonsumen: model.namaKonsumen)
+        ReturJualEceran returJual = new ReturJualEceran(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
+            keterangan: model.keterangan, namaKonsumen: model.namaKonsumen, bisaDijualKembali: model.bisaDijualKembali)
         model.items.each { returJual.tambah(it) }
         if (!returJualRepository.validate(returJual, Default, model)) return
 
@@ -170,6 +171,7 @@ class ReturJualEceranController {
             model.keterangan = null
             model.items.clear()
             model.namaKonsumen = null
+            model.bisaDijualKembali = false
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -195,6 +197,7 @@ class ReturJualEceranController {
                 model.items.clear()
                 model.items.addAll(selected.items)
                 model.namaKonsumen = selected.namaKonsumen
+                model.bisaDijualKembali = (selected.bisaDijualKembali != null)? model.bisaDijualKembali: false
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate

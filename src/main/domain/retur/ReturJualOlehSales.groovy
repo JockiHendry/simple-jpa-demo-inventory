@@ -17,6 +17,7 @@ package domain.retur
 
 import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
+import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
@@ -72,6 +73,13 @@ class ReturJualOlehSales extends ReturJual {
     @Override
     boolean isBolehPesanStok() {
         gudang.utama
+    }
+
+    @Override
+    DaftarBarang toDaftarBarang() {
+        DaftarBarang hasil = super.toDaftarBarang()
+        hasil.gudang = gudang
+        hasil
     }
 
     void hapusReferensiFaktur(String nomor) {

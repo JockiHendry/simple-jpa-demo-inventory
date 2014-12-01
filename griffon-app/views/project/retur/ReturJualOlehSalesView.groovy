@@ -93,6 +93,9 @@ panel(id: 'mainPanel') {
         label('Items:')
         button(action: showBarangRetur, errorPath: 'items')
         errorLabel(path: 'items', constraints: 'wrap')
+        label('Kondisi:')
+        checkBox('Barang masih bisa dijual kembali', selected: bind('bisaDijualKembali', target: model, mutual: true), errorPath: 'bisaDijualKembali')
+        errorLabel(path: 'bisaDijualKembali', constraints: 'wrap')
         panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             label('Dibuat:')

@@ -16,7 +16,6 @@
 package project.retur
 
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
 import domain.retur.*
 import domain.penjualan.*
 import ca.odell.glazedlists.*
@@ -48,6 +47,7 @@ class ReturJualOlehSalesModel {
     @Bindable String keterangan
     List<ItemRetur> items = []
     @Bindable Konsumen konsumen
+    @Bindable Boolean bisaDijualKembali
 
     BasicEventList<ReturJualOlehSales> returJualList = new BasicEventList<>()
 

@@ -60,6 +60,8 @@ abstract class ReturJual implements SebuahDaftarBarang, BolehPesanStok {
     @NotEmpty @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true) @OrderColumn @Valid
     List<ItemRetur> items = []
 
+    Boolean bisaDijualKembali = Boolean.FALSE
+
     void tambah(ItemRetur itemRetur) {
         // Periksa klaim untuk item retur ini
         if (itemRetur.jumlahBarangDitukar() > itemRetur.jumlah) {
