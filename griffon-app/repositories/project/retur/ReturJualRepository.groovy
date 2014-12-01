@@ -198,6 +198,15 @@ class ReturJualRepository {
         if (!daftarKlaimServis.items.empty) {
             app?.event(new PerubahanStokTukar(daftarKlaimServis, true))
         }
+
+        // Hapus tukar tambah dan tukar uang (bila ada)
+        returJual.getKlaims(KlaimTambahBayaran).each { KlaimTambahBayaran k ->
+            app?.event(new TransaksiSistem(k.jumlah, "Invers hapus [${returJual.nomor}]", KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG, true))
+        }
+        returJual.getKlaims(KlaimTukarUang).each { KlaimTukarUang k ->
+            app?.event(new TransaksiSistem(k.jumlah, "Invers hapus [${returJual.nomor}]", KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG, true))
+        }
+
         returJual.deleted = 'Y'
         returJual
     }

@@ -38,7 +38,7 @@ class TransaksiKas {
     @ManyToOne @NotNull
     KategoriKas kategoriKas
 
-    @NotNull @Min(0l)
+    @NotNull
     BigDecimal jumlah
 
     @NotNull @ManyToOne
