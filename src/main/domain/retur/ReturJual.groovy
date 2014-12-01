@@ -18,6 +18,7 @@ package domain.retur
 import domain.event.PerubahanStok
 import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
+import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
@@ -39,7 +40,7 @@ import javax.validation.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical(excludes='pengeluaranBarang')
-abstract class ReturJual implements SebuahDaftarBarang {
+abstract class ReturJual implements SebuahDaftarBarang, BolehPesanStok {
 
     @NotBlank @Size(min=2, max=100)
     String nomor
@@ -178,6 +179,16 @@ abstract class ReturJual implements SebuahDaftarBarang {
     @SuppressWarnings("GroovyUnusedDeclaration")
     BigDecimal jumlahTukarUang() {
         getKlaims(KlaimTukarUang).sum { Klaim k -> k.informasiHarga() }?: 0
+    }
+
+    @Override
+    List<ItemBarang> yangDipesan() {
+        yangHarusDitukar().items
+    }
+
+    @Override
+    boolean isBolehPesanStok() {
+        true
     }
 
 }

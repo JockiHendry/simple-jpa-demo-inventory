@@ -17,9 +17,7 @@ package domain.retur
 
 import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
-import domain.inventory.BolehPesanStok
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
 import domain.penjualan.Konsumen
 import domain.penjualan.PengeluaranBarang
 import groovy.transform.*
@@ -28,7 +26,7 @@ import javax.persistence.*
 import javax.validation.constraints.*
 
 @DomainClass @Entity @Canonical
-class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
+class ReturJualOlehSales extends ReturJual {
 
     @NotNull @ManyToOne
     Gudang gudang
@@ -74,11 +72,6 @@ class ReturJualOlehSales extends ReturJual implements BolehPesanStok {
     @Override
     boolean isBolehPesanStok() {
         gudang.utama
-    }
-
-    @Override
-    List<ItemBarang> yangDipesan() {
-        yangHarusDitukar().items
     }
 
     void hapusReferensiFaktur(String nomor) {
