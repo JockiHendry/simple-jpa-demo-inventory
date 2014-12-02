@@ -84,6 +84,9 @@ class ReturJualRepository {
 		if (returJual.nomor && findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
 		}
+        if (returJual.items.any { ItemRetur i -> i.klaims.empty }) {
+            throw new IllegalStateException('Terdapat item retur yang belum memiliki informasi klaim!')
+        }
         if (returJual instanceof ReturJualOlehSales) {
             returJual = buatReturOlehSales(returJual)
         } else if (returJual instanceof ReturJualEceran) {
