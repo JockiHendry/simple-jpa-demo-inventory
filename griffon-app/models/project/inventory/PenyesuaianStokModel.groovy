@@ -19,7 +19,7 @@ import ca.odell.glazedlists.BasicEventList
 import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
 import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
+import domain.inventory.ItemPenyesuaian
 import domain.inventory.PenyesuaianStok
 import org.joda.time.LocalDate
 
@@ -31,7 +31,7 @@ class PenyesuaianStokModel {
     @Bindable boolean bertambah
     @Bindable boolean berkurang
     @Bindable String keterangan
-    List<ItemBarang> items = []
+    List<ItemPenyesuaian> items = []
     BasicEventList<Gudang> gudangList = new BasicEventList<>()
     @Bindable DefaultEventComboBoxModel<Gudang> gudang = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(gudangList)
 

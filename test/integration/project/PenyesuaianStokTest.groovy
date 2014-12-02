@@ -16,7 +16,7 @@
 package project
 
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
+import domain.inventory.ItemPenyesuaian
 import domain.inventory.PenyesuaianStok
 import project.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
@@ -42,9 +42,9 @@ class PenyesuaianStokTest extends DbUnitTestCase {
 
         PenyesuaianStok penyesuaianStok = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang,
             bertambah: true, keterangan: 'Hasil Stock Opname Akhir Tahun 2013')
-        penyesuaianStok.tambah(new ItemBarang(produk: produkA, jumlah: 6))
-        penyesuaianStok.tambah(new ItemBarang(produk: produkB, jumlah: 7))
-        penyesuaianStok.tambah(new ItemBarang(produk: produkC, jumlah: 3))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkA, jumlah: 6))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkB, jumlah: 7))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkC, jumlah: 3))
         penyesuaianStok = penyesuaianStokRepository.buat(penyesuaianStok)
 
         assertNotNull(penyesuaianStok.nomor)
@@ -75,9 +75,9 @@ class PenyesuaianStokTest extends DbUnitTestCase {
 
         PenyesuaianStok penyesuaianStok = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang,
             bertambah: false, keterangan: 'Hasil Stock Opname Akhir Tahun 2013')
-        penyesuaianStok.tambah(new ItemBarang(produk: produkA, jumlah: 6))
-        penyesuaianStok.tambah(new ItemBarang(produk: produkB, jumlah: 7))
-        penyesuaianStok.tambah(new ItemBarang(produk: produkC, jumlah: 3))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkA, jumlah: 6))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkB, jumlah: 7))
+        penyesuaianStok.tambah(new ItemPenyesuaian(produk: produkC, jumlah: 3))
         penyesuaianStok = penyesuaianStokRepository.buat(penyesuaianStok)
 
         assertNotNull(penyesuaianStok.nomor)

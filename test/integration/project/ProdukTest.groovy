@@ -17,7 +17,7 @@
 package project
 
 import domain.inventory.Gudang
-import domain.inventory.ItemBarang
+import domain.inventory.ItemPenyesuaian
 import domain.inventory.PenyesuaianStok
 import project.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
@@ -167,13 +167,13 @@ class ProdukTest extends DbUnitTestCase {
         assertTrue(pesanRepository.refresh().isEmpty())
 
         PenyesuaianStok p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
-        p.tambah(new ItemBarang(produk, 1))
+        p.tambah(new ItemPenyesuaian(produk, 1))
         penyesuaianStokRepository.buat(p)
 
         assertTrue(pesanRepository.refresh().isEmpty())
 
         p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: false)
-        p.tambah(new ItemBarang(produk, 2))
+        p.tambah(new ItemPenyesuaian(produk, 2))
         penyesuaianStokRepository.buat(p)
 
         List<Pesan> listPesan = pesanRepository.refresh()
@@ -183,7 +183,7 @@ class ProdukTest extends DbUnitTestCase {
 
         // Menaikkan jumlah stok kembali
         p = new PenyesuaianStok(tanggal: LocalDate.now(), gudang: gudang, bertambah: true)
-        p.tambah(new ItemBarang(produk, 3))
+        p.tambah(new ItemPenyesuaian(produk, 3))
         penyesuaianStokRepository.buat(p)
 
         // Pesan harus hilang

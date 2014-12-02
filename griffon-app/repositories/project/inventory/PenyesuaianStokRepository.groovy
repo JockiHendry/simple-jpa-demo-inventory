@@ -59,10 +59,9 @@ class PenyesuaianStokRepository {
                 }
             }
         }
-        if (!penyesuaianStok.keterangan) penyesuaianStok.keterangan = 'Penyesuaian Stok'
         persist(penyesuaianStok)
         ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, ref))
+        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref))
         penyesuaianStok
     }
 
@@ -86,7 +85,7 @@ class PenyesuaianStokRepository {
         }
         penyesuaianStok.deleted = 'Y'
         ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok, ref, true))
+        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref, true))
         penyesuaianStok
     }
 

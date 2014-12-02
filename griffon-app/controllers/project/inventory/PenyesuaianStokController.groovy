@@ -114,11 +114,11 @@ class PenyesuaianStokController {
 
     def showItemBarang = {
         execInsideUISync {
-            def args = [parent: view.table.selectionModel.selected[0], listItemBarang: model.items, allowTambahProduk: false]
-            def dialogProps = [title: 'Detail Item', size: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps) { m, v, c ->
+            def args = [parent: view.table.selectionModel.selected[0], listItemPenyesuaian: model.items, allowTambahProduk: false]
+            def dialogProps = [title: 'Detail Item', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('itemPenyesuaianAsChild', args, view, dialogProps) { m, v, c ->
                 model.items.clear()
-                model.items.addAll(m.itemBarangList)
+                model.items.addAll(m.itemPenyesuaianList)
                 refreshInformasi()
             }
         }

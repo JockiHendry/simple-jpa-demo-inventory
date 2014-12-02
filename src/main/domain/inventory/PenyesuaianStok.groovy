@@ -15,19 +15,51 @@
  */
 package domain.inventory
 
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Type
+import org.hibernate.validator.constraints.NotBlank
+import org.hibernate.validator.constraints.NotEmpty
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
 @DomainClass @Entity
-class PenyesuaianStok extends DaftarBarang {
+class PenyesuaianStok implements SebuahDaftarBarang {
+
+    @NotBlank @Size(min=2, max=100)
+    String nomor
+
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+    LocalDate tanggal
+
+    @Size(min=2, max=200)
+    String keterangan
+
+    @NotNull @ManyToOne
+    Gudang gudang
+
+    @ElementCollection(fetch=FetchType.EAGER) @OrderColumn @NotEmpty
+    @Fetch(FetchMode.SUBSELECT)
+    List<ItemPenyesuaian> items = []
 
     @NotNull
     Boolean bertambah = true
 
+    void tambah(ItemPenyesuaian itemPenyesuaian) {
+        items << itemPenyesuaian
+    }
+
     @Override
-    int faktor() {
-        bertambah? 1: -1
+    DaftarBarang toDaftarBarang() {
+        DaftarBarangSementara hasil = new DaftarBarangSementara(items.collect { new ItemBarang(it.produk, it.jumlah) },
+            bertambah? 1:-1, false)
+        hasil.nomor = nomor
+        hasil.tanggal = tanggal
+        hasil.gudang = gudang
+        hasil.keterangan = keterangan
+        hasil
     }
 
 }
