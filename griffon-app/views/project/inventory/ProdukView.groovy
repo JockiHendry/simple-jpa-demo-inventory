@@ -32,6 +32,7 @@ actions {
         }
     })
     action(id: 'showStokProduk', name: 'Stok Produk...', closure: controller.showStokProduk)
+    action(id: 'showNilaiInventory', name: 'Nilai Inventory...', closure: controller.showNilaiInventory)
     action(id: 'showUbahQty', name: 'Ubah Qty...', closure: controller.showUbahQty)
 }
 
@@ -132,6 +133,7 @@ panel(id: 'mainPanel') {
             })
             button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode}), action: pilih)
             button(id: 'stokProduk', action: showStokProduk, visible: bind{table.isRowSelected})
+            button(id: 'nilaiInventory', action: showNilaiInventory, visible: bind{table.isRowSelected})
             button(id: 'ubahQty', action: showUbahQty, visible: bind{table.isRowSelected}, constraints: 'wrap')
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {it && !model.popupMode}), actionPerformed: {

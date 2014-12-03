@@ -26,3 +26,4 @@ project.labarugi.KategoriKasRepository
 project.labarugi.TransaksiKasRepository
 project.labarugi.JenisTransaksiKasRepository
 project.labarugi.KategoriKasService
+project.labarugi.LabaRugiService

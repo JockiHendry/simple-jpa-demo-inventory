@@ -131,6 +131,18 @@ class StokProduk {
         saldo
     }
 
+    long saldoKumulatifSebelum(LocalDate tanggal) {
+        long saldo = 0
+        PeriodeItemStok periode = periode(tanggal)
+        saldo += saldoKumulatifSebelum(periode)
+        periode.listItem.each { ItemStok i ->
+            if (i.tanggal.isBefore(tanggal)) {
+                saldo += i.jumlah
+            }
+        }
+        saldo
+    }
+
     List<ItemStok> cariItemStok(PeriodeItemStok periodeItemStok) {
         long saldo = saldoKumulatifSebelum(periodeItemStok)
         List<ItemStok> hasil = []

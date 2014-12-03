@@ -58,7 +58,7 @@ class ProdukTests extends GriffonUnitTestCase {
         assertEquals(5, p2.levelMinimum)
     }
 
-    public void testSaldoKumulatif() {
+    public void testSaldoKumulatifSebelumPeriode() {
         StokProduk s = new StokProduk()
 
         // Periode 1
@@ -86,6 +86,38 @@ class ProdukTests extends GriffonUnitTestCase {
         assertEquals(0, s.saldoKumulatifSebelum(p1))
         assertEquals(60, s.saldoKumulatifSebelum(p2))
         assertEquals(95, s.saldoKumulatifSebelum(p3))
+    }
+
+    public void testSaldoKumulatifSebelumTanggal() {
+        StokProduk s = new StokProduk()
+
+        // Periode 1
+        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
+        s.listPeriodeRiwayat << p1
+
+        // Periode 2
+        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20)
+        s.listPeriodeRiwayat << p2
+
+        // Periode 3
+        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10)
+        s.listPeriodeRiwayat << p3
+
+        // Periksa saldo kumulatif
+        assertEquals(0, s.saldoKumulatifSebelum(LocalDate.parse('2014-01-01')))
+        assertEquals(60, s.saldoKumulatifSebelum(LocalDate.parse('2014-01-10')))
+        assertEquals(30, s.saldoKumulatifSebelum(LocalDate.parse('2014-01-05')))
+        assertEquals(60, s.saldoKumulatifSebelum(LocalDate.parse('2014-02-01')))
+        assertEquals(105, s.saldoKumulatifSebelum(LocalDate.parse('2014-03-03')))
     }
 
     public void testCariItemStok() {

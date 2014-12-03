@@ -133,8 +133,16 @@ class ProdukController {
     def showStokProduk = {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Stok Produk', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Stok Produk', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('stokProduk', args, view, dialogProps)
+        }
+    }
+
+    def showNilaiInventory = {
+        execInsideUISync {
+            def args = [parent: view.table.selectionModel.selected[0]]
+            def dialogProps = [title: 'Nilai Inventory', preferredSize: new Dimension(900, 420)]
+            DialogUtils.showMVCGroup('nilaiInventory', args, view, dialogProps)
         }
     }
 

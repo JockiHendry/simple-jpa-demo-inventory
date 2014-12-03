@@ -15,6 +15,8 @@
  */
 package domain.inventory
 
+import domain.pembelian.PenerimaanBarang
+import domain.pembelian.PurchaseOrder
 import groovy.transform.*
 import org.hibernate.annotations.Type
 import org.joda.time.Interval
@@ -54,6 +56,25 @@ class PeriodeItemStok {
     public void tambah(ItemStok item) {
         getListItem().add(item)
         this.jumlah += item.jumlah
+    }
+
+    /**
+     * Mengembalikan seluruh item stok yang mempengaruhi penambahan pada nilai inventory, yaitu pembelian dan
+     * penyesuaian tambah.  Jenis lain seperti penambahan akibat transfer tidak akan disertakan disini.
+     *
+     * @return item stok yang menyebabkan nilai inventory bertambah.
+     */
+    List<ItemStok> cariPenambahanInventory() {
+        List<ItemStok> hasil = []
+        for (ItemStok itemStok: listItem) {
+            if ((itemStok.jumlah > 0) && (
+                    (itemStok.referensiStok?.classGudang == PenyesuaianStok.simpleName) ||
+                    ((itemStok.referensiStok?.classFinance == PurchaseOrder.simpleName) && (itemStok.referensiStok?.classGudang == PenerimaanBarang.simpleName))
+                )) {
+                hasil << itemStok
+            }
+        }
+        hasil
     }
 
     boolean equals(o) {
