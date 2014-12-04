@@ -33,7 +33,7 @@ panel(id: 'mainPanel') {
                 }
                 glazedColumn(name: 'Qty', property: 'jumlah')
                 glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
-                glazedColumn(name: 'Harga Total (Nilai Inventory)', property: 'harga', columnClass: Integer) {
+                glazedColumn(name: 'Harga Satuan', property: 'harga', columnClass: Integer) {
                     templateRenderer(exp: { it? currencyFormat(it): '' }, horizontalAlignment: RIGHT)
                 }
             }
@@ -50,7 +50,7 @@ panel(id: 'mainPanel') {
         label('Qty:')
         numberTextField(id: 'jumlah', columns: 10, bindTo: 'jumlah', errorPath: 'jumlah')
         errorLabel(path: 'jumlah', constraints: 'wrap')
-        label('Harga Total (Nilai Inventory):')
+        label('Harga Satuan:')
         decimalTextField(id: 'harga', columns: 20, bindTo: 'harga', nfParseBigDecimal: true, errorPath: 'harga')
         errorLabel(path: 'harga', constraints: 'wrap')
 
