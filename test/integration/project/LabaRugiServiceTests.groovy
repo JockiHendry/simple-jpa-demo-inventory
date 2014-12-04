@@ -48,4 +48,12 @@ class LabaRugiServiceTests extends DbUnitTestCase {
         assertEquals(8600, nilaiInventory.nilai().toInteger())
     }
 
+    void testHitungPendapatanKotor() {
+        BigDecimal penjualanKotor = labaRugiService.hitungPenjualanKotor(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
+        assertEquals(20000, penjualanKotor.toInteger())
+
+        BigDecimal hpp = labaRugiService.hitungHPP(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
+        assertEquals(11000, hpp.toInteger())
+    }
+
 }

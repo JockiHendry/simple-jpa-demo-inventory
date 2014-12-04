@@ -77,6 +77,11 @@ class FakturJualEceran extends FakturJual {
         toDaftarBarang().items
     }
 
+    @Override
+    BigDecimal nilaiPenjualan() {
+        total()
+    }
+
     boolean equals(o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false

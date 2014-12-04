@@ -15,7 +15,9 @@
  */
 package project
 
+import domain.inventory.Gudang
 import domain.inventory.ItemStok
+import domain.inventory.Periode
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
@@ -120,7 +122,7 @@ class ProdukTests extends GriffonUnitTestCase {
         assertEquals(105, s.saldoKumulatifSebelum(LocalDate.parse('2014-03-03')))
     }
 
-    public void testCariItemStok() {
+    public void testCariItemStokBerdasarkanPeriodeItemStok() {
         StokProduk s = new StokProduk()
 
         // Periode 1
@@ -164,6 +166,105 @@ class ProdukTests extends GriffonUnitTestCase {
         assertEquals(105, hasil[1].saldo)
         assertEquals(125, hasil[2].saldo)
         assertEquals(135, hasil[3].saldo)
+    }
+
+    public void testCariItemStokBerdasarkanPeriode() {
+        StokProduk s = new StokProduk()
+
+        // Periode 1
+        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
+        s.listPeriodeRiwayat << p1
+
+        // Periode 2
+        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20)
+        s.listPeriodeRiwayat << p2
+
+        // Periode 3
+        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20)
+        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10)
+        s.listPeriodeRiwayat << p3
+
+        // Cari item stok untuk periode
+
+        List hasil = s.cariItemStok(Periode.dari('01-01-2014', '31-01-2014'))
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+        assertEquals(30, hasil[2].jumlah)
+
+        hasil = s.cariItemStok(Periode.dari('01-01-2014', '15-01-2014'))
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+
+        hasil = s.cariItemStok(Periode.dari('05-01-2014', '31-01-2014'))
+        assertEquals(30, hasil[0].jumlah)
+
+        hasil = s.cariItemStok(Periode.dari('15-01-2014', '31-01-2014'))
+        assertTrue(hasil.empty)
+
+        hasil = s.cariItemStok(Periode.dari('01-02-2014', '28-02-2014'))
+        assertEquals(5,  hasil[0].jumlah)
+        assertEquals(10, hasil[1].jumlah)
+        assertEquals(20, hasil[2].jumlah)
+
+        hasil = s.cariItemStok(Periode.dari('01-03-2014', '31-03-2014'))
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+        assertEquals(10, hasil[2].jumlah)
+
+        hasil = s.cariItemStok(Periode.dari('01-01-2014', '31-03-2014'))
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+        assertEquals(30, hasil[2].jumlah)
+        assertEquals( 5, hasil[3].jumlah)
+        assertEquals(10, hasil[4].jumlah)
+        assertEquals(20, hasil[5].jumlah)
+        assertEquals(10, hasil[6].jumlah)
+        assertEquals(20, hasil[7].jumlah)
+        assertEquals(10, hasil[8].jumlah)
+    }
+
+    public void testSemuaItemStok() {
+        Produk produk = new Produk()
+        Gudang g1 = new Gudang('Gudang1', true)
+        Gudang g2 = new Gudang('Gudang2')
+
+        StokProduk s1 = new StokProduk(g1, produk)
+        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: 20)
+        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: -15)
+        s1.listPeriodeRiwayat << p1
+        produk.daftarStok[g1] = s1
+
+        StokProduk s2 = new StokProduk(g2, produk)
+        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 35)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: -10)
+        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: 30)
+        s2.listPeriodeRiwayat << p2
+        produk.daftarStok[g2] = s2
+
+        // Periksa hasil
+        List hasil = produk.semuaItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'))
+        assertEquals( 10, hasil[0].jumlah)
+        assertEquals( 10, hasil[1].jumlah)
+        assertEquals(-10, hasil[2].jumlah)
+        assertEquals( 30, hasil[3].jumlah)
+        assertEquals( 20, hasil[4].jumlah)
+        assertEquals(-15, hasil[5].jumlah)
+
+        hasil = produk.semuaItemStok(LocalDate.parse('2014-01-15'), LocalDate.parse('2014-01-31'))
+        assertEquals( 30, hasil[0].jumlah)
+        assertEquals( 20, hasil[1].jumlah)
+        assertEquals(-15, hasil[2].jumlah)
     }
 
 }

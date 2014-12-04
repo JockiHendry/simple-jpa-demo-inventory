@@ -27,6 +27,8 @@ class Periode {
 
     public static final DateTimeFormatter format = DateTimeFormat.forPattern("dd-MM-YYYY")
 
+    private Interval interval
+
     LocalDate tanggalMulai
 
     LocalDate tanggalSelesai
@@ -37,12 +39,16 @@ class Periode {
         if (tanggalMulai.isAfter(tanggalSelesai)) {
             throw new IllegalArgumentException("Tanggal mulai [$tanggalMulai] tidak boleh setelah tanggal selesai [$tanggalSelesai]")
         }
+        interval = new Interval(tanggalMulai.toDateMidnight(), tanggalSelesai.plusDays(1).toDateMidnight())
     }
 
-    public overlaps(Periode periode) {
-        Interval i1 = new Interval(tanggalMulai.toDateMidnight(), tanggalSelesai.plusDays(1).toDateMidnight())
-        Interval i2 = new Interval(periode.tanggalMulai.toDateMidnight(), periode.tanggalSelesai.plusDays(1).toDateMidnight())
-        i1.overlaps(i2)
+    public boolean overlaps(Periode periode) {
+        Interval i = new Interval(periode.tanggalMulai.toDateMidnight(), periode.tanggalSelesai.plusDays(1).toDateMidnight())
+        interval.overlaps(i)
+    }
+
+    public boolean termasuk(LocalDate tanggal) {
+        interval.contains(tanggal.toDateMidnight())
     }
 
     public static Periode sekarang() {
@@ -74,4 +80,5 @@ class Periode {
     String toString() {
         "${tanggalMulai.toString('dd-MM-YYYY')} s/d ${tanggalSelesai.toString('dd-MM-YYYY')}"
     }
+
 }

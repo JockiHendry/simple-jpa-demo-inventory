@@ -129,4 +129,13 @@ class PeriodeTests extends GriffonUnitTestCase {
         assertEquals(LocalDate.parse('2014-12-31'), p.tanggalSelesai)
     }
 
+    void testTermasuk() {
+        Periode periode = new Periode(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'))
+        assertTrue(periode.termasuk(LocalDate.parse('2014-02-01')))
+        assertTrue(periode.termasuk(LocalDate.parse('2014-02-15')))
+        assertTrue(periode.termasuk(LocalDate.parse('2014-02-28')))
+        assertFalse(periode.termasuk(LocalDate.parse('2014-01-31')))
+        assertFalse(periode.termasuk(LocalDate.parse('2014-03-01')))
+    }
+
 }

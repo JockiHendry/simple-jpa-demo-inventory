@@ -31,8 +31,6 @@ class BilyetGiroEventListenerService {
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void onBilyetGiroCleared(BilyetGiroCleared bilyetGiroCleared) {
-        log.info "Event onBilyetGiroCleared mulai dikerjakan..."
-
         BilyetGiro bilyetGiro = bilyetGiroCleared.source
 
         // Cari seluruh faktur jual oleh sales yang berhubungan dengan giro ini dan set status
@@ -50,8 +48,6 @@ class BilyetGiroEventListenerService {
                 p.status = StatusPurchaseOrder.LUNAS
             }
         }
-
-        log.info "Event onBilyetGiroCleared selesai dikerjakan!"
     }
 
 }

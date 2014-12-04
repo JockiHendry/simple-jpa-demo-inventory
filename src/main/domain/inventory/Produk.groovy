@@ -19,6 +19,7 @@ package domain.inventory
 import domain.pembelian.Supplier
 import domain.pengaturan.KeyPengaturan
 import domain.penjualan.Sales
+import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
 import javax.persistence.*
@@ -137,6 +138,15 @@ class Produk implements Comparable {
     public int jumlahReadyGudangUtama() {
         def qty = daftarStok.find { k, v -> k.utama }?.value?.jumlah ?: 0
         qty - (jumlahAkanDikirim?:0)
+    }
+
+    public List<ItemStok> semuaItemStok(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        List<ItemStok> hasil = []
+        Periode periodeCari = new Periode(tanggalMulai, tanggalSelesai)
+        for (StokProduk stokProduk: stokSemuaGudang()) {
+            hasil.addAll(stokProduk.cariItemStok(periodeCari))
+        }
+        hasil.sort {a, b -> a.tanggal.compareTo(b.tanggal)?: -a.jumlah.compareTo(b.jumlah) }
     }
 
     boolean equals(o) {

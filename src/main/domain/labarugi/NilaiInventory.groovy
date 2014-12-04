@@ -35,4 +35,22 @@ class NilaiInventory {
         items << new ItemNilaiInventory(tanggal, nama, qty, harga)
     }
 
+    BigDecimal kurang(long qty) {
+        BigDecimal hasil = 0
+        int sisaQty = qty
+        for (int i=0; i<items.size(); i++) {
+            ItemNilaiInventory item = items[i]
+            int itemQty = item.qty
+            if (item.hapus(sisaQty)) {
+                sisaQty -= itemQty
+                hasil += (itemQty * item.harga)
+            } else {
+                hasil += (sisaQty * item.harga)
+                break
+            }
+        }
+        items.removeAll { it.qty == 0 }
+        hasil
+    }
+
 }

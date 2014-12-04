@@ -127,6 +127,11 @@ class FakturJualOlehSales extends FakturJual {
         kirimDariGudangUtama? (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama(): konsumen.sales.gudang
     }
 
+    @Override
+    BigDecimal nilaiPenjualan() {
+        piutang?.jumlah?: 0
+    }
+
     void tambah(BuktiTerima buktiTerima) {
         super.tambah(buktiTerima)
 

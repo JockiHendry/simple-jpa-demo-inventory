@@ -13,34 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.labarugi
+package project.laporan
 
-import groovy.transform.Canonical
 import org.joda.time.LocalDate
 
-@Canonical
-class ItemNilaiInventory {
+class LaporanNilaiInventoryModel {
 
-    LocalDate tanggal
+    @Bindable LocalDate tanggalMulaiCari
+    @Bindable LocalDate tanggalSelesaiCari
 
-    String nama
+    List result
+    Map params = [:]
 
-    Integer qty
-
-    BigDecimal harga
-
-    BigDecimal total() {
-        (qty * harga)?: 0
-    }
-
-    boolean hapus(int qtyHapus) {
-        if (qty > qtyHapus) {
-            qty -= qtyHapus
-            return false
-        } else {
-            qty = 0
-            return true
-        }
-    }
+    boolean batal = false
 
 }

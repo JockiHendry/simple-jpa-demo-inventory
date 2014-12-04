@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_sisa_barang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eec581d2-323c-4755-974a-e959cc6dcde0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="tanggalMulaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tanggalSelesaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="nilaiAkhir" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[nilaiAkhir]]></fieldDescription>
+	</field>
+	<field name="nilaiAwal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[nilaiAwal]]></fieldDescription>
+	</field>
+	<field name="nilaiHPP" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[nilaiHPP]]></fieldDescription>
+	</field>
+	<field name="produk" class="domain.inventory.Produk">
+		<fieldDescription><![CDATA[produk]]></fieldDescription>
+	</field>
+	<variable name="nilaiAwal_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{nilaiAwal}]]></variableExpression>
+	</variable>
+	<variable name="nilaiHPP_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{nilaiHPP}]]></variableExpression>
+	</variable>
+	<variable name="nilaiAkhir_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{nilaiAkhir}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="60" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<box>
+					<bottomPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Laporan Nilai Inventory]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="d3cde47f-fe72-4ab3-86fa-129f5c12af99"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="74" height="60" uuid="7c51004f-9bf4-4b98-a5d0-4e90288018a0"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="75" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="8bea564e-99b9-4561-9951-7c78bdcc2eb4"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="80" width="554" height="20" uuid="d0b8f6d5-276a-47a7-9f2e-5383ff5d7901"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["${$P{tanggalMulaiCari}.toString('dd-MM-yyyy')} s/d ${$P{tanggalSelesaiCari}.toString('dd-MM-yyyy')}"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="200" height="15" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Produk]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="1" width="119" height="15" uuid="b075f071-efa6-4ba8-bf41-e93b622e1004"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nilai Awal (Rp)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="0" width="120" height="16" uuid="4cd56966-f3ea-4464-96db-ab5729aff9ee"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nilai Akhir (Rp)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="0" width="116" height="16" uuid="319ceb3b-4f86-4e88-b35e-34526d68257c"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nilai HPP (Rp)]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="1" width="200" height="15" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="200" y="0" width="119" height="16" uuid="1d40c631-f27f-41d8-89bb-c4c4a7140014"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nilaiAwal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="319" y="0" width="116" height="16" uuid="ec0ed97c-b93c-4415-89bc-a4a4a7824e3d"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nilaiHPP}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="435" y="0" width="120" height="16" uuid="b0716144-c16d-45e2-9200-28c61307c26b"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nilaiAkhir}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="29">
+			<textField pattern="#,##0">
+				<reportElement x="200" y="4" width="119" height="20" uuid="22fc4414-0b46-4f08-b251-e5cc2c1e6054"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nilaiAwal_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="319" y="4" width="116" height="20" uuid="5335d24b-fc68-4578-97f6-3839bb9bec13"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nilaiHPP_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="435" y="4" width="120" height="20" uuid="0744aa30-f967-4cb7-9de0-3ab889068aef"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nilaiAkhir_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="4" width="200" height="20" uuid="22239569-9fac-468f-ae06-d682d81bf635"/>
+				<box>
+					<topPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

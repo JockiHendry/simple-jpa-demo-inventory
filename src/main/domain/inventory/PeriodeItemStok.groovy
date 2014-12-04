@@ -15,8 +15,6 @@
  */
 package domain.inventory
 
-import domain.pembelian.PenerimaanBarang
-import domain.pembelian.PurchaseOrder
 import groovy.transform.*
 import org.hibernate.annotations.Type
 import org.joda.time.Interval
@@ -67,10 +65,7 @@ class PeriodeItemStok {
     List<ItemStok> cariPenambahanInventory() {
         List<ItemStok> hasil = []
         for (ItemStok itemStok: listItem) {
-            if ((itemStok.jumlah > 0) && (
-                    (itemStok.referensiStok?.classGudang == PenyesuaianStok.simpleName) ||
-                    ((itemStok.referensiStok?.classFinance == PurchaseOrder.simpleName) && (itemStok.referensiStok?.classGudang == PenerimaanBarang.simpleName))
-                )) {
+            if ((itemStok.jumlah > 0) && (itemStok.referensiStok?.classGudang != Transfer.simpleName)) {
                 hasil << itemStok
             }
         }

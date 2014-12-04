@@ -143,14 +143,29 @@ class StokProduk {
         saldo
     }
 
-    List<ItemStok> cariItemStok(PeriodeItemStok periodeItemStok) {
-        long saldo = saldoKumulatifSebelum(periodeItemStok)
+    List<ItemStok> cariItemStok(PeriodeItemStok periodeItemStok, boolean hitungSaldo = true) {
+        long saldo = 0
         List<ItemStok> hasil = []
-        hasil << new ItemStok(periodeItemStok.tanggalMulai, null, null, 'Saldo Awal', saldo)
+        if (hitungSaldo) {
+            saldo = saldoKumulatifSebelum(periodeItemStok)
+            hasil << new ItemStok(periodeItemStok.tanggalMulai, null, null, 'Saldo Awal', saldo)
+        }
         for (ItemStok itemStok: periodeItemStok.listItem) {
-            saldo += itemStok.jumlah
-            itemStok.saldo = saldo
+            if (hitungSaldo) {
+                saldo += itemStok.jumlah
+                itemStok.saldo = saldo
+            }
             hasil << itemStok
+        }
+        hasil
+    }
+
+    List<ItemStok> cariItemStok(Periode periode) {
+        List<ItemStok> hasil = []
+        for (PeriodeItemStok periodeItemStok: listPeriodeRiwayat) {
+            if (periodeItemStok.termasuk(periode)) {
+                hasil.addAll(cariItemStok(periodeItemStok, false).findAll { periode.termasuk(it.tanggal) })
+            }
         }
         hasil
     }

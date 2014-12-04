@@ -38,6 +38,8 @@ abstract class FakturJual extends Faktur implements BolehPesanStok {
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PengeluaranBarang pengeluaranBarang
 
+    abstract BigDecimal nilaiPenjualan()
+
     protected void tambah(PengeluaranBarang pengeluaranBarang, boolean langsungDikirim = true) {
         if (!status.pengeluaranBolehDiubah || this.pengeluaranBarang) {
             throw new DataTidakBolehDiubah(this)
