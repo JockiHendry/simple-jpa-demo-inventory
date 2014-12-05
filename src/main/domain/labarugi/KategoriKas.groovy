@@ -32,6 +32,9 @@ class KategoriKas implements Comparable {
     @NotNull
     Boolean sistem = Boolean.FALSE
 
+    @NotNull
+    Boolean dipakaiDiLaporan = Boolean.TRUE
+
     @ElementCollection(fetch=FetchType.EAGER)
     Set<SaldoKas> listSaldoKas = [] as Set
 

@@ -53,7 +53,8 @@ class KategoriKasController {
                 return
             }
         }
-		KategoriKas kategoriKas = new KategoriKas(id: model.id, nama: model.nama, jenis: model.jenis.selectedItem, sistem: false)
+		KategoriKas kategoriKas = new KategoriKas(id: model.id, nama: model.nama, jenis: model.jenis.selectedItem,
+			sistem: false, dipakaiDiLaporan: model.dipakaiDiLaporan)
 
 		if (!kategoriKasRepository.validate(kategoriKas, Default, model)) return
 
@@ -106,6 +107,7 @@ class KategoriKasController {
 			model.nama = null
 			model.jenis.selectedItem = null
 			model.listJumlahKas.clear()
+			model.dipakaiDiLaporan = false
 			model.created = null
 			model.createdBy = null
 			model.modified = null
@@ -125,6 +127,7 @@ class KategoriKasController {
 				model.id = selected.id
 				model.nama = selected.nama
 				model.jenis.selectedItem = selected.jenis
+				model.dipakaiDiLaporan = selected.dipakaiDiLaporan
 				model.listJumlahKas.clear()
 				model.listJumlahKas.addAll(selected.listSaldoKas)
 				model.created = selected.createdDate

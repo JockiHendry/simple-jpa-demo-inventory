@@ -39,9 +39,11 @@ class LaporanTransaksiKasController {
         Periode periodeCari = new Periode(model.tanggalMulaiCari, model.tanggalSelesaiCari)
         def result = []
         kategoriKasRepository.findAllKategoriKas().each { KategoriKas k ->
-            for (SaldoKas saldoKas : k.listSaldoKas) {
-                if (saldoKas.periode.overlaps(periodeCari)) {
-                    result << new SaldoKategoriKas(k.nama, k.jenis, saldoKas.jenis, saldoKas.saldo)
+            if (k.dipakaiDiLaporan) {
+                for (SaldoKas saldoKas : k.listSaldoKas) {
+                    if (saldoKas.periode.overlaps(periodeCari)) {
+                        result << new SaldoKategoriKas(k.nama, k.jenis, saldoKas.jenis, saldoKas.saldo)
+                    }
                 }
             }
         }

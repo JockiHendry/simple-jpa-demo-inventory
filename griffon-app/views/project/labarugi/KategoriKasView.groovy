@@ -44,8 +44,11 @@ panel(id: 'mainPanel') {
 			glazedColumn(name: '', expression: { it.deleted == 'Y'? 'D': ''}, width: 20)
 			glazedColumn(name: 'Nama', property: 'nama')
 			glazedColumn(name: 'Jenis', property: 'jenis')
-			glazedColumn(name: 'Sistem', property: 'sistem', width: 50) {
+			glazedColumn(name: 'Sistem', property: 'sistem') {
 				templateRenderer(exp: { it? 'Y': '' })
+			}
+			glazedColumn(name: 'Dipakai Di Laporan', property: 'dipakaiDiLaporan') {
+				templateRenderer(exp: { it? 'Y': 'N' })
 			}
         }
     }
@@ -57,6 +60,9 @@ panel(id: 'mainPanel') {
 		label('Jenis:')
 		comboBox(id: 'jenis', model: model.jenis, errorPath: 'jenis')
 		errorLabel(path: 'jenis', constraints: 'wrap')
+		label('Dipakai Di Laporan:')
+		checkBox(selected: bind('dipakaiDiLaporan', target: model, mutual: true), errorPath: 'dipakaiDiLaporan')
+		errorLabel(path: 'dipakaiDiLaporan', constraints: 'wrap')
 		panel(visible: bind{table.isRowSelected}, constraints: 'span, growx, wrap') {
 			flowLayout(alignment: FlowLayout.LEADING)
 			label('Created:')

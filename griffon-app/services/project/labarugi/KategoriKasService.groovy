@@ -65,6 +65,8 @@ class KategoriKasService {
             WHERE
                 (t.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai)
             AND
+                t.kategoriKas.dipakaiDiLaporan = TRUE
+            AND
                 t.kategoriKas.jenis = domain.labarugi.JENIS_KATEGORI_KAS.PENDAPATAN
             AND
                 t.deleted <> 'Y'
@@ -79,6 +81,8 @@ class KategoriKasService {
                 TransaksiKas t
             WHERE
                 (t.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai)
+            AND
+                t.kategoriKas.dipakaiDiLaporan = TRUE
             AND
                 t.kategoriKas.jenis = domain.labarugi.JENIS_KATEGORI_KAS.PENGELUARAN
             AND

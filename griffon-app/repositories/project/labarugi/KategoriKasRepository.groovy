@@ -67,6 +67,7 @@ class KategoriKasRepository {
 		mergedKategoriKas.with {
 			nama = kategoriKas.nama
 			jenis = kategoriKas.jenis
+			dipakaiDiLaporan = kategoriKas.dipakaiDiLaporan
 		}
 		mergedKategoriKas
 	}
