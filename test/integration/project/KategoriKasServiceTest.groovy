@@ -18,6 +18,7 @@ package project
 import domain.labarugi.JenisTransaksiKas
 import domain.labarugi.KategoriKas
 import domain.labarugi.SaldoKas
+import org.joda.time.LocalDate
 import project.labarugi.KategoriKasService
 import simplejpa.testing.DbUnitTestCase
 
@@ -45,6 +46,13 @@ class KategoriKasServiceTest extends DbUnitTestCase {
         assertEquals(2, k.listSaldoKas.size())
         assertEquals(10000, k.saldo(1, 2014, dalamKota))
         assertEquals(12000, k.saldo(1, 2014, luarKota))
+    }
+
+    void testTotalPendapatanDanPengeluaran() {
+        assertEquals(22000, kategoriKasService.totalPendapatan(LocalDate.parse('2014-01-01'),
+            LocalDate.parse('2014-01-31')).toInteger())
+        assertEquals(0, kategoriKasService.totalPengeluaran(LocalDate.parse('2014-01-01'),
+            LocalDate.parse('2014-01-31')).toInteger())
     }
 
 }

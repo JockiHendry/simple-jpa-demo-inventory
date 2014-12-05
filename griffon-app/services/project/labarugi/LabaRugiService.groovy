@@ -17,6 +17,7 @@ package project.labarugi
 
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
+import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.inventory.Gudang
 import domain.inventory.ItemPenyesuaian
 import domain.inventory.ItemStok
@@ -28,6 +29,8 @@ import domain.inventory.Transfer
 import domain.labarugi.NilaiInventory
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualOlehSales
+import laporan.ItemLabaRugi
 import laporan.NilaiInventoryProduk
 import org.joda.time.LocalDate
 import org.slf4j.Logger
@@ -41,6 +44,7 @@ class LabaRugiService {
     final Logger log = LoggerFactory.getLogger(LabaRugiService)
 
     GudangRepository gudangRepository
+    KategoriKasService kategoriKasService
 
     NilaiInventory hitungInventory(LocalDate sampaiTanggal, Produk produk) {
         produk = findProdukById(produk.id)
@@ -91,13 +95,16 @@ class LabaRugiService {
         produk.hargaDalamKota
     }
 
-    BigDecimal hitungPenjualanKotor(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal hasil = 0
+    List hitungPenjualan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        BigDecimal penjualanKotor = 0, potonganPiutang = 0
         List<FakturJual> fakturJuals = findAllFakturJualByTanggalBetween(tanggalMulai, tanggalSelesai)
         for (FakturJual fakturJual: fakturJuals) {
-            hasil += fakturJual.nilaiPenjualan()
+            penjualanKotor += fakturJual.nilaiPenjualan()
+            if ((fakturJual instanceof FakturJualOlehSales) && (fakturJual.piutang)) {
+                potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+            }
         }
-        hasil
+        [penjualanKotor, potonganPiutang]
     }
 
     BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
@@ -132,6 +139,19 @@ class LabaRugiService {
             informasi.nilaiHPP = hasil
             informasi.nilaiAkhir = informasi.nilaiAwal - informasi.nilaiHPP
         }
+        hasil
+    }
+
+    List<ItemLabaRugi> laporanLabaRugi(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        List<ItemLabaRugi> hasil = []
+        def (penjualanKotor, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+
+        hasil << new ItemLabaRugi('Pendapatan Dari Penjualan', penjualanKotor, null)
+        hasil << new ItemLabaRugi('Pendapatan Operasional', kategoriKasService.totalPendapatan(tanggalMulai, tanggalSelesai), null)
+        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hitungHPP(tanggalMulai, tanggalSelesai))
+        hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)
+        hasil << new ItemLabaRugi('Pengeluaran Operasional', null, kategoriKasService.totalPengeluaran(tanggalMulai, tanggalSelesai))
+
         hasil
     }
 
