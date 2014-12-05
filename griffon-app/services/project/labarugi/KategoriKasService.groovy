@@ -90,4 +90,16 @@ class KategoriKasService {
         ''', [:], [tanggalMulai: tanggalMulai, tanggalSelesai: tanggalSelesai])[0]?:0 as BigDecimal
     }
 
+    BigDecimal saldo() {
+        BigDecimal pendapatan = 0, pengeluaran = 0
+        kategoriKasRepository.findAllKategoriKas().each { KategoriKas k ->
+            if (k.jenis == JENIS_KATEGORI_KAS.PENDAPATAN) {
+                pendapatan += k.saldoTerakhir()
+            } else if (k.jenis == JENIS_KATEGORI_KAS.PENGELUARAN) {
+                pengeluaran += k.saldoTerakhir()
+            }
+        }
+        pendapatan - pengeluaran
+    }
+
 }

@@ -89,4 +89,15 @@ class KategoriKasTests extends GriffonUnitTestCase {
         assertEquals(4, k.listSaldoKas.size())
     }
 
+    void testSaldoTerakhir() {
+        KategoriKas k = new KategoriKas('Test', JENIS_KATEGORI_KAS.PENDAPATAN, false)
+        def dalamKota = new JenisTransaksiKas('Dalam Kota')
+        def luarKota = new JenisTransaksiKas('Luar Kota')
+        k.perubahanSaldo(1, 2014, 10000.0, dalamKota)
+        k.perubahanSaldo(1, 2014, 15000.0, luarKota)
+        k.perubahanSaldo(1, 2014, 5000.0, dalamKota)
+        k.perubahanSaldo(1, 2014, 6000.0, luarKota)
+        assertEquals(36000, k.saldoTerakhir())
+    }
+
 }

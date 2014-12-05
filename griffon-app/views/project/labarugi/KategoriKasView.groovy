@@ -48,7 +48,7 @@ panel(id: 'mainPanel') {
 				templateRenderer(exp: { it? 'Y': '' })
 			}
 			glazedColumn(name: 'Dipakai Di Laporan', property: 'dipakaiDiLaporan') {
-				templateRenderer(exp: { it? 'Y': 'N' })
+				templateRenderer(exp: { it? 'Y': '' })
 			}
         }
     }

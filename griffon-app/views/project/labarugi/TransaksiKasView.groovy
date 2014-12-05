@@ -23,6 +23,7 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'search', name: app.getMessage('simplejpa.search.label'), closure: controller.search)
+    action(id: 'hitungSaldo', name: 'Informasi Saldo Terakhir', closure: controller.hitungSaldo)
     action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
     action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
     action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
@@ -40,6 +41,7 @@ panel(id: 'mainPanel') {
         textField(id: 'pihakTerkaitSearch', columns: 10, text: bind('pihakTerkaitSearch', target: model, mutual: true), action: search)
         textField(id: 'kategoriKasSearch', columns: 10, text: bind('kategoriKasSearch', target: model, mutual: true), action: search)
         button(action: search)
+        button(action: hitungSaldo)
     }
 
     scrollPane(constraints: CENTER) {

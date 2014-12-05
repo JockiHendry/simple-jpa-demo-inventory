@@ -55,4 +55,8 @@ class KategoriKasServiceTest extends DbUnitTestCase {
             LocalDate.parse('2014-01-31')).toInteger())
     }
 
+    void testSaldo() {
+        assertEquals(22000, kategoriKasService.saldo())
+    }
+
 }

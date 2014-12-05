@@ -23,6 +23,7 @@ import project.user.NomorService
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
+import java.text.NumberFormat
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class TransaksiKasController {
@@ -30,6 +31,7 @@ class TransaksiKasController {
     TransaksiKasModel model
     def view
     TransaksiKasRepository transaksiKasRepository
+    KategoriKasService kategoriKasService
     NomorService nomorService
 
     void mvcGroupInit(Map args) {
@@ -103,6 +105,12 @@ class TransaksiKasController {
             view.table.selectionModel.selected[0] = transaksiKas
             clear()
         }
+    }
+
+    def hitungSaldo = {
+        BigDecimal saldo = kategoriKasService.saldo()
+        JOptionPane.showMessageDialog(view.mainPanel, "Saldo terakhir adalah ${NumberFormat.currencyInstance.format(saldo)}",
+            'Informasi Saldo', JOptionPane.INFORMATION_MESSAGE)
     }
 
     def clear = {

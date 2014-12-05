@@ -57,6 +57,10 @@ class KategoriKas implements Comparable {
         }?: 0
     }
 
+    BigDecimal saldoTerakhir() {
+        listSaldoKas.sum { it.saldo }?: 0
+    }
+
     @Override
     String toString() {
         "${jenis.teks} - $nama"
