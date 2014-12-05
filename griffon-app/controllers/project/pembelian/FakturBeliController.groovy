@@ -37,6 +37,7 @@ class FakturBeliController {
     void mvcGroupInit(Map args) {
         model.purchaseOrder = args.'purchaseOrder'
         model.fakturBeli = model.purchaseOrder.fakturBeli
+        model.showSave = model.fakturBeli? false: true
         model.editable = args.containsKey('editable')? args.'editable': false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         refreshInformasi()
@@ -86,7 +87,7 @@ class FakturBeliController {
     def delete = {
         try {
             if (model.fakturBeli) {
-                model.purchaseOrder = purchaseOrderRepository.hapus(model.purchaseOrder, model.fakturBeli)
+                model.purchaseOrder = purchaseOrderRepository.hapusFaktur(model.purchaseOrder)
                 execInsideUISync {
                     clear()
                 }

@@ -64,10 +64,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
 
     panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
         flowLayout(alignment: FlowLayout.LEADING)
-        button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: controller.save)
-//            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
-//                table.isRowSelected
-//            }, actionPerformed: controller.clear)
+        button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: controller.save, visible: bind { model.showSave })
         button(app.getMessage("simplejpa.dialog.delete.button"), actionPerformed: {
             if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
                     app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {

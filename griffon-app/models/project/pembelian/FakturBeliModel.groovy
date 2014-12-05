@@ -25,6 +25,7 @@ class FakturBeliModel {
     FakturBeli fakturBeli
     @Bindable boolean editable
     @Bindable boolean allowTambahProduk
+    @Bindable boolean showSave
 
     @Bindable Long id
     @Bindable String nomor

@@ -93,11 +93,7 @@ class PurchaseOrderRepository {
             } else {
                 nomor like("%${nomorPOSearch}%")
             }
-
-            if (statusSearch == SwingHelper.SEMUA) {
-                and()
-                status isIn([StatusPurchaseOrder.DIBUAT, StatusPurchaseOrder.BARANG_DITERIMA])
-            } else {
+            if (statusSearch != SwingHelper.SEMUA) {
                 and()
                 status eq(statusSearch)
             }
@@ -206,9 +202,8 @@ class PurchaseOrderRepository {
         [purchaseOrder, penerimaanBarang]
     }
 
-    public PurchaseOrder hapus(PurchaseOrder purchaseOrder, FakturBeli fakturBeli) {
+    public PurchaseOrder hapusFaktur(PurchaseOrder purchaseOrder) {
         purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
-        //fakturBeli = findFakturBeliById(fakturBeli.id)
         purchaseOrder.hapusFaktur()
         purchaseOrder
     }
