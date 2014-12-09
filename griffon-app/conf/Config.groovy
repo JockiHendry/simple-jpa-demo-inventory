@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+//noinspection GroovyUnusedAssignment
 log4j = {
     environments {
 
@@ -87,7 +88,6 @@ i18n.basenames = ['messages','ValidationMessages']
 griffon.simplejpa.finders.injectInto = ['service', 'repository']
 griffon.simplejpa.validation.convertEmptyStringToNull = true
 griffon.simplejpa.finders.alwaysExcludeSoftDeleted = true
-griffon.simplejpa.entityManager.propertiesFile = "${System.getProperty('user.home')}/inventory/simplejpa.properties"
 griffon.simplejpa.scaffolding.generator = 'simplejpa.scaffolding.generator.ddd.DDDGenerator'
 
 environments {
@@ -96,6 +96,9 @@ environments {
     }
     production {
         griffon.simplejpa.auditing.loginService = 'UserService'
+
+        // Read actual database configuration (server, user, and password) from properties file.
+        griffon.config.locations = ['classpath:server.properties']
     }
 }
 
