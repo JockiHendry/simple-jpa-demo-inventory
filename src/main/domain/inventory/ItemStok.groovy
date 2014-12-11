@@ -16,30 +16,26 @@
 
 package domain.inventory
 
+import domain.general.ItemPeriodik
 import groovy.transform.*
+import org.joda.time.LocalDate
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.joda.time.*
 
-@Embeddable @Canonical
-class ItemStok {
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    @Column(name='tanggalItemStok')
-    LocalDate tanggal
+@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true)
+class ItemStok extends ItemPeriodik {
 
     @NotNull
     ReferensiStok referensiStok
 
-    @NotNull
-    Integer jumlah
+    ItemStok() {}
 
-    @Size(min=3, max=100)
-    String keterangan
-
-    @Transient
-    long saldo
+    ItemStok(LocalDate tanggal, ReferensiStok referensiStok, Long jumlah, String keterangan) {
+        this.tanggal = tanggal
+        this.referensiStok = referensiStok
+        this.jumlah = jumlah
+        this.keterangan = keterangan
+    }
 
 }
 

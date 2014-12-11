@@ -64,21 +64,21 @@ class ProdukTests extends GriffonUnitTestCase {
         StokProduk s = new StokProduk()
 
         // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
         s.listPeriodeRiwayat << p1
 
         // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 5)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 20)
         s.listPeriodeRiwayat << p2
 
         // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 10)
@@ -94,21 +94,21 @@ class ProdukTests extends GriffonUnitTestCase {
         StokProduk s = new StokProduk()
 
         // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
         s.listPeriodeRiwayat << p1
 
         // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20)
         s.listPeriodeRiwayat << p2
 
         // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10)
@@ -126,21 +126,21 @@ class ProdukTests extends GriffonUnitTestCase {
         StokProduk s = new StokProduk()
 
         // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
         s.listPeriodeRiwayat << p1
 
         // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 5)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 20)
         s.listPeriodeRiwayat << p2
 
         // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 10)
@@ -172,21 +172,21 @@ class ProdukTests extends GriffonUnitTestCase {
         StokProduk s = new StokProduk()
 
         // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai:  LocalDate.parse('2014-01-31'), jumlah: 60)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
         s.listPeriodeRiwayat << p1
 
         // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-02-01'), LocalDate.parse('2014-02-28'), 35)
+        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai:  LocalDate.parse('2014-02-28'), jumlah: 35)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20)
         s.listPeriodeRiwayat << p2
 
         // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(LocalDate.parse('2014-03-01'), LocalDate.parse('2014-03-31'), 40)
+        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai:  LocalDate.parse('2014-03-31'), jumlah: 40)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20)
         p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10)
@@ -236,16 +236,16 @@ class ProdukTests extends GriffonUnitTestCase {
         Gudang g1 = new Gudang('Gudang1', true)
         Gudang g2 = new Gudang('Gudang2')
 
-        StokProduk s1 = new StokProduk(g1, produk)
-        PeriodeItemStok p1 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 60)
+        StokProduk s1 = new StokProduk(gudang: g1, produk: produk)
+        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: 20)
         p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: -15)
         s1.listPeriodeRiwayat << p1
         produk.daftarStok[g1] = s1
 
-        StokProduk s2 = new StokProduk(g2, produk)
-        PeriodeItemStok p2 = new PeriodeItemStok(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31'), 35)
+        StokProduk s2 = new StokProduk(gudang: g2, produk: produk)
+        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 35)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: -10)
         p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-15'), jumlah: 30)

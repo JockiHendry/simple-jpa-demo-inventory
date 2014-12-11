@@ -15,45 +15,20 @@
  */
 package domain.inventory
 
+import domain.general.NilaiPeriodik
 import groovy.transform.*
-import org.hibernate.annotations.Type
-import org.joda.time.Interval
-import org.joda.time.LocalDate
 import simplejpa.DomainClass
 import javax.persistence.*
-import javax.validation.constraints.NotNull
 
-@DomainClass @Entity @Canonical(excludes="listItem")
-class PeriodeItemStok {
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggalMulai
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggalSelesai
-
-    Integer jumlah = 0
-
-    @NotNull
-    Boolean arsip = Boolean.FALSE
+@DomainClass @Entity @Canonical(excludes="listItem") @TupleConstructor(includeSuperProperties=true)
+class PeriodeItemStok extends NilaiPeriodik {
 
     @ElementCollection @OrderColumn
     List<ItemStok> listItem = []
 
-    public boolean termasuk(LocalDate tanggal) {
-        (tanggal.isEqual(tanggalMulai) || tanggal.isAfter(tanggalMulai)) &&
-        (tanggal.isEqual(tanggalSelesai) || tanggal.isBefore(tanggalSelesai))
-    }
-
-    public boolean termasuk(Periode periode) {
-        Interval i1 = new Interval(tanggalMulai.toDateMidnight(), tanggalSelesai.plusDays(1).toDateMidnight())
-        Interval i2 = new Interval(periode.tanggalMulai.toDateMidnight(), periode.tanggalSelesai.plusDays(1).toDateMidnight())
-        i1.overlaps(i2)
-    }
-
-    public void tambah(ItemStok item) {
-        getListItem().add(item)
-        this.jumlah += item.jumlah
+    @Override
+    List getListItemPeriodik() {
+        listItem
     }
 
     /**

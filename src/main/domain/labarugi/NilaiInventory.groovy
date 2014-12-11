@@ -31,7 +31,7 @@ class NilaiInventory {
         items.sum { it.qty?: 0}?: 0
     }
 
-    void tambah(LocalDate tanggal, String nama, Integer qty, BigDecimal harga) {
+    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga) {
         items << new ItemNilaiInventory(tanggal, nama, qty, harga)
     }
 

@@ -13,34 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.labarugi
+package domain.general
 
-import groovy.transform.Canonical
-import org.joda.time.LocalDate
+import groovy.transform.*
+import javax.persistence.*
+import org.hibernate.annotations.Type
+import javax.validation.constraints.*
+import org.joda.time.*
 
-@Canonical
-class ItemNilaiInventory {
+@MappedSuperclass @Canonical
+abstract class ItemPeriodik {
 
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
     LocalDate tanggal
 
-    String nama
+    @NotNull
+    Long jumlah
 
-    Long qty
+    @Size(min=3, max=100)
+    String keterangan
 
-    BigDecimal harga
-
-    BigDecimal total() {
-        (qty * harga)?: 0
-    }
-
-    boolean hapus(int qtyHapus) {
-        if (qty > qtyHapus) {
-            qty -= qtyHapus
-            return false
-        } else {
-            qty = 0
-            return true
-        }
-    }
+    Long saldo
 
 }
+
