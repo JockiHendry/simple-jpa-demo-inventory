@@ -17,8 +17,8 @@ package project.user
 
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
-import domain.user.Menu
-import domain.user.User
+import domain.general.Menu
+import domain.general.User
 import org.joda.time.LocalDateTime
 import simplejpa.transaction.Transaction
 

@@ -15,9 +15,9 @@
  */
 package project.main
 
-import domain.user.PesanGiroJatuhTempo
-import domain.user.PesanLevelMinimum
-import domain.user.PesanPiutangJatuhTempo
+import domain.general.PesanGiroJatuhTempo
+import domain.general.PesanLevelMinimum
+import domain.general.PesanPiutangJatuhTempo
 import groovy.xml.MarkupBuilder
 import project.penjualan.FakturJualRepository
 import project.user.PesanRepository

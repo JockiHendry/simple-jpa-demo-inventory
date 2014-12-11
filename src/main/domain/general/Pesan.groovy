@@ -13,38 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package domain.general
 
-import domain.penjualan.FakturJualOlehSales
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
+import org.hibernate.annotations.Type
 import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
 @DomainClass @Entity @Canonical
-class PesanPiutangJatuhTempo extends Pesan {
+abstract class Pesan implements Comparable {
 
-    @NotNull @ManyToOne
-    FakturJualOlehSales faktur
+    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    LocalDateTime tanggal
+
+    @NotBlank
+    String pesan
 
     @SuppressWarnings("GroovyUnusedDeclaration")
-    PesanPiutangJatuhTempo() {}
+    @NotNull
+    Integer prioritas = 1
 
-    PesanPiutangJatuhTempo(FakturJualOlehSales faktur) {
-        this.tanggal = LocalDateTime.now()
-        this.faktur = faktur
-        this.pesan = "Faktur <span class='info'>${faktur.nomor}</span> akan segera jatuh tempo pada tanggal <span class='info'>${faktur.jatuhTempo.toString('dd-MM-YYYY')}</span>."
-    }
+    abstract boolean masihBerlaku()
 
-    @Override
-    boolean masihBerlaku() {
-        !faktur.piutang.lunas
-    }
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    abstract String jenisPesan()
 
     @Override
-    String jenisPesan() {
-        "Piutang Jatuh Tempo"
+    int compareTo(Object o) {
+        if (o==null) return -1
+        if (!(o instanceof Pesan)) return -1
+        id == o.id
     }
 }
 

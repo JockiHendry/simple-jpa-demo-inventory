@@ -16,7 +16,7 @@
 package project.penjualan
 
 import domain.penjualan.FakturJualOlehSales
-import domain.user.PesanPiutangJatuhTempo
+import domain.general.PesanPiutangJatuhTempo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.user.PesanRepository

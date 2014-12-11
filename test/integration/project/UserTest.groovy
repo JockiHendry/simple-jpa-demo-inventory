@@ -15,8 +15,8 @@
  */
 package project
 
-import domain.user.Menu
-import domain.user.User
+import domain.general.Menu
+import domain.general.User
 import project.user.UserRepository
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase

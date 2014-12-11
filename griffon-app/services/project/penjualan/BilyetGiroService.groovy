@@ -19,7 +19,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJualOlehSales
-import domain.user.PesanGiroJatuhTempo
+import domain.general.PesanGiroJatuhTempo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.faktur.BilyetGiroRepository

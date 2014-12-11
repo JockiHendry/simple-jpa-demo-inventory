@@ -118,7 +118,7 @@ class StokProduk {
     }
 
     void tambah(ItemStok item) {
-        periode(item.tanggalRiwayat()).tambah(item)
+        periode(item.tanggal).tambah(item)
         this.jumlah += item.jumlah
     }
 

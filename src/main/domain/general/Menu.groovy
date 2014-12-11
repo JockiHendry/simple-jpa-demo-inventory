@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user;
+package domain.general;
 
 public enum Menu {
     PENERIMAAN_BARANG("Penerimaan Barang"),

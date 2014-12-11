@@ -13,38 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package domain.general
 
-import domain.faktur.BilyetGiro
 import groovy.transform.*
+import simplejpa.AuditableUser
 import simplejpa.DomainClass
 import javax.persistence.*
+import org.hibernate.annotations.Type
 import javax.validation.constraints.*
+import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-class PesanGiroJatuhTempo extends Pesan {
+@DomainClass @Entity @Canonical(includes='nama')
+class User implements AuditableUser {
 
-    @NotNull @ManyToOne
-    BilyetGiro bilyetGiro
+    @NotBlank @Size(min=3, max=50)
+    String nama
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
-    PesanGiroJatuhTempo() {}
+    @NotNull
+    byte[] password = []
 
-    PesanGiroJatuhTempo(BilyetGiro bilyetGiro) {
-        this.tanggal = LocalDateTime.now()
-        this.bilyetGiro = bilyetGiro
-        this.pesan = "Giro <span class='info'>${bilyetGiro.nomorSeri}</span> untuk bank <span class='info'>${bilyetGiro.namaBank?:'-'}</span> sudah jatuh tempo"
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
+    LocalDateTime loginTerakhir
+
+    @NotEmpty @ElementCollection(fetch=FetchType.EAGER) @Enumerated
+    List<Menu> hakAkses = []
+
+    public boolean bolehAkses(Menu menu) {
+        hakAkses.contains(menu)
     }
 
     @Override
-    boolean masihBerlaku() {
-        !bilyetGiro.sudahDicairkan()
-    }
-
-    @Override
-    String jenisPesan() {
-        "Jatuh Tempo Giro"
+    String getUserName() {
+        nama
     }
 
 }

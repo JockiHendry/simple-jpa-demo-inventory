@@ -16,7 +16,7 @@
 
 package project.main
 
-import domain.user.User
+import domain.general.User
 import project.penjualan.BilyetGiroService
 import project.penjualan.PiutangService
 import simplejpa.SimpleJpaUtil
@@ -38,27 +38,27 @@ class MainGroupController {
         User currentUser = SimpleJpaUtil.instance.user
         if (currentUser) {
             model.status = "<html>Aplikasi demo inventory dengan Griffon dan plugin simple-jpa |  Selamat datang, <b>${currentUser.nama}</b>.</html>"
-            model.penerimaanBarangVisible = currentUser.bolehAkses(domain.user.Menu.PENERIMAAN_BARANG)
-            model.pengeluaranBarangVisible = currentUser.bolehAkses(domain.user.Menu.PENGELUARAN_BARANG)
-            model.buktiTerimaVisible = currentUser.bolehAkses(domain.user.Menu.BUKTI_TERIMA)
-            model.purchaseOrderVisible = currentUser.bolehAkses(domain.user.Menu.PURCHASE_ORDER)
-            model.fakturBeliVisible = currentUser.bolehAkses(domain.user.Menu.FAKTUR_BELI)
-            model.fakturJualVisible = currentUser.bolehAkses(domain.user.Menu.FAKTUR_JUAL)
-            model.hutangVisible = currentUser.bolehAkses(domain.user.Menu.HUTANG)
-            model.piutangVisible = currentUser.bolehAkses(domain.user.Menu.PIUTANG)
-            model.giroVisible = currentUser.bolehAkses(domain.user.Menu.GIRO)
-            model.poinVisible = currentUser.bolehAkses(domain.user.Menu.POIN)
-            model.produkVisible = currentUser.bolehAkses(domain.user.Menu.PRODUK)
-            model.transferVisible = currentUser.bolehAkses(domain.user.Menu.TRANSFER)
-            model.penyesuaianStokVisible = currentUser.bolehAkses(domain.user.Menu.PENYESUAIAN_STOK)
-            model.returJualVisible = currentUser.bolehAkses(domain.user.Menu.RETUR_JUAL)
-            model.returBeliVisible = currentUser.bolehAkses(domain.user.Menu.RETUR_BELI)
-            model.servisVisible = currentUser.bolehAkses(domain.user.Menu.SERVIS)
-            model.penerimaanServisVisible = currentUser.bolehAkses(domain.user.Menu.PENERIMAAN_SERVIS)
-            model.transaksiKasVisible = currentUser.bolehAkses(domain.user.Menu.TRANSAKSI_KAS)
-            model.laporanVisible = currentUser.bolehAkses(domain.user.Menu.LAPORAN)
-            model.maintenanceVisible = currentUser.bolehAkses(domain.user.Menu.MAINTENANCE)
-            model.pesanVisible = currentUser.bolehAkses(domain.user.Menu.PESAN)
+            model.penerimaanBarangVisible = currentUser.bolehAkses(domain.general.Menu.PENERIMAAN_BARANG)
+            model.pengeluaranBarangVisible = currentUser.bolehAkses(domain.general.Menu.PENGELUARAN_BARANG)
+            model.buktiTerimaVisible = currentUser.bolehAkses(domain.general.Menu.BUKTI_TERIMA)
+            model.purchaseOrderVisible = currentUser.bolehAkses(domain.general.Menu.PURCHASE_ORDER)
+            model.fakturBeliVisible = currentUser.bolehAkses(domain.general.Menu.FAKTUR_BELI)
+            model.fakturJualVisible = currentUser.bolehAkses(domain.general.Menu.FAKTUR_JUAL)
+            model.hutangVisible = currentUser.bolehAkses(domain.general.Menu.HUTANG)
+            model.piutangVisible = currentUser.bolehAkses(domain.general.Menu.PIUTANG)
+            model.giroVisible = currentUser.bolehAkses(domain.general.Menu.GIRO)
+            model.poinVisible = currentUser.bolehAkses(domain.general.Menu.POIN)
+            model.produkVisible = currentUser.bolehAkses(domain.general.Menu.PRODUK)
+            model.transferVisible = currentUser.bolehAkses(domain.general.Menu.TRANSFER)
+            model.penyesuaianStokVisible = currentUser.bolehAkses(domain.general.Menu.PENYESUAIAN_STOK)
+            model.returJualVisible = currentUser.bolehAkses(domain.general.Menu.RETUR_JUAL)
+            model.returBeliVisible = currentUser.bolehAkses(domain.general.Menu.RETUR_BELI)
+            model.servisVisible = currentUser.bolehAkses(domain.general.Menu.SERVIS)
+            model.penerimaanServisVisible = currentUser.bolehAkses(domain.general.Menu.PENERIMAAN_SERVIS)
+            model.transaksiKasVisible = currentUser.bolehAkses(domain.general.Menu.TRANSAKSI_KAS)
+            model.laporanVisible = currentUser.bolehAkses(domain.general.Menu.LAPORAN)
+            model.maintenanceVisible = currentUser.bolehAkses(domain.general.Menu.MAINTENANCE)
+            model.pesanVisible = currentUser.bolehAkses(domain.general.Menu.PESAN)
         }
         app.addApplicationEventListener(this)
         init()

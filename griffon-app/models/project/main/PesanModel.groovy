@@ -15,7 +15,7 @@
  */
 package project.main
 
-import domain.user.Pesan
+import domain.general.Pesan
 
 class PesanModel {
 

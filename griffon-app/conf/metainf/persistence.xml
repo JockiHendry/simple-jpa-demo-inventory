@@ -11,26 +11,26 @@
     <class>domain.retur.KlaimServis</class>
     <class>domain.servis.PenerimaanServis</class>
     <class>domain.servis.Servis</class>
-    <class>domain.user.PesanPiutangJatuhTempo</class>
+    <class>domain.general.PesanPiutangJatuhTempo</class>
     <class>domain.inventory.ReferensiStok</class>
     <class>domain.retur.ReturJualEceran</class>
     <class>domain.retur.ReturJualOlehSales</class>
     <class>domain.retur.KlaimPotongPiutang</class>
     <class>domain.retur.KlaimTukar</class>
     <class>domain.penjualan.RiwayatPoin</class>
-    <class>domain.user.PesanGiroJatuhTempo</class>
+    <class>domain.general.PesanGiroJatuhTempo</class>
     <class>domain.retur.Klaim</class>
     <class>domain.retur.ItemRetur</class>
     <class>domain.retur.ReturBeli</class>
     <class>domain.retur.ReturJual</class>
     <class>domain.retur.Kemasan</class>
-    <class>domain.user.PesanLevelMinimum</class>
-    <class>domain.user.Pesan</class>
+    <class>domain.general.PesanLevelMinimum</class>
+    <class>domain.general.Pesan</class>
     <class>domain.penjualan.PencairanPoinPotongPiutang</class>
     <class>domain.penjualan.PencairanPoinTukarBarang</class>
     <class>domain.penjualan.PencairanPoinTukarUang</class>
     <class>domain.penjualan.PencairanPoin</class>
-    <class>domain.user.User</class>
+    <class>domain.general.User</class>
     <class>domain.penjualan.BonusPenjualan</class>
     <class>domain.penjualan.BuktiTerima</class>
     <class>domain.penjualan.FakturJualOlehSales</class>

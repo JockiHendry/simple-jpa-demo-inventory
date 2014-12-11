@@ -24,8 +24,8 @@ import domain.inventory.Produk
 import domain.inventory.StokProduk
 import project.inventory.ProdukRepository
 import domain.inventory.PeriodeItemStok
-import domain.user.Pesan
-import domain.user.PesanLevelMinimum
+import domain.general.Pesan
+import domain.general.PesanLevelMinimum
 import project.user.PesanRepository
 import org.dbunit.dataset.ITable
 import org.joda.time.LocalDate

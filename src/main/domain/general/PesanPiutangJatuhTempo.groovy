@@ -13,40 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.user
+package domain.general
 
+import domain.penjualan.FakturJualOlehSales
 import groovy.transform.*
-import simplejpa.AuditableUser
 import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical(includes='nama')
-class User implements AuditableUser {
+@DomainClass @Entity @Canonical
+class PesanPiutangJatuhTempo extends Pesan {
 
-    @NotBlank @Size(min=3, max=50)
-    String nama
+    @NotNull @ManyToOne
+    FakturJualOlehSales faktur
 
-    @NotNull
-    byte[] password = []
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    PesanPiutangJatuhTempo() {}
 
-    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDateTime")
-    LocalDateTime loginTerakhir
-
-    @NotEmpty @ElementCollection(fetch=FetchType.EAGER) @Enumerated
-    List<Menu> hakAkses = []
-
-    public boolean bolehAkses(Menu menu) {
-        hakAkses.contains(menu)
+    PesanPiutangJatuhTempo(FakturJualOlehSales faktur) {
+        this.tanggal = LocalDateTime.now()
+        this.faktur = faktur
+        this.pesan = "Faktur <span class='info'>${faktur.nomor}</span> akan segera jatuh tempo pada tanggal <span class='info'>${faktur.jatuhTempo.toString('dd-MM-YYYY')}</span>."
     }
 
     @Override
-    String getUserName() {
-        nama
+    boolean masihBerlaku() {
+        !faktur.piutang.lunas
     }
 
+    @Override
+    String jenisPesan() {
+        "Piutang Jatuh Tempo"
+    }
 }
 

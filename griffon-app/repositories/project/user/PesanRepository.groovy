@@ -15,7 +15,7 @@
  */
 package project.user
 
-import domain.user.Pesan
+import domain.general.Pesan
 import simplejpa.transaction.Transaction
 import griffon.core.*
 import griffon.util.*

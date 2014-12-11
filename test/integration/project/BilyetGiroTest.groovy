@@ -16,8 +16,8 @@
 package project
 
 import domain.faktur.BilyetGiro
-import domain.user.Pesan
-import domain.user.PesanGiroJatuhTempo
+import domain.general.Pesan
+import domain.general.PesanGiroJatuhTempo
 import project.faktur.BilyetGiroRepository
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.StatusFakturJual

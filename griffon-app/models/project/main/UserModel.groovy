@@ -15,7 +15,7 @@
  */
 package project.main
 
-import domain.user.*
+import domain.general.*
 import ca.odell.glazedlists.*
 import org.joda.time.*
 import simplejpa.swing.*

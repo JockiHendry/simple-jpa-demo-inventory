@@ -28,7 +28,7 @@ import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
-import domain.user.PesanLevelMinimum
+import domain.general.PesanLevelMinimum
 import org.joda.time.LocalDate
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction

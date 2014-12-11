@@ -41,8 +41,5 @@ class ItemStok {
     @Transient
     long saldo
 
-    LocalDate tanggalRiwayat() {
-        tanggal
-    }
 }
 

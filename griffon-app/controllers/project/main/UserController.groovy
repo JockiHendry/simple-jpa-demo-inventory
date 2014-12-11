@@ -15,7 +15,7 @@
  */
 package project.main
 
-import domain.user.*
+import domain.general.*
 import project.user.UserRepository
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
