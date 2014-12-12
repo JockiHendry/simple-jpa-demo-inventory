@@ -31,9 +31,9 @@
 	<field name="tanggal" class="org.joda.time.LocalDate">
 		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
 	</field>
-	<variable name="saldo" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{jumlah}]]></variableExpression>
-	</variable>
+	<field name="saldo" class="java.lang.Long">
+		<fieldDescription><![CDATA[saldo]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -190,7 +190,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referensiStok}?.classFinance?: $F{referensiStok}?.classGudang]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0">
+			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="498" y="0" width="57" height="15" uuid="66a383be-e423-4ab5-a1ec-c3ed6aa907ee"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
@@ -198,7 +198,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{saldo}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

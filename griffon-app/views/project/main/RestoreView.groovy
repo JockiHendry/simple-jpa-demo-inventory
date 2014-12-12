@@ -43,6 +43,7 @@ panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
             button('Mulai Restore', actionPerformed: controller.&mulai)
             button('Refresh Stok', actionPerformed: controller.refreshStok)
             button('Refresh Jumlah Akan Dikirim', actionPerformed: controller.refreshJumlahAkanDikirim)
+            button('Refresh Saldo Stok', actionPerformed: controller.refreshSaldoStok)
         }
     }
 

@@ -27,7 +27,7 @@ panel(id: 'mainPanel') {
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
         comboBox(id: 'periodeItemStok', model: model.periodeItemStok,
-            templateRenderer: "\${it.tanggalMulai.toString('MMMM YYYY')} (Jumlah: \${it.jumlah})")
+            templateRenderer: "\${it.tanggalMulai.toString('MMMM YYYY')} (Perubahan: \${it.jumlah}, Saldo: \${it.saldo})")
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         checkBox('Referensi Finance', selected: bind('showReferensiFinance', target: model, mutual: true))
         checkBox('Referensi Gudang', selected: bind('showReferensiGudang', target: model, mutual: true))

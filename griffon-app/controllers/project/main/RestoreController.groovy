@@ -18,6 +18,7 @@ package project.main
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.inventory.ItemStok
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
@@ -158,6 +159,35 @@ class RestoreController {
                 }
             }
         }
+        execInsideUISync { output.append("\nSelesai!\n\n") }
+    }
+
+    def refreshSaldoStok = {
+        JTextArea output = view.output
+        execInsideUISync { output.append("Mulai...\n\n") }
+        long errorItemStok = 0, errorPeriode = 0
+        produkRepository.withTransaction {
+            findAllProduk().each { Produk p ->
+                long saldo = 0
+                p.daftarStok.each { Gudang g, StokProduk s ->
+                    s.listPeriodeRiwayat.each { PeriodeItemStok pr ->
+                        pr.listItem.each { ItemStok i ->
+                            saldo += i.jumlah
+                            if (i.saldo != saldo) {
+                                errorItemStok++
+                                i.saldo = saldo
+                            }
+                        }
+                        if (pr.saldo != saldo) {
+                            errorPeriode++
+                            pr.saldo = saldo
+                        }
+                    }
+                }
+            }
+        }
+        execInsideUISync { output.append("Jumlah saldo per item yang tidak sesuai: $errorItemStok.\n") }
+        execInsideUISync { output.append("Jumlah saldo periode yang tidak sesuai: $errorPeriode.\n") }
         execInsideUISync { output.append("\nSelesai!\n\n") }
     }
 
