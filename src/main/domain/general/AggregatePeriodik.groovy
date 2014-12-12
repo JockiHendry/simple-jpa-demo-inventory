@@ -63,10 +63,11 @@ abstract class AggregatePeriodik {
         p.tanggalSelesai = tanggal.withDayOfMonth(1).plusMonths(1).minusDays(1)
         p.jumlah = 0
         p.arsip = Boolean.FALSE
-        if (getListNilaiPeriodik().contains(p)) {
+        if (listNilaiPeriodik.contains(p)) {
             throw new DataDuplikat(p)
         }
-        getListNilaiPeriodik().add(p)
+        p.saldo = jumlah
+        listNilaiPeriodik.add(p)
         p
     }
 
@@ -85,29 +86,41 @@ abstract class AggregatePeriodik {
     }
 
     long saldoKumulatifSebelum(NilaiPeriodik nilaiPeriodik) {
-        long saldo = 0
+        long saldoSebelumnya = 0
         for (NilaiPeriodik p: getListNilaiPeriodik()) {
             if (p.termasuk(nilaiPeriodik.tanggalMulai)) break
-            saldo += p.jumlah
+            saldoSebelumnya = p.saldo?: 0
         }
-        saldo
+        saldoSebelumnya
     }
 
     long saldoKumulatifSebelum(LocalDate tanggal) {
-        long saldo = 0
-        NilaiPeriodik periode = periode(tanggal)
-        saldo += saldoKumulatifSebelum(periode)
-        periode.getListItemPeriodik().each { ItemPeriodik i ->
-            if (i.tanggal.isBefore(tanggal)) {
-                saldo += i.jumlah
+        NilaiPeriodik p = periode(tanggal)
+        long saldoSebelumnya = saldoKumulatifSebelum(p)
+        for (ItemPeriodik i : periode(tanggal).listItemPeriodik) {
+            if (i.tanggal.compareTo(tanggal) >= 0) {
+                break
             }
+            saldoSebelumnya = i.saldo ?: 0
         }
-        saldo
+        saldoSebelumnya
     }
 
     void tambah(ItemPeriodik item) {
         periode(item.tanggal).tambah(item)
         this.jumlah += item.jumlah
+    }
+
+    List<ItemPeriodik> cariItemStok(NilaiPeriodik nilaiPeriodik) {
+        new ArrayList<ItemPeriodik>(nilaiPeriodik.listItemPeriodik)
+    }
+
+    List<ItemPeriodik> cariItemStok(Periode periodeCari) {
+        List<ItemPeriodik> hasil = []
+        for (NilaiPeriodik p: periode(periodeCari)) {
+            hasil.addAll(p.listItemPeriodik.findAll { periodeCari.termasuk(it.tanggal) })
+        }
+        hasil
     }
 
 }

@@ -62,29 +62,20 @@ class ProdukTests extends GriffonUnitTestCase {
 
     public void testSaldoKumulatifSebelumPeriode() {
         StokProduk s = new StokProduk()
-
-        // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
-        s.listPeriodeRiwayat << p1
-
-        // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 5)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 10)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 20)
-        s.listPeriodeRiwayat << p2
-
-        // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 10)
-        s.listPeriodeRiwayat << p3
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10))
 
         // Periksa saldo kumulatif
+        PeriodeItemStok p1 = s.listPeriodeRiwayat[0]
+        PeriodeItemStok p2 = s.listPeriodeRiwayat[1]
+        PeriodeItemStok p3 = s.listPeriodeRiwayat[2]
         assertEquals(0, s.saldoKumulatifSebelum(p1))
         assertEquals(60, s.saldoKumulatifSebelum(p2))
         assertEquals(95, s.saldoKumulatifSebelum(p3))
@@ -92,27 +83,15 @@ class ProdukTests extends GriffonUnitTestCase {
 
     public void testSaldoKumulatifSebelumTanggal() {
         StokProduk s = new StokProduk()
-
-        // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
-        s.listPeriodeRiwayat << p1
-
-        // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20)
-        s.listPeriodeRiwayat << p2
-
-        // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10)
-        s.listPeriodeRiwayat << p3
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10))
 
         // Periksa saldo kumulatif
         assertEquals(0, s.saldoKumulatifSebelum(LocalDate.parse('2014-01-01')))
@@ -124,48 +103,37 @@ class ProdukTests extends GriffonUnitTestCase {
 
     public void testCariItemStokBerdasarkanPeriodeItemStok() {
         StokProduk s = new StokProduk()
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 5))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-03'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-05'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-01'), jumlah: 10))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-03'), jumlah: 20))
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-03-05'), jumlah: 10))
 
-        // Periode 1
-        PeriodeItemStok p1 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-01-01'), tanggalSelesai: LocalDate.parse('2014-01-31'), jumlah: 60)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
-        p1.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 30)
-        s.listPeriodeRiwayat << p1
-
-        // Periode 2
-        PeriodeItemStok p2 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-02-01'), tanggalSelesai: LocalDate.parse('2014-02-28'), jumlah: 35)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 5)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 10)
-        p2.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 20)
-        s.listPeriodeRiwayat << p2
-
-        // Periode 3
-        PeriodeItemStok p3 = new PeriodeItemStok(tanggalMulai: LocalDate.parse('2014-03-01'), tanggalSelesai: LocalDate.parse('2014-03-31'), jumlah: 40)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-03'), jumlah: 20)
-        p3.listItem << new ItemStok(tanggal: LocalDate.parse('2014-01-05'), jumlah: 10)
-        s.listPeriodeRiwayat << p3
+        PeriodeItemStok p1 = s.listPeriodeRiwayat[0]
+        PeriodeItemStok p2 = s.listPeriodeRiwayat[1]
+        PeriodeItemStok p3 = s.listPeriodeRiwayat[2]
 
         // Cari item stok untuk periode 1
         List hasil = s.cariItemStok(p1)
-        assertEquals(0, hasil[0].saldo)
-        assertEquals(10, hasil[1].saldo)
-        assertEquals(30, hasil[2].saldo)
-        assertEquals(60, hasil[3].saldo)
+        assertEquals(10, hasil[0].saldo)
+        assertEquals(30, hasil[1].saldo)
+        assertEquals(60, hasil[2].saldo)
 
         // Cari item stok untuk periode 2
         hasil = s.cariItemStok(p2)
-        assertEquals(60, hasil[0].saldo)
-        assertEquals(65, hasil[1].saldo)
-        assertEquals(75, hasil[2].saldo)
-        assertEquals(95, hasil[3].saldo)
+        assertEquals(65, hasil[0].saldo)
+        assertEquals(75, hasil[1].saldo)
+        assertEquals(95, hasil[2].saldo)
 
         // Cari item stok untuk periode 3
         hasil = s.cariItemStok(p3)
-        assertEquals(95, hasil[0].saldo)
-        assertEquals(105, hasil[1].saldo)
-        assertEquals(125, hasil[2].saldo)
-        assertEquals(135, hasil[3].saldo)
+        assertEquals(105, hasil[0].saldo)
+        assertEquals(125, hasil[1].saldo)
+        assertEquals(135, hasil[2].saldo)
     }
 
     public void testCariItemStokBerdasarkanPeriode() {
@@ -265,6 +233,30 @@ class ProdukTests extends GriffonUnitTestCase {
         assertEquals( 30, hasil[0].jumlah)
         assertEquals( 20, hasil[1].jumlah)
         assertEquals(-15, hasil[2].jumlah)
+    }
+
+    public void testSaldo() {
+        Produk p = new Produk()
+        Gudang g = new Gudang('Gudang1', true)
+        StokProduk s = new StokProduk(gudang: g, produk: p)
+        assertEquals(0, s.jumlah)
+
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-01'), jumlah: 10))
+        assertEquals(10, s.jumlah)
+        assertEquals(10, s.listNilaiPeriodik[0].saldo)
+        assertEquals(10, s.listNilaiPeriodik[0].listItemPeriodik[0].saldo)
+
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-01-31'), jumlah: 20))
+        assertEquals(30, s.jumlah)
+        assertEquals(30, s.listNilaiPeriodik[0].saldo)
+        assertEquals(10, s.listNilaiPeriodik[0].listItemPeriodik[0].saldo)
+        assertEquals(30, s.listNilaiPeriodik[0].listItemPeriodik[1].saldo)
+
+        s.tambah(new ItemStok(tanggal: LocalDate.parse('2014-02-01'), jumlah: 30))
+        assertEquals(60, s.jumlah)
+        assertEquals(30, s.listNilaiPeriodik[0].saldo)
+        assertEquals(60, s.listNilaiPeriodik[1].saldo)
+        assertEquals(60, s.listNilaiPeriodik[1].listItemPeriodik[0].saldo)
     }
 
 }

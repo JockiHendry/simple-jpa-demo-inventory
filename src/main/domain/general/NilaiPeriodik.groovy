@@ -36,6 +36,8 @@ abstract class NilaiPeriodik {
 
     Long jumlah = 0
 
+    Long saldo
+
     abstract List getListItemPeriodik()
 
     public boolean termasuk(LocalDate tanggal) {
@@ -52,6 +54,8 @@ abstract class NilaiPeriodik {
     public void tambah(ItemPeriodik item) {
         getListItemPeriodik().add(item)
         jumlah += item.jumlah
+        saldo += item.jumlah
+        item.saldo = saldo
     }
 
 }

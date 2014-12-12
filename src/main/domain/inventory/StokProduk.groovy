@@ -43,32 +43,6 @@ class StokProduk extends AggregatePeriodik {
         new PeriodeItemStok()
     }
 
-    List<ItemStok> cariItemStok(PeriodeItemStok periodeItemStok, boolean hitungSaldo = true) {
-        long saldo = 0
-        List<ItemStok> hasil = []
-        if (hitungSaldo) {
-            saldo = saldoKumulatifSebelum(periodeItemStok)
-            hasil << new ItemStok(tanggal: periodeItemStok.tanggalMulai, keterangan: 'Saldo Awal', saldo: saldo)
-        }
-        for (ItemStok itemStok: periodeItemStok.listItem) {
-            if (hitungSaldo) {
-                saldo += itemStok.jumlah
-                itemStok.saldo = saldo
-            }
-            hasil << itemStok
-        }
-        hasil
-    }
-
-    List<ItemStok> cariItemStok(Periode periode) {
-        List<ItemStok> hasil = []
-        for (PeriodeItemStok periodeItemStok: listPeriodeRiwayat) {
-            if (periodeItemStok.termasuk(periode)) {
-                hasil.addAll(cariItemStok(periodeItemStok, false).findAll { periode.termasuk(it.tanggal) })
-            }
-        }
-        hasil
-    }
 
 }
 
