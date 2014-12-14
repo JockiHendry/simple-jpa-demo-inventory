@@ -118,19 +118,19 @@ class ProdukTests extends GriffonUnitTestCase {
         PeriodeItemStok p3 = s.listPeriodeRiwayat[2]
 
         // Cari item stok untuk periode 1
-        List hasil = s.cariItemStok(p1)
+        List hasil = s.findAllItemPeriodik(p1)
         assertEquals(10, hasil[0].saldo)
         assertEquals(30, hasil[1].saldo)
         assertEquals(60, hasil[2].saldo)
 
         // Cari item stok untuk periode 2
-        hasil = s.cariItemStok(p2)
+        hasil = s.findAllItemPeriodik(p2)
         assertEquals(65, hasil[0].saldo)
         assertEquals(75, hasil[1].saldo)
         assertEquals(95, hasil[2].saldo)
 
         // Cari item stok untuk periode 3
-        hasil = s.cariItemStok(p3)
+        hasil = s.findAllItemPeriodik(p3)
         assertEquals(105, hasil[0].saldo)
         assertEquals(125, hasil[1].saldo)
         assertEquals(135, hasil[2].saldo)
@@ -162,32 +162,32 @@ class ProdukTests extends GriffonUnitTestCase {
 
         // Cari item stok untuk periode
 
-        List hasil = s.cariItemStok(Periode.dari('01-01-2014', '31-01-2014'))
+        List hasil = s.findAllItemPeriodik(Periode.dari('01-01-2014', '31-01-2014'))
         assertEquals(10, hasil[0].jumlah)
         assertEquals(20, hasil[1].jumlah)
         assertEquals(30, hasil[2].jumlah)
 
-        hasil = s.cariItemStok(Periode.dari('01-01-2014', '15-01-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('01-01-2014', '15-01-2014'))
         assertEquals(10, hasil[0].jumlah)
         assertEquals(20, hasil[1].jumlah)
 
-        hasil = s.cariItemStok(Periode.dari('05-01-2014', '31-01-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('05-01-2014', '31-01-2014'))
         assertEquals(30, hasil[0].jumlah)
 
-        hasil = s.cariItemStok(Periode.dari('15-01-2014', '31-01-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('15-01-2014', '31-01-2014'))
         assertTrue(hasil.empty)
 
-        hasil = s.cariItemStok(Periode.dari('01-02-2014', '28-02-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('01-02-2014', '28-02-2014'))
         assertEquals(5,  hasil[0].jumlah)
         assertEquals(10, hasil[1].jumlah)
         assertEquals(20, hasil[2].jumlah)
 
-        hasil = s.cariItemStok(Periode.dari('01-03-2014', '31-03-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('01-03-2014', '31-03-2014'))
         assertEquals(10, hasil[0].jumlah)
         assertEquals(20, hasil[1].jumlah)
         assertEquals(10, hasil[2].jumlah)
 
-        hasil = s.cariItemStok(Periode.dari('01-01-2014', '31-03-2014'))
+        hasil = s.findAllItemPeriodik(Periode.dari('01-01-2014', '31-03-2014'))
         assertEquals(10, hasil[0].jumlah)
         assertEquals(20, hasil[1].jumlah)
         assertEquals(30, hasil[2].jumlah)

@@ -18,10 +18,10 @@ package project.labarugi
 import domain.labarugi.*
 import ca.odell.glazedlists.*
 
-class SaldoKasAsChildModel {
+class JumlahPeriodeKasAsChildModel {
 
-	BasicEventList<SaldoKas> saldoKasList = new BasicEventList<>()
+    PeriodeKas parent
 
-	KategoriKas kategoriKas
+    BasicEventList<JumlahPeriodeKas> jumlahPeriodeKasList = new BasicEventList<>()
 
 }

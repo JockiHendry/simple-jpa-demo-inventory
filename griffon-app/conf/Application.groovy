@@ -23,6 +23,20 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "jumlahPeriodeKasAsChild"
+    'jumlahPeriodeKasAsChild' {
+        model      = 'project.labarugi.JumlahPeriodeKasAsChildModel'
+        view       = 'project.labarugi.JumlahPeriodeKasAsChildView'
+        controller = 'project.labarugi.JumlahPeriodeKasAsChildController'
+    }
+
+    // MVC Group for "kas"
+    'kas' {
+        model      = 'project.labarugi.KasModel'
+        view       = 'project.labarugi.KasView'
+        controller = 'project.labarugi.KasController'
+    }
+
     // MVC Group for "laporanLabaRugi"
     'laporanLabaRugi' {
         model      = 'project.labarugi.LaporanLabaRugiModel'
@@ -77,13 +91,6 @@ mvcGroups {
         model      = 'project.labarugi.TransaksiKasModel'
         view       = 'project.labarugi.TransaksiKasView'
         controller = 'project.labarugi.TransaksiKasController'
-    }
-
-    // MVC Group for "jumlahKasAsChild"
-    'jumlahKasAsChild' {
-        model      = 'project.labarugi.SaldoKasAsChildModel'
-        view       = 'project.labarugi.SaldoKasAsChildView'
-        controller = 'project.labarugi.SaldoKasAsChildController'
     }
 
     // MVC Group for "kategoriKas"

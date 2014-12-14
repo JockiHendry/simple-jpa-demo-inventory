@@ -35,32 +35,6 @@ class KategoriKas implements Comparable {
     @NotNull
     Boolean dipakaiDiLaporan = Boolean.TRUE
 
-    @ElementCollection(fetch=FetchType.EAGER)
-    Set<SaldoKas> listSaldoKas = [] as Set
-
-    void perubahanSaldo(int bulan, int tahun, BigDecimal jumlahBerubah, JenisTransaksiKas jenis) {
-        SaldoKas saldoKas = listSaldoKas.find { (it.bulan == bulan) && (it.tahun == tahun) && (it.jenis == jenis) }
-        if (saldoKas) {
-            saldoKas.saldo += jumlahBerubah
-        } else {
-            saldoKas = new SaldoKas(bulan, tahun, jumlahBerubah, jenis)
-            listSaldoKas << saldoKas
-        }
-    }
-
-    BigDecimal saldo(int bulan, int tahun, JenisTransaksiKas jenisTransaksiKas = null) {
-        listSaldoKas.sum { SaldoKas j ->
-            if ((j.bulan == bulan) && (j.tahun == tahun) && (jenisTransaksiKas? (j.jenis == jenisTransaksiKas): true)) {
-                return j.saldo
-            }
-            0
-        }?: 0
-    }
-
-    BigDecimal saldoTerakhir() {
-        listSaldoKas.sum { it.saldo }?: 0
-    }
-
     @Override
     String toString() {
         "${jenis.teks} - $nama"
@@ -69,7 +43,7 @@ class KategoriKas implements Comparable {
     @Override
     int compareTo(Object o) {
         if (o && (o instanceof KategoriKas)) {
-            return nama.compareTo(o.nama)
+            return nama.compareTo(o.nama) + (jenis?.compareTo(o?.jenis)?:0)
         }
         1
     }

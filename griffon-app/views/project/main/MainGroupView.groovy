@@ -117,7 +117,7 @@ actions {
         smallIcon: imageIcon('/menu_servis.png'), closure: controller.switchPage)
     action(id: 'penerimaanServis', name: 'Penerimaan Servis', actionCommandKey: 'penerimaanServis',
         smallIcon: imageIcon('/menu_penerimaan_servis.png'), closure: controller.switchPage)
-    action(id: 'transaksiKas', name: 'Kas', actionCommandKey: 'transaksiKas', mnemonic: KeyEvent.VK_H,
+    action(id: 'kas', name: 'Kas', actionCommandKey: 'kas', mnemonic: KeyEvent.VK_H,
         smallIcon: imageIcon('/menu_transaksi_kas.png'), closure: controller.switchPage)
 
     action(id: 'laporan', name: 'Laporan', actionCommandKey: 'laporan', mnemonic: KeyEvent.VK_L,
@@ -246,8 +246,8 @@ application(id: 'mainFrame',
                     borderPainted: false, visible: bind {model.servisVisible})
                 button(action: penerimaanServis, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.penerimaanServisVisible})
-                button(action: transaksiKas, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
-                    borderPainted: false, visible: bind {model.transaksiKasVisible})
+                button(action: kas, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
+                    borderPainted: false, visible: bind {model.kasVisible})
                 button(action: laporan, verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,
                     borderPainted: false, visible: bind {model.laporanVisible})
                 button(action: maintenance, id: 'maintenanceButton', verticalTextPosition: SwingConstants.BOTTOM, horizontalTextPosition: SwingConstants.CENTER,

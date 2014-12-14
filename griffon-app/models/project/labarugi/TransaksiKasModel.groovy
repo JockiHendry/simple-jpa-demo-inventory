@@ -22,9 +22,8 @@ import org.joda.time.*
 
 class TransaksiKasModel {
 
-    @Bindable Long id
+    Kas kas
 
-    @Bindable String nomor
     @Bindable LocalDate tanggal
     @Bindable String pihakTerkait
     BasicEventList<KategoriKas> kategoriKasList = new BasicEventList<>()
@@ -35,17 +34,10 @@ class TransaksiKasModel {
     @Bindable String keterangan
     BasicEventList<TransaksiKas> transaksiKasList = new BasicEventList<>()
 
-    @Bindable String nomorSearch
     @Bindable String pihakTerkaitSearch
     @Bindable String kategoriKasSearch
-    @Bindable LocalDate tanggalMulaiSearch
-    @Bindable LocalDate tanggalSelesaiSearch
 
-    @Bindable String created
-    @Bindable String modified
-    @Bindable String createdBy
-    @Bindable String modifiedBy
-
-    @Bindable boolean deleted = false
+    BasicEventList<PeriodeKas> periodeKasList = new BasicEventList<>()
+    DefaultEventComboBoxModel<PeriodeKas> periodeKas = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(periodeKasList)
 
 }

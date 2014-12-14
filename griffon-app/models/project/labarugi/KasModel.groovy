@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package laporan
+package project.labarugi
 
-import domain.labarugi.JENIS_KATEGORI_KAS
-import domain.labarugi.JenisTransaksiKas
-import groovy.transform.Canonical
+import domain.labarugi.*
+import ca.odell.glazedlists.*
 
-@Canonical
-class SaldoKategoriKas {
+class KasModel {
 
-    String namaKas
+    @Bindable Long id
 
-    String nama
+    @Bindable Integer jumlah
+    @Bindable String nama
+    List<PeriodeKas> listPeriodeRiwayat = []
+    @Bindable Boolean sistem
+    BasicEventList<Kas> kasList = new BasicEventList<>()
 
-    JENIS_KATEGORI_KAS jenisKategori
-
-    JenisTransaksiKas jenisTransaksiKas
-
-    BigDecimal saldo
+    @Bindable String created
+    @Bindable String modified
+    @Bindable String createdBy
+    @Bindable String modifiedBy
 
 }

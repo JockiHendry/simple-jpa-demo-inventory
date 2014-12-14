@@ -21,23 +21,24 @@ import domain.labarugi.TransaksiKas
 import org.joda.time.LocalDate
 import project.labarugi.JenisTransaksiKasRepository
 import project.labarugi.KategoriKasRepository
-import project.labarugi.TransaksiKasRepository
+import project.labarugi.KasRepository
+import simplejpa.transaction.Transaction
 
-@SuppressWarnings("GroovyUnusedDeclaration")
+@Transaction @SuppressWarnings("GroovyUnusedDeclaration")
 class LabaRugiEventListenerService {
 
-    TransaksiKasRepository transaksiKasRepository
+    KasRepository kasRepository
     KategoriKasRepository kategoriKasRepository
     JenisTransaksiKasRepository jenisTransaksiKasRepository
 
     void onTransaksiSistem(TransaksiSistem transaksiSistem) {
         KategoriKas kategori = kategoriKasRepository.getKategoriSistem(transaksiSistem.kategori)
-        TransaksiKas transaksiKas = new TransaksiKas(null, LocalDate.now(), transaksiSistem.nomorReferensi, kategori,
-            transaksiSistem.jumlah, jenisTransaksiKasRepository.cariUntukSistem())
+        TransaksiKas transaksiKas = new TransaksiKas(tanggal: LocalDate.now(), jumlah: transaksiSistem.jumlah,
+            pihakTerkait: transaksiSistem.nomorReferensi, kategoriKas: kategori, jenis: jenisTransaksiKasRepository.cariUntukSistem())
         if (transaksiSistem.invers) {
             transaksiKas.jumlah = -1 * transaksiKas.jumlah
         }
-        transaksiKasRepository.buat(transaksiKas)
+        kasRepository.cariUntukSistem().tambah(transaksiKas)
     }
 
 }

@@ -144,7 +144,7 @@ class Produk implements Comparable {
         List<ItemStok> hasil = []
         Periode periodeCari = new Periode(tanggalMulai, tanggalSelesai)
         for (StokProduk stokProduk: stokSemuaGudang()) {
-            hasil.addAll(stokProduk.cariItemStok(periodeCari))
+            hasil.addAll(stokProduk.findAllItemPeriodik(periodeCari))
         }
         hasil.sort {a, b -> a.tanggal.compareTo(b.tanggal)?: -a.jumlah.compareTo(b.jumlah) }
     }

@@ -52,10 +52,22 @@ abstract class NilaiPeriodik {
     }
 
     public void tambah(ItemPeriodik item) {
+        if (!termasuk(item.tanggal)) {
+            throw new IllegalArgumentException("Tanggal ${item.tanggal} bukan bagian dari periode $tanggalMulai s/d $tanggalSelesai.")
+        }
         getListItemPeriodik().add(item)
-        jumlah += item.jumlah
-        saldo += item.jumlah
+        jumlah += item.delta()
+        saldo += item.delta()
         item.saldo = saldo
+    }
+
+    public void hapus(ItemPeriodik item) {
+        if (!termasuk(item.tanggal)) {
+            throw new IllegalArgumentException("Tanggal ${item.tanggal} bukan bagian dari periode $tanggalMulai s/d $tanggalSelesai.")
+        }
+        getListItemPeriodik().remove(item)
+        jumlah -= item.delta()
+        saldo -= item.delta()
     }
 
 }

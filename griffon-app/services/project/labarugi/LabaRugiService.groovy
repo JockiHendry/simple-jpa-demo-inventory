@@ -26,6 +26,10 @@ import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.inventory.Transfer
+import domain.labarugi.JENIS_KATEGORI_KAS
+import domain.labarugi.KATEGORI_SISTEM
+import domain.labarugi.Kas
+import domain.labarugi.KategoriKas
 import domain.labarugi.NilaiInventory
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJual
@@ -37,6 +41,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
 import simplejpa.transaction.Transaction
+import static project.labarugi.KategoriKasRepository.KATEGORI_LAIN
+import static project.labarugi.KategoriKasRepository.KATEGORI_TUKAR_BARANG
 
 @Transaction
 class LabaRugiService {
@@ -44,7 +50,26 @@ class LabaRugiService {
     final Logger log = LoggerFactory.getLogger(LabaRugiService)
 
     GudangRepository gudangRepository
-    KategoriKasService kategoriKasService
+    KategoriKasRepository kategoriKasRepository
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void serviceInit() {
+        // Buat kategori pendapatan tukar barang bila perlu
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG)) {
+            kategoriKasRepository.buat(new KategoriKas(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENDAPATAN, true))
+        }
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG)) {
+            kategoriKasRepository.buat(new KategoriKas(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENGELUARAN, true))
+        }
+
+        // Buat kategori lain-lain bila perlu
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENDAPATAN_LAIN)) {
+            kategoriKasRepository.buat(new KategoriKas(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENDAPATAN, true))
+        }
+        if (!kategoriKasRepository.getKategoriSistem(KATEGORI_SISTEM.PENGELUARAN_LAIN)) {
+            kategoriKasRepository.buat(new KategoriKas(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true))
+        }
+    }
 
     NilaiInventory hitungInventory(LocalDate sampaiTanggal, Produk produk) {
         produk = findProdukById(produk.id)
@@ -147,11 +172,27 @@ class LabaRugiService {
         def (penjualanKotor, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
 
         hasil << new ItemLabaRugi('Pendapatan Dari Penjualan', penjualanKotor, null)
-        hasil << new ItemLabaRugi('Pendapatan Operasional', kategoriKasService.totalPendapatan(tanggalMulai, tanggalSelesai), null)
+        hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
         hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hitungHPP(tanggalMulai, tanggalSelesai))
         hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)
-        hasil << new ItemLabaRugi('Pengeluaran Operasional', null, kategoriKasService.totalPengeluaran(tanggalMulai, tanggalSelesai))
+        hasil << new ItemLabaRugi('Pengeluaran Operasional', null, totalPengeluaran(tanggalMulai, tanggalSelesai))
 
+        hasil
+    }
+
+    long totalPendapatan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        long hasil = 0
+        for (Kas kas: findAllKas()) {
+            hasil += kas.jumlah(tanggalMulai, tanggalSelesai, JENIS_KATEGORI_KAS.PENDAPATAN, true)
+        }
+        hasil
+    }
+
+    long totalPengeluaran(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        long hasil = 0
+        for (Kas kas: findAllKas()) {
+            hasil += kas.jumlah(tanggalMulai, tanggalSelesai, JENIS_KATEGORI_KAS.PENGELUARAN, true)
+        }
         hasil
     }
 

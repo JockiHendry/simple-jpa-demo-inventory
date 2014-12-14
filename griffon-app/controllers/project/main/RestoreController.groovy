@@ -22,6 +22,10 @@ import domain.inventory.ItemStok
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
+import domain.labarugi.JENIS_KATEGORI_KAS
+import domain.labarugi.Kas
+import domain.labarugi.PeriodeKas
+import domain.labarugi.TransaksiKas
 import domain.penjualan.FakturJual
 import domain.penjualan.StatusFakturJual
 import domain.retur.ReturJual
@@ -187,6 +191,51 @@ class RestoreController {
             }
         }
         execInsideUISync { output.append("Jumlah saldo per item yang tidak sesuai: $errorItemStok.\n") }
+        execInsideUISync { output.append("Jumlah saldo periode yang tidak sesuai: $errorPeriode.\n") }
+        execInsideUISync { output.append("\nSelesai!\n\n") }
+    }
+
+    def refreshSaldoKas = {
+        JTextArea output = view.output
+        execInsideUISync { output.append("Mulai...\n\n") }
+        long errorItemTransaksi = 0, errorPeriode = 0
+        produkRepository.withTransaction {
+            findAllKas().each { Kas kas ->
+                long saldo = 0
+                kas.listPeriodeRiwayat.each { PeriodeKas p ->
+                    long jumlahPeriode = 0
+                    p.jumlahPeriodik.clear()
+                    p.listItemPeriodik.each { TransaksiKas tr ->
+                        if (tr.kategoriKas.jenis == JENIS_KATEGORI_KAS.PENDAPATAN) {
+                            saldo += tr.jumlah
+                            jumlahPeriode += tr.jumlah
+                        } else if (tr.kategoriKas.jenis == JENIS_KATEGORI_KAS.PENGELUARAN) {
+                            saldo -= tr.jumlah
+                            jumlahPeriode -= tr.jumlah
+                        } else {
+                            throw new IllegalStateException('Jenis kategori kas tidak dikenali!')
+                        }
+                        p.cariJumlahPeriodeKas(tr.kategoriKas, tr.jenis).saldo += tr.jumlah
+                        if (tr.saldo != saldo) {
+                            errorItemTransaksi++
+                            tr.saldo = saldo
+                        }
+                    }
+                    if (p.saldo != saldo) {
+                        errorPeriode++
+                        p.saldo = saldo
+                    }
+                    if (p.jumlah != jumlahPeriode) {
+                        p.jumlah = jumlahPeriode
+                    }
+                }
+                if (kas.jumlah != saldo) {
+                    execInsideUISync { output.append("Menyesuaikan saldo kas ${kas.nama} dari ${kas.jumlah} menjadi ${saldo}...\n\n") }
+                    kas.jumlah = saldo
+                }
+            }
+        }
+        execInsideUISync { output.append("Jumlah saldo per item yang tidak sesuai: $errorItemTransaksi.\n") }
         execInsideUISync { output.append("Jumlah saldo periode yang tidak sesuai: $errorPeriode.\n") }
         execInsideUISync { output.append("\nSelesai!\n\n") }
     }

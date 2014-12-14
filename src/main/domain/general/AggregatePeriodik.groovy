@@ -20,13 +20,11 @@ import domain.inventory.Periode
 import domain.inventory.PeriodeItemStok
 import groovy.transform.*
 import javax.persistence.*
-import javax.validation.constraints.*
 import org.joda.time.*
 
 @MappedSuperclass @Canonical
 abstract class AggregatePeriodik {
 
-    @Min(0l)
     Integer jumlah = 0
 
     abstract List getListNilaiPeriodik()
@@ -107,15 +105,32 @@ abstract class AggregatePeriodik {
     }
 
     void tambah(ItemPeriodik item) {
-        periode(item.tanggal).tambah(item)
-        this.jumlah += item.jumlah
+        NilaiPeriodik p = periode(item.tanggal)
+        p.tambah(item)
+        this.jumlah += item.delta()
+        refreshSaldoSetelah(p, item.delta())
     }
 
-    List<ItemPeriodik> cariItemStok(NilaiPeriodik nilaiPeriodik) {
+    void hapus(ItemPeriodik item) {
+        NilaiPeriodik p = periode(item.tanggal)
+        p.hapus(item)
+        this.jumlah -= item.delta()
+        refreshSaldoSetelah(p, -item.delta())
+    }
+
+    private void refreshSaldoSetelah(NilaiPeriodik nilaiPeriodik, long delta) {
+        for (int i = listNilaiPeriodik.indexOf(nilaiPeriodik) + 1; i < listNilaiPeriodik.size(); i++) {
+            nilaiPeriodik = listNilaiPeriodik[i] as NilaiPeriodik
+            nilaiPeriodik.saldo += delta
+            nilaiPeriodik.listItemPeriodik.each { it.saldo += delta }
+        }
+    }
+
+    List<ItemPeriodik> findAllItemPeriodik(NilaiPeriodik nilaiPeriodik) {
         new ArrayList<ItemPeriodik>(nilaiPeriodik.listItemPeriodik)
     }
 
-    List<ItemPeriodik> cariItemStok(Periode periodeCari) {
+    List<ItemPeriodik> findAllItemPeriodik(Periode periodeCari) {
         List<ItemPeriodik> hasil = []
         for (NilaiPeriodik p: periode(periodeCari)) {
             hasil.addAll(p.listItemPeriodik.findAll { periodeCari.termasuk(it.tanggal) })

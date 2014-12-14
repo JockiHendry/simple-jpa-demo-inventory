@@ -16,11 +16,12 @@
 package project.laporan
 
 import domain.inventory.Periode
-import domain.labarugi.KategoriKas
-import domain.labarugi.SaldoKas
+import domain.labarugi.JumlahPeriodeKas
+import domain.labarugi.Kas
+import domain.labarugi.PeriodeKas
 import laporan.SaldoKategoriKas
 import org.joda.time.LocalDate
-import project.labarugi.KategoriKasRepository
+import project.labarugi.KasRepository
 import javax.swing.SwingUtilities
 
 @SuppressWarnings("GroovyUnusedDeclaration")
@@ -28,7 +29,7 @@ class LaporanTransaksiKasController {
 
     LaporanTransaksiKasModel model
     def view
-    KategoriKasRepository kategoriKasRepository
+    KasRepository kasRepository
 
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
@@ -36,18 +37,19 @@ class LaporanTransaksiKasController {
     }
 
     def tampilkanLaporan = {
+        model.tanggalMulaiCari = model.tanggalMulaiCari.dayOfMonth().withMinimumValue()
+        model.tanggalSelesaiCari = model.tanggalSelesaiCari.dayOfMonth().withMaximumValue()
         Periode periodeCari = new Periode(model.tanggalMulaiCari, model.tanggalSelesaiCari)
         def result = []
-        kategoriKasRepository.findAllKategoriKas().each { KategoriKas k ->
-            if (k.dipakaiDiLaporan) {
-                for (SaldoKas saldoKas : k.listSaldoKas) {
-                    if (saldoKas.periode.overlaps(periodeCari)) {
-                        result << new SaldoKategoriKas(k.nama, k.jenis, saldoKas.jenis, saldoKas.saldo)
+        kasRepository.findAllKas().each { Kas kas ->
+            for (PeriodeKas p: kas.listPeriodeRiwayat) {
+                if (p.termasuk(periodeCari)) {
+                    for (JumlahPeriodeKas j: p.jumlahPeriodik) {
+                        result << new SaldoKategoriKas(kas.nama, j.kategoriKas.nama, j.kategoriKas.jenis, j.jenisTransaksiKas, j.saldo)
                     }
                 }
             }
         }
-
         model.result = result
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari

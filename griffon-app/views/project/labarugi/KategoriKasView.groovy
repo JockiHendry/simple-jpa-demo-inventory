@@ -26,7 +26,6 @@ actions {
 	action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
 	action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
 	action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-	action(id: 'showJumlahKas', name: 'Lihat Saldo Kas', closure: controller.showJumlahKas)
 }
 
 panel(id: 'mainPanel') {
@@ -40,7 +39,7 @@ panel(id: 'mainPanel') {
     }
 
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.kategoriKasList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showJumlahKas, enterKeyAction: showJumlahKas) {
+        glazedTable(id: 'table', list: model.kategoriKasList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
 			glazedColumn(name: '', expression: { it.deleted == 'Y'? 'D': ''}, width: 20)
 			glazedColumn(name: 'Nama', property: 'nama')
 			glazedColumn(name: 'Jenis', property: 'jenis')
@@ -75,7 +74,6 @@ panel(id: 'mainPanel') {
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save)
-			button(action: showJumlahKas, visible: bind{table.isRowSelected})
             button(visible: bind{table.isRowSelected}, action: cancel)
             button(visible: bind{table.isRowSelected}, action: delete)
         }

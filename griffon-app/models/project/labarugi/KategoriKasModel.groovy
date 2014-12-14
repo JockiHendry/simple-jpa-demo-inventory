@@ -27,7 +27,6 @@ class KategoriKasModel {
 
 	@Bindable String nama
 	EnumComboBoxModel<JENIS_KATEGORI_KAS> jenis = new EnumComboBoxModel<JENIS_KATEGORI_KAS>(JENIS_KATEGORI_KAS)
-	List<SaldoKas> listJumlahKas = []
 	@Bindable Boolean dipakaiDiLaporan
 	BasicEventList<KategoriKas> kategoriKasList = new BasicEventList<>()
 

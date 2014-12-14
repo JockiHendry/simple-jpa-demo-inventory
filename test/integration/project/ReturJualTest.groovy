@@ -22,6 +22,7 @@ import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.Produk
 import domain.labarugi.JenisTransaksiKas
+import domain.labarugi.Kas
 import domain.labarugi.KategoriKas
 import domain.labarugi.TransaksiKas
 import domain.penjualan.FakturJualOlehSales
@@ -453,15 +454,17 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(21, produk2.jumlah)
 
         // Pastikan pendapatan tukar dibuat
-        KategoriKas kk = returJualRepository.findKategoriKasById(1l)
-        TransaksiKas t = returJualRepository.findTransaksiKasByPihakTerkait(retur.nomor)
-        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
-        assertNotNull(t)
-        assertEquals(LocalDate.now(), t.tanggal)
-        assertEquals(kk, t.kategoriKas)
-        assertEquals(j, t.jenis)
-        assertEquals(60000, t.jumlah)
-        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            JenisTransaksiKas j = findJenisTransaksiKasById(-1l)
+            KategoriKas kk = findKategoriKasById(1l)
+            TransaksiKas t = kas.listNilaiPeriodik[0].listItemPeriodik[0]
+            assertEquals(LocalDate.now(), t.tanggal)
+            assertEquals(kk, t.kategoriKas)
+            assertEquals(j, t.jenis)
+            assertEquals(60000, t.jumlah)
+            assertEquals(60000, kas.jumlah)
+        }
 
         // Hapus retur
         retur = returJualRepository.hapusPengeluaranBarang(retur)
@@ -476,8 +479,10 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(27, produk2.jumlah)
 
         // Pastikan pedapatan tukar berkurang
-        kk = returJualRepository.findKategoriKasById(1l)
-        assertEquals(0, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            assertEquals(0, kas.jumlah)
+        }
     }
 
     void testReturTukarUang() {
@@ -500,15 +505,17 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(21, produk2.jumlah)
 
         // Pastikan pendapatan tukar dibuat
-        KategoriKas kk = returJualRepository.findKategoriKasById(2l)
-        TransaksiKas t = returJualRepository.findTransaksiKasByPihakTerkait(retur.nomor)
-        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
-        assertNotNull(t)
-        assertEquals(LocalDate.now(), t.tanggal)
-        assertEquals(kk, t.kategoriKas)
-        assertEquals(j, t.jenis)
-        assertEquals(60000, t.jumlah)
-        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            JenisTransaksiKas j = findJenisTransaksiKasById(-1l)
+            KategoriKas kk = findKategoriKasById(2l)
+            TransaksiKas t = kas.listNilaiPeriodik[0].listItemPeriodik[0]
+            assertEquals(LocalDate.now(), t.tanggal)
+            assertEquals(j, t.jenis)
+            assertEquals(kk, t.kategoriKas)
+            assertEquals(60000, t.jumlah)
+            assertEquals(-60000, kas.jumlah)
+        }
 
         // Hapus retur
         retur = returJualRepository.hapusPengeluaranBarang(retur)
@@ -523,8 +530,10 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(27, produk2.jumlah)
 
         // Pastikan pedapatan tukar berkurang
-        kk = returJualRepository.findKategoriKasById(1l)
-        assertEquals(0, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            assertEquals(0, kas.jumlah)
+        }
     }
 
     void testReturTukarBisaDijualKembali() {
@@ -547,9 +556,17 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(21, produk2.jumlah)
 
         // Pastikan pedapatan tukar bertambah
-        KategoriKas kk = returJualRepository.findKategoriKasById(2l)
-        JenisTransaksiKas j = returJualRepository.findJenisTransaksiKasById(-1l)
-        assertEquals(60000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            JenisTransaksiKas j = findJenisTransaksiKasById(-1l)
+            KategoriKas kk = findKategoriKasById(2l)
+            TransaksiKas t = kas.listNilaiPeriodik[0].listItemPeriodik[0]
+            assertEquals(LocalDate.now(), t.tanggal)
+            assertEquals(j, t.jenis)
+            assertEquals(kk, t.kategoriKas)
+            assertEquals(60000, t.jumlah)
+            assertEquals(-60000, kas.jumlah)
+        }
 
         // Lakukan percobaan pada retur jual eceran
         retur = new ReturJualEceran(tanggal: LocalDate.now(), namaKonsumen: 'Test', bisaDijualKembali: true)
@@ -566,10 +583,11 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(3, produk2.jumlahRetur)
         assertEquals(16, produk2.jumlah)
 
-        // Pastikan pedapatan tukar bertambah
-        kk = returJualRepository.findKategoriKasById(2l)
-        assertEquals(120000, kk.saldo(LocalDate.now().monthOfYear, LocalDate.now().year, j))
-
+        // Pastikan pedapatan tukar berkurang
+        returJualRepository.withTransaction {
+            Kas kas = findKasBySistem(true)
+            assertEquals(-120000, kas.jumlah)
+        }
     }
 
 }

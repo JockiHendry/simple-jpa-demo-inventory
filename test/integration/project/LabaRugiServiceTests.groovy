@@ -57,4 +57,9 @@ class LabaRugiServiceTests extends DbUnitTestCase {
         assertEquals(11000, hpp.toInteger())
     }
 
+    void testTotalPendapatanDanPengeluaran() {
+        assertEquals(22000, labaRugiService.totalPendapatan(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31')).toInteger())
+        assertEquals(0, labaRugiService.totalPengeluaran(LocalDate.parse('2014-01-01'), LocalDate.parse('2014-01-31')).toInteger())
+    }
+
 }

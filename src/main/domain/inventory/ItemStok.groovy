@@ -37,5 +37,10 @@ class ItemStok extends ItemPeriodik {
         this.keterangan = keterangan
     }
 
+    @Override
+    long delta() {
+        jumlah
+    }
+
 }
 

@@ -18,11 +18,9 @@ package project.labarugi
 import ast.NeedSupervisorPassword
 import domain.labarugi.*
 import simplejpa.exception.DuplicateEntityException
-import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
-import java.awt.Dimension
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class KategoriKasController {
@@ -53,8 +51,7 @@ class KategoriKasController {
                 return
             }
         }
-		KategoriKas kategoriKas = new KategoriKas(id: model.id, nama: model.nama, jenis: model.jenis.selectedItem,
-			sistem: false, dipakaiDiLaporan: model.dipakaiDiLaporan)
+		KategoriKas kategoriKas = new KategoriKas(id: model.id, nama: model.nama, jenis: model.jenis.selectedItem, sistem: false, dipakaiDiLaporan: model.dipakaiDiLaporan)
 
 		if (!kategoriKasRepository.validate(kategoriKas, Default, model)) return
 
@@ -93,20 +90,11 @@ class KategoriKasController {
         }
     }
 
-	def showJumlahKas = {
-		execInsideUISync {
-			def args = [parentList: model.listJumlahKas, kategoriKas: view.table.selectionModel.selected[0]]
-			def props = [title: 'Saldo Kas', preferredSize: new Dimension(900, 420)]
-			DialogUtils.showMVCGroup('jumlahKasAsChild', args, view, props)
-		}
-	}
-
 	def clear = {
 		execInsideUISync {
 			model.id = null
 			model.nama = null
 			model.jenis.selectedItem = null
-			model.listJumlahKas.clear()
 			model.dipakaiDiLaporan = false
 			model.created = null
 			model.createdBy = null
@@ -128,8 +116,6 @@ class KategoriKasController {
 				model.nama = selected.nama
 				model.jenis.selectedItem = selected.jenis
 				model.dipakaiDiLaporan = selected.dipakaiDiLaporan
-				model.listJumlahKas.clear()
-				model.listJumlahKas.addAll(selected.listSaldoKas)
 				model.created = selected.createdDate
 				model.createdBy = selected.createdBy?'('+selected.createdBy+')':null
 				model.modified = selected.modifiedDate

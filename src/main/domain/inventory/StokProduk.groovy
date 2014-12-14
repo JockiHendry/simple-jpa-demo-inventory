@@ -17,6 +17,7 @@
 package domain.inventory
 
 import domain.general.AggregatePeriodik
+import domain.general.ItemPeriodik
 import domain.general.NilaiPeriodik
 import groovy.transform.*
 import simplejpa.DomainClass
@@ -43,6 +44,9 @@ class StokProduk extends AggregatePeriodik {
         new PeriodeItemStok()
     }
 
-
+    @Override
+    void tambah(ItemPeriodik item) {
+        super.tambah(item)
+    }
 }
 

@@ -15,22 +15,13 @@
  */
 package domain.labarugi
 
+import domain.general.ItemPeriodik
 import groovy.transform.*
-import simplejpa.DomainClass
 import javax.persistence.*
-import org.hibernate.annotations.Type
 import javax.validation.constraints.*
-import org.hibernate.validator.constraints.*
-import org.joda.time.*
 
-@DomainClass @Entity @Canonical
-class TransaksiKas {
-
-    @NotBlank @Size(min=2, max=100)
-    String nomor
-
-    @NotNull @Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
-    LocalDate tanggal
+@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true) @EqualsAndHashCode(callSuper=true)
+class TransaksiKas extends ItemPeriodik {
 
     @Size(min=2, max=150)
     String pihakTerkait
@@ -38,20 +29,13 @@ class TransaksiKas {
     @ManyToOne @NotNull
     KategoriKas kategoriKas
 
-    @NotNull
-    BigDecimal jumlah
-
     @NotNull @ManyToOne
     JenisTransaksiKas jenis
 
-    @Size(min=2, max=150)
-    String keterangan
-
-    void tambahKas(boolean invers = false) {
-        int pengali = invers? -1: 1
-        kategoriKas.perubahanSaldo(tanggal.getMonthOfYear(), tanggal.getYear(), pengali * jumlah, jenis)
+    @Override
+    long delta() {
+        (kategoriKas.jenis == JENIS_KATEGORI_KAS.PENGELUARAN)? -jumlah: jumlah
     }
-
 
 }
 

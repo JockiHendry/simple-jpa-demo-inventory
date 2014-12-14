@@ -23,7 +23,7 @@ project.retur.ReturJualService
 project.servis.ServisRepository
 project.servis.PenerimaanServisRepository
 project.labarugi.KategoriKasRepository
-project.labarugi.TransaksiKasRepository
+project.labarugi.KasRepository
 project.labarugi.JenisTransaksiKasRepository
-project.labarugi.KategoriKasService
 project.labarugi.LabaRugiService
+listener.LabaRugiEventListenerService

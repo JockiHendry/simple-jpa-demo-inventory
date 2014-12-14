@@ -35,5 +35,7 @@ abstract class ItemPeriodik {
 
     Long saldo
 
+    abstract long delta()
+
 }
 

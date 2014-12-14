@@ -13,23 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package laporan
+package project.labarugi
 
-import domain.labarugi.JENIS_KATEGORI_KAS
-import domain.labarugi.JenisTransaksiKas
-import groovy.transform.Canonical
+import javax.swing.*
 
-@Canonical
-class SaldoKategoriKas {
+@SuppressWarnings("GroovyUnusedDeclaration")
+class JumlahPeriodeKasAsChildController {
 
-    String namaKas
+    JumlahPeriodeKasAsChildModel model
+    def view
+    KasRepository kasRepository
 
-    String nama
+    void mvcGroupInit(Map args) {
+        model.parent = args.parent
+        model.jumlahPeriodeKasList.clear()
+        model.jumlahPeriodeKasList.addAll(model.parent.jumlahPeriodik)
+    }
 
-    JENIS_KATEGORI_KAS jenisKategori
-
-    JenisTransaksiKas jenisTransaksiKas
-
-    BigDecimal saldo
+    def close = {
+        SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
+    }
 
 }

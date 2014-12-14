@@ -44,6 +44,7 @@ panel(id: 'mainPanel', border: BorderFactory.createEmptyBorder(5,5,5,5)) {
             button('Refresh Stok', actionPerformed: controller.refreshStok)
             button('Refresh Jumlah Akan Dikirim', actionPerformed: controller.refreshJumlahAkanDikirim)
             button('Refresh Saldo Stok', actionPerformed: controller.refreshSaldoStok)
+            button('Refresh Saldo Kas', actionPerformed: controller.refreshSaldoKas)
         }
     }
 
