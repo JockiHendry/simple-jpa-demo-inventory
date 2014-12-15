@@ -52,7 +52,7 @@ class KasController {
                 return
             }
         }
-        Kas kas = new Kas(id: model.id, nama: model.nama, sistem: model.sistem)
+        Kas kas = new Kas(id: model.id, nama: model.nama, sistem: model.sistem, labaRugi: model.labaRugi)
         if (!kasRepository.validate(kas, Default, model)) return
 
         try {
@@ -107,6 +107,7 @@ class KasController {
             model.nama = null
             model.listPeriodeRiwayat.clear()
             model.sistem = false
+            model.labaRugi = false
             model.created = null
             model.createdBy = null
             model.modified = null
@@ -129,6 +130,7 @@ class KasController {
                 model.listPeriodeRiwayat.clear()
                 model.listPeriodeRiwayat.addAll(selected.listPeriodeRiwayat)
                 model.sistem = selected.sistem
+                model.labaRugi = selected.labaRugi
                 model.created = selected.createdDate
                 model.createdBy = selected.createdBy ? '(' + selected.createdBy + ')' : null
                 model.modified = selected.modifiedDate

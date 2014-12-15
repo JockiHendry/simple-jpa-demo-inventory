@@ -42,6 +42,10 @@ class KasRepository {
         kasUntukSistem
     }
 
+    public List<Kas> cariUntukLabaRugi() {
+        findAllKasByLabaRugi(true)
+    }
+
     public Kas buat(Kas kas) {
         if (findKasByNama(kas.nama)) {
             throw new DataDuplikat(kas)
@@ -58,6 +62,7 @@ class KasRepository {
         mergedKas.with {
             nama = kas.nama
             sistem = kas.sistem
+            labaRugi = kas.labaRugi
         }
         mergedKas
     }

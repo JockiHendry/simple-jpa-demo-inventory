@@ -36,6 +36,8 @@ class Kas extends AggregatePeriodik {
 
     Boolean sistem = Boolean.FALSE
 
+    Boolean labaRugi = Boolean.TRUE
+
     @Override
     List getListNilaiPeriodik() {
         listPeriodeRiwayat

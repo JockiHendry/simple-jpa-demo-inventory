@@ -34,6 +34,7 @@ panel(id: 'mainPanel') {
         glazedTable(id: 'table', list: model.kasList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged, doubleClickAction: showPeriodeKas, enterKeyAction: showPeriodeKas) {
             glazedColumn(name: 'Nama', property: 'nama')
             glazedColumn(name: 'Sistem', expression: { it.sistem? 'Y': ''})
+            glazedColumn(name: 'Laba Rugi', expression: { it.labaRugi? 'Y': ''})
             glazedColumn(name: 'Saldo', property: 'jumlah', columnClass: Integer) {
                 templateRenderer(exp: { !it ? '-' : currencyFormat(it) }, horizontalAlignment: RIGHT)
             }
@@ -44,9 +45,13 @@ panel(id: 'mainPanel') {
         label('Nama:')
         textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
         errorLabel(path: 'nama', constraints: 'wrap')
-        label('Sistem:')
-        checkBox(id: 'sistem', selected: bind('sistem', target: model, mutual: true), errorPath: 'sistem')
-        errorLabel(path: 'sistem', constraints: 'wrap')
+        panel(constraints: 'span 3, growx, wrap') {
+            flowLayout(alignment: FlowLayout.LEADING)
+            checkBox(id: 'sistem', text: 'Sistem', selected: bind('sistem', target: model, mutual: true), errorPath: 'sistem')
+            errorLabel(path: 'sistem')
+            checkBox(id: 'labaRugi', text: 'Laba Rugi', selected: bind('labaRugi', target: model, mutual: true), errorPath: 'labaRugi')
+            errorLabel(path: 'labaRugi')
+        }
         panel(visible: bind { table.isRowSelected }, constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             label('Created:')

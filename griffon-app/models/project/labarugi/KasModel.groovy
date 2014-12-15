@@ -26,6 +26,7 @@ class KasModel {
     @Bindable String nama
     List<PeriodeKas> listPeriodeRiwayat = []
     @Bindable Boolean sistem
+    @Bindable Boolean labaRugi
     BasicEventList<Kas> kasList = new BasicEventList<>()
 
     @Bindable String created

@@ -51,6 +51,7 @@ class LabaRugiService {
 
     GudangRepository gudangRepository
     KategoriKasRepository kategoriKasRepository
+    KasRepository kasRepository
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void serviceInit() {
@@ -182,7 +183,7 @@ class LabaRugiService {
 
     long totalPendapatan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         long hasil = 0
-        for (Kas kas: findAllKas()) {
+        for (Kas kas: kasRepository.cariUntukLabaRugi()) {
             hasil += kas.jumlah(tanggalMulai, tanggalSelesai, JENIS_KATEGORI_KAS.PENDAPATAN, true)
         }
         hasil
@@ -190,7 +191,7 @@ class LabaRugiService {
 
     long totalPengeluaran(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         long hasil = 0
-        for (Kas kas: findAllKas()) {
+        for (Kas kas: kasRepository.cariUntukLabaRugi()) {
             hasil += kas.jumlah(tanggalMulai, tanggalSelesai, JENIS_KATEGORI_KAS.PENGELUARAN, true)
         }
         hasil

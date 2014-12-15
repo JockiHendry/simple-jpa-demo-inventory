@@ -22,7 +22,7 @@ import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 
 @DomainClass @Entity  @Canonical
-class JenisTransaksiKas {
+class JenisTransaksiKas implements Comparable {
 
     @NotBlank @Size(min=2, max=50)
     String nama
@@ -33,6 +33,14 @@ class JenisTransaksiKas {
     @Override
     String toString() {
         nama
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (o && (o instanceof JenisTransaksiKas)) {
+            return o.compareTo(nama)
+        }
+        1
     }
 
 }
