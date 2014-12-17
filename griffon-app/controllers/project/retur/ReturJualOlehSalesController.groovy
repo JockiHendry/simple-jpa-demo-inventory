@@ -144,6 +144,9 @@ class ReturJualOlehSalesController {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
+        if (!returJual.pengeluaranBarang) {
+            throw new IllegalStateException('Tidak ada pengantaran barang yang dapat dihapus!')
+        }
         returJual = returJualRepository.hapusPengeluaranBarang(returJual)
         execInsideUISync {
             view.table.selectionModel.selected[0] = returJual
