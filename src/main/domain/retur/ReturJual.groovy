@@ -16,7 +16,6 @@
 package domain.retur
 
 import domain.event.PerubahanStok
-import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
@@ -63,10 +62,6 @@ abstract class ReturJual implements SebuahDaftarBarang, BolehPesanStok {
     Boolean bisaDijualKembali = Boolean.FALSE
 
     void tambah(ItemRetur itemRetur) {
-        // Periksa klaim untuk item retur ini
-        if (itemRetur.jumlahBarangDitukar() > itemRetur.jumlah) {
-            throw new BarangSelisih("${itemRetur.produk.nama}: jumlah yang ditukar (${itemRetur.jumlahBarangDitukar()}) melebihi jumlah yang diterima (${itemRetur.jumlah})!")
-        }
         items << itemRetur
     }
 
