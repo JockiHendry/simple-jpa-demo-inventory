@@ -45,6 +45,8 @@ class LaporanNilaiInventoryController {
             }
         }
         model.result = result
+        model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
+        model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
     }
 

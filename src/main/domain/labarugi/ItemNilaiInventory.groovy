@@ -30,7 +30,7 @@ class ItemNilaiInventory {
     BigDecimal harga
 
     BigDecimal total() {
-        (qty * harga)?: 0
+        (qty * (harga?:0))?: 0
     }
 
     boolean hapus(int qtyHapus) {

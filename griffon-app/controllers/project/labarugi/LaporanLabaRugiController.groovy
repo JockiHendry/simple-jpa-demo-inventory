@@ -32,6 +32,8 @@ class LaporanLabaRugiController {
 
     def tampilkanLaporan = {
         model.result = labaRugiService.laporanLabaRugi(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+        model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
+        model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
     }
 
