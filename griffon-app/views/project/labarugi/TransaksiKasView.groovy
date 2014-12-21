@@ -50,8 +50,11 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Kategori Kas', property: 'kategoriKas')
             glazedColumn(name: 'Jenis', property: 'jenis')
             glazedColumn(name: 'Keterangan', property: 'keterangan')
-            glazedColumn(name: 'Jumlah', property: 'jumlah', columnClass: Integer) {
-                templateRenderer(exp: { it? currencyFormat(it): 0 }, horizontalAlignment: RIGHT)
+            glazedColumn(name: 'Debit', expression: { it.debit() }, columnClass: Integer) {
+                templateRenderer(exp: { it > 0? currencyFormat(it): '' }, horizontalAlignment: RIGHT)
+            }
+            glazedColumn(name: 'Kredit', expression: { it.kredit() }, columnClass: Integer) {
+                templateRenderer(exp: { it > 0? currencyFormat(it): '' }, horizontalAlignment: RIGHT)
             }
             glazedColumn(name: 'Saldo', property: 'saldo', columnClass: Integer) {
                 templateRenderer(exp: { it? currencyFormat(it): 0 }, horizontalAlignment: RIGHT)

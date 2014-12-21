@@ -37,7 +37,7 @@ class KategoriKas implements Comparable {
 
     @Override
     String toString() {
-        "${jenis.teks} - $nama"
+        nama
     }
 
     @Override

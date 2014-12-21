@@ -37,5 +37,13 @@ class TransaksiKas extends ItemPeriodik {
         (kategoriKas.jenis == JENIS_KATEGORI_KAS.PENGELUARAN)? -jumlah: jumlah
     }
 
+    BigDecimal debit() {
+        (kategoriKas.jenis == JENIS_KATEGORI_KAS.PENDAPATAN)? jumlah: 0
+    }
+
+    BigDecimal kredit() {
+        (kategoriKas.jenis == JENIS_KATEGORI_KAS.PENGELUARAN)? jumlah: 0
+    }
+
 }
 
