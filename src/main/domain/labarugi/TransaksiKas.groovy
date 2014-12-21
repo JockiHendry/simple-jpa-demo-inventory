@@ -20,7 +20,7 @@ import groovy.transform.*
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true) @EqualsAndHashCode(callSuper=true)
+@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true)
 class TransaksiKas extends ItemPeriodik {
 
     @Size(min=2, max=150)
@@ -43,6 +43,32 @@ class TransaksiKas extends ItemPeriodik {
 
     BigDecimal kredit() {
         (kategoriKas.jenis == JENIS_KATEGORI_KAS.PENGELUARAN)? jumlah: 0
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof TransaksiKas)) return false
+        TransaksiKas that = (TransaksiKas) o
+        if (tanggal != that.tanggal) return false
+        if (jumlah != that.jumlah) return false
+        if (keterangan != that.keterangan) return false
+        if (saldo != that.saldo) return false
+        if (jenis.nama != that.jenis.nama) return false
+        if (kategoriKas.nama != that.kategoriKas.nama) return false
+        if (pihakTerkait != that.pihakTerkait) return false
+        true
+    }
+
+    int hashCode() {
+        int result
+        result = tanggal.hashCode()
+        result = 31 * result + jumlah.hashCode()
+        result = 31 * result + keterangan.hashCode()
+        result = 31 * result + saldo.hashCode()
+        result = 31 * result + jenis.nama.hashCode()
+        result = 31 * result + pihakTerkait.hashCode()
+        result = 31 * result + kategoriKas.nama.hashCode()
+        result
     }
 
 }
