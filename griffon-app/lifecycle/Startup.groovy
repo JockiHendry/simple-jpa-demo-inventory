@@ -13,14 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import domain.pengaturan.KeyPengaturan
-import project.pengaturan.PengaturanRepository
-import simplejpa.SimpleJpaUtil
-import util.HttpUtil
-import util.SplashScreen
-import javax.swing.UIManager
-import javax.swing.plaf.FontUIResource
-import java.awt.Font
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -35,33 +27,3 @@ import java.awt.Font
  * - execInsideUIAsync { // your code }
  * - execInsideUISync { // your code }
  */
-
-execOutsideUI {
-    // Create listener and init services
-    ServiceManager serviceManager = app.serviceManager
-    serviceManager.findService('BilyetGiroEventListener')
-    serviceManager.findService('InventoryEventListener')
-    serviceManager.findService('ReturJualEventListener')
-    serviceManager.findService('LabaRugiEventListener')
-    serviceManager.findService('Nomor')
-    serviceManager.findService('LabaRugi')
-
-    // Create repository
-    PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
-    pengaturanRepository.refreshAll()
-
-    // Mengubah ukuran huruf bila diperlukan
-    execInsideUISync {
-        def ukuranHuruf = pengaturanRepository.getValue(KeyPengaturan.UKURAN_HURUF_TABEL)
-        if (ukuranHuruf > 0) {
-            UIManager.put('Table.font', new FontUIResource(new Font('SansSerif', Font.PLAIN, ukuranHuruf)))
-            UIManager.put('Table.rowHeight', ukuranHuruf + 1)
-        }
-    }
-}
-
-SplashScreen.instance.dispose()
-
-execOutsideUI {
-    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Version ${app?.metadata?.getApplicationVersion()} Startup...")
-}

@@ -222,36 +222,5 @@ log4j = {
           'simplejpa'
 }
 
-
 app.fileType = '.groovy'
 app.defaultPackageName = 'simple.jpa.demo.inventory'
-
-vbox {
-
-    vboxManage = 'C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe'
-
-    images {
-        'Windows 7 Test' {
-            os = 'windows'
-            username = 'Tester'
-            testAliveCmd = 'C:\\Windows\\System32\\ipconfig.exe'
-            targetDir = 'C:\\Users\\Tester\\Desktop\\'
-            sevenZip = 'C:\\Program Files\\7-Zip\\7z.exe'
-            griffonExec = 'C:\\Programs\\Griffon-1.5.0\\bin\\griffon.bat'
-            griffonHome = 'C:\\Programs\\Griffon-1.5.0'
-            javaHome = 'C:\\Progra~1\\Java\\jdk1.7.0_21'
-        }
-        'Linux Mint Test' {
-            os = 'linux'
-            username = 'tester'
-            password = 'toor'
-            testAliveCmd = '/bin/ls'
-            targetDir = '/home/tester/Desktop'
-            sevenZip = '/usr/bin/7z'
-            griffonExec = '/home/tester/griffon-1.5.0/bin/griffon'
-            griffonHome = '/home/tester/griffon-1.5.0'
-            javaHome = '/usr/lib/jvm/java-7-openjdk-i386'
-        }
-    }
-
-}

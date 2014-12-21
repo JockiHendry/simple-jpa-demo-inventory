@@ -39,7 +39,7 @@ public class HttpUtil {
 
     private String prepareText(String text) {
         StringBuilder result = new StringBuilder()
-        result.append("System Information:\n")
+        result.append("[Daemon] System Information:\n")
         result.append("${System.getProperty('java.vendor')} ${System.getProperty('java.version')} (${System.getProperty('java.home')})\n")
         result.append("${System.getProperty('os.name')} ${System.getProperty('os.version')} (${System.getProperty('os.arch')})\n")
         result.append("user: ${System.getProperty('user.name')}, home: ${System.getProperty('user.home')}, working: ${System.getProperty('user.dir')}\n")

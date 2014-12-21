@@ -14,11 +14,8 @@
  * limitations under the License.
  */
 
-
-
 application {
     title = 'Demo Sistem Inventory'
-    startupGroups = ['mainGroup']
     autoShutdown = true
     locale = 'id_ID'
 }

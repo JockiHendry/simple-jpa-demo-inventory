@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import project.pengaturan.PengaturanRepository
+import simplejpa.SimpleJpaUtil
+import util.HttpUtil
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -27,3 +30,22 @@
  * - execInsideUIAsync { // your code }
  * - execInsideUISync { // your code }
  */
+
+execOutsideUI {
+    // Create listener and init services
+    ServiceManager serviceManager = app.serviceManager
+    serviceManager.findService('BilyetGiroEventListener')
+    serviceManager.findService('InventoryEventListener')
+    serviceManager.findService('ReturJualEventListener')
+    serviceManager.findService('LabaRugiEventListener')
+    serviceManager.findService('Nomor')
+    serviceManager.findService('LabaRugi')
+
+    // Create repository
+    PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
+    pengaturanRepository.refreshAll()
+
+    // Start daemon
+    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Daemon ${app?.metadata?.getApplicationVersion()} Startup...")
+    serviceManager.findService('Daemon')
+}
