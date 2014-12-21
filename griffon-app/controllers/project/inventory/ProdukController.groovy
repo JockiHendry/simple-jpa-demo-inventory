@@ -38,7 +38,6 @@ class ProdukController {
         model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
         model.supplierSearch = args.containsKey('supplierSearch')? args.'supplierSearch': null
         init()
-        search()
     }
 
     def init = {

@@ -87,7 +87,7 @@ class LabaRugiService {
         if (qtyTersedia > 0) {
             for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
                 for (ItemStok itemStok : p.cariPenambahanInventory().reverse()) {
-                    if (nilaiInventory.qty() + itemStok.jumlah >= qtyTersedia) {
+                    if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTersedia) {
                         nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(), cariHarga(produk, itemStok))
                         break
                     } else {
@@ -96,7 +96,6 @@ class LabaRugiService {
                 }
             }
         }
-
         nilaiInventory
     }
 
@@ -113,12 +112,12 @@ class LabaRugiService {
             PenyesuaianStok ps = findPenyesuaianStokByNomor(itemStok.referensiStok.nomorGudang)
             for (ItemPenyesuaian i: ps.items) {
                 if (i.produk == produk) {
-                    return i.harga?: produk.hargaDalamKota
+                    return i.harga?: null
                 }
             }
         }
-        log.warn "Tidak menemukan referensi harga ${produk.nama} untuk ${itemStok}! Yang dipakai adalah harga default ${produk.hargaDalamKota}!"
-        produk.hargaDalamKota
+        log.warn "Tidak menemukan referensi harga ${produk.nama} untuk ${itemStok}!"
+        return null
     }
 
     List hitungPenjualan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
@@ -152,9 +151,9 @@ class LabaRugiService {
         long jumlahPenjualan = 0
         for (ItemStok itemStok: itemStoks) {
             // Abaikan transfer karena tidak mempengaruhi laba rugi
-            if (itemStok.referensiStok.classGudang != Transfer.simpleName) {
+            if ((itemStok.referensiStok == null) || (itemStok.referensiStok?.classGudang != Transfer.simpleName)) {
                 if (itemStok.jumlah > 0) {
-                    nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
+                    nilaiInventory.tambah(itemStok.tanggal, itemStok?.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
                 } else {
                     jumlahPenjualan += itemStok.jumlah
                 }

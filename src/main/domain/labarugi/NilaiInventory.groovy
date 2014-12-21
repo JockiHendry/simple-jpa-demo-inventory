@@ -33,6 +33,7 @@ class NilaiInventory {
 
     void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga) {
         items << new ItemNilaiInventory(tanggal, nama, qty, harga)
+        isiHargaYangKosong()
     }
 
     BigDecimal kurang(long qty) {
@@ -43,14 +44,28 @@ class NilaiInventory {
             int itemQty = item.qty
             if (item.hapus(sisaQty)) {
                 sisaQty -= itemQty
-                hasil += (itemQty * item.harga)
+                hasil += (itemQty * (item.harga?:0))
             } else {
-                hasil += (sisaQty * item.harga)
+                hasil += (sisaQty * (item.harga?:0))
                 break
             }
         }
         items.removeAll { it.qty == 0 }
         hasil
+    }
+
+    void isiHargaYangKosong() {
+        if (items.every { it.harga == null }) {
+            // Tidak bisa melakukan estimasi bila seluruh harga kosong!
+            return
+        }
+        BigDecimal hargaTerakhir = 0
+        items.reverse().each { ItemNilaiInventory item ->
+            if (item.harga == null) {
+                item.harga = hargaTerakhir
+            }
+            hargaTerakhir = item.harga
+        }
     }
 
 }
