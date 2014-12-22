@@ -48,7 +48,7 @@ log4j = {
                 maxFileSize: 10485760, maxBackupIndex: 20
         }
         root {
-            error 'daemonLog'
+            debug 'daemonLog'
         }
     }
 }

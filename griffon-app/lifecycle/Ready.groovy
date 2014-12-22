@@ -16,25 +16,12 @@
 import daemon.ScheduledTask
 import project.daemon.DaemonService
 import project.pengaturan.PengaturanRepository
+import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
-
-/*
- * This script is executed inside the UI thread, so be sure to  call
- * long running code in another thread.
- *
- * You have the following options
- * - execOutsideUI { // your code }
- * - execFuture { // your code }
- * - Thread.start { // your code }
- *
- * You have the following options to run code again inside the UI thread
- * - execInsideUIAsync { // your code }
- * - execInsideUISync { // your code }
- */
 
 // Create listener and init services
 ServiceManager serviceManager = app.serviceManager
@@ -61,3 +48,10 @@ scheduler.executeExistingDelayedTasksAfterShutdownPolicy = true
 // Jadwal   : Setiap 7 jam.
 //
 scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.periksaJatuhTempo() }, 1, 7 * 60, TimeUnit.MINUTES)
+
+//
+// Task     : Hapus pesan yang tidak valid lagi
+// Jadwal   : Setiap 2 jam.
+//
+PesanRepository pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pesan')
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { pesanRepository.refresh() }, 2, 2 * 60, TimeUnit.MINUTES)
