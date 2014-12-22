@@ -40,7 +40,8 @@ class PesanController {
     }
 
     def refresh = {
-        model.pesanList = pesanRepository.refresh()
+        model.pesanList = pesanRepository.findAllPesan()
+        app.event(PesanRepository.EVENT_UPDATE_PESAN, [!model.pesanList.empty])
         JEditorPane dashboard = view.dashboard
 
         def htmlOutput = new StringWriter()
