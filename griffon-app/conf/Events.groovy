@@ -20,7 +20,6 @@ import project.daemon.DaemonService
 import simplejpa.SimpleJpaUtil
 import griffon.util.*
 import util.HttpUtil
-import util.SplashScreen
 import javax.validation.ConstraintViolationException
 
 final Logger log = LoggerFactory.getLogger(DaemonService)

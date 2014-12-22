@@ -32,7 +32,6 @@ class DaemonService {
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void serviceInit() {
-
         // Setup user
         SimpleJpaUtil.instance.user = new AuditableUser() {
             @Override
@@ -40,13 +39,13 @@ class DaemonService {
                 "daemon"
             }
         }
+    }
 
-        // Periksa jatuh tempo
+    void periksaJatuhTempo() {
         log.debug "Mulai melakukan pemeriksaan jatuh tempo."
         bilyetGiroService.periksaJatuhTempo()
         piutangService.periksaJatuhTempo()
         log.debug "Selesai melakukan pemeriksaan jatuh tempo."
-
         HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Selesai melakukan pemeriksaan jatuh tempo.")
     }
 

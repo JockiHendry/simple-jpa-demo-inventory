@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import daemon.ScheduledTask
+import project.daemon.DaemonService
 import project.pengaturan.PengaturanRepository
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledThreadPoolExecutor
+import java.util.concurrent.TimeUnit
 
 /*
  * This script is executed inside the UI thread, so be sure to  call
@@ -31,21 +36,28 @@ import util.HttpUtil
  * - execInsideUISync { // your code }
  */
 
-execOutsideUI {
-    // Create listener and init services
-    ServiceManager serviceManager = app.serviceManager
-    serviceManager.findService('BilyetGiroEventListener')
-    serviceManager.findService('InventoryEventListener')
-    serviceManager.findService('ReturJualEventListener')
-    serviceManager.findService('LabaRugiEventListener')
-    serviceManager.findService('Nomor')
-    serviceManager.findService('LabaRugi')
+// Create listener and init services
+ServiceManager serviceManager = app.serviceManager
+serviceManager.findService('BilyetGiroEventListener')
+serviceManager.findService('InventoryEventListener')
+serviceManager.findService('ReturJualEventListener')
+serviceManager.findService('LabaRugiEventListener')
+serviceManager.findService('Nomor')
+serviceManager.findService('LabaRugi')
 
-    // Create repository
-    PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
-    pengaturanRepository.refreshAll()
+// Create repository
+PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
+pengaturanRepository.refreshAll()
 
-    // Start daemon
-    HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Daemon ${app?.metadata?.getApplicationVersion()} Startup...")
-    serviceManager.findService('Daemon')
-}
+// Start daemon
+HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Daemon ${app?.metadata?.getApplicationVersion()} Startup...")
+DaemonService daemonService = serviceManager.findService('Daemon')
+ScheduledThreadPoolExecutor scheduler = Executors.newScheduledThreadPool(2)
+scheduler.continueExistingPeriodicTasksAfterShutdownPolicy = true
+scheduler.executeExistingDelayedTasksAfterShutdownPolicy = true
+
+//
+// Task     : Periksa Jatuh Tempo
+// Jadwal   : Setiap 7 jam.
+//
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.periksaJatuhTempo() }, 1, 7 * 60, TimeUnit.MINUTES)

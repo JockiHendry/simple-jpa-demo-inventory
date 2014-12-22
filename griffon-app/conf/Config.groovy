@@ -22,7 +22,7 @@ log4j = {
                 maxFileSize: 10485760, maxBackupIndex: 20
         }
         root {
-            warn 'daemonLog'
+            debug 'daemonLog'
             additivity = false
         }
         error  additivity: false, daemonLog: ['org.dbunit']

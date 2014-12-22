@@ -9,6 +9,10 @@
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/lifecycle" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/services" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/griffon-app/repositories" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/models" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/views" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/griffon-app/controllers" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/integration" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/staging" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
