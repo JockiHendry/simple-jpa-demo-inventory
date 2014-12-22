@@ -107,7 +107,7 @@ class RestoreController {
                 def total = 0
                 p.daftarStok.each { Gudang g, StokProduk s ->
                     def jumlah = 0
-                    s.listPeriodeRiwayat.each { PeriodeItemStok pr ->
+                    s.listPeriodeRiwayat.sort { it.tanggalMulai }.each { PeriodeItemStok pr ->
                         def totalPeriode = pr.listItem.sum {it.jumlah}?: 0
                         if (pr.jumlah != totalPeriode) {
                             execInsideUISync { output.append("${p.nama} pada ${pr.tanggalMulai.toString('dd-MM-YYYY')} sampai ${pr.tanggalSelesai.toString('dd-MM-YYYY')} harus berjumlah ${totalPeriode} tetapi ${pr.jumlah}\n") }
@@ -172,9 +172,9 @@ class RestoreController {
         long errorItemStok = 0, errorPeriode = 0
         produkRepository.withTransaction {
             findAllProduk().each { Produk p ->
-                long saldo = 0
                 p.daftarStok.each { Gudang g, StokProduk s ->
-                    s.listPeriodeRiwayat.each { PeriodeItemStok pr ->
+                    long saldo = 0
+                    s.listPeriodeRiwayat.sort { it.tanggalMulai }.each { PeriodeItemStok pr ->
                         pr.listItem.each { ItemStok i ->
                             saldo += i.jumlah
                             if (i.saldo != saldo) {
@@ -202,7 +202,7 @@ class RestoreController {
         produkRepository.withTransaction {
             findAllKas().each { Kas kas ->
                 long saldo = 0
-                kas.listPeriodeRiwayat.each { PeriodeKas p ->
+                kas.listPeriodeRiwayat.sort { it.tanggalMulai }.each { PeriodeKas p ->
                     long jumlahPeriode = 0
                     p.jumlahPeriodik.clear()
                     p.listItemPeriodik.each { TransaksiKas tr ->
