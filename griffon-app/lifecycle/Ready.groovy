@@ -53,5 +53,4 @@ scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.periksa
 // Task     : Hapus pesan yang tidak valid lagi
 // Jadwal   : Setiap 2 jam.
 //
-PesanRepository pesanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pesan')
-scheduler.scheduleAtFixedRate(new ScheduledTask().action { pesanRepository.refresh() }, 2, 2 * 60, TimeUnit.MINUTES)
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.refreshPesan() }, 2, 2 * 60, TimeUnit.MINUTES)

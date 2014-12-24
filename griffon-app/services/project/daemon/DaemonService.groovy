@@ -19,6 +19,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.penjualan.BilyetGiroService
 import project.penjualan.PiutangService
+import project.user.PesanRepository
 import simplejpa.AuditableUser
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
@@ -29,6 +30,7 @@ class DaemonService {
 
     BilyetGiroService bilyetGiroService
     PiutangService piutangService
+    PesanRepository pesanRepository
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void serviceInit() {
@@ -42,11 +44,20 @@ class DaemonService {
     }
 
     void periksaJatuhTempo() {
-        log.debug "Mulai melakukan pemeriksaan jatuh tempo."
+        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Mulai melakukan pemeriksaan jatuh tempo.")
+        log.info "Mulai melakukan pemeriksaan jatuh tempo."
         bilyetGiroService.periksaJatuhTempo()
         piutangService.periksaJatuhTempo()
-        log.debug "Selesai melakukan pemeriksaan jatuh tempo."
+        log.info "Selesai melakukan pemeriksaan jatuh tempo."
         HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Selesai melakukan pemeriksaan jatuh tempo.")
+    }
+
+    void refreshPesan() {
+        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Mulai men-refresh pesan.")
+        log.info "Mulai melakukan refresh pesan."
+        pesanRepository.refresh()
+        log.info "Selesai melakukan refresh pesan."
+        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Selesai men-refresh pesan.")
     }
 
 }

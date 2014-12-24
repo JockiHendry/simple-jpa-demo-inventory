@@ -18,28 +18,20 @@
 log4j = {
     development {
         appenders {
-            rollingFile name: 'daemonLog', file: "${System.getProperty('user.home')}/inventory/daemon.log", layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n'),
-                maxFileSize: 10485760, maxBackupIndex: 20
+            console name: 'stdout', layout: pattern(conversionPattern: '%d [%t] %-5p %c - %m%n')
         }
         root {
-            debug 'daemonLog'
+            warn 'stdout'
             additivity = false
         }
-        error  additivity: false, daemonLog: ['org.dbunit']
-        debug additivity: false, daemonLog: ['org.hibernate.SQL', 'project']
-        info  additivity: false, daemonLog: [
+        error additivity: false, stdout: ['org.dbunit']
+        debug additivity: false, stdout: ['org.hibernate.SQL', 'project']
+        info additivity: false, stdout: [
             'simplejpa',
             'project',
             'domain',
             'com.mchange'
-            //'net.sf.jasperreports',
-            //'org.jboss',
-            //'org.codehaus',
-            //'griffon.util',
-            //'griffon.core',
-            //'griffon.swing',
-            //'griffon.app']
-            ]
+        ]
     }
 
     production {
@@ -48,7 +40,7 @@ log4j = {
                 maxFileSize: 10485760, maxBackupIndex: 20
         }
         root {
-            debug 'daemonLog'
+            warn 'daemonLog'
         }
     }
 }
