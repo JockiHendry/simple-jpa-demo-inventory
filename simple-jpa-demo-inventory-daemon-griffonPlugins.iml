@@ -2,13 +2,13 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/console-0.1.0" />
-    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8" />
+    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/console-0.1.0" />
+    <content url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/simple-jpa-0.8" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="griffon-1.5.0" level="project" />
     <orderEntry type="module-library" exported="">
-      <library name="Griffon:lib (simple-jpa-demo-inventory-griffonPlugins)">
+      <library name="Griffon:lib (simple-jpa-demo-inventory-daemon-griffonPlugins)">
         <CLASSES />
         <JAVADOC />
         <SOURCES />

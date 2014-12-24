@@ -6,7 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="griffon-1.5.0" level="project" />
     <orderEntry type="module-library" exported="">
-      <library name="Griffon:lib-fixes (simple-jpa-demo-inventory-griffonPluginFixes)">
+      <library name="Griffon:lib-fixes (simple-jpa-demo-inventory-daemon-griffonPluginFixes)">
         <CLASSES>
           <root url="jar://$IVY_CACHE$/org.hibernate/hibernate-validator/jars/hibernate-validator-4.3.0.Final.jar!/" />
           <root url="jar://$IVY_CACHE$/javax.validation/validation-api/jars/validation-api-1.0.0.GA.jar!/" />
@@ -44,11 +44,9 @@
           <root url="jar://$IVY_CACHE$/org.javassist/javassist/bundles/javassist-3.18.1-GA.jar!/" />
           <root url="jar://$IVY_CACHE$/antlr/antlr/jars/antlr-2.7.7.jar!/" />
           <root url="jar://$IVY_CACHE$/org.jboss/jandex/jars/jandex-1.1.0.Final.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs/jxlayer/jars/jxlayer-3.0.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-jxlayer-runtime/jars/griffon-jxlayer-runtime-1.0.0.jar!/" />
-          <root url="jar://$IVY_CACHE$/com.miglayout/miglayout-swing/jars/miglayout-swing-4.2.jar!/" />
-          <root url="jar://$IVY_CACHE$/com.miglayout/miglayout-core/jars/miglayout-core-4.2.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-miglayout-runtime/jars/griffon-miglayout-runtime-1.0.0.jar!/" />
+          <root url="jar://$IVY_CACHE$/org.apache.poi/poi/jars/poi-3.8.jar!/" />
+          <root url="jar://$IVY_CACHE$/commons-codec/commons-codec/jars/commons-codec-1.5.jar!/" />
+          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-console-runtime/jars/griffon-console-runtime-0.1.0.jar!/" />
           <root url="jar://$IVY_CACHE$/javax.validation/validation-api/jars/validation-api-1.1.0.Final.jar!/" />
           <root url="jar://$IVY_CACHE$/org.jadira.usertype/usertype.jodatime/jars/usertype.jodatime-2.0.1.jar!/" />
           <root url="jar://$IVY_CACHE$/org.jadira.usertype/usertype.spi/jars/usertype.spi-2.0.1.jar!/" />
@@ -57,30 +55,15 @@
           <root url="jar://$IVY_CACHE$/org.dbunit/dbunit/jars/dbunit-2.4.9.jar!/" />
           <root url="jar://$IVY_CACHE$/junit/junit/jars/junit-3.8.2.jar!/" />
           <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-simple-jpa-runtime/jars/griffon-simple-jpa-runtime-0.8.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-swing-runtime/jars/griffon-swing-runtime-1.4.0.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon/swingxbuilder/jars/swingxbuilder-0.3.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs/swing-worker/jars/swing-worker-1.1.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-action/jars/swingx-action-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/net.java.dev.timingframework/timingframework/jars/timingframework-1.0.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-common/jars/swingx-common-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-core/jars/swingx-core-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-autocomplete/jars/swingx-autocomplete-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-plaf/jars/swingx-plaf-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-painters/jars/swingx-painters-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-graphics/jars/swingx-graphics-1.6.4.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.swinglabs.swingx/swingx-beaninfo/jars/swingx-beaninfo-1.6.4.jar!/" />
           <root url="jar://$IVY_CACHE$/org.jboss.logging/jboss-logging/jars/jboss-logging-3.1.0.CR2.jar!/" />
-          <root url="jar://$IVY_CACHE$/org.codehaus.griffon.plugins/griffon-swing-compile/jars/griffon-swing-compile-1.4.0.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/jxlayer-1.0.0/dist/griffon-jxlayer-1.0.0-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swing-1.4.0/docs/griffon-swing-runtime-1.4.0-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/console-0.1.0/docs/griffon-console-runtime-0.1.0-javadoc.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/simple-jpa-0.8/docs/griffon-simple-jpa-runtime-0.8-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/jxlayer-1.0.0/dist/griffon-jxlayer-1.0.0-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/miglayout-1.0.0/dist/griffon-miglayout-1.0.0-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/docs/griffon-simple-jpa-runtime-0.8-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/swing-1.4.0/docs/griffon-swing-runtime-1.4.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/console-0.1.0/docs/griffon-console-runtime-0.1.0-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory-daemon/plugins/simple-jpa-0.8/docs/griffon-simple-jpa-runtime-0.8-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPluginFixes.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPluginFixes.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPlugins.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-griffonPlugins.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-daemon.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-daemon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-daemon-griffonPluginFixes.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-daemon-griffonPluginFixes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simple-jpa-demo-inventory-daemon-griffonPlugins.iml" filepath="$PROJECT_DIR$/simple-jpa-demo-inventory-daemon-griffonPlugins.iml" />
     </modules>
   </component>
 </project>
-
