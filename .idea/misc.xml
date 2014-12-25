@@ -24,6 +24,25 @@
     <option name="OPEN_IN_BROWSER" value="true" />
   </component>
   <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/Repository.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaChildController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaChildModel.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaChildView.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaDDDChildController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaDDDController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaDDDPairController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaDomainClass.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaIntegrationTest.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaModel.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaPairController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaPairModel.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaPairView.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaRepository.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/SimpleJpaView.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/StartupController.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/StartupModel.groovy" />
+    <file url="file://$USER_HOME$/.griffon/1.5.0/projects/simple-jpa-demo-inventory/plugins/simple-jpa-0.8/src/templates/artifacts/StartupView.groovy" />
     <file url="file://$PROJECT_DIR$/griffon-app/conf/webstart/applet.jnlp" />
     <file url="file://$PROJECT_DIR$/griffon-app/conf/webstart/application.jnlp" />
     <file url="file://$PROJECT_DIR$/src/templates/artifacts/SimpleJpaDDDController.groovy" />
