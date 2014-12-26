@@ -23,10 +23,10 @@ import javax.validation.constraints.*
 
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical(excludes='produk')
 class PesanLevelMinimum extends Pesan {
 
-    @NotNull @ManyToOne
+    @NotNull @ManyToOne(fetch=FetchType.LAZY)
     Produk produk
 
     @SuppressWarnings("GroovyUnusedDeclaration")

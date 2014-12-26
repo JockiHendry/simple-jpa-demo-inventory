@@ -22,10 +22,10 @@ import javax.persistence.*
 import javax.validation.constraints.*
 import org.joda.time.*
 
-@DomainClass @Entity @Canonical
+@DomainClass @Entity @Canonical(excludes='faktur')
 class PesanPiutangJatuhTempo extends Pesan {
 
-    @NotNull @ManyToOne
+    @NotNull @ManyToOne(fetch=FetchType.LAZY)
     FakturJualOlehSales faktur
 
     @SuppressWarnings("GroovyUnusedDeclaration")
