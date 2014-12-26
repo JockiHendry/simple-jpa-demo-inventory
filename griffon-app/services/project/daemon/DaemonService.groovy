@@ -17,6 +17,7 @@ package project.daemon
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import project.global.SyncService
 import project.penjualan.BilyetGiroService
 import project.penjualan.PiutangService
 import project.user.PesanRepository
@@ -28,9 +29,12 @@ class DaemonService {
 
     final Logger log = LoggerFactory.getLogger(DaemonService)
 
+    SyncService syncService
     BilyetGiroService bilyetGiroService
     PiutangService piutangService
     PesanRepository pesanRepository
+
+    HttpUtil httpUtil
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     void serviceInit() {
@@ -41,23 +45,44 @@ class DaemonService {
                 "daemon"
             }
         }
+        httpUtil = HttpUtil.instance
     }
 
     void periksaJatuhTempo() {
-        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Mulai melakukan pemeriksaan jatuh tempo.")
+        httpUtil.sendNotification('[Daemon]', "Mulai melakukan pemeriksaan jatuh tempo.")
         log.info "Mulai melakukan pemeriksaan jatuh tempo."
         bilyetGiroService.periksaJatuhTempo()
         piutangService.periksaJatuhTempo()
         log.info "Selesai melakukan pemeriksaan jatuh tempo."
-        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Selesai melakukan pemeriksaan jatuh tempo.")
+        httpUtil.sendNotification('[Daemon]', "Selesai melakukan pemeriksaan jatuh tempo.")
     }
 
     void refreshPesan() {
-        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Mulai men-refresh pesan.")
+        httpUtil.sendNotification('[Daemon]', "Mulai men-refresh pesan.")
         log.info "Mulai melakukan refresh pesan."
         pesanRepository.refresh()
         log.info "Selesai melakukan refresh pesan."
-        HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Selesai men-refresh pesan.")
+        httpUtil.sendNotification('[Daemon]', "Selesai men-refresh pesan.")
+    }
+
+    @SuppressWarnings("GroovyUnusedDeclaration")
+    void onPesanSync(def pesan) {
+        log.info "Pesan sync: $pesan"
+        httpUtil.sendNotification('[Daemon]', pesan)
+    }
+
+    void syncAkumulator() {
+        syncService.addEventListener(this)
+        syncService.refreshStok()
+        syncService.refreshJumlahAkanDikirim()
+        syncService.removeEventListener(this)
+    }
+
+    void syncSaldo() {
+        syncService.addEventListener(this)
+        syncService.refreshSaldoStok()
+        syncService.refreshSaldoKas()
+        syncService.removeEventListener(this)
     }
 
 }

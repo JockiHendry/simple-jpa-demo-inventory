@@ -16,7 +16,6 @@
 import daemon.ScheduledTask
 import project.daemon.DaemonService
 import project.pengaturan.PengaturanRepository
-import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
 import util.HttpUtil
 import java.util.concurrent.Executors
@@ -43,14 +42,26 @@ ScheduledThreadPoolExecutor scheduler = Executors.newScheduledThreadPool(2)
 scheduler.continueExistingPeriodicTasksAfterShutdownPolicy = true
 scheduler.executeExistingDelayedTasksAfterShutdownPolicy = true
 
-//
-// Task     : Periksa Jatuh Tempo
-// Jadwal   : Setiap 7 jam.
-//
+////
+//// Task     : Periksa Jatuh Tempo
+//// Jadwal   : Setiap 7 jam.
+////
 scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.periksaJatuhTempo() }, 1, 7 * 60, TimeUnit.MINUTES)
+//
+////
+//// Task     : Hapus pesan yang tidak valid lagi
+//// Jadwal   : Setiap 3 jam.
+////
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.refreshPesan() }, 2, 3 * 60, TimeUnit.MINUTES)
 
 //
-// Task     : Hapus pesan yang tidak valid lagi
-// Jadwal   : Setiap 2 jam.
+// Task     : Memastikan nilai akumulator di stok selalu valid
+// Jadwal   : Setiap 1 jam.
 //
-scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.refreshPesan() }, 2, 2 * 60, TimeUnit.MINUTES)
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.syncAkumulator() }, 1, 1, TimeUnit.HOURS)
+
+//
+// Task     : Memastikan nilai saldo selalu valid
+// Jadwal   : Setiap 1 jam.
+//
+scheduler.scheduleAtFixedRate(new ScheduledTask().action { daemonService.syncSaldo() }, 2, 1, TimeUnit.HOURS)
