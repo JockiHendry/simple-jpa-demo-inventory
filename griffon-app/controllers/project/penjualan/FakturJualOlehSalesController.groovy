@@ -102,7 +102,7 @@ class FakturJualOlehSalesController {
         } catch (MelebihiBatasKredit ex) {
             model.errors['konsumen'] = ex.message
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -117,7 +117,7 @@ class FakturJualOlehSalesController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -139,7 +139,7 @@ class FakturJualOlehSalesController {
 
     def showItemFaktur = {
         if (!model.konsumen) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Anda harus memilih konsumen terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
             return
         }
         execInsideUISync {
@@ -170,7 +170,7 @@ class FakturJualOlehSalesController {
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
                     model.konsumen = v.view.table.selectionModel.selected[0]
                 }

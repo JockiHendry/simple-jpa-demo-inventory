@@ -59,7 +59,7 @@ class PenerimaanBarangController {
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -75,7 +75,7 @@ class PenerimaanBarangController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Penerimaan barang tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

@@ -18,6 +18,8 @@ package project.faktur
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
 import org.joda.time.LocalDate
+import simplejpa.swing.DialogUtils
+import javax.swing.JOptionPane
 import javax.swing.SwingConstants
 import javax.swing.SwingUtilities
 import java.awt.FlowLayout
@@ -91,11 +93,8 @@ panel(id: 'mainPanel') {
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
-                if (model.id != null) {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                            app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                        return
-                    }
+                if ((model.id != null) && !DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+                    return
                 }
                 controller.save()
                 form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
@@ -103,8 +102,7 @@ panel(id: 'mainPanel') {
             button('Pilih', visible: bind('isRowSelected', source: table, converter: {it && model.popupMode && !model.deleted}), action: pilih)
             button('Cairkan', actionPerformed: controller.cairkan, visible: bind {table.isRowSelected && !model.deleted})
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {table.isRowSelected && !model.deleted}, actionPerformed: {
-                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
                     controller.delete()
                 }
             })

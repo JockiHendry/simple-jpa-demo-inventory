@@ -15,6 +15,7 @@
  */
 package project.pembelian
 
+import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import net.miginfocom.swing.MigLayout
 import org.joda.time.*
@@ -66,8 +67,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
         flowLayout(alignment: FlowLayout.LEADING)
         button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: controller.save, visible: bind { model.showSave })
         button(app.getMessage("simplejpa.dialog.delete.button"), actionPerformed: {
-            if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                    app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+            if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
                 controller.delete()
             }
         })

@@ -18,7 +18,7 @@ package project.main
 import domain.pengaturan.KeyPengaturan
 import project.pengaturan.PengaturanRepository
 import project.user.PasswordService
-import javax.swing.JOptionPane
+import simplejpa.swing.DialogUtils
 import javax.swing.SwingUtilities
 
 @SuppressWarnings("GroovyUnusedDeclaration")
@@ -57,8 +57,7 @@ class SupervisorPasswordController {
             return
         }
 
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin untuk menyetujui proses ini?',
-                'Konfirmasi Persetujuan', JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin untuk menyetujui proses ini?', 'Konfirmasi Persetujuan')) {
             return
         }
 

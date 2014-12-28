@@ -122,7 +122,7 @@ class PurchaseOrderController {
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Purchase order tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Purchase order tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -136,7 +136,7 @@ class PurchaseOrderController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

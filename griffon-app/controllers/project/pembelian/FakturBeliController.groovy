@@ -21,6 +21,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.HargaSelisih
 import domain.faktur.Diskon
 import domain.pembelian.*
+import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
@@ -71,15 +72,15 @@ class FakturBeliController {
 
         try {
             model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, fakturBeli)
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli berhasil disimpan!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur beli berhasil disimpan!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
         } catch (DataDuplikat ex) {
             model.errors['nomor'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (BarangSelisih | HargaSelisih ex) {
-            if (JOptionPane.showConfirmDialog(view.mainPanel, "${ex.message}.\nAnda yakin ingin melanjutkan?", 'Konfirmasi', JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (DialogUtils.confirm(view.mainPanel, "${ex.message}.\nAnda yakin ingin melanjutkan?", 'Konfirmasi')) {
                 model.purchaseOrder = purchaseOrderRepository.tambah(model.purchaseOrder, fakturBeli, false)
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -93,7 +94,7 @@ class FakturBeliController {
                 }
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur beli tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

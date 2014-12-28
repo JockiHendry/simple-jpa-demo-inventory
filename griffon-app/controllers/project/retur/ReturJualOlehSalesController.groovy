@@ -86,7 +86,7 @@ class ReturJualOlehSalesController {
 
     def save = {
         if (model.id != null) {
-            if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
                 return
             }
         }
@@ -123,12 +123,12 @@ class ReturJualOlehSalesController {
     }
 
     def prosesTukar = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
         if (returJual.pengeluaranBarang != null) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Pengantaran sebelumnya telah dilakukan untuk retur ini!', 'Pesan kesalahan', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Pengantaran sebelumnya telah dilakukan untuk retur ini!', 'Pesan kesalahan', JOptionPane.ERROR_MESSAGE)
             return
         }
         returJual = returJualRepository.tukar(returJual)
@@ -140,7 +140,7 @@ class ReturJualOlehSalesController {
 
     @NeedSupervisorPassword
     def hapusPengeluaran = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
@@ -156,7 +156,7 @@ class ReturJualOlehSalesController {
 
     @NeedSupervisorPassword
     def delete = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
@@ -173,7 +173,7 @@ class ReturJualOlehSalesController {
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
                     model.konsumen = v.view.table.selectionModel.selected[0]
                 }

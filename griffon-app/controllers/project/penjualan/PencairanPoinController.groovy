@@ -102,7 +102,7 @@ class PencairanPoinController {
                 clear()
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, "Pencairan poin tidak boleh dihapus: ${ex.message}", 'Penghapusan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, "Pencairan poin tidak boleh dihapus: ${ex.message}", 'Penghapusan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -128,7 +128,7 @@ class PencairanPoinController {
 
     def showFakturPotongPiutang = {
         if (!model.konsumen) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memiliki konsumen terlebih dahulu!', 'Kesalahan Urutan Pengisian Data', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Anda harus memiliki konsumen terlebih dahulu!', 'Kesalahan Urutan Pengisian Data', JOptionPane.ERROR_MESSAGE)
             return
         }
         execInsideUISync {
@@ -136,7 +136,7 @@ class PencairanPoinController {
             def dialogProps = [title: 'Faktur Belum Lunas', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('fakturJualOlehSalesAsChild', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada faktur yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada faktur yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                     return
                 } else {
                     model.fakturPotongPiutang = v.view.table.selectionModel.selected[0]
@@ -151,7 +151,7 @@ class PencairanPoinController {
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
                     model.konsumen = v.view.table.selectionModel.selected[0]
                 }

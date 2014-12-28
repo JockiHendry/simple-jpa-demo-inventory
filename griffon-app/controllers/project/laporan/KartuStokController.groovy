@@ -54,7 +54,7 @@ class KartuStokController {
             Produk produk = null
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                     return
                 } else {
                     produk = v.view.table.selectionModel.selected[0]

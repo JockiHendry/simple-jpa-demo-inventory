@@ -17,6 +17,7 @@ package project.inventory
 
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
+import simplejpa.swing.DialogUtils
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import java.awt.FlowLayout
@@ -90,8 +91,7 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                 if (model.id != null) {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                            app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
                         return
                     }
                 }
@@ -104,8 +104,7 @@ panel(id: 'mainPanel') {
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
                 table.isRowSelected
             }, actionPerformed: {
-                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
                     controller.delete()
                 }
             })

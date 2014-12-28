@@ -60,9 +60,9 @@ class ServisController {
 
 	def save = {
         if (model.id!=null) {
-            if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                return
-            }
+			if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+				return
+			}
         }
 		Servis servis = new Servis(id: model.id, namaKonsumen: model.namaKonsumen, alamat: model.alamat, tipe: model.tipe, keluhan: model.keluhan, keterangan: model.keterangan, tanggalMasuk: model.tanggalMasuk, tanggalSelesai: model.tanggalSelesai, tanggalDiambil: model.tanggalDiambil)
 
@@ -93,9 +93,9 @@ class ServisController {
 
     @NeedSupervisorPassword
     def delete = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-            return
-        }
+		if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+			return
+		}
         Servis servis = view.table.selectionModel.selected[0]
         servisRepository.hapus(servis)
         execInsideUISync {

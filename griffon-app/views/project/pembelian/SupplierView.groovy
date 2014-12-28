@@ -16,6 +16,7 @@
 
 package project.pembelian
 
+import simplejpa.swing.DialogUtils
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -44,7 +45,7 @@ panel(id: 'mainPanel') {
         textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
         errorLabel(path: 'nama', constraints: 'wrap')
         label('Alamat:')
-        textField(id: 'alamat', columns: 20, text: bind('alamat', target: model, mutual: true), errorPath: 'alamat')
+        textField(id: 'alamat', columns: 100, text: bind('alamat', target: model, mutual: true), errorPath: 'alamat')
         errorLabel(path: 'alamat', constraints: 'wrap')
         label('Nomor Telepon:')
         textField(id: 'nomorTelepon', columns: 20, text: bind('nomorTelepon', target: model, mutual: true), errorPath: 'nomorTelepon')
@@ -55,9 +56,8 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                 if (model.id!=null) {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                        app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
-                            return
+                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+                        return
                     }
                 }
                 controller.save()
@@ -65,9 +65,8 @@ panel(id: 'mainPanel') {
             })
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind{table.isRowSelected}, actionPerformed: controller.clear)
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind{table.isRowSelected}, actionPerformed: {
-                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                    app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
-                        controller.delete()
+                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+                    controller.delete()
                 }
             })
         }

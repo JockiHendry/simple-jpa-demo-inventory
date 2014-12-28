@@ -22,6 +22,7 @@ import groovy.xml.MarkupBuilder
 import project.penjualan.FakturJualRepository
 import project.user.PesanRepository
 import simplejpa.SimpleJpaUtil
+import simplejpa.swing.DialogUtils
 import util.HttpUtil
 import javax.swing.JEditorPane
 import javax.swing.JOptionPane
@@ -129,9 +130,9 @@ class PesanController {
             if (e instanceof FormSubmitEvent) {
                 String userName = SimpleJpaUtil.instance.user?.userName
                 if (HttpUtil.instance.sendNotification(userName, e.data)) {
-                    JOptionPane.showMessageDialog(view.mainPanel, "Terima kasih, $userName. Server kami telah menerima masukan dari Anda.", 'Pesan Diterima', JOptionPane.INFORMATION_MESSAGE)
+                    DialogUtils.message(view.mainPanel, "Terima kasih, $userName. Server kami telah menerima masukan dari Anda.", 'Pesan Diterima', JOptionPane.INFORMATION_MESSAGE)
                 } else {
-                    JOptionPane.showMessageDialog(view.mainPanel, "Maaf, $userName.  Program sedang tidak dapat menghubungi server kami.", 'Pesan Gagal Dikirim', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, "Maaf, $userName.  Program sedang tidak dapat menghubungi server kami.", 'Pesan Gagal Dikirim', JOptionPane.ERROR_MESSAGE)
                 }
             } else {
                 if (e.description == '#piutang') {

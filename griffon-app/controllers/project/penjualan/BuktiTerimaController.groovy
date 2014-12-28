@@ -57,7 +57,7 @@ class BuktiTerimaController {
     def save = {
         BuktiTerima buktiTerima = new BuktiTerima(tanggalTerima: model.tanggal, namaPenerima: model.namaPenerima, namaSupir: model.namaSupir)
         if (!fakturJualRepository.validate(buktiTerima, Default, model)) return
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang yang dikirim telah diterima untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin barang yang dikirim telah diterima untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
@@ -68,13 +68,13 @@ class BuktiTerimaController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
     @NeedSupervisorPassword
     def hapus = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan menghapus bukti terima barang untuk faktur ini?', 'Konfirmasi Pembatalan Bukti Terima', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan menghapus bukti terima barang untuk faktur ini?', 'Konfirmasi Pembatalan Bukti Terima', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
@@ -85,7 +85,7 @@ class BuktiTerimaController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

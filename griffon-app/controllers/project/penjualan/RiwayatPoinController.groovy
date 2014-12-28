@@ -33,7 +33,7 @@ class RiwayatPoinController {
             def dialogProps = [title: 'Cari Konsumen...', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('konsumen', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada konsumen yang dipilih!', 'Cari Konsumen', JOptionPane.ERROR_MESSAGE)
                 } else {
                     model.konsumenSearch = v.view.table.selectionModel.selected[0]
                 }

@@ -89,7 +89,7 @@ class KonsumenController {
 
     @NeedSupervisorPassword
     def creditLimit = {
-        String input = JOptionPane.showInputDialog(view.mainPanel, 'Masukkan nilai credit limit baru:', 'Input Credit Limit', JOptionPane.QUESTION_MESSAGE)
+        String input = DialogUtils.input(view.mainPanel, 'Masukkan nilai credit limit baru:', 'Input Credit Limit')
         try {
             BigDecimal creditLimit = new BigDecimal(input)
             Konsumen konsumen = view.table.selectionModel.selected[0]
@@ -98,7 +98,7 @@ class KonsumenController {
                 view.table.selectionModel.selected[0] = konsumen
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Nilai credit limit bukan nilai yang valid!', 'Kesalahan Input', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Nilai credit limit bukan nilai yang valid!', 'Kesalahan Input', JOptionPane.ERROR_MESSAGE)
         }
     }
 

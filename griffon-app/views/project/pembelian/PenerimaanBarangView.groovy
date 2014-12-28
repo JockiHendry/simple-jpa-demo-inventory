@@ -15,6 +15,7 @@
  */
 package project.pembelian
 
+import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
@@ -75,8 +76,7 @@ panel(id: 'mainPanel') {
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
                 table.isRowSelected
             }, actionPerformed: {
-                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
                     controller.delete()
                 }
             })

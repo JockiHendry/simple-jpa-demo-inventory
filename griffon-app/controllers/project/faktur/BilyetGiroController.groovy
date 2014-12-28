@@ -19,6 +19,7 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.BilyetGiro
 import project.penjualan.BilyetGiroService
+import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
@@ -67,12 +68,12 @@ class BilyetGiroController {
         } catch (DataDuplikat ex) {
             model.errors['nomorSeri'] = app.getMessage("simplejpa.error.alreadyExist.message")
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Bilyet giro tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Bilyet giro tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
     def cairkan = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin sudah mencairkan bilyet giro ini?', 'Pencairan Bilyet Giro', JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin sudah mencairkan bilyet giro ini?', 'Pencairan Bilyet Giro')) {
             return
         }
         try {
@@ -82,7 +83,7 @@ class BilyetGiroController {
                 view.table.selectionModel.selected[0] = bilyetGiro
             }
         } catch (IllegalStateException ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Kesalahan Pencairan Giro', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, ex.message, 'Kesalahan Pencairan Giro', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -96,7 +97,7 @@ class BilyetGiroController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Kesalahan Hapus Giro', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, ex.message, 'Kesalahan Hapus Giro', JOptionPane.ERROR_MESSAGE)
         }
     }
 

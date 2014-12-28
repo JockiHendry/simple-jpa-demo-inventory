@@ -38,8 +38,7 @@ class LaporanController {
     def search = {
         JenisLaporan jenisLaporan = model.jenisLaporanSearch.selectedItem
         if (!jenisLaporan) {
-            JOptionPane.showMessageDialog(view.mainPanel, "Anda harus memilih jenis laporan yang akan ditampilkan!",
-                    "Pesan Kesalahan", JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, "Anda harus memilih jenis laporan yang akan ditampilkan!", "Pesan Kesalahan", JOptionPane.ERROR_MESSAGE)
             return
         }
         def result, batal, params

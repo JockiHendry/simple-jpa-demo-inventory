@@ -61,7 +61,7 @@ class PengirimanController {
 
     def simpanSuratJalan = {
         if (!fakturJualRepository.validate(model, Default, model)) return
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin menyimpan data surat untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin menyimpan data surat untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
@@ -73,7 +73,7 @@ class PengirimanController {
                 tableSelectionChanged()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -81,10 +81,10 @@ class PengirimanController {
         if (!fakturJualRepository.validate(model, Default, model)) return
         FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
         if (faktur.pengeluaranBarang == null) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memproses pengiriman, buat surat jalan terlebih dahulu!', 'Kesalahan', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Untuk memproses pengiriman, buat surat jalan terlebih dahulu!', 'Kesalahan', JOptionPane.ERROR_MESSAGE)
             return
         }
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin order surat jalan telah diantar untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin order surat jalan telah diantar untuk faktur ini?', 'Konfirmasi Pengiriman', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
@@ -94,13 +94,13 @@ class PengirimanController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
     @NeedSupervisorPassword
     def batalKirim = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
@@ -111,7 +111,7 @@ class PengirimanController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -132,7 +132,7 @@ class PengirimanController {
                 DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
             }
         } else {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Surat jalan belum dibuat sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Surat jalan belum dibuat sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 

@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 import simplejpa.SimpleJpaUtil
+import simplejpa.swing.DialogUtils
 import simplejpa.transaction.TransactionHolder
 import util.BusyLayerUI
 import griffon.util.*
 import util.HttpUtil
 import util.SplashScreen
+import javax.swing.JOptionPane
 import javax.validation.ConstraintViolationException
 
 //noinspection GroovyUnusedAssignment
@@ -40,9 +42,9 @@ onUncaughtExceptionThrown = { Exception e ->
             pesan.append(it.message)
             pesan.append('\n')
         }
-        javax.swing.JOptionPane.showMessageDialog(null, pesan.toString(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+        DialogUtils.message(null, pesan.toString(), "Error", JOptionPane.ERROR_MESSAGE)
     } else {
-        javax.swing.JOptionPane.showMessageDialog(null, e.message, "Error", javax.swing.JOptionPane.ERROR_MESSAGE)
+        DialogUtils.message(null, e.message, "Error", JOptionPane.ERROR_MESSAGE)
     }
 
     def stringWriter = new StringWriter()

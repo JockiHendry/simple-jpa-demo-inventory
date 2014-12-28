@@ -77,13 +77,13 @@ class HutangController {
             }
         }
         if (!returBeli) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada retur beli yang dipilih!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Tidak ada retur beli yang dipilih!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
             return
         } else if (returBeli.deleted == 'Y') {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Retur beli yang sudah dihapus tidak dapat dipakai lagi!', 'Data Tidak Valid', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Retur beli yang sudah dihapus tidak dapat dipakai lagi!', 'Data Tidak Valid', JOptionPane.ERROR_MESSAGE)
             return
         }
-        if (JOptionPane.showConfirmDialog(view.mainPanel, "Anda yakin ingin melunasi hutang ini dengan retur beli [${returBeli.nomor}]?", 'Konfirmasi', JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, "Anda yakin ingin melunasi hutang ini dengan retur beli [${returBeli.nomor}]?", 'Konfirmasi')) {
             return
         }
         purchaseOrderRepository.withTransaction {
@@ -94,7 +94,7 @@ class HutangController {
         execInsideUISync {
             view.table.selectionModel.selected[0] = purchaseOrder
         }
-        JOptionPane.showMessageDialog(view.mainPanel, "Potongan hutang berdasarkan retur beli [${returBeli.nomor}] telah ditambahkan.", 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+        DialogUtils.message(view.mainPanel, "Potongan hutang berdasarkan retur beli [${returBeli.nomor}] telah ditambahkan.", 'Informasi', JOptionPane.INFORMATION_MESSAGE)
     }
 
     def clear = {

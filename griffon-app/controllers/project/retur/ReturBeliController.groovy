@@ -96,7 +96,7 @@ class ReturBeliController {
 
     def save = {
         if (model.id != null) {
-            if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
                 return
             }
         }
@@ -122,7 +122,7 @@ class ReturBeliController {
         } catch (DuplicateEntityException ex) {
             model.errors['nomor'] = app.getMessage('simplejpa.error.alreadyExist.message')
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
         execInsideUISync {
             clear()
@@ -131,7 +131,7 @@ class ReturBeliController {
     }
 
     def prosesTukar = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima dari supplier?', 'Konfirmasi Penerimaan', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima dari supplier?', 'Konfirmasi Penerimaan', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         ReturBeli returBeli = view.table.selectionModel.selected[0]
@@ -144,7 +144,7 @@ class ReturBeliController {
 
     @NeedSupervisorPassword
     def delete = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
             return
         }
         ReturBeli returBeli = view.table.selectionModel.selected[0]
@@ -168,7 +168,7 @@ class ReturBeliController {
 
     def showKlaimRetur = {
         if (model.supplier.selectedItem == null) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Anda harus memilih supplier terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Anda harus memilih supplier terlebih dahulu!', 'Urutan Input Data', JOptionPane.ERROR_MESSAGE)
             return
         }
         execInsideUISync {

@@ -15,6 +15,7 @@
  */
 package project.penjualan
 
+import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import java.text.NumberFormat
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
@@ -94,8 +95,7 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
                 if (model.id != null) {
-                    if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.update.message"),
-                            app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
                         return
                     }
                 }
@@ -110,8 +110,7 @@ panel(id: 'mainPanel') {
             button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
                 table.isRowSelected
             }, actionPerformed: {
-                if (JOptionPane.showConfirmDialog(mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                        app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION) {
+                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
                     controller.delete()
                 }
             })

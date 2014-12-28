@@ -44,7 +44,7 @@ class PembayaranHutangAsChildController {
 
     def save = {
         if (!view.table.selectionModel.selectionEmpty) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
             return
         }
         Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan)
@@ -57,7 +57,7 @@ class PembayaranHutangAsChildController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, "Pembayaran tidak dapat dilakukan lagi!", 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, "Pembayaran tidak dapat dilakukan lagi!", 'Pembayaran gagal disimpan', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException | HargaSelisih ex) {
             model.errors['jumlah'] = ex.message
         }
@@ -65,8 +65,7 @@ class PembayaranHutangAsChildController {
 
     @NeedSupervisorPassword
     def delete = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"),
-                app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
             return
         }
         try {
@@ -77,7 +76,7 @@ class PembayaranHutangAsChildController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Pembayaran tidak dapat dihapus lagi!', 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Pembayaran tidak dapat dihapus lagi!', 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException ex) {
             model.errors['jumlah'] = ex.message
         }
@@ -89,7 +88,7 @@ class PembayaranHutangAsChildController {
             def dialogProps = [title: 'Cari Bilyet Giro', size: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('bilyetGiro', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada bilyet giro yang dipilih!', 'Cari Bilyet Giro', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada bilyet giro yang dipilih!', 'Cari Bilyet Giro', JOptionPane.ERROR_MESSAGE)
                 } else {
                     model.bilyetGiro = v.table.selectionModel.selected[0]
                 }

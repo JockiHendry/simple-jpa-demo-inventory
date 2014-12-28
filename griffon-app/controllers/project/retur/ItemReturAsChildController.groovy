@@ -46,7 +46,7 @@ class ItemReturAsChildController {
 
     def save = {
         if (!view.table.selectionModel.selectionEmpty) {
-            if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+            if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
                 return
             }
         }
@@ -76,7 +76,7 @@ class ItemReturAsChildController {
     }
 
     def delete = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
             return
         }
         ItemRetur itemRetur = view.table.selectionModel.selected[0]
@@ -109,7 +109,7 @@ class ItemReturAsChildController {
             Produk produk = null
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {
-                    JOptionPane.showMessageDialog(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
+                    DialogUtils.message(view.mainPanel, 'Tidak ada produk yang dipilih!', 'Cari Produk', JOptionPane.ERROR_MESSAGE)
                 } else {
                     produk = v.view.table.selectionModel.selected[0]
                 }
@@ -133,7 +133,7 @@ class ItemReturAsChildController {
 
     def prosesAutoKlaim = { boolean hanyaPiutang = false, boolean tukarServis = false ->
         if (!model.modusEceran && !model.parent && (!model.parentGudang || !model.parentKonsumen)) {
-            JOptionPane.showMessageDialog(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Untuk memakai fasilitas auto klaim, Anda harus memilih gudang dan konsumen terlebih dahulu!', 'Data Tidak Lengkap', JOptionPane.ERROR_MESSAGE)
             return
         }
         ReturJual returJual
@@ -151,19 +151,19 @@ class ItemReturAsChildController {
         execInsideUISync {
             view.table.repaint()
             clear()
-            JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Rencana klaim sudah ditentukan secara otomatis!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
         }
     }
 
     def resetKlaim = {
-        if (JOptionPane.showConfirmDialog(view.mainPanel, 'Anda yakin ingin menghapus rencana klaim retur yang sudah dibuat?', 'Konfirmasi Reset', JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin menghapus rencana klaim retur yang sudah dibuat?', 'Konfirmasi Reset', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         model.itemReturList.each { it.klaims.clear() }
         execInsideUISync {
             view.table.repaint()
             clear()
-            JOptionPane.showMessageDialog(view.mainPanel, 'Rencana klaim yang ada sudah dihapus semua!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
+            DialogUtils.message(view.mainPanel, 'Rencana klaim yang ada sudah dihapus semua!', 'Informasi', JOptionPane.INFORMATION_MESSAGE)
         }
     }
 
