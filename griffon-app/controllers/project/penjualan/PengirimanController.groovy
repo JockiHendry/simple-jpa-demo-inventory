@@ -68,8 +68,9 @@ class PengirimanController {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
             faktur = fakturJualRepository.buatSuratJalan(faktur, model.alamatTujuan, model.tanggal, model.keterangan)
             execInsideUISync {
-                view.table.selectionModel.selected[0] = faktur
                 cetak(faktur)
+                view.table.selectionModel.selected[0] = faktur
+                tableSelectionChanged()
             }
         } catch (DataTidakBolehDiubah ex) {
             JOptionPane.showMessageDialog(view.mainPanel, ex.message, 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
