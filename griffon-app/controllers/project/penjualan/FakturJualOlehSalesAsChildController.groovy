@@ -38,8 +38,8 @@ class FakturJualOlehSalesAsChildController {
         }
     }
 
-    def tutup = {
-        SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
+    def close = {
+        execInsideUISync { SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose() }
     }
 
 }

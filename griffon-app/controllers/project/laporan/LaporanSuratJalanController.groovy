@@ -62,7 +62,7 @@ class LaporanSuratJalanController {
     }
 
     def close = {
-        SwingUtilities.getWindowAncestor(view.mainPanel).visible = false
+        execInsideUISync { SwingUtilities.getWindowAncestor(view.mainPanel).visible = false }
     }
 
 }

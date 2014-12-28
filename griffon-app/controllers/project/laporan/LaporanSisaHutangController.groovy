@@ -81,7 +81,7 @@ class LaporanSisaHutangController {
     }
 
     def close = {
-        SwingUtilities.getWindowAncestor(view.mainPanel).visible = false
+        execInsideUISync { SwingUtilities.getWindowAncestor(view.mainPanel).visible = false }
     }
 
 }

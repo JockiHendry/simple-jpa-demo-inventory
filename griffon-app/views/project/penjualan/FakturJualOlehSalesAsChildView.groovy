@@ -22,7 +22,7 @@ import static javax.swing.SwingConstants.CENTER
 import static javax.swing.SwingConstants.RIGHT
 
 actions {
-    action(id: 'tutup', name: 'Tutup', closure: controller.tutup)
+    action(id: 'tutup', name: 'Tutup', closure: controller.close)
 }
 
 panel(id: 'mainPanel') {
@@ -33,8 +33,7 @@ panel(id: 'mainPanel') {
     }
 
     scrollPane(constraints: CENTER) {
-        glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN, doubleClickAction: tutup,
-                enterKeyAction: tutup) {
+        glazedTable(id: 'table', list: model.fakturJualOlehSalesList, sortingStrategy: SINGLE_COLUMN) {
             glazedColumn(name: '', property: 'deleted', width: 20) {
                 templateRenderer(exp: { it == 'Y'? 'D': ''})
             }

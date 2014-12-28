@@ -97,7 +97,7 @@ class PembayaranHutangAsChildController {
     }
 
     def close = {
-        SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose()
+        execInsideUISync { SwingUtilities.getWindowAncestor(view.mainPanel)?.dispose() }
     }
 
     def clear = {
