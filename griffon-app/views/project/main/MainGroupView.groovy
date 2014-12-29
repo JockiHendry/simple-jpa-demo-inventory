@@ -24,7 +24,7 @@ import project.penjualan.FakturEceranViewMode
 import project.retur.ReturBeliViewMode
 import project.retur.ReturJualViewMode
 import util.BusyLayerUI
-import util.MainTabbedPane
+import simplejpa.swing.MainTabbedPane
 import util.ScrollableToolBar
 import javax.swing.*
 import javax.swing.border.*
