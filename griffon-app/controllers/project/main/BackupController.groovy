@@ -45,7 +45,7 @@ class BackupController {
         JTextArea output = view.output
         String userName = SimpleJpaUtil.instance.dbUsername
         String dbName = SimpleJpaUtil.instance.dbName
-        String password = "12345"
+        String password = SimpleJpaUtil.instance.jpaConfig['javax.persistence.jdbc.password']
         if (view.databasePassword?.password?.length > 0) password = view.databasePassword.password.toString()
 
         String namafile = DateTime.now().toString('yyyyMMdd-hhmm')
