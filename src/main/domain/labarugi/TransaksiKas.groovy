@@ -61,13 +61,13 @@ class TransaksiKas extends ItemPeriodik {
 
     int hashCode() {
         int result
-        result = tanggal.hashCode()
-        result = 31 * result + jumlah.hashCode()
-        result = 31 * result + keterangan.hashCode()
-        result = 31 * result + saldo.hashCode()
-        result = 31 * result + jenis.nama.hashCode()
-        result = 31 * result + pihakTerkait.hashCode()
-        result = 31 * result + kategoriKas.nama.hashCode()
+        result = (tanggal?.hashCode()?: 0)
+        result = 31 * result + (jumlah?.hashCode()?: 0)
+        result = 31 * result + (keterangan?.hashCode()?: 0)
+        result = 31 * result + (saldo?.hashCode()?: 0)
+        result = 31 * result + (jenis?.nama?.hashCode()?: 0)
+        result = 31 * result + (pihakTerkait?.hashCode()?: 0)
+        result = 31 * result + (kategoriKas?.nama?.hashCode()?: 0)
         result
     }
 
