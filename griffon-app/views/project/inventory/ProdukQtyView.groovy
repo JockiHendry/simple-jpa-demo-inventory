@@ -38,7 +38,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left]',''), focusCycle
     numberTextField(id: 'jumlahSemua', columns: 20, bindTo: 'jumlahSemua', editable: false, errorPath: 'jumlahSemua', constraints: 'wrap')
 
     label('Qty Akan Dikirim (K):')
-    numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', errorPath: 'jumlahAkanDikirim', constraints: 'wrap')
+    numberTextField(id: 'jumlahAkanDikirim', columns: 20, bindTo: 'jumlahAkanDikirim', editable: false, errorPath: 'jumlahAkanDikirim', constraints: 'wrap')
 
     label('Qty Ready (S - K):')
     numberTextField(id: 'jumlahReady', columns: 20, bindTo: 'jumlahReady', editable: false, errorPath: 'jumlahReady', constraints: 'wrap')

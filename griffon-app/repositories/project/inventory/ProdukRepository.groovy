@@ -91,7 +91,6 @@ class ProdukRepository {
         Produk p = findProdukByIdFetchComplete(produk.id)
         p.jumlahRetur = produk.jumlahRetur
         p.jumlahTukar = produk.jumlahTukar
-        p.jumlahAkanDikirim = produk.jumlahAkanDikirim
         p
     }
 

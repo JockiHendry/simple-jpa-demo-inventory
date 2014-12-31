@@ -38,7 +38,6 @@ class ProdukQtyController {
         model.parent.with {
             jumlahRetur = model.jumlahRetur
             jumlahTukar = model.jumlahTukar
-            jumlahAkanDikirim = model.jumlahAkanDikirim
         }
         produkRepository.updateQty(model.parent)
     }
