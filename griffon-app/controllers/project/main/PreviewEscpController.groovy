@@ -43,8 +43,10 @@ class PreviewEscpController {
         model.options['createdBy'] = (model.dataSource.hasProperty('createdBy')? model.dataSource.createdBy: null)?: SimpleJpaUtil.instance.user.userName
         model.options['companyName'] = pengaturanRepository.getValue(KeyPengaturan.NAMA_PERUSAHAAN)
         model.options['cetakJatuhTempo'] = model.cetakJatuhTempo
-        PrintPreviewPane printPreviewPane = view.printPreviewPane
-        printPreviewPane.display(template, DataSources.from(model.dataSource, model.options))
+        execInsideUISync {
+            PrintPreviewPane printPreviewPane = view.printPreviewPane
+            printPreviewPane.display(template, DataSources.from(model.dataSource, model.options))
+        }
     }
 
 }
