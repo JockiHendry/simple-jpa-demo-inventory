@@ -30,11 +30,15 @@ import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
 import domain.general.PesanLevelMinimum
 import org.joda.time.LocalDate
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class InventoryEventListenerService {
+
+    private final Logger log = LoggerFactory.getLogger(InventoryEventListenerService)
 
     PesanRepository pesanRepository
 
@@ -78,6 +82,10 @@ class InventoryEventListenerService {
         source.yangDipesan().each {
             Produk produk = findProdukById(it.produk.id)
             produk.jumlahAkanDikirim = (produk.jumlahAkanDikirim?:0) + (pengali * (it.jumlah?:0))
+            if (produk.jumlahAkanDikirim < 0) {
+                log.warn "Jumlah akan dikirim untuk ${produk.nama} mencapai negatif: ${produk.jumlahAkanDikirim}."
+                produk.jumlahAkanDikirim = 0
+            }
         }
     }
 
@@ -97,6 +105,10 @@ class InventoryEventListenerService {
             i.produk.perubahanStok(daftarBarang.gudang, itemStok)
             if (perubahanStok.pakaiYangSudahDipesan) {
                 i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
+                if (i.produk.jumlahAkanDikirim < 0) {
+                    log.warn "Jumlah akan dikirim untuk ${i.produk.nama} mencapai negatif: ${i.produk.jumlahAkanDikirim}."
+                    i.produk.jumlahAkanDikirim = 0
+                }
             }
             periksaLevelMinimum(i.produk)
         }
