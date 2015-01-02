@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -62,11 +62,43 @@ class ReturJualRepository {
         }
     }
 
+    List<ReturJual> cariReturOlehSalesUntukDiantar(String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
+        findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
     List<ReturJual> cariReturEceran(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
         findAllReturJualEceranByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             if (!nomorSearch) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             } else {
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                namaKonsumen like("%${konsumenSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
+    List<ReturJual> cariReturEceranUntukDiantar(String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
+        findAllReturJualEceranByDsl([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {

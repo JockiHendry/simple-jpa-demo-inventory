@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -40,11 +40,13 @@ class ReturJualOlehSalesController {
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
         if (model.mode == ReturJualViewMode.INPUT) {
             model.showSave = true
+            model.showTanggal = true
             model.statusSearch.selectedItem = StatusReturJual.SEMUA
             model.showPiutang = true
             model.excludeDeleted = false
         } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
             model.showSave = false
+            model.showTanggal = false
             model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
             model.showPiutang = false
             model.excludeDeleted = true
@@ -62,12 +64,6 @@ class ReturJualOlehSalesController {
         search()
     }
 
-    void mvcGroupDestroy() {
-    }
-
-    def init = {
-    }
-
     def search = {
         Boolean sudahDiproses = null
         execInsideUISync {
@@ -77,7 +73,12 @@ class ReturJualOlehSalesController {
                 sudahDiproses = false
             }
         }
-        List result = returJualRepository.cariReturOlehSales(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
+        List result
+        if (model.mode == ReturJualViewMode.INPUT) {
+            result = returJualRepository.cariReturOlehSales(model.tanggalMulaiSearch, model.tanggalSelesaiSearch, model.nomorSearch, model.konsumenSearch, sudahDiproses, model.excludeDeleted)
+        } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
+            result = returJualRepository.cariReturOlehSalesUntukDiantar(model.nomorSearch, model.konsumenSearch, sudahDiproses)
+        }
         execInsideUISync {
             model.returJualList.clear()
             model.returJualList.addAll(result)
@@ -131,9 +132,9 @@ class ReturJualOlehSalesController {
             DialogUtils.message(view.mainPanel, 'Pengantaran sebelumnya telah dilakukan untuk retur ini!', 'Pesan kesalahan', JOptionPane.ERROR_MESSAGE)
             return
         }
-        returJual = returJualRepository.tukar(returJual)
+        returJualRepository.tukar(returJual)
         execInsideUISync {
-            view.table.selectionModel.selected[0] = returJual
+            model.returJualList.remove(returJual)
             clear()
         }
     }

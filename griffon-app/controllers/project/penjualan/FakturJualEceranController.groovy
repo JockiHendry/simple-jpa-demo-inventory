@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ class FakturJualEceranController {
                 model.showPenerimaan = false
                 model.showFakturJual = true
                 model.showNilaiUang = true
+                model.showTanggal = true
                 model.allowAddFakturJual = true
                 model.statusSearch.selectedItem = SwingHelper.SEMUA
                 break
@@ -53,6 +54,7 @@ class FakturJualEceranController {
                 model.showPenerimaan = true
                 model.showFakturJual = false
                 model.showNilaiUang = false
+                model.showTanggal = false
                 model.allowAddFakturJual = false
                 model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
                 break
@@ -60,6 +62,7 @@ class FakturJualEceranController {
                 model.showPenerimaan = true
                 model.showFakturJual = true
                 model.showNilaiUang = true
+                model.showTanggal = true
                 model.allowAddFakturJual = true
                 model.statusSearch.selectedItem = SwingHelper.SEMUA
                 break
@@ -76,8 +79,14 @@ class FakturJualEceranController {
     }
 
     def search = {
-        List result = fakturJualRepository.cariFakturJualEceran(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorSearch, model.namaPembeliSearch, model.statusSearch.selectedItem)
+        List result
+        if (model.mode == FakturEceranViewMode.PENGELUARAN) {
+            result = fakturJualRepository.cariFakturJualEceranUntukDiantar(model.nomorSearch, model.namaPembeliSearch,
+                model.statusSearch.selectedItem)
+        } else {
+            result = fakturJualRepository.cariFakturJualEceran(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
+                model.nomorSearch, model.namaPembeliSearch, model.statusSearch.selectedItem)
+        }
         execInsideUISync {
             model.fakturJualEceranList.clear()
             model.fakturJualEceranList.addAll(result)
@@ -137,9 +146,9 @@ class FakturJualEceranController {
         }
         try {
             FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
-            fakturJualEceran = fakturJualRepository.antar(fakturJualEceran)
+            fakturJualRepository.antar(fakturJualEceran)
             execInsideUISync {
-                view.table.selectionModel.selected[0] = fakturJualEceran
+                model.fakturJualEceranList.remove(fakturJualEceran)
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {

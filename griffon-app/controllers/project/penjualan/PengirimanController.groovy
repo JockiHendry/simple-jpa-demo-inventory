@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import domain.inventory.DaftarBarangSementara
 import domain.penjualan.FakturJualOlehSales
 import project.user.NomorService
 import domain.penjualan.StatusFakturJual
-import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -44,15 +43,12 @@ class PengirimanController {
     def init = {
         execInsideUISync {
             model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
-            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
-            model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
         }
     }
 
     def search = {
-        List result = fakturJualRepository.cariFakturJualUntukPengiriman(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-                model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
+        List result = fakturJualRepository.cariFakturJualOlehSalesUntukPengiriman(model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             model.fakturJualOlehSalesList.addAll(result)

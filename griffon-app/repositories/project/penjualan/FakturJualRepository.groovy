@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -106,11 +106,25 @@ class FakturJualRepository {
         }
     }
 
-    List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
+    List<FakturJualEceran> cariFakturJualEceranUntukDiantar(String nomorSearch, String namaPembeliSearch, def statusSearch) {
+        findAllFakturJualEceranByDslFetchComplete([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
+                nomor like("%${nomorSearch}%")
+            }
+            if (statusSearch != SwingHelper.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (namaPembeliSearch) {
+                and()
+                namaPembeli like("%${namaPembeliSearch}%")
+            }
+        }
+    }
+
+    List<FakturJualOlehSales> cariFakturJualOlehSalesUntukPengiriman(String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            if (!nomorSearch) {
-                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            } else {
+            if (nomorSearch) {
                 nomor like("%${nomorSearch}%")
             }
             if (statusSearch != SwingHelper.SEMUA) {

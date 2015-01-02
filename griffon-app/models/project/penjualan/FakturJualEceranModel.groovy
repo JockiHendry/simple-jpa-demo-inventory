@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ class FakturJualEceranModel {
     @Bindable boolean showPenerimaan
     @Bindable boolean showFakturJual
     @Bindable boolean showNilaiUang
+    @Bindable boolean showTanggal
     @Bindable boolean allowAddFakturJual
     @Bindable boolean allowPrint = true
     @Bindable boolean allowAntar = true

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -64,13 +64,13 @@ actions {
         smallIcon: imageIcon('/menu_penerimaan_retur_beli.png'), closure: controller.switchPage.rcurry([mode: ReturBeliViewMode.PENERIMAAN]))
     action(id: 'pengeluaranBarang', name: 'Antar Barang', actionCommandKey: 'pengeluaranBarang', mnemonic: KeyEvent.VK_A,
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
-    action(id: 'pengeluaranBarangEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
+    action(id: 'pengeluaranBarangEceran', name: 'Antar Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
         smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.PENGELUARAN]))
-    action(id: 'pengiriman', name: 'Kirim Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
+    action(id: 'pengiriman', name: 'Antar Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
         smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
-    action(id: 'pengeluaranReturJualEceran', name: 'Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_C,
+    action(id: 'pengeluaranReturJualEceran', name: 'Antar Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_C,
         smallIcon: imageIcon('/menu_pengeluaran_retur_jual_sales.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
-    action(id: 'pengeluaranReturJualSales', name: 'Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_R,
+    action(id: 'pengeluaranReturJualSales', name: 'Antar Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_R,
         smallIcon: imageIcon('/menu_pengeluaran_retur_jual_eceran.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
     action(id: 'buktiTerima', name: 'Bukti Terima', actionCommandKey: 'buktiTerima', mnemonic: KeyEvent.VK_T,
         smallIcon: imageIcon('/menu_bukti_terima.png'), closure: controller.switchPage)
@@ -106,9 +106,9 @@ actions {
 
     action(id: 'returJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_U,
         smallIcon: imageIcon('/menu_retur_jual.png'), closure: popupReturJual)
-    action(id: 'returJualEceran', name: 'Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_E,
+    action(id: 'returJualEceran', name: 'Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_E,
             smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage)
-    action(id: 'returJualOlehSales', name: 'Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_S,
+    action(id: 'returJualOlehSales', name: 'Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_S,
             smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
     action(id: 'returBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_retur_beli.png'), closure: controller.switchPage)
