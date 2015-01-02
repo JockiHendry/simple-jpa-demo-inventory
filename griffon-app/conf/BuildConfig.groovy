@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -201,8 +201,17 @@ griffon.project.dependency.resolution = {
             exclude 'lucene-queryparser'
             exclude 'lucene-analyzers-common'
             exclude 'lucene-core'
+            exclude 'itext'
         }
         compile 'jockihendry:simple-escp:0.6'
+        compile('com.lowagie:itext:2.1.7') {
+            exclude 'bctsp-jdk14'
+            exclude 'bcmail-jdk14'
+            exclude 'bcprov-jdk14'
+        }
+        compile 'org.bouncycastle:bctsp-jdk14:1.38'
+        compile 'org.bouncycastle:bcmail-jdk14:1.38'
+        compile 'org.bouncycastle:bcprov-jdk14:1.38'
     }
 }
 
