@@ -276,5 +276,25 @@ class ReturJualRepository {
         returJual
     }
 
+    public void prosesSemuaReturJualSales() {
+        List daftar = findAllReturJualOlehSalesBySudahDiproses(false)
+        for (ReturJualOlehSales retur: daftar) {
+            if (!retur.getKlaimsTukar(true).empty) {
+                PengeluaranBarang pengeluaranBarang = retur.tukar()
+                persist(pengeluaranBarang)
+            }
+        }
+    }
+
+    public void prosesSemuaReturJualEceran() {
+        List daftar = findAllReturJualEceranBySudahDiproses(false)
+        for (ReturJualEceran retur: daftar) {
+            if (!retur.getKlaimsTukar(true).empty) {
+                PengeluaranBarang pengeluaranBarang = retur.tukar()
+                persist(pengeluaranBarang)
+            }
+        }
+    }
+
 }
 

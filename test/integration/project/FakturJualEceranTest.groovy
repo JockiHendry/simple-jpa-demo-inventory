@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,18 @@ package project
 
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
+import domain.penjualan.FakturJualOlehSales
 import project.inventory.GudangRepository
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
 import project.penjualan.FakturJualRepository
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class FakturJualEceranTest extends DbUnitTestCase {
-
-    private static final Logger log = LoggerFactory.getLogger(FakturJualEceranTest)
 
     GudangRepository gudangRepository
     FakturJualRepository fakturJualRepository
@@ -147,6 +144,37 @@ class FakturJualEceranTest extends DbUnitTestCase {
             fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-1l)
             shouldFail(DataTidakBolehDiubah) {
                 fakturJualEceran.bayar()
+            }
+        }
+    }
+
+    public void testProsesSemuaFakturJualEceran() {
+        fakturJualRepository.prosesSemuaFakturJualEceran()
+        List<FakturJualEceran> hasil = fakturJualRepository.findAllFakturJualEceran()
+        assertEquals(2, hasil.size())
+        assertEquals(StatusFakturJual.DIANTAR, hasil[0].status)
+        assertEquals(StatusFakturJual.DIANTAR, hasil[1].status)
+    }
+
+    public void testLunasiSemuaFakturJualEceran() {
+        fakturJualRepository.lunasiSemuaFakturJualEceran()
+        List<FakturJualEceran> hasil = fakturJualRepository.findAllFakturJualEceran()
+        assertEquals(2, hasil.size())
+        assertEquals(StatusFakturJual.LUNAS, hasil[0].status)
+        assertEquals(StatusFakturJual.LUNAS, hasil[1].status)
+    }
+
+    public void testProsesSemuaFakturJualSales() {
+        fakturJualRepository.prosesSemuaFakturJualSales()
+        fakturJualRepository.withTransaction {
+            List<FakturJualOlehSales> hasil = fakturJualRepository.findAllFakturJualOlehSales()
+            assertEquals(5, hasil.size())
+            (0..4).each { i ->
+                assertEquals(StatusFakturJual.DITERIMA, hasil[i].status)
+                assertNotNull(hasil[i].pengeluaranBarang)
+                assertNotNull(hasil[i].pengeluaranBarang.buktiTerima.namaPenerima)
+                assertNotNull(hasil[i].pengeluaranBarang.buktiTerima.namaSupir)
+                assertNotNull(hasil[i].pengeluaranBarang.buktiTerima.tanggalTerima)
             }
         }
     }

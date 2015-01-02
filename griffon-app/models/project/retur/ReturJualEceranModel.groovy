@@ -26,6 +26,7 @@ class ReturJualEceranModel {
     ReturJualViewMode mode
     @Bindable boolean showSave
     @Bindable boolean showTanggal
+    @Bindable boolean showPenukaran
     @Bindable boolean allowPenukaran
     @Bindable boolean deleted = false
     boolean excludeDeleted = false

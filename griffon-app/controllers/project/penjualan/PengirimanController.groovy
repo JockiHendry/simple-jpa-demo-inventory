@@ -94,6 +94,17 @@ class PengirimanController {
         }
     }
 
+    def prosesSemuaFaktur = {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin mengubah status semua faktur yang ada menjadi telah diterima?', 'Konfirmasi Pengantaran', JOptionPane.QUESTION_MESSAGE)) {
+            return
+        }
+        fakturJualRepository.prosesSemuaFakturJualSales()
+        execInsideUISync {
+            model.fakturJualOlehSalesList.clear()
+            clear()
+        }
+    }
+
     @NeedSupervisorPassword
     def batalKirim = {
         if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.QUESTION_MESSAGE)) {

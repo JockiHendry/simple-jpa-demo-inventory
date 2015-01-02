@@ -44,12 +44,14 @@ class ReturJualOlehSalesController {
             model.statusSearch.selectedItem = StatusReturJual.SEMUA
             model.showPiutang = true
             model.excludeDeleted = false
+            model.showPenukaran = false
         } else if (model.mode == ReturJualViewMode.PENGELUARAN) {
             model.showSave = false
             model.showTanggal = false
             model.statusSearch.selectedItem = StatusReturJual.BELUM_DIPROSES
             model.showPiutang = false
             model.excludeDeleted = true
+            model.showPenukaran = true
         }
         List gudangResult = returJualRepository.findAllGudang([orderBy: 'nama'])
         execInsideUISync {
@@ -124,7 +126,7 @@ class ReturJualOlehSalesController {
     }
 
     def prosesTukar = {
-        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Penerimaan', JOptionPane.QUESTION_MESSAGE)) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin barang retur yang ditukar telah diterima oleh konsumen?', 'Konfirmasi Tukar', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         ReturJual returJual = view.table.selectionModel.selected[0]
@@ -135,6 +137,17 @@ class ReturJualOlehSalesController {
         returJualRepository.tukar(returJual)
         execInsideUISync {
             model.returJualList.remove(returJual)
+            clear()
+        }
+    }
+
+    def prosesSemuaFaktur = {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin semua barang retur yang ditukar telah dikirim ke konsumen?', 'Konfirmasi Tukar', JOptionPane.QUESTION_MESSAGE)) {
+            return
+        }
+        returJualRepository.prosesSemuaReturJualSales()
+        execInsideUISync {
+            model.returJualList.clear()
             clear()
         }
     }

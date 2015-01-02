@@ -450,6 +450,46 @@ class FakturJualRepository {
         new DaftarBarangSementara(items, 1)
     }
 
+    void lunasiSemuaFakturJualEceran() {
+        findAllFakturJualEceranByDsl {
+            status ne(StatusFakturJual.LUNAS)
+        }.each { FakturJualEceran f ->
+            if (f.status != StatusFakturJual.DIANTAR) {
+                f.antar()
+            }
+            f.bayar()
+        }
+    }
+
+    void prosesSemuaFakturJualEceran() {
+        List daftarFaktur = findAllFakturJualEceranByDsl {
+            status ne(StatusFakturJual.LUNAS)
+            and()
+            status ne(StatusFakturJual.DIANTAR)
+        }
+        for (FakturJualEceran faktur: daftarFaktur) {
+            faktur.antar()
+        }
+    }
+
+    void prosesSemuaFakturJualSales() {
+        List daftarFaktur = findAllFakturJualOlehSalesByDsl {
+            status ne(StatusFakturJual.LUNAS)
+        }
+        for (FakturJualOlehSales faktur: daftarFaktur) {
+            if (faktur.status == StatusFakturJual.DIBUAT) {
+                if (faktur.pengeluaranBarang) {
+                    faktur.kirimSuratJalan()
+                } else {
+                    faktur.kirim('[Otomatis]')
+                }
+            }
+            if (faktur.status == StatusFakturJual.DIANTAR) {
+                faktur.tambah(new BuktiTerima(LocalDate.now(), '[Otomatis]', '[Otomatis]'))
+            }
+        }
+    }
+
     public enum StatusPiutangSearch {
         SEMUA('Semua'), BELUM_LUNAS('Belum Lunas'), LUNAS('Lunas'), AKAN_JATUH_TEMPO('Akan Jatuh Tempo')
 

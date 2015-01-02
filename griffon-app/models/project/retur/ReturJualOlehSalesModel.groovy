@@ -28,6 +28,7 @@ class ReturJualOlehSalesModel {
     ReturJualViewMode mode
     @Bindable boolean showSave
     @Bindable boolean showTanggal
+    @Bindable boolean showPenukaran
     @Bindable boolean allowPenukaran
     @Bindable boolean showPiutang
     @Bindable boolean deleted = false

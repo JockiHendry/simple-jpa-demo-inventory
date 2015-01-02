@@ -29,6 +29,7 @@ actions {
     action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
     action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
 }
 
 panel(id: 'mainPanel') {
@@ -43,6 +44,7 @@ panel(id: 'mainPanel') {
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), action: search)
         comboBox(id: 'statusSearch', model: model.statusSearch)
         button(action: search)
+        button(action: prosesSemuaFaktur, visible: bind { model.showPenukaran })
     }
 
     scrollPane(constraints: CENTER) {

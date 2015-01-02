@@ -28,6 +28,7 @@ actions {
     action(id: 'cetakSummary', name: 'Cetak Summary...', closure: controller.cetakSummary)
     action(id: 'simpanSuratJalan', name: 'Simpan Surat Jalan', closure: controller.simpanSuratJalan)
     action(id: 'kirimSuratJalan', name: 'Order Di Surat Jalan Sudah Diantar...', closure: controller.kirimSuratJalan)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
 }
 
 panel(id: 'mainPanel') {
@@ -40,6 +41,7 @@ panel(id: 'mainPanel') {
         textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+        button(action: prosesSemuaFaktur)
         button(action: cetakSummary)
     }
 

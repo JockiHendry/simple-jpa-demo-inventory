@@ -26,6 +26,8 @@ import org.jdesktop.swingx.prompt.PromptSupport
 actions {
     action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
+    action(id: 'lunasiSemuaFaktur', name: 'Lunasi Semua Faktur', closure: controller.lunasiSemuaFaktur)
 }
 
 panel(id: 'mainPanel') {
@@ -40,6 +42,8 @@ panel(id: 'mainPanel') {
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'namaPembeliSearch', columns: 10, text: bind('namaPembeliSearch', target: model, mutual: true), actionPerformed: controller.search)
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
+        button(action: prosesSemuaFaktur, visible: bind { model.showPenerimaan })
+        button(action: lunasiSemuaFaktur, visible: bind { !model.showPenerimaan })
     }
 
 

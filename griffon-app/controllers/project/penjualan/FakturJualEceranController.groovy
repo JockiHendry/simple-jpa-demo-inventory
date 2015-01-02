@@ -156,6 +156,28 @@ class FakturJualEceranController {
         }
     }
 
+    def prosesSemuaFaktur = {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin mengubah status semua faktur yang ada menjadi telah diantar?', 'Konfirmasi Pengantaran', JOptionPane.QUESTION_MESSAGE)) {
+            return
+        }
+        fakturJualRepository.prosesSemuaFakturJualEceran()
+        execInsideUISync {
+            model.fakturJualEceranList.clear()
+            clear()
+        }
+    }
+
+    def lunasiSemuaFaktur = {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin ingin mengubah status semua faktur menjadi lunas?', 'Konfirmasi Pembayaran', JOptionPane.QUESTION_MESSAGE)) {
+            return
+        }
+        fakturJualRepository.lunasiSemuaFakturJualEceran()
+        execInsideUISync {
+            model.fakturJualEceranList.clear()
+            clear()
+        }
+    }
+
     def batalAntar = {
         if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan membatalkan pengantaran barang untuk faktur ini?', 'Konfirmasi Pengantaran', JOptionPane.QUESTION_MESSAGE)) {
             return

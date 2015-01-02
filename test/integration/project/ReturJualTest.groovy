@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -587,6 +587,16 @@ class ReturJualTest extends DbUnitTestCase {
         returJualRepository.withTransaction {
             Kas kas = findKasBySistem(true)
             assertEquals(-120000, kas.jumlah)
+        }
+    }
+
+    void testProsesSemuaReturJualSales() {
+        returJualRepository.prosesSemuaReturJualSales()
+        returJualRepository.withTransaction {
+            ReturJualOlehSales r1 = findReturJualOlehSalesById(-1l)
+            assertNotNull(r1.pengeluaranBarang)
+            ReturJualOlehSales r2 = findReturJualOlehSalesById(-2l)
+            assertNull(r2.pengeluaranBarang)
         }
     }
 
