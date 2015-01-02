@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package project
 
 import domain.penjualan.Sales
+import org.joda.time.DateTimeUtils
 import project.user.NomorService
 import org.joda.time.LocalDate
 import simplejpa.testing.DbUnitTestCase
@@ -28,6 +29,12 @@ class NomorServiceTest extends DbUnitTestCase {
         super.setUp()
         setUpDatabase("/project/data_penjualan.xlsx")
         nomorService = app.serviceManager.findService('Nomor')
+        DateTimeUtils.currentMillisFixed = LocalDate.parse('2014-09-09').toDate().time
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        DateTimeUtils.setCurrentMillisSystem()
     }
 
     void testGetNomorFakturJualTerakhir() {
