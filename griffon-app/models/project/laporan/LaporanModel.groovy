@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ public enum JenisLaporan {
     LAPORAN_SISA_PIUTANG('Laporan Sisa Piutang', 'laporan_sisa_piutang', 'laporanSisaPiutang'),
     LAPORAN_SISA_HUTANG('Laporan Sisa Hutang', 'laporan_sisa_hutang', 'laporanSisaHutang'),
     LAPORAN_PEMBAYARAN_PIUTANG('Laporan Pembayaran Piutang', 'laporan_pembayaran_piutang_per_sales', 'laporanPembayaranPiutang'),
+    LAPORAN_PENGAMBILAN_BARANG('Laporan Pengambilan Barang', 'laporan_pengambilan_barang', 'laporanPengambilanBarang'),
     LAPORAN_STOK('Laporan Summary Stok', 'laporan_stok', 'laporanStok'),
     KARTU_STOK('Kartu Stok', 'kartu_stok', 'kartuStok'),
     LAPORAN_STOK_GUDANG('Laporan Stok Per Gudang', 'laporan_stok_gudang', 'laporanStokGudang'),
