@@ -17,10 +17,13 @@ package project
 
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
+import domain.inventory.Gudang
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.FakturJualOlehSales
 import project.inventory.GudangRepository
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
+import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import domain.penjualan.StatusFakturJual
 import org.joda.time.LocalDate
@@ -32,6 +35,7 @@ class FakturJualEceranTest extends DbUnitTestCase {
 
     GudangRepository gudangRepository
     FakturJualRepository fakturJualRepository
+    PengaturanRepository pengaturanRepository
     NomorService nomorService
 
     protected void setUp() {
@@ -39,6 +43,7 @@ class FakturJualEceranTest extends DbUnitTestCase {
         setUpDatabase("/project/data_penjualan.xlsx")
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
+        pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
         nomorService = app.serviceManager.findService('Nomor')
     }
 
@@ -177,6 +182,38 @@ class FakturJualEceranTest extends DbUnitTestCase {
                 assertNotNull(hasil[i].pengeluaranBarang.buktiTerima.tanggalTerima)
             }
         }
+    }
+
+    public void testBuatFakturTanpaWorkflow() {
+        Gudang gudang = gudangRepository.cariGudangUtama()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        FakturJualEceran faktur = new FakturJualEceran(namaPembeli: 'Mr. Xu', tanggal: LocalDate.now())
+        faktur.tambah(new ItemFaktur(produkA,  5, 1000))
+        faktur.tambah(new ItemFaktur(produkB, 10, 1000))
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = false
+        faktur = fakturJualRepository.buat(faktur)
+
+        // Periksa status faktur
+        assertEquals(StatusFakturJual.LUNAS, faktur.status)
+        assertNotNull(faktur.pengeluaranBarang)
+        assertEquals(2, faktur.pengeluaranBarang.items.size())
+        assertEquals(produkA, faktur.pengeluaranBarang.items[0].produk)
+        assertEquals(5, faktur.pengeluaranBarang.items[0].jumlah)
+        assertEquals(produkB, faktur.pengeluaranBarang.items[1].produk)
+        assertEquals(10, faktur.pengeluaranBarang.items[1].jumlah)
+
+        // Periksa apakah jumlah barang sudah berkurang
+        produkA = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(32, produkA.jumlah)
+        assertEquals(17, produkB.jumlah)
+        assertEquals(5, produkA.stok(gudang).jumlah)
+        assertEquals(4, produkB.stok(gudang).jumlah)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
     }
 
 }

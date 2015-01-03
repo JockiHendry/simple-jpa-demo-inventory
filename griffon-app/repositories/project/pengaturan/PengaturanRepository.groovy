@@ -32,7 +32,7 @@ class PengaturanRepository {
 
     @Transaction(Transaction.Policy.SKIP)
     public def getValue(KeyPengaturan keyPengaturan) {
-        cache[keyPengaturan]?: keyPengaturan.defaultValue
+        cache.containsKey(keyPengaturan)? cache[keyPengaturan]: keyPengaturan.defaultValue
     }
 
     @Transaction(Transaction.Policy.SKIP)

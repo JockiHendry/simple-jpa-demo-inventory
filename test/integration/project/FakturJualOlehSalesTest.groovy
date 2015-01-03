@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import domain.faktur.Pembayaran
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.PeriodeItemStok
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.FakturJualEceran
 import domain.penjualan.ReturFaktur
 import project.inventory.GudangRepository
@@ -51,6 +52,7 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
     KonsumenRepository konsumenRepository
     NomorService nomorService
     ProdukRepository produkRepository
+    PengaturanRepository pengaturanRepository
 
     protected void setUp() {
         super.setUp()
@@ -60,7 +62,8 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         konsumenRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Konsumen')
         produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
         nomorService = app.serviceManager.findService('Nomor')
-        (SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan') as PengaturanRepository).refreshAll()
+        pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
+        pengaturanRepository.refreshAll()
     }
 
     public void testBuatPenjualanLuarKota() {
@@ -904,6 +907,40 @@ class FakturJualOlehSalesTest extends DbUnitTestCase {
         produkB = fakturJualRepository.findProdukById(-2l)
         assertEquals(0, produkA.jumlahAkanDikirim)
         assertEquals(0, produkB.jumlahAkanDikirim)
+    }
+
+    public void testBuatFakturTanpaWorkflow() {
+        Gudang gudang = gudangRepository.cariGudangUtama()
+        Produk produkA = fakturJualRepository.findProdukById(-1l)
+        Produk produkB = fakturJualRepository.findProdukById(-2l)
+        Konsumen konsumen = fakturJualRepository.findKonsumenById(-1l)
+        FakturJualOlehSales faktur = new FakturJualOlehSales(konsumen:  konsumen, tanggal: LocalDate.now())
+        faktur.tambah(new ItemFaktur(produkA,  5, 1000))
+        faktur.tambah(new ItemFaktur(produkB, 10, 1000))
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = false
+        faktur = fakturJualRepository.buat(faktur, true)
+
+        // Periksa status faktur
+        assertEquals(StatusFakturJual.DITERIMA, faktur.status)
+        assertNotNull(faktur.pengeluaranBarang)
+        assertNotNull(faktur.pengeluaranBarang.buktiTerima)
+        assertEquals(2, faktur.pengeluaranBarang.items.size())
+        assertEquals(produkA, faktur.pengeluaranBarang.items[0].produk)
+        assertEquals(5, faktur.pengeluaranBarang.items[0].jumlah)
+        assertEquals(produkB, faktur.pengeluaranBarang.items[1].produk)
+        assertEquals(10, faktur.pengeluaranBarang.items[1].jumlah)
+
+        // Periksa apakah jumlah barang sudah berkurang
+        produkA = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produkB = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(32, produkA.jumlah)
+        assertEquals(17, produkB.jumlah)
+        assertEquals(5, produkA.stok(gudang).jumlah)
+        assertEquals(4, produkB.stok(gudang).jumlah)
+        assertEquals(0, produkA.jumlahAkanDikirim)
+        assertEquals(0, produkB.jumlahAkanDikirim)
+
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
     }
 
 }

@@ -36,6 +36,7 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
+import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
@@ -47,6 +48,7 @@ class FakturJualRepository {
 
     NomorService nomorService
     GudangRepository gudangRepository
+    PengaturanRepository pengaturanRepository
 
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -287,7 +289,21 @@ class FakturJualRepository {
             fakturJual = buatFakturJualEceran(fakturJual)
         }
 
-        ApplicationHolder.application.event(new PesanStok(fakturJual, false))
+        if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+            ApplicationHolder.application.event(new PesanStok(fakturJual, false))
+        } else {
+            // Workflow gudang dimatikan sehingga faktur dianggap sudah diterima!
+            if (!fakturJual.pengeluaranBarang) {
+                if (fakturJual instanceof FakturJualOlehSales) {
+                    fakturJual.kirim('[Otomatis]')
+                    fakturJual.tambah(new BuktiTerima(LocalDate.now(), '[Otomatis]', '[Otomatis]'))
+                } else if (fakturJual instanceof FakturJualEceran) {
+                    fakturJual.antar()
+                    fakturJual.bayar()
+                }
+            }
+        }
+
         fakturJual
     }
 

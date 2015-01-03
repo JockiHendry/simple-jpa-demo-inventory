@@ -25,6 +25,7 @@ import domain.labarugi.JenisTransaksiKas
 import domain.labarugi.Kas
 import domain.labarugi.KategoriKas
 import domain.labarugi.TransaksiKas
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import domain.retur.ItemRetur
@@ -39,6 +40,7 @@ import domain.retur.ReturJualEceran
 import domain.retur.ReturJualOlehSales
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
+import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import project.retur.ReturJualRepository
 import simplejpa.SimpleJpaUtil
@@ -49,14 +51,16 @@ class ReturJualTest extends DbUnitTestCase {
     ReturJualRepository returJualRepository
     FakturJualRepository fakturJualRepository
     GudangRepository gudangRepository
+    PengaturanRepository pengaturanRepository
 
-	protected void setUp() {
-		super.setUp()
-		setUpDatabase("/project/data_retur_jual.xlsx")
+    protected void setUp() {
+        super.setUp()
+        setUpDatabase("/project/data_retur_jual.xlsx")
         returJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('ReturJual')
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
-	}
+        pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
+    }
 
     public void testJumlahReturDiProduk() {
         Produk p1 = returJualRepository.findProdukById(-1l)
@@ -398,7 +402,7 @@ class ReturJualTest extends DbUnitTestCase {
         // Pastikan bahwa penukaran telah dilakukan
         assertNotNull(retur.pengeluaranBarang)
         assertTrue(retur.yangHarusDitukar().items.empty)
-        assertTrue(retur.items.every { ItemRetur i -> i.klaims.every { Klaim klaim -> klaim.sudahDiproses }})
+        assertTrue(retur.items.every { ItemRetur i -> i.klaims.every { Klaim klaim -> klaim.sudahDiproses } })
 
         // Pastikan stok barang sudah berkurang
         produk1 = returJualRepository.findProdukByIdFetchStokProduk(-1l)
@@ -600,4 +604,72 @@ class ReturJualTest extends DbUnitTestCase {
         }
     }
 
+    void testBuatReturJualOlehSalesTanpaWorkflow() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenById(-1l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJual retur = new ReturJualOlehSales(tanggal: LocalDate.now(), nomor: '000001-RS-KB-112014', konsumen: k, gudang: g)
+        retur.tambah(new ItemRetur(produk1,  5, [new KlaimTukar(produk1,  5)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = false
+        retur = returJualRepository.buat(retur)
+
+        // Periksa status retur
+        assertTrue(retur.sudahDiproses)
+        assertNotNull(retur.pengeluaranBarang)
+        assertEquals(2, retur.pengeluaranBarang.items.size())
+        assertEquals(produk1, retur.pengeluaranBarang.items[0].produk)
+        assertEquals(5, retur.pengeluaranBarang.items[0].jumlah)
+        assertEquals(produk2, retur.pengeluaranBarang.items[1].produk)
+        assertEquals(10, retur.pengeluaranBarang.items[1].jumlah)
+
+        // Periksa apakah jumlah barang berkurang
+        produk1 = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produk2 = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(32, produk1.jumlah)
+        assertEquals(17, produk2.jumlah)
+        assertEquals(5, produk1.stok(g).jumlah)
+        assertEquals(4, produk2.stok(g).jumlah)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+        assertEquals(15, produk1.jumlahRetur)
+        assertEquals(13, produk2.jumlahRetur)
+
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
+    }
+
+    void testBuatReturJualEceranTanpaWorkflow() {
+        Produk produk1 = returJualRepository.findProdukById(-1l)
+        Produk produk2 = returJualRepository.findProdukById(-2l)
+        Gudang g = gudangRepository.cariGudangUtama()
+        ReturJual retur = new ReturJualEceran(tanggal: LocalDate.now(), nomor: '000001-RE-112014', namaKonsumen: 'Mr. Xu')
+        retur.tambah(new ItemRetur(produk1,  5, [new KlaimTukar(produk1,  5)] as Set))
+        retur.tambah(new ItemRetur(produk2, 10, [new KlaimTukar(produk2, 10)] as Set))
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = false
+        retur = returJualRepository.buat(retur)
+
+        // Periksa status retur
+        assertTrue(retur.sudahDiproses)
+        assertNotNull(retur.pengeluaranBarang)
+        assertEquals(2, retur.pengeluaranBarang.items.size())
+        assertEquals(produk1, retur.pengeluaranBarang.items[0].produk)
+        assertEquals(5, retur.pengeluaranBarang.items[0].jumlah)
+        assertEquals(produk2, retur.pengeluaranBarang.items[1].produk)
+        assertEquals(10, retur.pengeluaranBarang.items[1].jumlah)
+
+        // Periksa apakah jumlah barang berkurang
+        produk1 = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produk2 = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(32, produk1.jumlah)
+        assertEquals(17, produk2.jumlah)
+        assertEquals(5, produk1.stok(g).jumlah)
+        assertEquals(4, produk2.stok(g).jumlah)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+        assertEquals(15, produk1.jumlahRetur)
+        assertEquals(13, produk2.jumlahRetur)
+
+        pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
+    }
 }

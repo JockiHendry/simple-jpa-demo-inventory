@@ -30,10 +30,12 @@ import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.labarugi.KATEGORI_SISTEM
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
+import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import project.user.NomorService
 import simplejpa.transaction.Transaction
@@ -43,6 +45,7 @@ class ReturJualRepository {
 
     NomorService nomorService
     FakturJualRepository fakturJualRepository
+    PengaturanRepository pengaturanRepository
     
     List<ReturJual> cariReturOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
         findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
@@ -146,7 +149,12 @@ class ReturJualRepository {
 
         }
 
-        app?.event(new PesanStok(returJual))
+        if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+            app?.event(new PesanStok(returJual))
+        } else if (!returJual.getKlaimsTukar(true).empty) {
+            // Workflow gudang dimatikan sehingga barang untuk penukaran retur dianggap sudah diantar!
+            tukar(returJual)
+        }
 
         // Periksa apakah klaim servis bisa dilakukan (bila ada klaim servis)
         DaftarBarang daftarKlaimServis = returJual.getDaftarBarangServis(true)
