@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,10 @@ panel(id: 'mainPanel') {
         label('Nilai:', visible: bind { model.genericValue })
         textField(id: 'nilai', columns: 50, text: bind('nilai', target: model, mutual: true), visible: bind { model.genericValue }, errorPath: 'nilai')
         errorLabel(path: 'nilai', visible: bind { model.genericValue }, constraints: 'wrap')
+
+        label('Nilai:', visible: bind { model.booleanValue})
+        checkBox(id: 'nilaiBoolean', selected: bind('nilaiBoolean', target: model, mutual: true), visible: bind { model.booleanValue }, errorPath: 'nilaiBoolean')
+        errorLabel(path: 'nilaiBoolean', visible: bind { model.booleanValue }, constraints: 'wrap')
 
         label('Password Baru:', visible: bind { model.passwordValue })
         passwordField(id: 'passwordBaru', columns: 50, visible: bind { model.passwordValue }, errorPath: 'nilai')

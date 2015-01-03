@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@ public enum KeyPengaturan {
     BONUS_POINT_RATE("Bonus Point Rate", JenisNilai.INTEGER, 2000),
     LEVEL_MINIMUM_STOK("Level Minimum Untuk Stok", JenisNilai.INTEGER, 0),
     CREDIT_LIMIT_DEFAULT("Credit Limit Default", JenisNilai.INTEGER, 10000000),
-    NAMA_PERUSAHAAN("Nama Perusahaan", JenisNilai.STRING, "[Company Name]")
+    NAMA_PERUSAHAAN("Nama Perusahaan", JenisNilai.STRING, "[Company Name]"),
+    WORKFLOW_GUDANG("Workflow Gudang", JenisNilai.BOOLEAN, true)
 
     String description
     JenisNilai jenisNilai

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,6 @@ package domain.pengaturan;
 
 public enum JenisNilai {
 
-    STRING, PASSWORD, INTEGER
+    STRING, PASSWORD, INTEGER, BOOLEAN
 
 }

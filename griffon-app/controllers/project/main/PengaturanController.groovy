@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,8 @@ class PengaturanController {
                     return
                 }
                 nilai = String.valueOf(view.passwordBaru.getPassword())
+            } else if (pengaturanDTO.keyPengaturan.jenisNilai == JenisNilai.BOOLEAN) {
+                nilai = model.nilaiBoolean
             }
 
             pengaturanRepository.save(pengaturanDTO.keyPengaturan, nilai)
@@ -75,6 +77,7 @@ class PengaturanController {
         execInsideUISync {
             model.keyPengaturan = null
             model.nilai = null
+            model.nilaiBoolean = false
             model.passwordValue = false
             model.genericValue = false
             model.errors.clear()
@@ -95,8 +98,13 @@ class PengaturanController {
                 model.genericValue = false
                 if (model.keyPengaturan.jenisNilai == JenisNilai.PASSWORD) {
                     model.passwordValue = true
+                } else if (model.keyPengaturan.jenisNilai == JenisNilai.BOOLEAN) {
+                    model.booleanValue = true
+                    model.genericValue = false
+                    model.nilaiBoolean = selected.nilai
                 } else {
                     model.genericValue = true
+                    model.booleanValue = false
                     model.nilai = selected.nilai
                 }
             }
