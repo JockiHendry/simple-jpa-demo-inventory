@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,11 @@
  */
 package project.inventory
 
+import domain.inventory.Gudang
 import org.jdesktop.swingx.prompt.PromptSupport
+import simplejpa.SimpleJpaUtil
 import simplejpa.swing.DialogUtils
+import javax.swing.JTable
 import javax.swing.SwingUtilities
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
@@ -62,32 +65,40 @@ panel(id: 'mainPanel') {
         }
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.produkList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged,
-                    doubleClickAction: pilih, enterKeyAction: pilih) {
+                    doubleClickAction: pilih, enterKeyAction: pilih, autoResizeMode: JTable.AUTO_RESIZE_OFF) {
                 glazedColumn(name: 'Nama', property: 'nama', preferredWidth: 300)
-                glazedColumn(name: 'Supplier', expression: { it.supplier?.nama?: ''})
-                glazedColumn(name: 'HET Dalam Kota', property: 'hargaDalamKota', columnClass: Integer) {
+                glazedColumn(name: 'Supplier', expression: { it.supplier?.nama?: ''}, preferredWidth: 200)
+                glazedColumn(name: 'HET Dalam Kota', property: 'hargaDalamKota', preferredWidth: 110, columnClass: Integer) {
                     templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', columnClass: Integer) {
+                glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', preferredWidth: 110, columnClass: Integer) {
                     templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan }, preferredWidth: 50)
-                glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode}) {
+                glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer, preferredWidth: 50, visible: bind {!model.popupMode}) {
                     templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Stok Level Minimum', property: 'levelMinimum', preferredWidth: 50, columnClass: Integer, visible: bind {!model.popupMode}) {
+                glazedColumn(name: 'Stok Level Minimum', property: 'levelMinimum', preferredWidth: 80, columnClass: Integer, visible: bind {!model.popupMode}) {
                     templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, preferredWidth: 30) {
+                SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').findAllGudang().each { Gudang g ->
+                    glazedColumn(name: "Qty ${g.nama}", expression: { it.stok(g).jumlah }, columnClass: Integer, preferredWidth: 80) {
+                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    }
+                }
+                glazedColumn(name: 'Total', property: 'jumlah', columnClass: Integer, preferredWidth: 80) {
                     templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode || model.showReturOnly}) {
+                glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 80, visible: bind {!model.popupMode || model.showReturOnly}) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Qty Tukar', property: 'jumlahTukar', columnClass: Integer, preferredWidth: 30, visible: bind {!model.popupMode }) {
+                glazedColumn(name: 'Qty Tukar', property: 'jumlahTukar', columnClass: Integer, preferredWidth: 80, visible: bind {!model.popupMode }) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                 }
-                glazedColumn(name: 'Qty Ready', expression: {it.jumlahReadyGudangUtama()}, columnClass: Integer, preferredWidth: 30) {
+                glazedColumn(name: 'Qty Kirim', property: 'jumlahAkanDikirim', columnClass: Integer, preferredWidth: 80) {
+                    templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
+                }
+                glazedColumn(name: 'Qty Ready', expression: {it.jumlahReadyGudangUtama()}, columnClass: Integer, preferredWidth: 80) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
                 }
             }
