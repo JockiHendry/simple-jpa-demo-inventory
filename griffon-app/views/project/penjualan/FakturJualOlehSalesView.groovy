@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -128,7 +128,7 @@ panel(id: 'mainPanel') {
                     }
                 }
                 controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
+                //form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
             })
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
             button(id: 'showRetur', action: retur, visible: bind { table.isRowSelected })

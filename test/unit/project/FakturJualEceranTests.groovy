@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  */
 package project
 
-import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.penjualan.FakturJualEceran
 import griffon.test.mock.MockGriffonApplication
+import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
@@ -38,8 +38,10 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        PengaturanRepository.metaClass.getValue = { x -> true }
         SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
         SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
+        SimpleJpaUtil.instance.repositoryManager.instances['PengaturanRepository'] = new PengaturanRepository()
         MockGriffonApplication app = new MockGriffonApplication()
         app.serviceManager = new ServiceManager() {
 
@@ -76,9 +78,9 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         Produk produkB = new Produk(nama: 'Produk B', hargaDalamKota: 9000, hargaLuarKota: 91000, jumlah: 50)
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
-
+        f.proses()
         ApplicationHolder.application.serviceManager.findService('Nomor').nomorUrutTerakhir[NomorService.TIPE.PENGELUARAN_BARANG] = 5
-        f.antar()
+        f.proses()
 
         assertEquals(StatusFakturJual.DIANTAR, f.status)
         assertNotNull(f.pengeluaranBarang)
@@ -98,11 +100,9 @@ class FakturJualEceranTests extends GriffonUnitTestCase {
         Produk produkB = new Produk('Produk B',  9000, 9100, 50)
         f.tambah(new ItemFaktur(produkA, 20))
         f.tambah(new ItemFaktur(produkB, 15))
-        shouldFail(DataTidakBolehDiubah) {
-            f.bayar()
-        }
-        f.antar()
-        f.bayar()
+        f.proses() // mulai
+        f.proses() // antar
+        f.proses() // bayar
         assertEquals(StatusFakturJual.LUNAS, f.status)
     }
 

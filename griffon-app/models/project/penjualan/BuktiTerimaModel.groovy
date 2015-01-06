@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,7 @@ package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.StatusFakturJual
-import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
-import util.SwingHelper
 
 class BuktiTerimaModel {
 
@@ -30,9 +27,6 @@ class BuktiTerimaModel {
     @Bindable String nomorFakturSearch
     @Bindable String nomorSuratJalanSearch
     @Bindable String konsumenSearch
-    @Bindable LocalDate tanggalMulaiSearch
-    @Bindable LocalDate tanggalSelesaiSearch
-    ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusFakturJual))
 
     @Bindable String nomorFaktur
     @Bindable String nomorSuratJalan

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -105,8 +105,8 @@ class PencairanPoinTest extends DbUnitTestCase {
 
             // Melakukan penerimaan untuk salah satu faktur sehingga piutangnya bisa dibayar
             FakturJualOlehSales f = konsumen.listFakturBelumLunas[0]
-            fakturJualRepository.kirim(f, 'test')
-            fakturJualRepository.terima(f, new BuktiTerima(LocalDate.now(), 'test'))
+            f = fakturJualRepository.proses(f, [alamatTujuan: 'test'])
+            fakturJualRepository.proses(f, [buktiTerima: new BuktiTerima(LocalDate.now(), 'test')])
             // Poin bertambah akibat penerimaan
             assertEquals(60, konsumen.poinTerkumpul)
 

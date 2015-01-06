@@ -146,7 +146,7 @@ class FakturJualEceranController {
         }
         try {
             FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
-            fakturJualRepository.antar(fakturJualEceran)
+            fakturJualRepository.proses(fakturJualEceran)
             execInsideUISync {
                 model.fakturJualEceranList.remove(fakturJualEceran)
                 clear()
@@ -184,7 +184,7 @@ class FakturJualEceranController {
         }
         try {
             FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
-            fakturJualEceran = fakturJualRepository.batalAntar(fakturJualEceran)
+            fakturJualEceran = fakturJualRepository.hapus(fakturJualEceran)
             execInsideUISync {
                 view.table.selectionModel.selected[0] = fakturJualEceran
                 clear()
@@ -200,7 +200,7 @@ class FakturJualEceranController {
             return
         }
         try {
-            fakturJualEceran = fakturJualRepository.bayar(fakturJualEceran)
+            fakturJualEceran = fakturJualRepository.proses(fakturJualEceran)
             execInsideUISync {
                 view.table.selectionModel.selected[0] = fakturJualEceran
                 clear()

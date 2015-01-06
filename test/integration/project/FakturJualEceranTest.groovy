@@ -82,7 +82,7 @@ class FakturJualEceranTest extends DbUnitTestCase {
             Produk produkB = fakturJualRepository.findProdukById(-2)
             produkA.jumlahAkanDikirim = 10
             produkB.jumlahAkanDikirim = 10
-            fakturJualEceran.antar()
+            fakturJualEceran = fakturJualRepository.proses(fakturJualEceran)
             assertEquals(StatusFakturJual.DIANTAR, fakturJualEceran.status)
         }
 
@@ -109,7 +109,7 @@ class FakturJualEceranTest extends DbUnitTestCase {
         FakturJualEceran fakturJualEceran
         fakturJualRepository.withTransaction {
             fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-2l)
-            fakturJualEceran.hapusPengeluaranBarang()
+            fakturJualEceran = fakturJualRepository.hapus(fakturJualEceran)
         }
         assertEquals(StatusFakturJual.DIBUAT, fakturJualEceran.status)
 
@@ -126,31 +126,23 @@ class FakturJualEceranTest extends DbUnitTestCase {
         }
 
         // Pastikan bahwa pengantaran tidak dapat dibatalkan setelah diterima
-        fakturJualRepository.withTransaction {
-            fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-2l)
-            fakturJualEceran.antar()
-            fakturJualEceran.bayar()
-            shouldFail(DataTidakBolehDiubah) {
-                fakturJualEceran.hapusPengeluaranBarang()
-            }
-        }
+//        fakturJualRepository.withTransaction {
+//            fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-2l)
+//            fakturJualEceran = fakturJualRepository.proses(fakturJualEceran) // antar
+//            fakturJualEceran = fakturJualRepository.proses(fakturJualEceran) // bayar
+//            shouldFail {
+//                fakturJualRepository.hapus(fakturJualEceran)
+//            }
+//        }
     }
 
     public void testBayar() {
         FakturJualEceran fakturJualEceran
         fakturJualRepository.withTransaction {
             fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-2l)
-            fakturJualEceran.bayar()
+            fakturJualEceran.proses()
         }
         assertEquals(StatusFakturJual.LUNAS, fakturJualEceran.status)
-
-        // Belum boleh bayar
-        fakturJualRepository.withTransaction {
-            fakturJualEceran = fakturJualRepository.findFakturJualEceranById(-1l)
-            shouldFail(DataTidakBolehDiubah) {
-                fakturJualEceran.bayar()
-            }
-        }
     }
 
     public void testProsesSemuaFakturJualEceran() {

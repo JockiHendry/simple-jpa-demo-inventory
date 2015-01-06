@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package project
 
-import domain.exception.DataTidakBolehDiubah
 import domain.faktur.ItemFaktur
 import domain.faktur.Pembayaran
 import domain.faktur.Referensi
@@ -33,6 +32,7 @@ import domain.penjualan.Sales
 import domain.penjualan.StatusFakturJual
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
+import project.pengaturan.PengaturanRepository
 import simplejpa.SimpleJpaUtil
 
 class FakturJualOlehSalesTests extends GriffonUnitTestCase{
@@ -43,8 +43,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        PengaturanRepository.metaClass.getValue = { x -> true }
         SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
         SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
+        SimpleJpaUtil.instance.repositoryManager.instances['PengaturanRepository'] = new PengaturanRepository()
     }
 
     protected void tearDown() {
@@ -59,9 +61,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen:  konsumen)
         f.tambah(new ItemFaktur(produkA, 10))
         f.tambah(new ItemFaktur(produkB, 20))
+        f.proses()
         assertEquals(StatusFakturJual.DIBUAT, f.status)
 
-        f.kirim('Xtra Street')
+        f.proses([alamatTujuan: 'Xtra Street'])
         assertEquals(StatusFakturJual.DIANTAR, f.status)
         assertEquals(LocalDate.now(), f.pengeluaranBarang.tanggal)
         assertEquals('Xtra Street', f.pengeluaranBarang.alamatTujuan)
@@ -77,10 +80,11 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
-        f.kirim('Xtra Street')
+        f.proses()
+        f.proses([alamatTujuan: 'Xtra Street'])
         assertEquals(StatusFakturJual.DIANTAR, f.status)
 
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
         assertNotNull(f.pengeluaranBarang.buktiTerima)
         assertEquals(StatusFakturJual.DITERIMA, f.status)
         assertNotNull(f.piutang)
@@ -96,15 +100,15 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
         k.tambahFakturBelumLunas(f)
-        f.kirim('Xtra Street')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
-
+        f.proses([alamatTujuan: 'Xtra Street'])
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
         f.bayar(new Pembayaran(LocalDate.now(), 120000))
         assertEquals(StatusFakturJual.DITERIMA, f.status)
         f.bayar(new Pembayaran(LocalDate.now(), 220000))
         assertEquals(StatusFakturJual.LUNAS, f.status)
-        shouldFail(DataTidakBolehDiubah) {
+        shouldFail {
             f.bayar(new Pembayaran(LocalDate.now(), 5000))
         }
     }
@@ -117,10 +121,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
         k.tambahFakturBelumLunas(f)
-
-        f.kirim('Xtra Street')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
+        f.proses([alamatTujuan: 'Xtra Street'])
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
 
         Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 100000)
         Pembayaran pembayaran2 = new Pembayaran(LocalDate.now(), 240000)
@@ -153,9 +157,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
         k.tambahFakturBelumLunas(f)
-        f.kirim('Xtra Street')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
+        f.proses([alamatTujuan: 'Xtra Street'])
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
         Pembayaran pembayaran1 = new Pembayaran(LocalDate.now(), 1000, true, null, new Referensi(FakturJualOlehSales, 'R-001'))
         Pembayaran pembayaran2 = new Pembayaran(LocalDate.now(), 240000)
         f.bayar(pembayaran1)
@@ -180,9 +185,10 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F1', konsumen: k)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
         k.tambahFakturBelumLunas(f)
-        f.kirim('Xtra Street')
-        f.tambah(new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy'))
+        f.proses([alamatTujuan: 'Xtra Street'])
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
 
         assertEquals(340000, f.sisaPiutang())
         f.bayar(new Pembayaran(LocalDate.now(), 120000))
@@ -257,8 +263,9 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
-        f.kirim('Tujuan')
-        f.tambah(new BuktiTerima())
+        f.proses()
+        f.proses([alamatTujuan: 'Tujuan'])
+        f.proses([buktiTerima: new BuktiTerima()])
         assertEquals(340000, f.piutang.jumlah)
         assertEquals(110, konsumen.poinTerkumpul)
 
@@ -302,7 +309,8 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
-        f.kirim('Tujuan')
+        f.proses()
+        f.proses([alamatTujuan: 'Tujuan'])
 
         ReturFaktur retur1 = new ReturFaktur()
         retur1.tambah(new ItemBarang(produkA, 5))
@@ -321,7 +329,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(0, konsumen.poinTerkumpul)
 
         // Pastikan barang yang diantar sudah dikurangi barang retur
-        f.tambah(new BuktiTerima())
+        f.proses([buktiTerima: new BuktiTerima()])
         assertEquals(50000, f.piutang.jumlah)
         assertEquals(15, konsumen.poinTerkumpul)
     }
@@ -336,7 +344,7 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen)
         f.tambah(new ItemFaktur(produkA, 10, 10000))
         f.tambah(new ItemFaktur(produkB, 20, 12000))
-        f.kirim('Tujuan')
+        f.proses([alamatTujuan: 'Tujuan'])
 
         ReturFaktur retur1 = new ReturFaktur()
         retur1.tambah(new ItemBarang(produkA, 5))

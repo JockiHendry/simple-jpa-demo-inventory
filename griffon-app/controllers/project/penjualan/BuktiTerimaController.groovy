@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
-import domain.penjualan.StatusFakturJual
-import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -35,19 +33,11 @@ class BuktiTerimaController {
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
-        init()
         search()
     }
 
-    def init = {
-        model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
-        model.tanggalSelesaiSearch = LocalDate.now()
-        model.statusSearch.selectedItem = StatusFakturJual.DIANTAR
-    }
-
     def search = {
-        List result = fakturJualRepository.cariFakturJualUntukBuktiTerima(model.tanggalMulaiSearch, model.tanggalSelesaiSearch,
-            model.nomorFakturSearch, model.nomorSuratJalanSearch, model.konsumenSearch, model.statusSearch.selectedItem)
+        List result = fakturJualRepository.cariFakturJualUntukBuktiTerima(model.nomorFakturSearch, model.nomorSuratJalanSearch, model.konsumenSearch)
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             model.fakturJualOlehSalesList.addAll(result)
@@ -62,7 +52,7 @@ class BuktiTerimaController {
         }
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            faktur = fakturJualRepository.terima(faktur, buktiTerima)
+            faktur = fakturJualRepository.proses(faktur, [buktiTerima: buktiTerima])
             execInsideUIAsync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
@@ -74,12 +64,12 @@ class BuktiTerimaController {
 
     @NeedSupervisorPassword
     def hapus = {
-        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan menghapus bukti terima barang untuk faktur ini?', 'Konfirmasi Pembatalan Bukti Terima', JOptionPane.QUESTION_MESSAGE)) {
+        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan mengembalikan faktur ini menjadi belum diantar?', 'Konfirmasi Pembatalan Pengantaran', JOptionPane.QUESTION_MESSAGE)) {
             return
         }
         try {
             FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            fakturJualRepository.hapusBuktiTerima(faktur)
+            fakturJualRepository.hapus(faktur)
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
@@ -120,21 +110,8 @@ class BuktiTerimaController {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.nomorFaktur = selected.nomor
                 model.nomorSuratJalan = selected.pengeluaranBarang?.nomor
-                if (selected.pengeluaranBarang?.buktiTerima) {
-                    model.allowSimpan = false
-                    model.allowHapus = (selected.status == StatusFakturJual.DITERIMA)
-                    model.tanggal = selected.pengeluaranBarang.buktiTerima.tanggalTerima
-                    model.namaPenerima = selected.pengeluaranBarang.buktiTerima.namaPenerima
-                    model.namaSupir = selected.pengeluaranBarang.buktiTerima.namaSupir
-                } else {
-                    model.allowSimpan = (selected.status == StatusFakturJual.DIANTAR)
-                    model.allowHapus = false
-                    model.nomorFaktur = null
-                    model.nomorSuratJalan = null
-                    model.tanggal = null
-                    model.namaPenerima = null
-                    model.namaSupir = null
-                }
+                model.allowSimpan = false
+                model.allowHapus = true
             }
         }
     }

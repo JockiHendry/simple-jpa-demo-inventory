@@ -36,7 +36,6 @@ panel(id: 'mainPanel') {
 
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
-        comboBox(id: 'statusSearch', model: model.statusSearch)
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
@@ -85,7 +84,6 @@ panel(id: 'mainPanel') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: simpanSuratJalan, visible: bind { model.allowBuatSuratJalan })
             button(action: kirimSuratJalan, visible: bind { model.allowKirim })
-            button('Hapus Pengiriman', actionPerformed: controller.batalKirim, visible: bind { model.allowBatalKirim})
             button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
             button('Cetak', actionPerformed: controller.cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowPrint}))
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)

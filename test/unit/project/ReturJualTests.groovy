@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import griffon.test.GriffonUnitTestCase
 import griffon.test.mock.MockGriffonApplication
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
+import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import griffon.core.*
@@ -54,8 +55,10 @@ class ReturJualTests extends GriffonUnitTestCase {
         super.setUp()
         super.registerMetaClass(GudangRepository)
         GudangRepository.metaClass.cariGudangUtama = { gudangUtama }
+        PengaturanRepository.metaClass.getValue = { x -> true }
         SimpleJpaUtil.instance.repositoryManager = new StubRepositoryManager()
         SimpleJpaUtil.instance.repositoryManager.instances['GudangRepository'] = new GudangRepository()
+        SimpleJpaUtil.instance.repositoryManager.instances['PengaturanRepository'] = new PengaturanRepository()
         MockGriffonApplication app = new MockGriffonApplication()
         app.serviceManager = new ServiceManager() {
 
@@ -142,7 +145,7 @@ class ReturJualTests extends GriffonUnitTestCase {
     }
 
     public void testPotongPiutang() {
-        Gudang gudang = new Gudang()
+        Gudang gudang = new Gudang(utama: true)
         Sales sales = new Sales(gudang: gudang)
         Konsumen konsumen = new Konsumen(sales: sales)
         Produk produk1 = new Produk(jumlah: 10)
@@ -150,8 +153,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         FakturJualOlehSales f = new FakturJualOlehSales(nomor: 'F-01', konsumen: konsumen)
         f.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
         f.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
-        f.kirim("test")
-        f.tambah(new BuktiTerima())
+        f.proses()
+        f.proses([alamatTujuan: 'test'])
+        f.proses([buktiTerima: new BuktiTerima()])
         konsumen.tambahFakturBelumLunas(f)
         assertEquals(500000, f.total())
         assertEquals(500000, konsumen.jumlahPiutang())
@@ -167,7 +171,7 @@ class ReturJualTests extends GriffonUnitTestCase {
     }
 
     public void testPotongPiutangDenganPelunasanGiroBelumJatuhTempo() {
-        Gudang gudang = new Gudang()
+        Gudang gudang = new Gudang(utama: true)
         Sales sales = new Sales(gudang: gudang)
         Konsumen konsumen = new Konsumen(sales: sales)
         Produk produk1 = new Produk(jumlah: 10)
@@ -176,8 +180,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         // Sudah dibayar sepenuhnya dengan BG, tapi belum lunas karena BG belum jatuh tempo
         FakturJualOlehSales f1 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-01'), nomor: 'F-01', konsumen: konsumen)
         f1.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
-        f1.kirim("test")
-        f1.tambah(new BuktiTerima())
+        f1.proses()
+        f1.proses([alamatTujuan: 'test'])
+        f1.proses([buktiTerima: new BuktiTerima()])
         f1.bayar(new Pembayaran(LocalDate.now(), 100000, null, new BilyetGiro('BG-001', 100000, LocalDate.now().plusMonths(1))))
         konsumen.tambahFakturBelumLunas(f1)
 
@@ -185,8 +190,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         FakturJualOlehSales f2 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-02'), nomor: 'F-02', konsumen: konsumen)
         f2.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
         f2.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
-        f2.kirim("test")
-        f2.tambah(new BuktiTerima())
+        f2.proses()
+        f2.proses([alamatTujuan: 'test'])
+        f2.proses([buktiTerima: new BuktiTerima()])
         f2.bayar(new Pembayaran(LocalDate.now(), 100000, null, new BilyetGiro('BG-002', 100000, LocalDate.now().plusMonths(1))))
         konsumen.tambahFakturBelumLunas(f2)
 
@@ -194,8 +200,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         FakturJualOlehSales f3 = new FakturJualOlehSales(tanggal: LocalDate.parse('2014-11-03'), nomor: 'F-03', konsumen: konsumen)
         f3.tambah(new ItemFaktur(produk: produk1, jumlah: 10, harga: 10000))
         f3.tambah(new ItemFaktur(produk: produk2, jumlah: 20, harga: 20000))
-        f3.kirim("test")
-        f3.tambah(new BuktiTerima())
+        f3.proses()
+        f3.proses([alamatTujuan: 'test'])
+        f3.proses([buktiTerima: new BuktiTerima()])
         konsumen.tambahFakturBelumLunas(f3)
 
 

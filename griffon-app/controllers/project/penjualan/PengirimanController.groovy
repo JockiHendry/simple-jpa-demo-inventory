@@ -15,7 +15,6 @@
  */
 package project.penjualan
 
-import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarangSementara
 import domain.penjualan.FakturJualOlehSales
@@ -43,12 +42,11 @@ class PengirimanController {
     def init = {
         execInsideUISync {
             model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
-            model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
         }
     }
 
     def search = {
-        List result = fakturJualRepository.cariFakturJualOlehSalesUntukPengiriman(model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
+        List result = fakturJualRepository.cariFakturJualOlehSalesUntukPengiriman(model.nomorSearch, model.konsumenSearch)
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             model.fakturJualOlehSalesList.addAll(result)
@@ -84,7 +82,7 @@ class PengirimanController {
             return
         }
         try {
-            faktur = fakturJualRepository.kirimSuratJalan(faktur)
+            faktur = fakturJualRepository.proses(faktur)
             execInsideUISync {
                 model.fakturJualOlehSalesList.remove(faktur)
                 clear()
@@ -102,23 +100,6 @@ class PengirimanController {
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             clear()
-        }
-    }
-
-    @NeedSupervisorPassword
-    def batalKirim = {
-        if (!DialogUtils.confirm(view.mainPanel, 'Anda yakin akan membatalkan pengiriman barang untuk faktur ini?', 'Konfirmasi Pembatalan Pengiriman', JOptionPane.QUESTION_MESSAGE)) {
-            return
-        }
-        try {
-            FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-            fakturJualRepository.batalKirim(faktur)
-            execInsideUISync {
-                model.fakturJualOlehSalesList.remove(faktur)
-                clear()
-            }
-        } catch (DataTidakBolehDiubah ex) {
-            DialogUtils.message(view.mainPanel, 'Faktur jual tidak boleh diubah karena sudah diproses!', 'Penyimpanan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
@@ -169,7 +150,6 @@ class PengirimanController {
         execInsideUISync {
             if (view.table.selectionModel.isSelectionEmpty()) {
                 model.allowKirim = false
-                model.allowBatalKirim = false
                 clear()
             } else {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
@@ -177,7 +157,6 @@ class PengirimanController {
                 if (selected.pengeluaranBarang) {
                     model.allowBuatSuratJalan = false
                     model.allowKirim = (selected.status == StatusFakturJual.DIBUAT) && (selected.deleted != 'Y')
-                    model.allowBatalKirim = (selected.status == StatusFakturJual.DIANTAR)
                     model.nomorSuratJalan = selected.pengeluaranBarang.nomor
                     model.tanggal = selected.pengeluaranBarang.tanggal
                     model.alamatTujuan = selected.pengeluaranBarang.alamatTujuan
@@ -190,7 +169,6 @@ class PengirimanController {
                     if (selected.status.pengeluaranBolehDiubah && selected.deleted != 'Y') {
                         model.allowBuatSuratJalan = true
                         model.allowKirim = false
-                        model.allowBatalKirim = false
                         model.alamatTujuan = selected.konsumen.alamat
                     }
                 }

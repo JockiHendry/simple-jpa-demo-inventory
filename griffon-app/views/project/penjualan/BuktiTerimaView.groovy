@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,6 @@ panel(id: 'mainPanel') {
 
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
-        dateTimePicker(id: 'tanggalMulaiSearch', localDate: bind('tanggalMulaiSearch', target: model, mutual: true), timeVisible: false)
-        label(' s/d ')
-        dateTimePicker(id: 'tanggalSelesaiSearch', localDate: bind('tanggalSelesaiSearch', target: model, mutual: true), timeVisible: false)
-        comboBox(id: 'statusSearch', model: model.statusSearch)
         textField(id: 'nomorFakturSearch', columns: 10, text: bind('nomorFakturSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'nomorSuratJalanSearch', columns: 10, text: bind('nomorSuratJalanSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)
@@ -81,7 +77,7 @@ panel(id: 'mainPanel') {
         panel(constraints: PAGE_END) {
             flowLayout(alignment: FlowLayout.LEADING)
             button('Simpan Bukti Terima', actionPerformed: controller.save, visible: bind { model.allowSimpan })
-            button('Hapus', actionPerformed: controller.hapus, visible: bind { model.allowHapus})
+            button('Batalkan Pengantaran', actionPerformed: controller.hapus, visible: bind { model.allowHapus})
             button(action: showBarangYangHarusDikirim, visible: bind { table.isRowSelected })
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind { table.isRowSelected }, actionPerformed: controller.clear)
         }

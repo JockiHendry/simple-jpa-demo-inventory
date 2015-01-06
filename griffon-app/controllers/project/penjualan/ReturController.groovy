@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,7 @@ class ReturController {
         ReturFaktur returFaktur = new ReturFaktur(id: model.id, nomor: model.nomor, tanggal: model.tanggal, keterangan: model.keterangan, createdBy: SimpleJpaUtil.instance.user)
         returFaktur.items.addAll(model.listItemBarang)
         if (!fakturJualRepository.validate(returFaktur, TanpaGudang, model)) return
-        model.fakturJualOlehSales = fakturJualRepository.retur(model.fakturJualOlehSales, returFaktur)
+        model.fakturJualOlehSales = fakturJualRepository.tambahRetur(model.fakturJualOlehSales, returFaktur)
         execInsideUISync {
             model.returFakturList << returFaktur
             view.table.changeSelection(model.returFakturList.size() - 1, 0, false, false)
