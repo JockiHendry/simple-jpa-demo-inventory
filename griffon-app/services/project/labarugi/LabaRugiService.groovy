@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import domain.labarugi.KategoriKas
 import domain.labarugi.NilaiInventory
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
 import laporan.ItemLabaRugi
 import laporan.NilaiInventoryProduk
@@ -121,15 +122,19 @@ class LabaRugiService {
     }
 
     List hitungPenjualan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal penjualanKotor = 0, potonganPiutang = 0
+        BigDecimal penjualanSales = 0, penjualanEceran = 0, potonganPiutang = 0
         List<FakturJual> fakturJuals = findAllFakturJualByTanggalBetween(tanggalMulai, tanggalSelesai)
         for (FakturJual fakturJual: fakturJuals) {
-            penjualanKotor += fakturJual.nilaiPenjualan()
-            if ((fakturJual instanceof FakturJualOlehSales) && (fakturJual.piutang)) {
-                potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+            if (fakturJual instanceof FakturJualOlehSales) {
+                penjualanSales += fakturJual.nilaiPenjualan()
+                if (fakturJual.piutang) {
+                    potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+                }
+            } else if (fakturJual instanceof FakturJualEceran) {
+                penjualanEceran += fakturJual.nilaiPenjualan()
             }
         }
-        [penjualanKotor, potonganPiutang]
+        [penjualanSales, penjualanEceran, potonganPiutang]
     }
 
     BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
@@ -169,9 +174,10 @@ class LabaRugiService {
 
     List<ItemLabaRugi> laporanLabaRugi(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         List<ItemLabaRugi> hasil = []
-        def (penjualanKotor, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (penjualanSales, penjualanEceran, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
 
-        hasil << new ItemLabaRugi('Pendapatan Dari Penjualan', penjualanKotor, null)
+        hasil << new ItemLabaRugi('Pendapatan Piutang Penjualan Sales (Gross)', penjualanSales, null)
+        hasil << new ItemLabaRugi('Pendapatan Penjualan Eceran', penjualanEceran, null)
         hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
         hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hitungHPP(tanggalMulai, tanggalSelesai))
         hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)

@@ -140,7 +140,7 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="69">
+		<band height="127">
 			<staticText>
 				<reportElement x="0" y="4" width="217" height="20" uuid="22239569-9fac-468f-ae06-d682d81bf635"/>
 				<box>
@@ -191,6 +191,15 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[($V{pendapatan_1}?:0) - ($V{pengeluaran_1}?:0)]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="1" y="56" width="554" height="70" uuid="6d0e8669-9c70-47a0-ab5b-1199567a8b5b"/>
+				<textElement textAlignment="Left">
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[*) Pendapatan piutang penjualan sales (gross) adalah jumlah piutang kotor yang dapat ditagih pada periode ini.  Nilai ini belum dikurangi potongan.
+
+*) Potongan piutang termasuk pembatalan faktur (retur faktur), retur jual, dan potongan lainnya.  Buka screen Piutang dan urutkan berdasarkan potongan untuk melihat rincian.]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>

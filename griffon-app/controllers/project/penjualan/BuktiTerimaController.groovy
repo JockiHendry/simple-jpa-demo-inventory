@@ -110,7 +110,7 @@ class BuktiTerimaController {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.nomorFaktur = selected.nomor
                 model.nomorSuratJalan = selected.pengeluaranBarang?.nomor
-                model.allowSimpan = false
+                model.allowSimpan = true
                 model.allowHapus = true
             }
         }

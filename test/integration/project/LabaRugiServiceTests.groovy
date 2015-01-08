@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,9 @@ class LabaRugiServiceTests extends DbUnitTestCase {
     }
 
     void testHitungPendapatanKotor() {
-        def (penjualanKotor, potonganPiutang) = labaRugiService.hitungPenjualan(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
-        assertEquals(20000, penjualanKotor as Integer)
+        def (penjualanSales, penjualanEceran, potonganPiutang) = labaRugiService.hitungPenjualan(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
+        assertEquals(20000, penjualanSales as Integer)
+        assertEquals(5000, penjualanEceran as Integer)
         assertEquals(0, potonganPiutang as Integer)
 
         BigDecimal hpp = labaRugiService.hitungHPP(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
