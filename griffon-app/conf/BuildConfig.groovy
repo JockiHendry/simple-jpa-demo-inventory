@@ -196,7 +196,6 @@ griffon.project.dependency.resolution = {
         runtime 'org.apache.poi:poi:3.8'
         compile 'org.hibernate:hibernate-validator:4.3.0.Final'
         compile('net.sf.jasperreports:jasperreports:5.6.1') {
-            exclude 'commons-collections'
             exclude 'olap4j'
             exclude 'lucene-queryparser'
             exclude 'lucene-analyzers-common'

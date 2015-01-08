@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,9 @@ class LaporanTransaksiKasController {
                 }
             }
         }
-        model.result = result
+        model.result = result.sort { SaldoKategoriKas s1, SaldoKategoriKas s2 ->
+            (s1.namaKas <=> s2.namaKas)?: ((s1.jenisKategori <=> s2.jenisKategori)?: (s1.nama <=> s2.nama) )
+        }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()
