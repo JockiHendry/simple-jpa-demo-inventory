@@ -28,6 +28,7 @@ actions {
     action(id: 'showBonus', name: 'Klik Disini Untuk Melihat Atau Mengisi Bonus...', closure: controller.showBonus)
     action(id: 'retur', name: 'Retur', closure: controller.showRetur)
     action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'cetakSuratJalan', name: 'Cetak Surat Jalan', closure: controller.cetakSuratJalan)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
 }
 
@@ -131,6 +132,7 @@ panel(id: 'mainPanel') {
                 //form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
             })
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
+            button(id: 'cetakSuratJalan', action: cetakSuratJalan, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
             button(id: 'showRetur', action: retur, visible: bind { table.isRowSelected })
             button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
                 table.isRowSelected

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -184,6 +184,19 @@ class FakturJualOlehSalesController {
             if (e instanceof FakturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
+        }
+    }
+
+    def cetakSuratJalan = {
+        FakturJualOlehSales selected = fakturJualRepository.findFakturJualOlehSalesByIdFetchPengeluaranBarang(view.table.selectionModel.selected[0].id)
+        if (selected.pengeluaranBarang != null) {
+            execInsideUISync {
+                def args = [dataSource: selected, template: 'surat_jalan.json']
+                def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
+                DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
+            }
+        } else {
+            DialogUtils.message(view.mainPanel, 'Surat jalan belum dibuat sehingga tidak bisa dicetak!', 'Percetakan Gagal', JOptionPane.ERROR_MESSAGE)
         }
     }
 
