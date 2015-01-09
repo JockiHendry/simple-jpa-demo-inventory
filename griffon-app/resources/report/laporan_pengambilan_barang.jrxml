@@ -32,6 +32,7 @@
 		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
 	</field>
 	<sortField name="tanggal"/>
+	<sortField name="produk"/>
 	<group name="tanggal">
 		<groupExpression><![CDATA[$F{tanggal}]]></groupExpression>
 		<groupHeader>

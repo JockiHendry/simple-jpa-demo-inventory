@@ -16,8 +16,13 @@
 package project.laporan
 
 import domain.inventory.ItemStok
+import domain.inventory.PenyesuaianStok
 import domain.inventory.Produk
+import domain.inventory.Transfer
+import domain.penjualan.FakturJualEceran
+import domain.penjualan.FakturJualOlehSales
 import laporan.PengambilanBarang
+import laporan.PengambilanBarangSummary
 import org.joda.time.LocalDate
 import project.inventory.ProdukRepository
 import javax.swing.SwingUtilities
@@ -36,11 +41,38 @@ class LaporanPengambilanBarangController {
 
     def tampilkanLaporan = {
         model.result = []
-        produkRepository.withTransaction {
-            for (Produk produk : findAllProduk()) {
-                for (ItemStok itemStok : produk.semuaItemStok(model.tanggalMulaiCari, model.tanggalSelesaiCari)) {
-                    if (itemStok.jumlah < 0) {
-                        model.result << new PengambilanBarang(itemStok.tanggal, produk, -1 * itemStok.jumlah, itemStok.keterangan, itemStok.referensiStok)
+        if (model.cetakSummary?.booleanValue()) {
+            model.params.fileLaporan = 'report/laporan_summary_pengambilan_barang.jasper'
+            produkRepository.withTransaction {
+                for (Produk produk: findAllProduk()) {
+                    for (ItemStok itemStok : produk.semuaItemStok(model.tanggalMulaiCari, model.tanggalSelesaiCari)) {
+                        if (itemStok.jumlah < 0) {
+                            PengambilanBarangSummary p = new PengambilanBarangSummary(tanggal: itemStok.tanggal, produk: produk)
+                            Long jumlah = -1 * itemStok.jumlah
+                            if (itemStok.referensiStok.classFinance == FakturJualOlehSales.simpleName) {
+                                p.qtyJualSales = jumlah
+                            } else if (itemStok.referensiStok.classFinance == FakturJualEceran.simpleName) {
+                                p.qtyJualEceran = jumlah
+                            } else if (itemStok.referensiStok.classGudang == PenyesuaianStok.simpleName) {
+                                p.qtyPenyesuaian = jumlah
+                            } else if (itemStok.referensiStok.classGudang == Transfer.simpleName) {
+                                p.qtyTransfer = jumlah
+                            } else {
+                                p.qtyRetur = jumlah
+                            }
+                            model.result << p
+                        }
+                    }
+                }
+            }
+        } else {
+            model.params.fileLaporan = 'report/laporan_pengambilan_barang.jasper'
+            produkRepository.withTransaction {
+                for (Produk produk : findAllProduk()) {
+                    for (ItemStok itemStok : produk.semuaItemStok(model.tanggalMulaiCari, model.tanggalSelesaiCari)) {
+                        if (itemStok.jumlah < 0) {
+                            model.result << new PengambilanBarang(itemStok.tanggal, produk, -1 * itemStok.jumlah, itemStok.keterangan, itemStok.referensiStok)
+                        }
                     }
                 }
             }

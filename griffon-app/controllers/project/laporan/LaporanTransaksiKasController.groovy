@@ -50,9 +50,7 @@ class LaporanTransaksiKasController {
                 }
             }
         }
-        model.result = result.sort { SaldoKategoriKas s1, SaldoKategoriKas s2 ->
-            (s1.namaKas <=> s2.namaKas)?: ((s1.jenisKategori <=> s2.jenisKategori)?: (s1.nama <=> s2.nama) )
-        }
+        model.result = result
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()

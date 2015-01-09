@@ -13,19 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.laporan
+package laporan
 
+import domain.inventory.Produk
+import groovy.transform.Canonical
 import org.joda.time.LocalDate
 
-class LaporanPengambilanBarangModel {
+@Canonical
+class PengambilanBarangSummary {
 
-    @Bindable LocalDate tanggalMulaiCari
-    @Bindable LocalDate tanggalSelesaiCari
-    @Bindable Boolean cetakSummary
+    LocalDate tanggal
 
-    List result
-    Map params = [:]
+    Produk produk
 
-    boolean batal = false
+    Long qtyJualSales = 0
+
+    Long qtyJualEceran = 0
+
+    Long qtyRetur = 0
+
+    Long qtyPenyesuaian = 0
+
+    Long qtyTransfer = 0
+
+    Long total() {
+        qtyJualSales + qtyJualEceran + qtyRetur + qtyPenyesuaian + qtyTransfer
+    }
 
 }

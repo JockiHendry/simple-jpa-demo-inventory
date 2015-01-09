@@ -32,6 +32,9 @@
 	<field name="namaKas" class="java.lang.String">
 		<fieldDescription><![CDATA[namaKas]]></fieldDescription>
 	</field>
+	<sortField name="namaKas"/>
+	<sortField name="jenisKategori"/>
+	<sortField name="nama"/>
 	<group name="kas">
 		<groupExpression><![CDATA[$F{namaKas}]]></groupExpression>
 		<groupFooter>

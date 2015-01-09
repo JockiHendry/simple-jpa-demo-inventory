@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="laporan_pengambilan_barang" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eec581d2-323c-4755-974a-e959cc6dcde0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="tanggalMulaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tanggalSelesaiCari" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="produk" class="domain.inventory.Produk">
+		<fieldDescription><![CDATA[produk]]></fieldDescription>
+	</field>
+	<field name="qtyPenyesuaian" class="java.lang.Long">
+		<fieldDescription><![CDATA[qtyPenyesuaian]]></fieldDescription>
+	</field>
+	<field name="qtyRetur" class="java.lang.Long">
+		<fieldDescription><![CDATA[qtyRetur]]></fieldDescription>
+	</field>
+	<field name="qtyTransfer" class="java.lang.Long">
+		<fieldDescription><![CDATA[qtyTransfer]]></fieldDescription>
+	</field>
+	<field name="tanggal" class="org.joda.time.LocalDate">
+		<fieldDescription><![CDATA[tanggal]]></fieldDescription>
+	</field>
+	<field name="qtyJualEceran" class="java.lang.Long">
+		<fieldDescription><![CDATA[qtyJualEceran]]></fieldDescription>
+	</field>
+	<field name="qtyJualSales" class="java.lang.Long">
+		<fieldDescription><![CDATA[qtyJualSales]]></fieldDescription>
+	</field>
+	<sortField name="tanggal"/>
+	<sortField name="produk"/>
+	<variable name="qtyJualSales" class="java.lang.Long" resetType="Group" resetGroup="produk" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtyJualSales}]]></variableExpression>
+	</variable>
+	<variable name="qtyJualEceran" class="java.lang.Long" resetType="Group" resetGroup="produk" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtyJualEceran}]]></variableExpression>
+	</variable>
+	<variable name="qtyRetur" class="java.lang.Long" resetType="Group" resetGroup="produk" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtyRetur}]]></variableExpression>
+	</variable>
+	<variable name="qtyPenyesuaian" class="java.lang.Long" resetType="Group" resetGroup="produk" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtyPenyesuaian}]]></variableExpression>
+	</variable>
+	<variable name="qtyTransfer" class="java.lang.Long" resetType="Group" resetGroup="produk" calculation="Sum">
+		<variableExpression><![CDATA[$F{qtyTransfer}]]></variableExpression>
+	</variable>
+	<group name="tanggal">
+		<groupExpression><![CDATA[$F{tanggal}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<staticText>
+					<reportElement x="1" y="10" width="44" height="20" uuid="5103ac7a-2ae5-451d-a86b-f5eaaa41fd49"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Tanggal]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement isPrintRepeatedValues="false" x="45" y="10" width="510" height="20" isPrintInFirstWholeBand="true" uuid="ecb88b29-6853-4e0c-858b-1323205049d6"/>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="produk">
+		<groupExpression><![CDATA[$F{produk}]]></groupExpression>
+		<groupFooter>
+			<band height="19">
+				<textField isStretchWithOverflow="true">
+					<reportElement x="0" y="0" width="233" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+					<box>
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="233" y="0" width="59" height="17" uuid="4f4657fc-7653-42d7-b1cc-f2d8cf3eabbe"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{qtyJualSales}?: '-']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="292" y="0" width="57" height="17" uuid="1b41e9c2-b05d-45f8-84a1-e3cc39baf87f"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{qtyJualEceran}?: '-']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="396" y="0" width="50" height="17" uuid="42a62136-e616-4655-8cd5-38d8d9ad2ae2"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{qtyPenyesuaian}?: '-']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="446" y="0" width="54" height="17" uuid="47568080-fab8-4f61-9deb-e77c3743acdb"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{qtyTransfer}?: '-']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="349" y="0" width="47" height="17" uuid="b2d3a8ea-2379-4dd3-b250-ad0a47713226"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{qtyRetur}?: '-']]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="500" y="0" width="55" height="17" uuid="73c806ea-0441-4a8a-89cd-b328e8462b6a"/>
+					<box rightPadding="3">
+						<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($V{qtyPenyesuaian} + $V{qtyRetur} + $V{qtyTransfer} + $V{qtyJualEceran} + $V{qtyJualSales})?: '-']]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="102" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="60" width="555" height="20" uuid="e21181e0-1649-41ad-a898-583e7adb4b00"/>
+				<box>
+					<bottomPen lineWidth="2.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Laporan Pengambilan Barang (Summary)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="d3cde47f-fe72-4ab3-86fa-129f5c12af99"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="74" height="60" uuid="42fc7295-b10a-4d11-8ec7-d03e9b8b8e16"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="75" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="1d5f845a-9291-4ca3-9a36-72a4eae6f82d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="80" width="554" height="20" uuid="0a25918e-e295-48dc-99ad-2a7ad496e624"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["${$P{tanggalMulaiCari}.toString('dd-MM-yyyy')} s/d ${$P{tanggalSelesaiCari}.toString('dd-MM-yyyy')}"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="233" height="27" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Produk]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="233" y="1" width="59" height="28" uuid="2a611cb5-431e-4b71-a494-1885ca689d0e"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty Jual Sales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="396" y="2" width="50" height="27" uuid="52127756-b1e8-4904-9163-77c7afb3ad0d"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty
+Penysian]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="446" y="2" width="54" height="27" uuid="f4d00ed3-0ae9-4523-b81f-d6fc114806dc"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty Transfer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="349" y="2" width="47" height="27" uuid="02956434-16a2-4ece-82c7-334605e7cac2"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty
+Retur]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="2" width="55" height="27" uuid="e77c2452-e9b9-44bc-84f3-e9572aa2e6f0"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="2" width="57" height="27" uuid="5011a8f8-5166-4e0e-9bf7-0bac2d9af7ea"/>
+				<box rightPadding="3">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty Jual Eceran]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+</jasperReport>

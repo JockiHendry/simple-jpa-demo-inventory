@@ -31,6 +31,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,gr
         label(" s/d ")
         dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
                 dateVisible: true, timeVisible: false, focusable: true)
+        checkBox('Cetak Summary', selected: bind('cetakSummary', target: model, mutual: true), constraints: 'wrap')
     }
 
     panel(constraints: 'span, growx, wrap') {
