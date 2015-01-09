@@ -36,6 +36,7 @@ panel(id: 'mainPanel') {
 
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
+        comboBox(id: 'statusSearch', model: model.statusSearch)
         textField(id: 'nomorSearch', columns: 10, text: bind('nomorSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'salesSearch', columns: 10, text: bind('salesSearch', target: model, mutual: true), actionPerformed: controller.search)
         textField(id: 'konsumenSearch', columns: 10, text: bind('konsumenSearch', target: model, mutual: true), actionPerformed: controller.search)

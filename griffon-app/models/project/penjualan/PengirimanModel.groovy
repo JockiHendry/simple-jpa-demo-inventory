@@ -17,8 +17,11 @@ package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
 import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.StatusFakturJual
 import org.hibernate.validator.constraints.NotBlank
+import org.jdesktop.swingx.combobox.ListComboBoxModel
 import org.joda.time.LocalDate
+import util.SwingHelper
 
 class PengirimanModel {
 
@@ -37,5 +40,6 @@ class PengirimanModel {
     @Bindable String nomorSearch
     @Bindable String salesSearch
     @Bindable String konsumenSearch
+    ListComboBoxModel statusSearch = new ListComboBoxModel(SwingHelper.searchEnum(StatusFakturJual))
 
 }

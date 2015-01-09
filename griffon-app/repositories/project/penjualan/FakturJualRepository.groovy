@@ -122,12 +122,14 @@ class FakturJualRepository {
         }
     }
 
-    List<FakturJualOlehSales> cariFakturJualOlehSalesUntukPengiriman(String nomorSearch, String konsumenSearch) {
+    List<FakturJualOlehSales> cariFakturJualOlehSalesUntukPengiriman(String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            status eq(StatusFakturJual.DIBUAT)
             if (nomorSearch) {
-                and()
                 nomor like("%${nomorSearch}%")
+            }
+            if (statusSearch != SwingHelper.SEMUA) {
+                and()
+                status eq(statusSearch)
             }
             if (konsumenSearch) {
                 and()
@@ -346,6 +348,9 @@ class FakturJualRepository {
 
     FakturJualOlehSales buatSuratJalan(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
+        if (faktur.pengeluaranBarang) {
+            throw new DataTidakBolehDiubah("Surat jalan sudah pernah dibuat sebelumnya!", faktur)
+        }
         faktur.buatSuratJalan(alamatTujuan, tanggalKirim, keterangan)
         faktur
     }

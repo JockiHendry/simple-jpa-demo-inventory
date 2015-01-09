@@ -8,7 +8,7 @@
     "template": {
         "header": [
            "      %{176 R2}      Surat Jalan ${companyName:62} Hal: %{PAGE_NO}",
-           "    %{176 R6}    Nomor     : ${nomor:25}                    Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
+           "    %{176 R6}    Nomor     : ${pengeluaranBarang.nomor:19} / ${nomor:22} Tanggal : {{tanggal.toString('dd-MM-YYYY')::10}}",
            "   %{176 R8}   Sales     : ${konsumen.sales.nama:25}             Tanggal Terima : ........",
            "     %{176 R4}     Kepada    : ${konsumen.nama:30}              Penerima : ........",
            "      %{176 R2}      Alamat    : ${pengeluaranBarang.alamatTujuan:68}"

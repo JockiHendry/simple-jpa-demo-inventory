@@ -42,11 +42,12 @@ class PengirimanController {
     def init = {
         execInsideUISync {
             model.nomorSuratJalan = nomorService.getCalonNomor(NomorService.TIPE.PENGELUARAN_BARANG)
+            model.statusSearch.selectedItem = StatusFakturJual.DIBUAT
         }
     }
 
     def search = {
-        List result = fakturJualRepository.cariFakturJualOlehSalesUntukPengiriman(model.nomorSearch, model.konsumenSearch)
+        List result = fakturJualRepository.cariFakturJualOlehSalesUntukPengiriman(model.nomorSearch, model.konsumenSearch, model.statusSearch.selectedItem)
         execInsideUISync {
             model.fakturJualOlehSalesList.clear()
             model.fakturJualOlehSalesList.addAll(result)
@@ -74,7 +75,7 @@ class PengirimanController {
     def kirimSuratJalan = {
         if (!fakturJualRepository.validate(model, Default, model)) return
         FakturJualOlehSales faktur = view.table.selectionModel.selected[0]
-        if (faktur.pengeluaranBarang == null) {
+        if (!faktur.pengeluaranBarang || (faktur.status != StatusFakturJual.DIBUAT)) {
             DialogUtils.message(view.mainPanel, 'Untuk memproses pengiriman, buat surat jalan terlebih dahulu!', 'Kesalahan', JOptionPane.ERROR_MESSAGE)
             return
         }
