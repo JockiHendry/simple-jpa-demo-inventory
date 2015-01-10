@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import simplejpa.transaction.Transaction
 @SuppressWarnings("GroovyUnusedDeclaration")
 class InventoryEventListenerService {
 
+    public static final String KETERANGAN_INVERS_HAPUS = 'Invers Hapus'
     private final Logger log = LoggerFactory.getLogger(InventoryEventListenerService)
 
     PesanRepository pesanRepository
@@ -99,7 +100,7 @@ class InventoryEventListenerService {
             String keterangan = null
             if (perubahanStok.invers) {
                 pengali *= -1
-                keterangan = 'Invers Hapus'
+                keterangan = KETERANGAN_INVERS_HAPUS
             }
             ItemStok itemStok = new ItemStok(LocalDate.now(), referensiStok, pengali * i.jumlah, keterangan)
             i.produk.perubahanStok(daftarBarang.gudang, itemStok)
@@ -122,7 +123,7 @@ class InventoryEventListenerService {
             String keterangan
             if (transferStok.invers) {
                 pengali = 1
-                keterangan = 'Invers Hapus'
+                keterangan = KETERANGAN_INVERS_HAPUS
             }
 
             // Mengurangi gudang asal

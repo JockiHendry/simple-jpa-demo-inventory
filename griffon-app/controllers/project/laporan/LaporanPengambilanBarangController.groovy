@@ -15,14 +15,19 @@
  */
 package project.laporan
 
+import domain.inventory.ItemBarang
+import domain.inventory.ItemPenyesuaian
 import domain.inventory.ItemStok
 import domain.inventory.PenyesuaianStok
-import domain.inventory.Produk
+import domain.inventory.ReferensiStok
+import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
 import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
+import domain.retur.ReturJual
 import laporan.PengambilanBarang
 import laporan.PengambilanBarangSummary
+import listener.InventoryEventListenerService
 import org.joda.time.LocalDate
 import project.inventory.ProdukRepository
 import javax.swing.SwingUtilities
@@ -39,43 +44,118 @@ class LaporanPengambilanBarangController {
         model.tanggalSelesaiCari = LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1)
     }
 
+    boolean periksaReferensi(ItemStok itemStok) {
+        if (itemStok.keterangan == InventoryEventListenerService.KETERANGAN_INVERS_HAPUS) {
+            return false
+        }
+        ReferensiStok referensiStok = itemStok.referensiStok
+        if (referensiStok.classGudang) {
+            List hasil = produkRepository."findAll${referensiStok.classGudang}ByNomor"(referensiStok.nomorGudang, [excludeDeleted: false])
+            if (hasil.empty) return false
+            if (hasil.any { it.deleted == 'Y' }) return false
+        }
+        if (referensiStok.classFinance) {
+            List hasil = produkRepository."findAll${referensiStok.classFinance}ByNomor"(referensiStok.nomorFinance, [excludeDeleted: false])
+            if (hasil.empty) return false
+            if (hasil.any { it.deleted == 'Y' }) return false
+        }
+        true
+    }
+
+    void prosesLaporanPengambilanBarang(boolean summary = false) {
+        produkRepository.withTransaction {
+            // Faktur jual oleh sales
+            List daftarFakturJualSales = executeQuery('''
+                SELECT f FROM FakturJualOlehSales f JOIN FETCH f.pengeluaranBarang p
+                WHERE p IS NOT NULL AND p.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                AND p.gudang.utama = TRUE
+                ''',  [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
+            for (FakturJualOlehSales f: daftarFakturJualSales) {
+                for (ItemBarang i : f.pengeluaranBarang.items) {
+                    ReferensiStok ref = new ReferensiStokBuilder(f).refer(f.pengeluaranBarang).buat()
+                    if (summary) {
+                        model.result << new PengambilanBarangSummary(f.pengeluaranBarang.tanggal, i.produk, i.jumlah)
+                    } else {
+                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                    }
+                }
+            }
+
+            // Faktur jual eceran
+            List daftarFakturJualEceran = executeQuery('''
+                SELECT f FROM FakturJualEceran f JOIN FETCH f.pengeluaranBarang p
+                WHERE p IS NOT NULL AND p.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                ''',  [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
+            for (FakturJualEceran f: daftarFakturJualEceran) {
+                for (ItemBarang i : f.pengeluaranBarang.items) {
+                    ReferensiStok ref = new ReferensiStokBuilder(f).refer(f.pengeluaranBarang).buat()
+                    if (summary) {
+                        model.result << new PengambilanBarangSummary(f.pengeluaranBarang.tanggal, i.produk, 0, i.jumlah)
+                    } else {
+                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                    }
+                }
+            }
+
+            // Penyesuaian stok
+            List daftarPenyesuaianStok = executeQuery('''
+                SELECT f FROM PenyesuaianStok f WHERE f.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                AND f.gudang.utama = TRUE
+            ''', [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
+            for (PenyesuaianStok p: daftarPenyesuaianStok) {
+                for (ItemPenyesuaian i: p.items) {
+                    ReferensiStok ref = new ReferensiStokBuilder(p).buat()
+                    if (summary) {
+                        model.result << new PengambilanBarangSummary(p.tanggal, i.produk, 0, 0, 0, i.jumlah)
+                    } else {
+                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, null, ref)
+                    }
+                }
+            }
+
+            // Transfer
+            List daftarTransfer = executeQuery('''
+                SELECT f FROM Transfer f WHERE f.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                AND f.gudang.utama = TRUE
+            ''', [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
+            for (Transfer p: daftarTransfer) {
+                for (ItemBarang i: p.items) {
+                    ReferensiStok ref = new ReferensiStokBuilder(p).buat()
+                    if (summary) {
+                        model.result << new PengambilanBarangSummary(p.tanggal, i.produk, 0, 0, 0, 0, i.jumlah)
+                    } else {
+                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, null, ref)
+                    }
+                }
+            }
+
+            // Retur jual
+            List daftarReturJual = executeQuery('''
+                SELECT r FROM ReturJual r WHERE r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                AND r.pengeluaranBarang.gudang.utama = TRUE
+            ''',  [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
+            for (ReturJual r: daftarReturJual) {
+                for (ItemBarang i : r.pengeluaranBarang.items) {
+                    ReferensiStok ref = new ReferensiStokBuilder(r).refer(r.pengeluaranBarang).buat()
+                    if (summary) {
+                        model.result << new PengambilanBarangSummary(r.pengeluaranBarang.tanggal, i.produk, 0, 0, i.jumlah)
+                    } else {
+                        model.result << new PengambilanBarang(r.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                    }
+                }
+            }
+
+        }
+    }
+
     def tampilkanLaporan = {
         model.result = []
         if (model.cetakSummary?.booleanValue()) {
             model.params.fileLaporan = 'report/laporan_summary_pengambilan_barang.jasper'
-            produkRepository.withTransaction {
-                for (Produk produk: findAllProduk()) {
-                    for (ItemStok itemStok : produk.semuaItemStok(model.tanggalMulaiCari, model.tanggalSelesaiCari)) {
-                        if (itemStok.jumlah < 0) {
-                            PengambilanBarangSummary p = new PengambilanBarangSummary(tanggal: itemStok.tanggal, produk: produk)
-                            Long jumlah = -1 * itemStok.jumlah
-                            if (itemStok.referensiStok.classFinance == FakturJualOlehSales.simpleName) {
-                                p.qtyJualSales = jumlah
-                            } else if (itemStok.referensiStok.classFinance == FakturJualEceran.simpleName) {
-                                p.qtyJualEceran = jumlah
-                            } else if (itemStok.referensiStok.classGudang == PenyesuaianStok.simpleName) {
-                                p.qtyPenyesuaian = jumlah
-                            } else if (itemStok.referensiStok.classGudang == Transfer.simpleName) {
-                                p.qtyTransfer = jumlah
-                            } else {
-                                p.qtyRetur = jumlah
-                            }
-                            model.result << p
-                        }
-                    }
-                }
-            }
+            prosesLaporanPengambilanBarang(true)
         } else {
             model.params.fileLaporan = 'report/laporan_pengambilan_barang.jasper'
-            produkRepository.withTransaction {
-                for (Produk produk : findAllProduk()) {
-                    for (ItemStok itemStok : produk.semuaItemStok(model.tanggalMulaiCari, model.tanggalSelesaiCari)) {
-                        if (itemStok.jumlah < 0) {
-                            model.result << new PengambilanBarang(itemStok.tanggal, produk, -1 * itemStok.jumlah, itemStok.keterangan, itemStok.referensiStok)
-                        }
-                    }
-                }
-            }
+            prosesLaporanPengambilanBarang()
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
