@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,14 @@ import simplejpa.swing.DialogUtils
 import javax.swing.event.ListSelectionEvent
 import javax.validation.groups.Default
 import java.awt.Dimension
+import griffon.core.*
 
 @SuppressWarnings("GroovyUnusedDeclaration")
 class ProdukController {
 
     ProdukModel model
     def view
+    GriffonApplication app
 
     ProdukRepository produkRepository
 
@@ -130,10 +132,9 @@ class ProdukController {
     }
 
     def showStokProduk = {
+        def mainView = app.getMvcGroupManager()['mainGroup'].view
         execInsideUISync {
-            def args = [parent: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Stok Produk', preferredSize: new Dimension(900, 420)]
-            DialogUtils.showMVCGroup('stokProduk', args, view, dialogProps)
+            mainView.mainTab.addMVCTab('stokProduk', [parent: view.table.selectionModel.selected[0]], "Stok ${model.nama}")
         }
     }
 

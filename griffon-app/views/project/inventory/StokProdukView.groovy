@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package project.inventory
 
 import net.miginfocom.swing.MigLayout
 import java.awt.FlowLayout
-import java.awt.event.KeyEvent
-
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 
 actions {
@@ -47,9 +45,6 @@ panel(id: 'mainPanel') {
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(id: 'itemStok', action: showItemStok, visible: bind{table.isRowSelected})
-            button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-            }, mnemonic: KeyEvent.VK_T)
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 package project.inventory
 
-import simplejpa.swing.DialogUtils
-import java.awt.Dimension
-
 @SuppressWarnings("GroovyUnusedDeclaration")
 class StokProdukController {
 
@@ -32,10 +29,12 @@ class StokProdukController {
     }
 
     def showItemStok = {
-        execInsideUISync {
-            def args = [parent: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Item Stok', preferredSize: new Dimension(900, 620)]
-            DialogUtils.showMVCGroup('itemStok', args, view, dialogProps)
+        def mainView = app.getMvcGroupManager()['mainGroup'].view
+        def selected = view.table.selectionModel.selected[0]
+        if (selected) {
+            execInsideUISync {
+                mainView.mainTab.addMVCTab('itemStok', [parent: selected], "Stok ${model.parent.nama} - ${selected.gudang.nama}")
+            }
         }
     }
 

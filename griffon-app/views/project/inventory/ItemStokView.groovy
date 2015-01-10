@@ -15,7 +15,6 @@
  */
 package project.inventory
 
-import net.miginfocom.swing.MigLayout
 import java.awt.FlowLayout
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
@@ -52,15 +51,6 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Diubah', expression: {it.referensiStok?.diubahOleh?:''},
                 visible: bind {model.showPembuat})
             glazedColumn(name: 'Keterangan', property: 'keterangan', visible: bind {model.showKeterangan})
-        }
-    }
-
-    taskPane(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: PAGE_END) {
-        panel(constraints: 'span, growx, wrap') {
-            flowLayout(alignment: FlowLayout.LEADING)
-            button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-            }, mnemonic: KeyEvent.VK_T)
         }
     }
 }
