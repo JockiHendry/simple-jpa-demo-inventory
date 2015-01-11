@@ -69,25 +69,25 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Nama', property: 'nama', preferredWidth: 300)
                 glazedColumn(name: 'Supplier', expression: { it.supplier?.nama?: ''}, preferredWidth: 200)
                 glazedColumn(name: 'HET Dalam Kota', property: 'hargaDalamKota', preferredWidth: 110, columnClass: Integer) {
-                    templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', preferredWidth: 110, columnClass: Integer) {
-                    templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan }, preferredWidth: 50)
                 glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer, preferredWidth: 50, visible: bind {!model.popupMode}) {
-                    templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:numberFormat', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Stok Level Minimum', property: 'levelMinimum', preferredWidth: 80, columnClass: Integer, visible: bind {!model.popupMode}) {
-                    templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:numberFormat', horizontalAlignment: RIGHT)
                 }
                 SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').findAllGudang().each { Gudang g ->
                     glazedColumn(name: "Qty ${g.nama}", expression: { it.stok(g).jumlah }, columnClass: Integer, preferredWidth: 80) {
-                        templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                        templateRenderer('this:numberFormat', horizontalAlignment: RIGHT)
                     }
                 }
                 glazedColumn(name: 'Total', property: 'jumlah', columnClass: Integer, preferredWidth: 80) {
-                    templateRenderer('${numberFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:numberFormat', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Qty Retur', property: 'jumlahRetur', columnClass: Integer, preferredWidth: 80, visible: bind {!model.popupMode || model.showReturOnly}) {
                     templateRenderer(exp: {it? numberFormat(it): 0}, horizontalAlignment: RIGHT)
@@ -120,7 +120,7 @@ panel(id: 'mainPanel') {
         comboBox(id: 'supplier', model: model.supplier, errorPath: 'supplier')
         errorLabel(path: 'supplier', constraints: 'wrap')
         label('Satuan:')
-        comboBox(id: 'satuan', model: model.satuan, templateRenderer: '${value}', errorPath: 'satuan')
+        comboBox(id: 'satuan', model: model.satuan, errorPath: 'satuan')
         errorLabel(path: 'satuan', constraints: 'wrap')
         label('Poin:')
         numberTextField(id: 'poin', columns: 20, bindTo: 'poin', errorPath: 'poin')

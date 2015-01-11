@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,10 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Tukar Dengan', expression: { it.informasiProduk()?.nama?: '' })
             glazedColumn(name: 'Qty Ditukar', expression: { it.informasiQty() }, columnClass: Integer)
             glazedColumn(name: 'Potongan Piutang / Tukar', expression: { it.informasiHarga() }, columnClass: Integer) {
-                templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
+                templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
             }
             glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
-                templateRenderer("\${it? 'Y': ''}", horizontalAlignment: RIGHT)
+                templateRenderer(exp: {it? 'Y': ''}, horizontalAlignment: RIGHT)
             }
         }
     }

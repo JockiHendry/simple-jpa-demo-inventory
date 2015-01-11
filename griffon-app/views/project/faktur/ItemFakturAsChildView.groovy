@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -30,21 +30,21 @@ panel(id: 'mainPanel') {
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.itemFakturList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                 glazedColumn(name: 'Produk', property: 'produk', width: [200, 200, 400]) {
-                    templateRenderer('${it.nama}')
+                    templateRenderer('nama')
                 }
                 glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 40)
                 glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan }, width: 40)
                 glazedColumn(name: 'Harga', property: 'harga', columnClass: Integer, visible: bind { model.showHarga }) {
-                    templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Keterangan', property: 'keterangan', width: [40, 40, 500])
                 glazedColumn(name: 'Diskon', property: 'diskon', columnClass: Integer, visible: bind { model.showHarga }, width: [40, 100, 100])
                 glazedColumn(name: 'Jumlah Diskon', expression: {it.diskon?.jumlah(it.harga)?.multiply(it.jumlah)},
                         columnClass: Integer, visible: bind { model.showHarga }) {
-                    templateRenderer("\${it==null?'-':currencyFormat(it)}", horizontalAlignment: RIGHT)
+                    templateRenderer(exp: {it==null?'-':currencyFormat(it)}, horizontalAlignment: RIGHT)
                 }
                 glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer, visible: bind { model.showHarga }) {
-                    templateRenderer('${currencyFormat(it)}', horizontalAlignment: RIGHT)
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
             }
         }

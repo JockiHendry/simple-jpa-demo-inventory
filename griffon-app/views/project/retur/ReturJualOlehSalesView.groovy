@@ -63,7 +63,7 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Konsumen', expression: { it.konsumen.nama })
             glazedColumn(name: 'Qty Ditukar', expression: { it.jumlahDitukar() }, columnClass: Integer)
             glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind {model.showPiutang}) {
-                templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
+                templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
             }
             glazedColumn(name: 'Ref Faktur', expression: {it.fakturPotongPiutang.collect{it.nomor}.join(',')})
             glazedColumn(name: 'Sudah Diproses', property: 'sudahDiproses') {
@@ -81,7 +81,7 @@ panel(id: 'mainPanel') {
         dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', dateVisible: true, timeVisible: false)
         errorLabel(path: 'tanggal', constraints: 'wrap')
         label('Gudang:')
-        comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
+        comboBox(id: 'gudang', model: model.gudang, errorPath: 'gudang')
         errorLabel(path: 'gudang', constraints: 'wrap')
         label('Konsumen:')
         panel {

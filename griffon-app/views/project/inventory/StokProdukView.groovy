@@ -32,10 +32,10 @@ panel(id: 'mainPanel') {
             glazedTable(id: 'table', list: model.stokProdukList, sortingStrategy: SINGLE_COLUMN,
                     doubleClickAction: showItemStok, enterKeyAction: showItemStok) {
                 glazedColumn(name: 'Gudang', property: 'gudang') {
-                    templateRenderer('${it.nama}')
+                    templateRenderer('nama')
                 }
                 glazedColumn(name: 'Jumlah', property: 'jumlah') {
-                    templateRenderer('${numberFormat(it)}')
+                    templateRenderer('this:numberFormat')
                 }
             }
         }

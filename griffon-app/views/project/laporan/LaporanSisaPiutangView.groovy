@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -35,17 +35,17 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''),
     }
 
     label('Nama Sales')
-    comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', constraints: 'wrap')
+    comboBox(id: 'sales', model: model.sales, templateRenderer: 'nama', constraints: 'wrap')
 
     label('Dan', constraints: 'wrap')
 
     label('Nama Konsumen')
-    tagChooser(model: model.konsumenSearch, templateString: '${it.nama}', constraints: 'height 70, wrap')
+    tagChooser(model: model.konsumenSearch, templateRenderer: 'nama', constraints: 'height 70, span 2, growx, wrap')
 
     label('Dan', constraints: 'wrap')
 
     label('Region')
-    comboBox(id: 'region', model: model.region, templateRenderer: '${value.nama}', constraints: 'wrap')
+    comboBox(id: 'region', model: model.region, templateRenderer: 'nama', constraints: 'wrap')
 
     checkBox('Cetak Formulir', selected: bind('cetakFormulir', target: model, mutual: true), constraints: 'wrap')
 

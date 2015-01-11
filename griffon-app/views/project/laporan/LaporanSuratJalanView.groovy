@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout
 
 panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]', '')) {
     label('Gudang:')
-    comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
+    comboBox(id: 'gudang', model: model.gudang, errorPath: 'gudang')
     errorLabel(path: 'nomor')
 
     panel(constraints: 'span, growx, wrap') {

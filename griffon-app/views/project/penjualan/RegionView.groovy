@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ panel(id: 'mainPanel') {
         textField(id: 'nama', columns: 20, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
         errorLabel(path: 'nama', constraints: 'wrap')
         label('Bagian Dari:')
-        comboBox(id: 'bagianDari', model: model.bagianDari, templateRenderer: '${value}', errorPath: 'bagianDari')
+        comboBox(id: 'bagianDari', model: model.bagianDari, errorPath: 'bagianDari')
         errorLabel(path: 'bagianDari', constraints: 'wrap')
 
         panel(constraints: 'span, growx, wrap') {

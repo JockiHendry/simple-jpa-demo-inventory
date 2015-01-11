@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ panel(id: 'mainPanel') {
         scrollPane(constraints: CENTER) {
             glazedTable(id: 'table', list: model.itemBarangList, sortingStrategy: SINGLE_COLUMN, onValueChanged: controller.tableSelectionChanged) {
                 glazedColumn(name: 'Produk', property: 'produk') {
-                    templateRenderer('${it.nama}')
+                    templateRenderer('nama')
                 }
                 glazedColumn(name: 'Qty', property: 'jumlah')
                 glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })

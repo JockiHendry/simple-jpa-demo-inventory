@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,gr
     label('Dan', constraints: 'wrap')
 
     label('Nama Sales')
-    comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', constraints: 'wrap')
+    comboBox(id: 'sales', model: model.sales, templateRenderer: 'nama', constraints: 'wrap')
 
     label('Dan', constraints: 'wrap')
 

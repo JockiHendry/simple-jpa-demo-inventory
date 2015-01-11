@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''),
     }
 
     label('Gudang:')
-    comboBox(id: 'gudangSearch', model: model.gudangSearch, templateRenderer: '${value}', errorPath: 'gudangSearch', constraints: 'wrap')
+    comboBox(id: 'gudangSearch', model: model.gudangSearch, errorPath: 'gudangSearch', constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', actionPerformed: controller.tampilkanLaporan, defaultCapable: true)

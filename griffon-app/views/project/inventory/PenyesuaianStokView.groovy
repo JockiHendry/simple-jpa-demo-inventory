@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ panel(id: 'mainPanel') {
         dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
         errorLabel(path: 'tanggal', constraints: 'wrap')
         label('Gudang:')
-        comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
+        comboBox(id: 'gudang', model: model.gudang, errorPath: 'gudang')
         errorLabel(path: 'gudang', constraints: 'wrap')
         label('Perubahan:')
         panel {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ panel(id: 'mainPanel') {
         dateTimePicker(id: 'tanggal', localDate: bind('tanggal', target: model, mutual: true), errorPath: 'tanggal', timeVisible: false)
         errorLabel(path: 'tanggal', constraints: 'wrap')
         label('Supplier:')
-        comboBox(id: 'supplier', model: model.supplier, templateRenderer: '${value}', errorPath: 'supplier')
+        comboBox(id: 'supplier', model: model.supplier, errorPath: 'supplier')
         errorLabel(path: 'supplier', constraints: 'wrap')
         label('Diskon:', visible: bind { model.showFakturBeli })
         panel(layout: new FlowLayout(FlowLayout.LEADING, 0, 0), visible: bind { model.showFakturBeli }) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -85,10 +85,10 @@ panel(id: 'mainPanel') {
         textField(id: 'alamat', columns: 50, text: bind('alamat', target: model, mutual: true), errorPath: 'alamat')
         errorLabel(path: 'alamat', constraints: 'wrap')
         label('Region:')
-        comboBox(id: 'region', model: model.region, templateRenderer: '${value}', errorPath: 'region')
+        comboBox(id: 'region', model: model.region, errorPath: 'region')
         errorLabel(path: 'region', constraints: 'wrap')
         label('Sales:')
-        comboBox(id: 'sales', model: model.sales, templateRenderer: '${value.nama}', errorPath: 'sales')
+        comboBox(id: 'sales', model: model.sales, templateRenderer: 'nama', errorPath: 'sales')
         errorLabel(path: 'sales', constraints: 'wrap')
 
         panel(constraints: 'span, growx, wrap') {

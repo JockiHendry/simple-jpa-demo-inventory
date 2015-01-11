@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,grow]',
     label('Dan', constraints: 'wrap')
 
     label('Region')
-    comboBox(id: 'region', model: model.region, templateRenderer: '${value.nama}', constraints: 'wrap')
+    comboBox(id: 'region', model: model.region, templateRenderer: 'nama', constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)

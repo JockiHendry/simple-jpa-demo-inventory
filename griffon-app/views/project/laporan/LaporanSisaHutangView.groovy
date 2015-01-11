@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''),
     }
 
     label('Nama Supplier')
-    tagChooser(model: model.supplierSearch, templateString: '${it.nama}', constraints: 'height 70, wrap')
+    tagChooser(model: model.supplierSearch, templateRenderer: 'nama', constraints: 'height 70, span 2, growx, wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)

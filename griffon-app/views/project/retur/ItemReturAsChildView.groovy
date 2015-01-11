@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Qty Tukar Baru', expression: { it.jumlahBarangDitukar() }, columnClass: Integer)
                 glazedColumn(name: 'Qty Tukar Servis', expression: { it.jumlahBarangDiservis() }, columnClass: Integer)
                 glazedColumn(name: 'Potong Piutang', expression: { it.jumlahPotongPiutang() }, columnClass: Integer, visible: bind{model.showPiutang}) {
-                    templateRenderer("\${it? currencyFormat(it): ''}", horizontalAlignment: RIGHT)
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
             }
         }

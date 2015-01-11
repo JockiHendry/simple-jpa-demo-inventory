@@ -26,7 +26,7 @@ panel(id: 'mainPanel') {
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
         comboBox(id: 'periodeItemStok', model: model.periodeItemStok,
-            templateRenderer: "\${it.tanggalMulai.toString('MMMM YYYY')} (Perubahan: \${it.jumlah}, Saldo: \${it.saldo})")
+            templateRenderer: {"${it.tanggalMulai.toString('MMMM YYYY')} (Perubahan: ${it.jumlah}, Saldo: ${it.saldo})"})
         button(app.getMessage('simplejpa.search.label'), actionPerformed: controller.search)
         checkBox('Referensi Finance', selected: bind('showReferensiFinance', target: model, mutual: true))
         checkBox('Referensi Gudang', selected: bind('showReferensiGudang', target: model, mutual: true))
@@ -37,7 +37,7 @@ panel(id: 'mainPanel') {
     scrollPane(constraints: CENTER) {
         glazedTable(id: 'table', list: model.itemStokList, sortingStrategy: SINGLE_COLUMN) {
             glazedColumn(name: 'Tanggal', property: 'tanggal', width: 100) {
-                templateRenderer("\${it.toString('dd-MM-yyyy')}")
+                templateRenderer(exp: {it.toString('dd-MM-yyyy')})
             }
             glazedColumn(name: 'Qty', property: 'jumlah', columnClass: Integer, width: 50)
             glazedColumn(name: 'Saldo', property: 'saldo', columnClass: Integer, width: 60)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ panel(id: 'mainPanel') {
         textField(id: 'nomorTelepon', columns: 20, text: bind('nomorTelepon', target: model, mutual: true), errorPath: 'nomorTelepon')
         errorLabel(path: 'nomorTelepon', constraints: 'wrap')
         label('Gudang:')
-        comboBox(id: 'gudang', model: model.gudang, templateRenderer: '${value}', errorPath: 'gudang')
+        comboBox(id: 'gudang', model: model.gudang, errorPath: 'gudang')
         errorLabel(path: 'gudang', constraints: 'wrap')
         label('Kode:')
         textField(id: 'kode', columns: 15, text: bind('kode', target: model, mutual: true), errorPath: 'kode')

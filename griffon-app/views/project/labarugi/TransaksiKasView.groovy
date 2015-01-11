@@ -34,7 +34,7 @@ panel(id: 'mainPanel') {
 
     panel(constraints: PAGE_START) {
         flowLayout(alignment: FlowLayout.LEADING)
-        comboBox(id: 'periodeKas', model: model.periodeKas, templateRenderer: "\${it.tanggalMulai.toString('MMMM YYYY')} (Saldo: \${it.saldo? java.text.NumberFormat.currencyInstance.format(it.saldo): 0})")
+        comboBox(id: 'periodeKas', model: model.periodeKas, templateRenderer: {"${it.tanggalMulai.toString('MMMM YYYY')} (Saldo: ${it.saldo? java.text.NumberFormat.currencyInstance.format(it.saldo): 0})"})
         textField(id: 'pihakTerkaitSearch', columns: 10, text: bind('pihakTerkaitSearch', target: model, mutual: true), action: search)
         textField(id: 'kategoriKasSearch', columns: 10, text: bind('kategoriKasSearch', target: model, mutual: true), action: search)
         button(action: search)
