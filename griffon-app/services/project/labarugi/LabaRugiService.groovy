@@ -86,15 +86,18 @@ class LabaRugiService {
         // Hitung nilai inventory dengan menggunakan metode FIFO
         NilaiInventory nilaiInventory = new NilaiInventory()
         if (qtyTersedia > 0) {
+            boolean selesai = false
             for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
                 for (ItemStok itemStok : p.cariPenambahanInventory().reverse()) {
                     if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTersedia) {
                         nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(), cariHarga(produk, itemStok))
+                        selesai = true
                         break
                     } else {
                         nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
                     }
                 }
+                if (selesai) break
             }
         }
         nilaiInventory
