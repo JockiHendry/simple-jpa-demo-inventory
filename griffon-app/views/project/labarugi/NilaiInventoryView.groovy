@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ panel(id: 'mainPanel') {
                     templateRenderer(exp: { it?.toString('dd-MM-yyyy') })
                 }
                 glazedColumn(name: 'Nama', property: 'nama')
+                glazedColumn(name: 'Faktur', property: 'faktur')
                 glazedColumn(name: 'Qty', property: 'qty', columnClass: Integer)
                 glazedColumn(name: 'Harga Beli Satuan', property: 'harga', columnClass: Integer) {
                     templateRenderer(exp: { currencyFormat(it) }, horizontalAlignment: RIGHT)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ class NilaiInventory {
         items.sum { it.qty?: 0}?: 0
     }
 
-    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga) {
-        items << new ItemNilaiInventory(tanggal, nama, qty, harga)
+    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur) {
+        items << new ItemNilaiInventory(tanggal, nama, qty, harga, faktur)
         isiHargaYangKosong()
     }
 

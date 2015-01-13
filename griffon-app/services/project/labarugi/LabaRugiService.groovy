@@ -90,11 +90,13 @@ class LabaRugiService {
             for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
                 for (ItemStok itemStok : p.cariPenambahanInventory().reverse()) {
                     if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTersedia) {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(), cariHarga(produk, itemStok))
+                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(),
+                            cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
                         selesai = true
                         break
                     } else {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
+                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah,
+                            cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
                     }
                 }
                 if (selesai) break
