@@ -32,9 +32,14 @@ import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
 
-@NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
-    @NamedAttributeNode('listItemFaktur'),
-    @NamedAttributeNode('pengeluaranBarang')
+@NamedEntityGraphs([
+    @NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur'),
+        @NamedAttributeNode('pengeluaranBarang')
+    ]),
+    @NamedEntityGraph(name='FakturJualEceran.Items', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur')
+    ])
 ])
 @DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
 class FakturJualEceran extends FakturJual {
