@@ -105,7 +105,7 @@
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="2" width="233" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<reportElement x="0" y="2" width="166" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -115,8 +115,8 @@
 				<text><![CDATA[Produk]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="233" y="1" width="40" height="21" uuid="2a611cb5-431e-4b71-a494-1885ca689d0e"/>
-				<box rightPadding="3">
+				<reportElement x="166" y="1" width="40" height="21" uuid="2a611cb5-431e-4b71-a494-1885ca689d0e"/>
+				<box rightPadding="5">
 					<bottomPen lineWidth="1.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
@@ -125,7 +125,7 @@
 				<text><![CDATA[Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="273" y="2" width="140" height="20" uuid="28148ba2-378b-4c1f-9b94-9d44a8d35fa5"/>
+				<reportElement x="320" y="2" width="122" height="20" uuid="28148ba2-378b-4c1f-9b94-9d44a8d35fa5"/>
 				<box leftPadding="4">
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -135,7 +135,7 @@
 				<text><![CDATA[Bukti Invoice Gudang]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="413" y="2" width="142" height="20" uuid="39fd50d4-d909-42f7-8911-8d928fffc8b2"/>
+				<reportElement x="442" y="2" width="113" height="20" uuid="39fd50d4-d909-42f7-8911-8d928fffc8b2"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -144,12 +144,22 @@
 				</textElement>
 				<text><![CDATA[Bukti Invoice Finance]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="206" y="2" width="114" height="20" uuid="4fb3aafd-41d2-447e-95ed-df6ae13a1f3d"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pihak Terkait]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="1" y="0" width="232" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="165" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -158,18 +168,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0">
-				<reportElement x="233" y="0" width="40" height="17" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
-				<box rightPadding="3">
-					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="SansSerif" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="273" y="0" width="140" height="17" isPrintWhenDetailOverflows="true" uuid="6d6d9dad-0655-45fe-926a-96216ff4e6f3"/>
+				<reportElement stretchType="RelativeToTallestObject" x="320" y="0" width="122" height="17" isPrintWhenDetailOverflows="true" uuid="6d6d9dad-0655-45fe-926a-96216ff4e6f3"/>
 				<box leftPadding="4">
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -179,7 +179,7 @@
 				<textFieldExpression><![CDATA[$F{referensiStok}.nomorGudang]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="413" y="0" width="142" height="17" isPrintWhenDetailOverflows="true" uuid="29ad35a1-e80d-401c-aaed-03ed4e5f2c63"/>
+				<reportElement stretchType="RelativeToTallestObject" x="442" y="0" width="113" height="17" isPrintWhenDetailOverflows="true" uuid="29ad35a1-e80d-401c-aaed-03ed4e5f2c63"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -187,6 +187,26 @@
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{referensiStok}.nomorFinance]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="206" y="0" width="114" height="17" isPrintWhenDetailOverflows="true" uuid="3d57aa36-2128-486b-a301-ac74b951be08"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{keterangan}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0">
+				<reportElement stretchType="RelativeToTallestObject" x="166" y="0" width="40" height="17" uuid="caac4507-b7b2-45e3-8317-3fbbffbcc4f4"/>
+				<box rightPadding="5">
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

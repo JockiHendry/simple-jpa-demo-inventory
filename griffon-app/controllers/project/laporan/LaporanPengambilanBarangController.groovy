@@ -25,6 +25,8 @@ import domain.inventory.Transfer
 import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
 import domain.retur.ReturJual
+import domain.retur.ReturJualEceran
+import domain.retur.ReturJualOlehSales
 import laporan.PengambilanBarang
 import laporan.PengambilanBarangSummary
 import listener.InventoryEventListenerService
@@ -76,7 +78,7 @@ class LaporanPengambilanBarangController {
                     if (summary) {
                         model.result << new PengambilanBarangSummary(f.pengeluaranBarang.tanggal, i.produk, i.jumlah)
                     } else {
-                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, f.konsumen.nama, ref)
                     }
                 }
             }
@@ -92,7 +94,7 @@ class LaporanPengambilanBarangController {
                     if (summary) {
                         model.result << new PengambilanBarangSummary(f.pengeluaranBarang.tanggal, i.produk, 0, i.jumlah)
                     } else {
-                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                        model.result << new PengambilanBarang(f.pengeluaranBarang.tanggal, i.produk, i.jumlah, f.namaPembeli, ref)
                     }
                 }
             }
@@ -108,7 +110,7 @@ class LaporanPengambilanBarangController {
                     if (summary) {
                         model.result << new PengambilanBarangSummary(p.tanggal, i.produk, 0, 0, 0, i.jumlah)
                     } else {
-                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, null, ref)
+                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, '[Internal]', ref)
                     }
                 }
             }
@@ -124,7 +126,7 @@ class LaporanPengambilanBarangController {
                     if (summary) {
                         model.result << new PengambilanBarangSummary(p.tanggal, i.produk, 0, 0, 0, 0, i.jumlah)
                     } else {
-                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, null, ref)
+                        model.result << new PengambilanBarang(p.tanggal, i.produk, i.jumlah, '[Internal]', ref)
                     }
                 }
             }
@@ -140,7 +142,13 @@ class LaporanPengambilanBarangController {
                     if (summary) {
                         model.result << new PengambilanBarangSummary(r.pengeluaranBarang.tanggal, i.produk, 0, 0, i.jumlah)
                     } else {
-                        model.result << new PengambilanBarang(r.pengeluaranBarang.tanggal, i.produk, i.jumlah, null, ref)
+                        String keterangan
+                        if (r instanceof ReturJualOlehSales) {
+                            keterangan = r.konsumen.nama
+                        } else if (r instanceof ReturJualEceran) {
+                            keterangan = r.namaKonsumen
+                        }
+                        model.result << new PengambilanBarang(r.pengeluaranBarang.tanggal, i.produk, i.jumlah, keterangan, ref)
                     }
                 }
             }
