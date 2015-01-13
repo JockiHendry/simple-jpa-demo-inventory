@@ -27,8 +27,8 @@ class FakturJualOlehSalesSingkatMulai implements OperasiFakturJual {
         if (!(fakturJual instanceof FakturJualOlehSales)) {
             throw new IllegalArgumentException('Argumen fakturJual harus berupa FakturJualOlehSales!')
         }
-        new FakturJualOlehSalesDibuat().proses(fakturJual, [alamatTujuan: '[Otomatis]'])
-        new FakturJualOlehSalesDiantar().proses(fakturJual, [buktiTerima: new BuktiTerima(fakturJual.tanggal, 'Otomatis')])
+        new FakturJualOlehSalesDibuat().proses(fakturJual, [alamatTujuan: ''])
+        new FakturJualOlehSalesDiantar().proses(fakturJual, [buktiTerima: new BuktiTerima(fakturJual.tanggal, '')])
     }
 
     @Override

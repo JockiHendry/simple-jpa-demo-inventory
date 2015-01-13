@@ -39,7 +39,7 @@ class FakturJualOlehSalesDibuat implements OperasiFakturJual {
             // Surat jalan belum pernah dibuat sebelumnya
             LocalDate tanggal = args.containsKey('tanggal')? args.tanggal: LocalDate.now()
             String keterangan = args.containsKey('keterangan')? args.keterangan: null
-            String alamatTujuan = args.containsKey('alamatTujuan')? args.alamatTujuan: '[Otomatis]'
+            String alamatTujuan = args.containsKey('alamatTujuan')? args.alamatTujuan: ''
             PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
                 nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
                 tanggal: tanggal, gudang: fakturJual.kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan

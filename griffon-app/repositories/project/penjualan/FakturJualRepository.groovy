@@ -415,8 +415,8 @@ class FakturJualRepository {
         }
         for (FakturJualOlehSales faktur: daftarFaktur) {
             faktur.prosesSampai(StatusFakturJual.DITERIMA, [
-                Dibuat: [alamatTujuan: '[Otomatis]'],
-                Diantar: [buktiTerima: new BuktiTerima(LocalDate.now(), '[Otomatis]', '[Otomatis]')]
+                Dibuat: [alamatTujuan: ''],
+                Diantar: [buktiTerima: new BuktiTerima(LocalDate.now(), '', '')]
             ])
         }
     }
