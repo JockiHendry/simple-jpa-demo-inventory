@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daftar_inventory" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="eec581d2-323c-4755-974a-e959cc6dcde0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="itemInventory" uuid="0690fced-b5a6-4cb0-96f4-b62c9ca5729c">
+		<field name="tanggal" class="org.joda.time.LocalDate"/>
+		<field name="nama" class="java.lang.String"/>
+		<field name="faktur" class="java.lang.String"/>
+		<field name="qty" class="java.lang.Long"/>
+		<field name="harga" class="java.math.BigDecimal"/>
+		<variable name="total" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[($F{qty}?:0) * ($F{harga}?:0)]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["[COMPANY NAME]"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="logo" class="java.lang.Object" isForPrompting="false"/>
+	<parameter name="tanggal" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[org.joda.time.LocalDate.now()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="items" class="java.util.List">
+		<fieldDescription><![CDATA[items]]></fieldDescription>
+	</field>
+	<field name="produk" class="domain.inventory.Produk">
+		<fieldDescription><![CDATA[produk]]></fieldDescription>
+	</field>
+	<sortField name="produk"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="101" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="d3cde47f-fe72-4ab3-86fa-129f5c12af99"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Hal: ${$V{PAGE_NUMBER}}"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="74" height="60" uuid="7c51004f-9bf4-4b98-a5d0-4e90288018a0"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="75" y="0" width="255" height="60" isRemoveLineWhenBlank="true" uuid="8bea564e-99b9-4561-9951-7c78bdcc2eb4"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="81" width="555" height="20" uuid="0d109650-b344-4f7d-9bc8-0acb73a19372"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Per Tanggal " + $P{tanggal}.toString('dd-MM-yyyy')]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="61" width="554" height="20" uuid="5e461202-4cfb-4772-8f4e-c6353a19695e"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Daftar Inventory]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="77" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="0" width="554" height="20" uuid="46cc06a0-6c3f-46e6-a737-36f1619fc49f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" x="1" y="20" width="554" height="53" uuid="2b6d442d-e276-4612-8dc0-389a40d85390"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="itemInventory" uuid="730d754d-9785-4714-bdfc-06637470c206">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
+JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="60" uuid="990418b6-d7d8-47ee-a366-ff819f91054a">
+						<jr:tableFooter height="18" rowSpan="1"/>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="20" uuid="bf4b65a0-b21c-45ab-b9ed-4b16d1c0b8f6"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tanggal]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="16" uuid="2db9aafd-2582-486f-86a4-bd25e5292d13"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-yyyy')]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="140" uuid="c309fbeb-1bb6-4f7e-a65d-cababf68ac84">
+						<jr:tableFooter height="18" rowSpan="1"/>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="140" height="20" uuid="a2055ca8-e18b-4357-bd75-78c225de50ee"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nama]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="16" uuid="9fcb2f88-b99a-4a6a-91d0-a0f5caf756a6"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textFieldExpression><![CDATA[$F{nama}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="105" uuid="93b8903c-1983-479b-9074-332bdcdf80cf">
+						<jr:tableFooter height="18" rowSpan="1"/>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="105" height="20" uuid="f036bfce-96d1-4dcb-a594-107bfc3b2af1"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Faktur]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="105" height="16" uuid="bb066d59-eab3-44e1-8e6b-cbb7c0d89ada"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textFieldExpression><![CDATA[$F{faktur}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="55" uuid="986e90a4-7f7c-4f3c-bd4b-7ed5a6a748b9">
+						<jr:tableFooter height="18" rowSpan="1"/>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="55" height="20" uuid="40f0cf5a-069a-4e97-990e-3272cb7ba1e0"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Qty]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="16" uuid="270607cb-ff63-4f50-9f4f-67e190aa086a"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="44654de3-a0e5-4e2b-a082-1b8040a2210a">
+						<jr:tableFooter height="18" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="13" uuid="51e8ee81-9a94-4453-a7ae-6de0eeb3b7bb"/>
+								<textElement textAlignment="Right">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total:]]></text>
+							</staticText>
+						</jr:tableFooter>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="20" uuid="21bb7cd4-9930-4159-ae92-e1e475aa3a95"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Harga Beli]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField pattern="¤ #,##0" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="16" uuid="920ff2b6-f298-46a9-815f-4e66f2aa2b21"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{harga}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="102" uuid="e29cb257-52b0-470f-86fb-9708c2d6e138">
+						<jr:tableFooter height="18" rowSpan="1">
+							<textField pattern="¤ #,##0">
+								<reportElement x="0" y="0" width="102" height="13" uuid="7674d456-e7a8-49dc-8764-c1e36f24df37"/>
+								<textElement textAlignment="Right">
+									<font isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+							</textField>
+						</jr:tableFooter>
+						<jr:columnHeader height="25" rowSpan="1">
+							<staticText>
+								<reportElement x="1" y="0" width="101" height="20" uuid="82fc4e51-3eae-4b14-9dfe-2b789c323462"/>
+								<box>
+									<bottomPen lineWidth="1.0"/>
+								</box>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
+									<font size="10" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField pattern="¤ #,##0" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="102" height="16" uuid="1ba44aac-1696-4787-bb32-fca8e351865d"/>
+								<box>
+									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+								</box>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[($F{qty}?:0) * ($F{harga}?:0)]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

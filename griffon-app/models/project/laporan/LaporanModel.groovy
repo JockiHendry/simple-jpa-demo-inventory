@@ -46,7 +46,8 @@ public enum JenisLaporan {
     LAPORAN_RETUR_PRODUK('Laporan Retur Produk', 'laporan_retur_produk', 'laporanReturProduk'),
     LAPORAN_TRANSAKSI_KAS('Laporan Transaksi Kas', 'laporan_kas_kategori', 'laporanTransaksiKas'),
     LAPORAN_NILAI_INVENTORY('Laporan Nilai Inventory', 'laporan_nilai_inventory', 'laporanNilaiInventory' ),
-    LAPORAN_LABA_RUGI('Laporan Laba Rugi', 'laporan_laba_rugi', 'laporanLabaRugi')
+    LAPORAN_LABA_RUGI('Laporan Laba Rugi', 'laporan_laba_rugi', 'laporanLabaRugi'),
+    DAFTAR_INVENTORY('Daftar Inventory', 'daftar_inventory', 'laporanDaftarInventory')
 
     String nama
     String namaLaporan

@@ -15,11 +15,14 @@
  */
 package domain.labarugi
 
+import domain.inventory.Produk
 import groovy.transform.Canonical
 import org.joda.time.LocalDate
 
 @Canonical
 class NilaiInventory {
+
+    Produk produk
 
     List<ItemNilaiInventory> items = []
 
@@ -31,7 +34,7 @@ class NilaiInventory {
         items.sum { it.qty?: 0}?: 0
     }
 
-    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur) {
+    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur = null) {
         items << new ItemNilaiInventory(tanggal, nama, qty, harga, faktur)
         isiHargaYangKosong()
     }

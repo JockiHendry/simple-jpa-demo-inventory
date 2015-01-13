@@ -84,7 +84,7 @@ class LabaRugiService {
         }
 
         // Hitung nilai inventory dengan menggunakan metode FIFO
-        NilaiInventory nilaiInventory = new NilaiInventory()
+        NilaiInventory nilaiInventory = new NilaiInventory(produk: produk)
         if (qtyTersedia > 0) {
             boolean selesai = false
             for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
