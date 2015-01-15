@@ -35,6 +35,7 @@ class ProdukController {
     ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('namaSearch')) model.namaSearch = args.namaSearch
         model.popupMode = args.'popup'?: false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         model.showReturOnly = args.containsKey('showReturOnly')? args.'showReturOnly': false
@@ -53,6 +54,7 @@ class ProdukController {
             model.satuanList.addAll(satuan)
             model.supplierList.addAll(supplier)
         }
+        if (model.namaSearch) search()
     }
 
     def search = {

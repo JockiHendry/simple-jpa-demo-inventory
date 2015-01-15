@@ -40,6 +40,7 @@ class FakturJualEceranController {
     NomorService nomorService
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('nomorSearch')) model.nomorSearch = args.nomorSearch
         model.mode = args.containsKey('mode')? args.'mode': FakturEceranViewMode.ALL
         switch (model.mode) {
             case FakturEceranViewMode.FAKTUR:
@@ -67,7 +68,6 @@ class FakturJualEceranController {
                 model.statusSearch.selectedItem = SwingHelper.SEMUA
                 break
         }
-
         init()
         search()
     }

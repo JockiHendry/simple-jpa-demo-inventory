@@ -38,6 +38,7 @@ class ReturJualEceranController {
     ReturJualService returJualService
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('nomorSearch')) model.nomorSearch = args.nomorSearch
         model.mode = args.containsKey('mode')? args.mode: ReturJualViewMode.INPUT
         if (model.mode == ReturJualViewMode.INPUT) {
             model.showSave = true
@@ -61,8 +62,6 @@ class ReturJualEceranController {
 
     def init = {
         execInsideUISync {
-            model.nomorSearch = null
-            model.konsumenSearch = null
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)

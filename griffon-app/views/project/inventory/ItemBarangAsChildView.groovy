@@ -21,6 +21,10 @@ import java.awt.FlowLayout
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 
+actions {
+    action(id: 'tampilkanProduk', name: 'Tampilkan Produk', closure: controller.tampilkanProduk)
+}
+
 panel(id: 'mainPanel') {
     borderLayout()
 
@@ -33,6 +37,7 @@ panel(id: 'mainPanel') {
                 }
                 glazedColumn(name: 'Qty', property: 'jumlah')
                 glazedColumn(name: 'Satuan', expression: { it.produk.satuan.singkatan })
+                menuItem(tampilkanProduk)
             }
         }
     }

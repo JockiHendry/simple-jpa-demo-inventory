@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ class PenyesuaianStokController {
     NomorService nomorService
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('nomorSearch')) model.nomorSearch = args.nomorSearch
         init()
         search()
     }
@@ -47,8 +48,6 @@ class PenyesuaianStokController {
             model.gudangList.addAll(gudang)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.gudangSearch = null
-            model.nomorSearch = null
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PENYESUAIAN_STOK)
         }
     }

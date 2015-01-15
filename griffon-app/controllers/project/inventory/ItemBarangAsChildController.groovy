@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@ package project.inventory
 
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import project.main.MainGroupModel
+import project.main.MainGroupView
 import project.pembelian.PurchaseOrderRepository
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
@@ -104,6 +106,17 @@ class ItemBarangAsChildController {
                 model.errors.clear()
                 model.produk = selected.produk
                 model.jumlah = selected.jumlah
+            }
+        }
+    }
+
+    def tampilkanProduk = {
+        ItemBarang itemBarang = view.table.selectionModel.selected[0]
+        if (itemBarang) {
+            MainGroupView mainView = app.getMvcGroupManager()['mainGroup'].view
+            MainGroupModel mainModel = app.getMvcGroupManager()['mainGroup'].model
+            if (mainModel.produkVisible) {
+                mainView.mainTab.addMVCTab('produk', [namaSearch: itemBarang.produk.nama], "${itemBarang.produk.nama}")
             }
         }
     }

@@ -22,6 +22,10 @@ import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.RIGHT
 
+actions {
+    action(id: 'tampilkanProduk', name: 'Tampilkan Produk', closure: controller.tampilkanProduk)
+}
+
 panel(id: 'mainPanel') {
     borderLayout()
 
@@ -46,6 +50,7 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'Total', expression: {it.total()}, columnClass: Integer, visible: bind { model.showHarga }) {
                     templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
+                menuItem(tampilkanProduk)
             }
         }
     }

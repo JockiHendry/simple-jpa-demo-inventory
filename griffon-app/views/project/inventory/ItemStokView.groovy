@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 package project.inventory
 
 import java.awt.FlowLayout
-import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.CENTER
+
+actions {
+    action(id: 'tampilkanReferensi', name: 'Tampilkan Referensi', closure: controller.tampilkanReferensi)
+}
 
 panel(id: 'mainPanel') {
     borderLayout()
@@ -51,6 +54,7 @@ panel(id: 'mainPanel') {
             glazedColumn(name: 'Diubah', expression: {it.referensiStok?.diubahOleh?:''},
                 visible: bind {model.showPembuat})
             glazedColumn(name: 'Keterangan', property: 'keterangan', visible: bind {model.showKeterangan})
+            menuItem(tampilkanReferensi)
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ import domain.faktur.ItemFaktur
 import domain.inventory.Produk
 import domain.pembelian.FakturBeli
 import domain.pembelian.PurchaseOrder
+import project.main.MainGroupModel
+import project.main.MainGroupView
 import project.pembelian.PurchaseOrderRepository
 import project.penjualan.KonsumenRepository
 import simplejpa.swing.DialogUtils
@@ -122,6 +124,17 @@ class ItemFakturAsChildController {
                 model.harga = selected.harga
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
+            }
+        }
+    }
+
+    def tampilkanProduk = {
+        ItemFaktur itemFaktur = view.table.selectionModel.selected[0]
+        if (itemFaktur) {
+            MainGroupView mainView = app.getMvcGroupManager()['mainGroup'].view
+            MainGroupModel mainModel = app.getMvcGroupManager()['mainGroup'].model
+            if (mainModel.produkVisible) {
+                mainView.mainTab.addMVCTab('produk', [namaSearch: itemFaktur.produk.nama], "${itemFaktur.produk.nama}")
             }
         }
     }

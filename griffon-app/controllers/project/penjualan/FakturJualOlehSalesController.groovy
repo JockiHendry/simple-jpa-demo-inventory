@@ -39,6 +39,7 @@ class FakturJualOlehSalesController {
     FakturJualRepository fakturJualRepository
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('nomorSearch')) model.nomorSearch = args.nomorSearch
         init()
         search()
     }

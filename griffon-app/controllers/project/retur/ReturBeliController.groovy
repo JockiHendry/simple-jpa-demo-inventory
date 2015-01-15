@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ class ReturBeliController {
     NomorService nomorService
 
     void mvcGroupInit(Map args) {
+        if (args.containsKey('nomorSearch')) model.nomorSearch = args.nomorSearch
         model.mode = args.containsKey('mode')? args.mode: ReturBeliViewMode.INPUT
         if (model.mode == ReturBeliViewMode.INPUT) {
             model.showSave = true
@@ -65,8 +66,6 @@ class ReturBeliController {
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_BELI)
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
-            model.nomorSearch = null
-            model.supplierSearch = null
             List supplierResult = returBeliRepository.findAllSupplier([orderBy: 'nama'])
             model.supplierList.clear()
             model.supplierList.addAll(supplierResult)
