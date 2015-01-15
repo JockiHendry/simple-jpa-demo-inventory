@@ -636,6 +636,20 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(15, produk1.jumlahRetur)
         assertEquals(13, produk2.jumlahRetur)
 
+        // Hapus retur harus langsung menghapus pengeluaran barang dan mengurangi stok
+        retur = returJualRepository.hapus(retur)
+        assertNull(retur.pengeluaranBarang)
+        produk1 = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produk2 = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(37, produk1.jumlah)
+        assertEquals(27, produk2.jumlah)
+        assertEquals(10, produk1.stok(g).jumlah)
+        assertEquals(14, produk2.stok(g).jumlah)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+        assertEquals(10, produk1.jumlahRetur)
+        assertEquals(3, produk2.jumlahRetur)
+
         pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
     }
 
@@ -669,6 +683,20 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(0, produk2.jumlahAkanDikirim)
         assertEquals(15, produk1.jumlahRetur)
         assertEquals(13, produk2.jumlahRetur)
+
+        // Hapus retur harus langsung menghapus pengeluaran barang dan mengurangi stok
+        retur = returJualRepository.hapus(retur)
+        assertNull(retur.pengeluaranBarang)
+        produk1 = fakturJualRepository.findProdukByIdFetchStokProduk(-1l)
+        produk2 = fakturJualRepository.findProdukByIdFetchStokProduk(-2l)
+        assertEquals(37, produk1.jumlah)
+        assertEquals(27, produk2.jumlah)
+        assertEquals(10, produk1.stok(g).jumlah)
+        assertEquals(14, produk2.stok(g).jumlah)
+        assertEquals(0, produk1.jumlahAkanDikirim)
+        assertEquals(0, produk2.jumlahAkanDikirim)
+        assertEquals(10, produk1.jumlahRetur)
+        assertEquals(3, produk2.jumlahRetur)
 
         pengaturanRepository.cache[KeyPengaturan.WORKFLOW_GUDANG] = true
     }
