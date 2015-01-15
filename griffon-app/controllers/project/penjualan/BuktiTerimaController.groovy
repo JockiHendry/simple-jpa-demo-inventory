@@ -19,6 +19,7 @@ import ast.NeedSupervisorPassword
 import domain.exception.DataTidakBolehDiubah
 import domain.penjualan.BuktiTerima
 import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.StatusFakturJual
 import simplejpa.swing.DialogUtils
 import javax.swing.JOptionPane
 import javax.swing.event.ListSelectionEvent
@@ -110,8 +111,8 @@ class BuktiTerimaController {
                 FakturJualOlehSales selected = view.table.selectionModel.selected[0]
                 model.nomorFaktur = selected.nomor
                 model.nomorSuratJalan = selected.pengeluaranBarang?.nomor
-                model.allowSimpan = true
-                model.allowHapus = true
+                model.allowSimpan = (selected.status == StatusFakturJual.DIANTAR)
+                model.allowHapus = (selected.status == StatusFakturJual.DITERIMA)
             }
         }
     }

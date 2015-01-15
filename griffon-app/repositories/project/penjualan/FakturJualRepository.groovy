@@ -140,10 +140,10 @@ class FakturJualRepository {
 
     List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            status eq(StatusFakturJual.DIANTAR)
             if (nomorFakturSearch) {
-                and()
-                nomor like("%${nomorFakturSearch}%")
+                nomor like("%${nomorFakturSearch}")
+            } else {
+                status eq(StatusFakturJual.DIANTAR)
             }
             if (nomorSuratJalanSearch) {
                 and()
