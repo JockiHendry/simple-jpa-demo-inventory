@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ class PembayaranHutangAsChildController {
                 clear()
             }
         } catch (DataTidakBolehDiubah ex) {
-            DialogUtils.message(view.mainPanel, 'Pembayaran tidak dapat dihapus lagi!', 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
+            DialogUtils.message(view.mainPanel, "Pembayaran tidak dapat dihapus lagi! ${ex.message}", 'Pembayaran gagal dihapus', JOptionPane.ERROR_MESSAGE)
         } catch (IllegalArgumentException ex) {
             model.errors['jumlah'] = ex.message
         }

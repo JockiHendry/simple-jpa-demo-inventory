@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -110,7 +110,6 @@ class PurchaseOrder extends Faktur {
         if (!status.penerimaanBolehDiubah || penerimaanBarang.deleted == 'Y') {
             throw new DataTidakBolehDiubah(this)
         }
-        penerimaanBarang.deleted = 'Y'
         if (isPenerimaanKosong()) {
             if (fakturBeli) {
                 status = StatusPurchaseOrder.FAKTUR_DITERIMA
@@ -120,16 +119,16 @@ class PurchaseOrder extends Faktur {
         }
         ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, this).buat()
         ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref, true))
+        penerimaanBarang.deleted = 'Y'
     }
 
     void hapus(Pembayaran pembayaranHutang) {
-        if (status!=StatusPurchaseOrder.OK || fakturBeli==null) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        if (!fakturBeli.hutang) {
+        if (fakturBeli?.hutang) {
+            fakturBeli.hutang.hapus(pembayaranHutang)
+        } else {
             throw new DataTidakBolehDiubah('Pembayaran hutang tidak dapat dibayar untuk purchase order ini')
         }
-        fakturBeli.hutang.hapus(pembayaranHutang)
+
     }
 
 
@@ -158,7 +157,7 @@ class PurchaseOrder extends Faktur {
     }
 
     void hapusFaktur() {
-        if (!status.fakturBolehDiubah) {
+        if (!status.fakturBolehDiubah || (fakturBeli.hutang.jumlahDibayar() > 0)) {
             throw new DataTidakBolehDiubah(this)
         }
         fakturBeli = null
