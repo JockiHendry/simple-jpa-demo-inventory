@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package project.retur
 
+import domain.pengaturan.NamaTemplateFaktur
 import domain.retur.*
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
@@ -98,7 +99,7 @@ class KemasanReturController {
             return
         }
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'kemasan_retur.json', options: ['nomorRetur': model.parent.nomor]]
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.KEMASAN_RETUR, options: ['nomorRetur': model.parent.nomor]]
             def dialogProps = [title: 'Preview Kemasan Retur Beli', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }

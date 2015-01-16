@@ -16,6 +16,7 @@
 package project.penjualan
 
 import ast.NeedSupervisorPassword
+import domain.pengaturan.NamaTemplateFaktur
 import domain.penjualan.ReturFaktur
 import domain.validation.TanpaGudang
 import project.user.NomorService
@@ -77,7 +78,7 @@ class ReturController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_faktur.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.RETUR_FAKTUR]
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }

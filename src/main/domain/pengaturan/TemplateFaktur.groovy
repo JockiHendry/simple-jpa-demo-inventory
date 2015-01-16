@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.main
+package domain.pengaturan
 
-import domain.pengaturan.NamaTemplateFaktur
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
+import javax.validation.constraints.*
 
-@SuppressWarnings("GroovyUnusedDeclaration")
-class PreviewEscpModel {
+@DomainClass @Entity @Canonical
+class TemplateFaktur {
 
-    @Bindable Boolean cetakJatuhTempo
-    @Bindable boolean showParameter
-    NamaTemplateFaktur namaTemplateFaktur
-    def dataSource
-    def options
+    @NotNull @Enumerated
+    NamaTemplateFaktur nama
+
+    @Lob
+    String isi
 
 }
+

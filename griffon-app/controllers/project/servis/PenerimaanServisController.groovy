@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package project.servis
 
 import ast.NeedSupervisorPassword
 import domain.exception.BarangSelisih
+import domain.pengaturan.NamaTemplateFaktur
 import domain.servis.*
 import org.joda.time.LocalDate
 import project.inventory.GudangRepository
@@ -122,7 +123,7 @@ class PenerimaanServisController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'penerimaan_servis.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.PENERIMAAN_SERVIS]
             if (e instanceof PenerimaanServis) args.dataSource = e
             def dialogProps = [title: 'Preview Penerimaan Servis', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)

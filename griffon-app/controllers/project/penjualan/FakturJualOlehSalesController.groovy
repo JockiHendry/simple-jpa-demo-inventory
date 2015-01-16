@@ -20,6 +20,7 @@ import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
 import domain.exception.StokTidakCukup
 import domain.faktur.Diskon
+import domain.pengaturan.NamaTemplateFaktur
 import domain.penjualan.*
 import domain.validation.InputPenjualanOlehSales
 import org.joda.time.LocalDate
@@ -181,7 +182,7 @@ class FakturJualOlehSalesController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'faktur_jual_sales.json', showParameter: true]
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.FAKTUR_JUAL_SALES, showParameter: true]
             if (e instanceof FakturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Faktur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
@@ -192,7 +193,7 @@ class FakturJualOlehSalesController {
         FakturJualOlehSales selected = fakturJualRepository.findFakturJualOlehSalesByIdFetchPengeluaranBarang(view.table.selectionModel.selected[0].id)
         if (selected.pengeluaranBarang != null) {
             execInsideUISync {
-                def args = [dataSource: selected, template: 'surat_jalan.json']
+                def args = [dataSource: selected, namaTemplateFaktur: NamaTemplateFaktur.SURAT_JALAN]
                 def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
                 DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
             }

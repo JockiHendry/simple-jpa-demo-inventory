@@ -109,7 +109,7 @@ class PencairanPoinController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: model.jenisPencairanPoin.selectedItem.fileLaporan]
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: model.jenisPencairanPoin.selectedItem.namaTemplateFaktur]
             if (e instanceof PencairanPoin) args.dataSource = e
             def dialogProps = [title: 'Preview Bukti Pencairan Poin', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)

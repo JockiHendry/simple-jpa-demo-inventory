@@ -17,6 +17,7 @@ package project.retur
 
 import ast.NeedSupervisorPassword
 import domain.exception.StokTidakCukup
+import domain.pengaturan.NamaTemplateFaktur
 import domain.retur.*
 import org.joda.time.LocalDate
 import project.user.NomorService
@@ -216,7 +217,7 @@ class ReturJualOlehSalesController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'retur_jual_sales.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.RETUR_JUAL_SALES]
             if (e instanceof ReturJual) args.dataSource = e
             def dialogProps = [title: 'Preview Retur Jual', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)

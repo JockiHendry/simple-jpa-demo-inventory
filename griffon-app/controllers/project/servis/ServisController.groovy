@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package project.servis
 
 import ast.NeedSupervisorPassword
+import domain.pengaturan.NamaTemplateFaktur
 import domain.servis.*
 import simplejpa.exception.DuplicateEntityException
 import simplejpa.swing.DialogUtils
@@ -106,7 +107,7 @@ class ServisController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'formulir_servis.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.FORMULIR_SERVIS]
             if (e instanceof Servis) args.dataSource = e
             def dialogProps = [title: 'Preview Formulir Servis', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)

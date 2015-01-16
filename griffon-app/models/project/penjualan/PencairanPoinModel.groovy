@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package project.penjualan
 
 import ca.odell.glazedlists.BasicEventList
 import domain.inventory.ItemBarang
+import domain.pengaturan.NamaTemplateFaktur
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.Konsumen
 import org.jdesktop.swingx.combobox.EnumComboBoxModel
@@ -54,16 +55,16 @@ class PencairanPoinModel {
 
 enum JenisPencairanPoin {
 
-    TUKAR_UANG('Tukar Uang', 'bukti_pencairan_poin_tukar_uang.json'),
-    TUKAR_BARANG('Tukar Barang', 'bukti_pencairan_poin_tukar_barang.json'),
-    POTONG_PIUTANG('Potong Piutang', 'bukti_pencairan_poin_potong_piutang.json')
+    TUKAR_UANG('Tukar Uang', NamaTemplateFaktur.BUKTI_PENCAIRAN_POIN_TUKAR_UANG),
+    TUKAR_BARANG('Tukar Barang', NamaTemplateFaktur.BUKTI_PENCAIRAN_POIN_TUKAR_BARANG),
+    POTONG_PIUTANG('Potong Piutang', NamaTemplateFaktur.BUKTI_PENCAIRAN_POIN_POTONG_PIUTANG)
 
     String desc
-    String fileLaporan
+    String namaTemplateFaktur
 
-    JenisPencairanPoin(String desc, String fileLaporan) {
+    JenisPencairanPoin(String desc, NamaTemplateFaktur namaTemplateFaktur) {
         this.desc = desc
-        this.fileLaporan = fileLaporan
+        this.namaTemplateFaktur = namaTemplateFaktur
     }
 
     @Override

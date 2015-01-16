@@ -157,7 +157,7 @@ class PurchaseOrder extends Faktur {
     }
 
     void hapusFaktur() {
-        if (!status.fakturBolehDiubah || (fakturBeli.hutang.jumlahDibayar() > 0)) {
+        if (!status.fakturBolehDiubah || (fakturBeli?.hutang?.jumlahDibayar() > 0)) {
             throw new DataTidakBolehDiubah(this)
         }
         fakturBeli = null

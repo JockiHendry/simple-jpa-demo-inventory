@@ -17,6 +17,7 @@ package project.penjualan
 
 import domain.exception.DataTidakBolehDiubah
 import domain.inventory.DaftarBarangSementara
+import domain.pengaturan.NamaTemplateFaktur
 import domain.penjualan.FakturJualOlehSales
 import project.user.NomorService
 import domain.penjualan.StatusFakturJual
@@ -116,7 +117,7 @@ class PengirimanController {
         FakturJualOlehSales selected = e instanceof FakturJualOlehSales? e: view.table.selectionModel.selected[0]
         if (selected.pengeluaranBarang != null) {
             execInsideUISync {
-                def args = [dataSource: selected, template: 'surat_jalan.json']
+                def args = [dataSource: selected, namaTemplateFaktur: NamaTemplateFaktur.SURAT_JALAN]
                 def dialogProps = [title: 'Preview Surat Jalan', preferredSize: new Dimension(970, 700)]
                 DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
             }
@@ -128,7 +129,7 @@ class PengirimanController {
     def cetakSummary = {
         DaftarBarangSementara daftarBarang = fakturJualRepository.hitungBarangYangHarusDikirim()
         execInsideUISync {
-            def args = [dataSource: daftarBarang, template: 'daftar_barang_kirim.json']
+            def args = [dataSource: daftarBarang, namaTemplateFaktur: NamaTemplateFaktur.DAFTAR_BARANG_KIRIM]
             def dialogProps = [title: 'Preview Daftar Barang Untuk Dikirim', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
         }

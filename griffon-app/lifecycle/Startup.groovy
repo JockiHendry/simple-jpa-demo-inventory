@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ execOutsideUI {
     // Create repository
     PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('pengaturan')
     pengaturanRepository.refreshAll()
+    SimpleJpaUtil.instance.repositoryManager.findRepository('TemplateFaktur').refreshAll()
 
     // Mengubah ukuran huruf bila diperlukan
     execInsideUISync {

@@ -16,14 +16,10 @@
 package project.main
 
 import domain.pengaturan.NamaTemplateFaktur
+import org.jdesktop.swingx.combobox.EnumComboBoxModel
 
-@SuppressWarnings("GroovyUnusedDeclaration")
-class PreviewEscpModel {
+class TemplateFakturModel {
 
-    @Bindable Boolean cetakJatuhTempo
-    @Bindable boolean showParameter
-    NamaTemplateFaktur namaTemplateFaktur
-    def dataSource
-    def options
+    EnumComboBoxModel<NamaTemplateFaktur> namaTemplateFaktur = new EnumComboBoxModel<NamaTemplateFaktur>(NamaTemplateFaktur)
 
 }

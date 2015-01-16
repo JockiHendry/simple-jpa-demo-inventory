@@ -20,6 +20,7 @@ import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Diskon
 import domain.pembelian.PurchaseOrder
+import domain.pengaturan.NamaTemplateFaktur
 import project.user.NomorService
 import domain.validation.InputPurchaseOrder
 import org.joda.time.LocalDate
@@ -143,7 +144,7 @@ class PurchaseOrderController {
 
     def cetak = { e ->
         execInsideUISync {
-            def args = [dataSource: view.table.selectionModel.selected[0], template: 'purchase_order.json']
+            def args = [dataSource: view.table.selectionModel.selected[0], namaTemplateFaktur: NamaTemplateFaktur.PURCHASE_ORDER]
             if (e instanceof PurchaseOrder ) args.dataSource = e
             def dialogProps = [title: 'Preview Purchase Order', preferredSize: new Dimension(970, 700)]
             DialogUtils.showMVCGroup('previewEscp', args, view, dialogProps)
