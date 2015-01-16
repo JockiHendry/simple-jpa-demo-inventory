@@ -149,6 +149,8 @@ actions {
         smallIcon: imageIcon('/menu_maintenance_restore.png'), closure: controller.switchPage)
     action(id: 'user', name: 'User', actionCommandKey: 'user', mnemonic: KeyEvent.VK_U,
         smallIcon: imageIcon('/menu_maintenance_user.png'), closure: controller.switchPage)
+    action(id: 'jpqlQuery', name: 'JPQL Query', actionCommandKey: 'jpqlQuery', mnemonic: KeyEvent.VK_Q,
+        smallIcon: imageIcon('/menu_maintenance_jpql.png'), closure: controller.showGroovyConsole)
 
     action(id: 'pesan', name: '<html><strong>Ada pesan notifikasi yang belum dibaca!</strong></html>',
         actionCommandKey: 'pesan', smallIcon: imageIcon('/warning.png'), closure: controller.switchPage)
@@ -177,6 +179,7 @@ application(id: 'mainFrame',
         menuItem(action: backup)
         menuItem(action: restore)
         menuItem(action: user)
+        menuItem(action: jpqlQuery)
     }
 
     popupMenu(id: 'penerimaanBarangPopup') {

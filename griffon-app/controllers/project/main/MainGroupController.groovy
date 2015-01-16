@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package project.main
 
 import domain.general.User
+import groovy.ui.Console
 import simplejpa.SimpleJpaUtil
 import util.BusyLayerUI
 import javax.swing.JButton
@@ -84,6 +85,15 @@ class MainGroupController {
 
             BusyLayerUI.instance.hide()
         }
+    }
+
+    def showGroovyConsole = {
+        Binding binding = new Binding()
+        binding.setVariable('util', SimpleJpaUtil.instance)
+        binding.setVariable('repo', SimpleJpaUtil.instance.repositoryManager.findRepository('produk'))
+        binding.setVariable('app', app)
+        Console groovyConsole = new Console(binding)
+        groovyConsole.run()
     }
 
 }
