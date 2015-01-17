@@ -142,13 +142,15 @@ class LabaRugiService {
         [penjualanSales, penjualanEceran, potonganPiutang]
     }
 
-    BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal hasil = 0
+    List hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        BigDecimal hasil = 0, ongkosKirim = 0
         List<Produk> produks = findAllProduk()
         for (Produk produk: produks) {
-            hasil += hitungHPP(tanggalMulai, tanggalSelesai, produk)
+            NilaiInventoryProduk info = new NilaiInventoryProduk()
+            hasil += hitungHPP(tanggalMulai, tanggalSelesai, produk, info)
+            ongkosKirim += ((info.qtyPenjualan?:0) * (produk.ongkosKirimBeli?:0))
         }
-        hasil
+        [hasil, ongkosKirim]
     }
 
     BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai, Produk produk, NilaiInventoryProduk informasi = null) {
@@ -173,6 +175,7 @@ class LabaRugiService {
         if (informasi) {
             informasi.nilaiHPP = hasil
             informasi.nilaiAkhir = informasi.nilaiAwal - informasi.nilaiHPP
+            informasi.qtyPenjualan = Math.abs(jumlahPenjualan)
         }
         hasil
     }
@@ -180,11 +183,13 @@ class LabaRugiService {
     List<ItemLabaRugi> laporanLabaRugi(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         List<ItemLabaRugi> hasil = []
         def (penjualanSales, penjualanEceran, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (hpp, ongkosKirimBeli) = hitungHPP(tanggalMulai, tanggalSelesai)
 
         hasil << new ItemLabaRugi('Pendapatan Piutang Penjualan Sales (Gross)', penjualanSales, null)
         hasil << new ItemLabaRugi('Pendapatan Penjualan Eceran', penjualanEceran, null)
         hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
-        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hitungHPP(tanggalMulai, tanggalSelesai))
+        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hpp)
+        hasil << new ItemLabaRugi('Ongkos Kirim Pembelian', null, ongkosKirimBeli)
         hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)
         hasil << new ItemLabaRugi('Pengeluaran Operasional', null, totalPengeluaran(tanggalMulai, tanggalSelesai))
 

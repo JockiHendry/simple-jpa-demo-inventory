@@ -74,6 +74,9 @@ panel(id: 'mainPanel') {
                 glazedColumn(name: 'HET Luar Kota', property: 'hargaLuarKota', preferredWidth: 110, columnClass: Integer) {
                     templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
                 }
+                glazedColumn(name: 'Ongkos Kirim Beli', property: 'ongkosKirimBeli', preferredWidth: 110, columnClass: Integer) {
+                    templateRenderer('this:currencyFormat', horizontalAlignment: RIGHT)
+                }
                 glazedColumn(name: 'Satuan', expression: { it.satuan.singkatan }, preferredWidth: 50)
                 glazedColumn(name: 'Poin', property: 'poin', columnClass: Integer, preferredWidth: 50, visible: bind {!model.popupMode}) {
                     templateRenderer('this:numberFormat', horizontalAlignment: RIGHT)
@@ -105,31 +108,34 @@ panel(id: 'mainPanel') {
         }
     }
 
-    panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left,grow]',''), constraints: PAGE_END, focusCycleRoot: true,
+    panel(id: "form", layout: new MigLayout('hidemode 2', '[right][left][left][right][left][left,grow]',''), constraints: PAGE_END, focusCycleRoot: true,
           visible: bind { model.allowTambahProduk }) {
         label('Nama:')
         textField(id: 'nama', columns: 50, text: bind('nama', target: model, mutual: true), errorPath: 'nama')
-        errorLabel(path: 'nama', constraints: 'wrap')
+        errorLabel(path: 'nama')
+        label('Satuan:')
+        comboBox(id: 'satuan', model: model.satuan, errorPath: 'satuan')
+        errorLabel(path: 'satuan', constraints: 'wrap')
         label('HET Dalam Kota:')
         decimalTextField(id: 'hargaDalamKota', columns: 20, bindTo: 'hargaDalamKota', errorPath: 'hargaDalamKota')
-        errorLabel(path: 'hargaDalamKota', constraints: 'wrap')
+        errorLabel(path: 'hargaDalamKota')
         label('HET Luar Kota:')
         decimalTextField(id: 'hargaLuarKota', columns: 20, bindTo: 'hargaLuarKota', errorPath: 'hargaLuarKota')
         errorLabel(path: 'hargaLuarKota', constraints: 'wrap')
         label('Supplier:')
         comboBox(id: 'supplier', model: model.supplier, errorPath: 'supplier')
-        errorLabel(path: 'supplier', constraints: 'wrap')
-        label('Satuan:')
-        comboBox(id: 'satuan', model: model.satuan, errorPath: 'satuan')
-        errorLabel(path: 'satuan', constraints: 'wrap')
+        errorLabel(path: 'supplier')
+        label('Ongkos Kirim Pembelian:')
+        decimalTextField(id: 'ongkosKirimBeli', columns: 20, bindTo: 'ongkosKirimBeli', errorPath: 'ongkosKirimBeli')
+        errorLabel(path: 'ongkosKirimBeli', constraints: 'wrap')
         label('Poin:')
         numberTextField(id: 'poin', columns: 20, bindTo: 'poin', errorPath: 'poin')
-        errorLabel(path: 'poin', constraints: 'wrap')
+        errorLabel(path: 'poin')
         label('Stok Level Minimum:')
         numberTextField(id: 'levelMinimum', columns: 20, bindTo: 'levelMinimum', errorPath: 'levelMinimum')
         errorLabel(path: 'levelMinimum', constraints: 'wrap')
         label('Keterangan:')
-        textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan')
+        textField(id: 'keterangan', columns: 50, text: bind('keterangan', target: model, mutual: true), errorPath: 'keterangan', constraints: 'span 3')
         errorLabel(path: 'keterangan', constraints: 'wrap')
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)

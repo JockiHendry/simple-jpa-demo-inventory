@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -79,6 +79,7 @@ class ProdukRepository {
         p.nama = produk.nama
         p.hargaDalamKota = produk.hargaDalamKota
         p.hargaLuarKota = produk.hargaLuarKota
+        p.ongkosKirimBeli = produk.ongkosKirimBeli
         p.satuan = produk.satuan
         p.supplier = produk.supplier
         p.poin = produk.poin

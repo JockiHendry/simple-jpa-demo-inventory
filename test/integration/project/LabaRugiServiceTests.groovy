@@ -54,8 +54,9 @@ class LabaRugiServiceTests extends DbUnitTestCase {
         assertEquals(5000, penjualanEceran as Integer)
         assertEquals(0, potonganPiutang as Integer)
 
-        BigDecimal hpp = labaRugiService.hitungHPP(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
+        def (hpp, ongkosKirimBeli) = labaRugiService.hitungHPP(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
         assertEquals(11000, hpp.toInteger())
+        assertEquals(10000, ongkosKirimBeli.toInteger())
     }
 
     void testTotalPendapatanDanPengeluaran() {

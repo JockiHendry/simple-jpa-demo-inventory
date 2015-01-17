@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ class ProdukModel {
 	@Bindable String nama
 	@Bindable BigDecimal hargaDalamKota
     @Bindable BigDecimal hargaLuarKota
+    @Bindable BigDecimal ongkosKirimBeli
     BasicEventList<Satuan> satuanList = new BasicEventList<>()
     @Bindable Integer poin
     @Bindable Integer levelMinimum
