@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,21 @@ import domain.penjualan.FakturJualOlehSales
 import domain.retur.ReturJual
 import domain.retur.ReturJualOlehSales
 import project.retur.ReturJualRepository
+import simplejpa.transaction.Transaction
 
 @SuppressWarnings("GroovyUnusedDeclaration")
+@Transaction
 class ReturJualEventListenerService {
 
     ReturJualRepository returJualRepository
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onBayarPiutang(BayarPiutang bayarPiutang) {
         Referensi referensi = bayarPiutang.pembayaran.referensi
 
         // Apakah perlu memproses event ini?
         if ((!referensi) || (referensi?.namaClass != ReturJual.simpleName)) return
 
-        ReturJualOlehSales retur = returJualRepository.findReturJualOlehSalesByNomor(referensi.nomor)
+        ReturJualOlehSales retur = findReturJualOlehSalesByNomor(referensi.nomor)
         if (!retur) {
             throw new FakturTidakDitemukan(referensi.nomor)
         }

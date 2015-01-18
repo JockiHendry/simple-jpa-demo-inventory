@@ -36,6 +36,7 @@ import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
 @SuppressWarnings("GroovyUnusedDeclaration")
+@Transaction
 class InventoryEventListenerService {
 
     public static final String KETERANGAN_INVERS_HAPUS = 'Invers Hapus'
@@ -43,8 +44,6 @@ class InventoryEventListenerService {
 
     PesanRepository pesanRepository
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
-    @Transaction
     void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
         DaftarBarang daftarBarang = (DaftarBarang) perubahanStokTukar.source
         int pengali = daftarBarang.faktor() * (perubahanStokTukar.invers? -1: 1)
@@ -59,7 +58,6 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
         DaftarBarang daftarBarang = perubahanRetur.nilai()
         daftarBarang.items.each { ItemBarang itemBarang ->
@@ -73,8 +71,6 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
-    @Transaction
     void onPesanStok(PesanStok pesanStok) {
         BolehPesanStok source = pesanStok.source
         if (!source.bolehPesanStok) return
@@ -90,7 +86,6 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanStok(PerubahanStok perubahanStok) {
         DaftarBarang daftarBarang = perubahanStok.source
         ReferensiStok referensiStok = perubahanStok.referensiStok
@@ -115,7 +110,6 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onTransferStok(TransferStok transferStok) {
         Transfer transfer = transferStok.source
         transfer.normalisasi().each { ItemBarang i ->

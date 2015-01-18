@@ -202,6 +202,19 @@ class ReturJualTest extends DbUnitTestCase {
         }
     }
 
+    public void testTukarBaruTidakCukup() {
+        returJualRepository.withTransaction {
+            Produk p1 = findProdukById(-1l)
+            p1.stok(gudangRepository.cariGudangUtama()).jumlah = 1
+        }
+        shouldFail(StokTidakCukup) {
+            returJualRepository.withTransaction {
+                ReturJual returJual = returJualRepository.findReturJualOlehSalesById(-1l)
+                returJualRepository.tukar(returJual)
+            }
+        }
+    }
+
     public void testHapus() {
         Produk p1 = returJualRepository.findProdukById(-1l)
         Produk p2 = returJualRepository.findProdukById(-2l)
