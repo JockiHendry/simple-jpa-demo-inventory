@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package project
 
+import domain.general.NilaiPeriodik
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.Kas
 import domain.labarugi.KategoriKas

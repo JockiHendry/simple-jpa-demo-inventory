@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,8 @@ import javax.persistence.*
 @DomainClass @Entity @Canonical(excludes='listTransaksiKas,saldoPerKategori') @TupleConstructor(includeSuperProperties=true)
 class PeriodeKas extends NilaiPeriodik {
 
-    @ElementCollection @OrderColumn
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @OrderColumn
     List<TransaksiKas> listTransaksiKas = []
 
     @ElementCollection(fetch=FetchType.EAGER)

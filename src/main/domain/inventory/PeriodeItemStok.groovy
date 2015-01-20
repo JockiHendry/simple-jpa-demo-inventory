@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,15 @@ import javax.persistence.*
 @DomainClass @Entity @Canonical(excludes="listItem") @TupleConstructor(includeSuperProperties=true)
 class PeriodeItemStok extends NilaiPeriodik {
 
-    @ElementCollection @OrderColumn
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true)
+    @OrderColumn
     List<ItemStok> listItem = []
 
     @Override
     List getListItemPeriodik() {
         listItem
     }
-
-    /**
+/**
      * Mengembalikan seluruh item stok yang mempengaruhi penambahan pada nilai inventory, yaitu pembelian dan
      * penyesuaian tambah.  Jenis lain seperti penambahan akibat transfer tidak akan disertakan disini.
      *

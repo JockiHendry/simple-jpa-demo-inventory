@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ class ProdukTest extends DbUnitTestCase {
         log.debug "Proses pengarsipan selesai."
 
         ITable aktualItemStok = CONNECTION.createQueryTable("AktualItemStok",
-                "SELECT * FROM PeriodeItemStok_listItem WHERE periodeItemStok_Id <> -18")
+                "SELECT * FROM PeriodeItemStok_itemStok WHERE periodeItemStok_Id <> -18")
         assertEquals(22, aktualItemStok.rowCount)
 
         produkRepository.withTransaction {

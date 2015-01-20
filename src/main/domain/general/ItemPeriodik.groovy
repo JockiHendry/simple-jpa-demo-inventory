@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ abstract class ItemPeriodik {
     @NotNull
     Long jumlah
 
-    @Size(min=3, max=100)
+    @Size(min=3, max=255)
     String keterangan
 
     Long saldo

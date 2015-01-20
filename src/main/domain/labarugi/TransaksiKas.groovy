@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ package domain.labarugi
 
 import domain.general.ItemPeriodik
 import groovy.transform.*
+import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true)
+@DomainClass @Canonical @TupleConstructor(includeSuperProperties=true)
+@Entity
 class TransaksiKas extends ItemPeriodik {
 
     @Size(min=2, max=150)

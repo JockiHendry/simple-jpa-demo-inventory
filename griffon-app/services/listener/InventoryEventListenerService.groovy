@@ -63,6 +63,7 @@ class InventoryEventListenerService {
         daftarBarang.items.each { ItemBarang itemBarang ->
             int pengali = (perubahanRetur.invers? -1: 1) * daftarBarang.faktor()
             int jumlahRetur = pengali * itemBarang.jumlah
+            itemBarang.produk = findProdukById(itemBarang.produk.id)
             if (itemBarang.produk.jumlahRetur == null) {
                 itemBarang.produk.jumlahRetur = jumlahRetur
             } else {
@@ -98,6 +99,7 @@ class InventoryEventListenerService {
                 keterangan = KETERANGAN_INVERS_HAPUS
             }
             ItemStok itemStok = new ItemStok(LocalDate.now(), referensiStok, pengali * i.jumlah, keterangan)
+            i.produk = findProdukById(i.produk.id)
             i.produk.perubahanStok(daftarBarang.gudang, itemStok)
             if (perubahanStok.pakaiYangSudahDipesan) {
                 i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
@@ -119,6 +121,8 @@ class InventoryEventListenerService {
                 pengali = 1
                 keterangan = KETERANGAN_INVERS_HAPUS
             }
+
+            i.produk = findProdukById(i.produk.id)
 
             // Mengurangi gudang asal
             ItemStok itemStokAsal = new ItemStok(LocalDate.now(), new ReferensiStokBuilder(transfer).buat(),
