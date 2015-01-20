@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class PenerimaanServisRepository {
 
+    def app
+
     public List<PenerimaanServis> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch) {
         findAllPenerimaanServisByDsl([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
             if (!nomorSearch) {
@@ -52,8 +54,8 @@ class PenerimaanServisRepository {
         }
 
         persist(penerimaanServis)
-        ApplicationHolder.application?.event(new PerubahanRetur(penerimaanServis, true))
-        ApplicationHolder.application?.event(new PerubahanStokTukar(penerimaanServis))
+        app?.event(new PerubahanRetur(penerimaanServis, true))
+        app?.event(new PerubahanStokTukar(penerimaanServis))
         penerimaanServis
     }
 
@@ -76,8 +78,8 @@ class PenerimaanServisRepository {
             throw new DataTidakBolehDiubah(penerimaanServis)
         }
         penerimaanServis.deleted = 'Y'
-        ApplicationHolder.application?.event(new PerubahanStokTukar(penerimaanServis, true))
-        ApplicationHolder.application?.event(new PerubahanRetur(penerimaanServis))
+        app?.event(new PerubahanStokTukar(penerimaanServis, true))
+        app?.event(new PerubahanRetur(penerimaanServis))
         penerimaanServis
     }
 

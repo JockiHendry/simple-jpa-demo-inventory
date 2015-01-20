@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import simplejpa.transaction.Transaction
 
 @Transaction
 class PenyesuaianStokRepository {
+
+    def app
 
     NomorService nomorService
 
@@ -61,7 +63,7 @@ class PenyesuaianStokRepository {
         }
         persist(penyesuaianStok)
         ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref))
+        app?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref))
         penyesuaianStok
     }
 
@@ -85,7 +87,7 @@ class PenyesuaianStokRepository {
         }
         penyesuaianStok.deleted = 'Y'
         ReferensiStok ref = new ReferensiStokBuilder(penyesuaianStok).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref, true))
+        app?.event(new PerubahanStok(penyesuaianStok.toDaftarBarang(), ref, true))
         penyesuaianStok
     }
 

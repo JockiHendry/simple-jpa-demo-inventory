@@ -43,6 +43,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturJualRepository {
 
+    def app
+
     NomorService nomorService
     FakturJualRepository fakturJualRepository
     PengaturanRepository pengaturanRepository
@@ -130,8 +132,6 @@ class ReturJualRepository {
         } else if (returJual instanceof ReturJualEceran) {
             returJual = buatReturEceran(returJual)
         }
-
-        def app = ApplicationHolder.application
 
         if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
             app?.event(new PesanStok(returJual))
@@ -233,7 +233,7 @@ class ReturJualRepository {
         if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG) && (returJual.pengeluaranBarang != null)) {
             throw new DataTidakBolehDiubah(returJual)
         }
-        def app = ApplicationHolder.application
+
         app?.event(new PerubahanRetur(returJual, true))
         if (returJual instanceof ReturJualOlehSales) {
             // Hapus piutang khusus untuk retur jual oleh sales
@@ -273,7 +273,7 @@ class ReturJualRepository {
         if (returJual.pengeluaranBarang != null) {
             PengeluaranBarang pengeluaranBarang = returJual.pengeluaranBarang
             ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
-            ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true,
+            app?.event(new PerubahanStok(pengeluaranBarang, ref, true,
                 pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)))
             returJual.hapusPenukaran()
         }

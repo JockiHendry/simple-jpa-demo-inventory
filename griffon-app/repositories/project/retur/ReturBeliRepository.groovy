@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import simplejpa.transaction.Transaction
 
 @Transaction
 class ReturBeliRepository {
+
+    def app
 
     List<ReturBeli> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String supplierSearch, Boolean sudahDiterimaSearch, boolean excludeDeleted = false) {
         findAllReturBeliByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
@@ -70,10 +72,10 @@ class ReturBeliRepository {
         if (findReturBeliByNomor(returBeli.nomor)) {
             throw new DataDuplikat(returBeli)
         }
-        returBeli.nomor = ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.RETUR_BELI)
+        returBeli.nomor = app.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.RETUR_BELI)
         returBeli.items.each { Kemasan k -> k.items.each { it.produk = findProdukById(it.produk.id) } }
         persist(returBeli)
-        ApplicationHolder.application?.event(new PerubahanRetur(returBeli))
+        app.event(new PerubahanRetur(returBeli))
         returBeli
     }
 
@@ -86,7 +88,7 @@ class ReturBeliRepository {
             throw new DataTidakBolehDiubah('Tidak boleh mengubah retur beli karena sudah diproses dan diterima!', returBeli)
         }
         returBeli.items.each { Kemasan k -> k.items.each {it.produk = findProdukById(it.produk.id)} }
-        ApplicationHolder.application?.event(new PerubahanRetur(returBeli, mergedRetur))
+        app?.event(new PerubahanRetur(returBeli, mergedRetur))
         mergedRetur.with {
             nomor = returBeli.nomor
             tanggal = returBeli.tanggal
@@ -106,7 +108,7 @@ class ReturBeliRepository {
         if (!returBeli || returBeli.penerimaanBarang) {
             throw new DataTidakBolehDiubah(returBeli)
         }
-        ApplicationHolder.application?.event(new PerubahanRetur(returBeli, true))
+        app?.event(new PerubahanRetur(returBeli, true))
         returBeli.deleted = 'Y'
         returBeli
     }
@@ -116,7 +118,7 @@ class ReturBeliRepository {
         PenerimaanBarang penerimaanBarang = returBeli.terima()
         persist(penerimaanBarang)
         ReferensiStok ref = new ReferensiStokBuilder(penerimaanBarang, returBeli).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(penerimaanBarang, ref))
+        app?.event(new PerubahanStok(penerimaanBarang, ref))
         returBeli
     }
 

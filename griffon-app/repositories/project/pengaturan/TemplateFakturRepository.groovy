@@ -19,17 +19,18 @@ import domain.pengaturan.NamaTemplateFaktur
 import domain.pengaturan.TemplateFaktur
 import simplejpa.transaction.Transaction
 import java.util.concurrent.ConcurrentHashMap
-import griffon.util.*
 
 @Transaction
 class TemplateFakturRepository {
+
+    def app
 
     public final Map cache = new ConcurrentHashMap()
 
     @Transaction(Transaction.Policy.SKIP)
     public String getValue(NamaTemplateFaktur namaTemplateFaktur) {
         if (!cache.containsKey(namaTemplateFaktur)) {
-            def resource = ApplicationHolder.application.getResourceAsStream(namaTemplateFaktur.file)
+            def resource = app.getResourceAsStream(namaTemplateFaktur.file)
             if (resource) {
                 cache[namaTemplateFaktur] = resource.text
             } else {
@@ -62,7 +63,7 @@ class TemplateFakturRepository {
     public TemplateFaktur reset(NamaTemplateFaktur namaTemplateFaktur) {
         TemplateFaktur templateFaktur = findTemplateFakturByNama(namaTemplateFaktur)
         if (templateFaktur) {
-            def resource = ApplicationHolder.application.getResourceAsStream(namaTemplateFaktur.file)
+            def resource = app.getResourceAsStream(namaTemplateFaktur.file)
             if (resource) {
                 String defaultContent = resource.text
                 templateFaktur.isi = defaultContent
