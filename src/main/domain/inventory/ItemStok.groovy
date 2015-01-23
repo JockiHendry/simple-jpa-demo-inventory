@@ -30,7 +30,7 @@ class ItemStok extends ItemPeriodik {
 
     ItemStok() {}
 
-    ItemStok(LocalDate tanggal, ReferensiStok referensiStok, Long jumlah, String keterangan) {
+    ItemStok(LocalDate tanggal, ReferensiStok referensiStok, Long jumlah, String keterangan = null) {
         this.tanggal = tanggal
         this.referensiStok = referensiStok
         this.jumlah = jumlah

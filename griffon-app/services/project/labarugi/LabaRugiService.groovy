@@ -18,14 +18,12 @@ package project.labarugi
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
-import domain.inventory.Gudang
 import domain.inventory.ItemPenyesuaian
 import domain.inventory.ItemStok
 import domain.inventory.PenyesuaianStok
-import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
-import domain.inventory.StokProduk
 import domain.inventory.Transfer
+import domain.labarugi.CacheGlobal
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.KATEGORI_SISTEM
 import domain.labarugi.Kas
@@ -41,6 +39,7 @@ import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
+import project.inventory.ProdukRepository
 import simplejpa.transaction.Transaction
 import static project.labarugi.KategoriKasRepository.KATEGORI_LAIN
 import static project.labarugi.KategoriKasRepository.KATEGORI_TUKAR_BARANG
@@ -50,6 +49,7 @@ class LabaRugiService {
 
     final Logger log = LoggerFactory.getLogger(LabaRugiService)
 
+    ProdukRepository produkRepository
     GudangRepository gudangRepository
     KategoriKasRepository kategoriKasRepository
     KasRepository kasRepository
@@ -73,33 +73,20 @@ class LabaRugiService {
         }
     }
 
-    NilaiInventory hitungInventory(LocalDate sampaiTanggal, Produk produk) {
-        produk = findProdukById(produk.id)
-        StokProduk stokProduk = produk.stok(gudangRepository.cariGudangUtama())
-        int qtyTersedia = stokProduk.saldoKumulatifSebelum(sampaiTanggal)
-
-        // Tambahkan juga dengan jumlah yang tersedia di gudang lain (yang bukan gudang utama)
-        gudangRepository.findAllGudangByUtama(false).each { Gudang gudang ->
-            qtyTersedia += produk.stok(gudang).saldoKumulatifSebelum(sampaiTanggal)
-        }
-
-        // Hitung nilai inventory dengan menggunakan metode FIFO
+    NilaiInventory hitungInventory(Produk produk, CacheGlobal cacheGlobal = new CacheGlobal()) {
+        int qtyTerakhir = cacheGlobal.cariQtyTerakhir(produk)
         NilaiInventory nilaiInventory = new NilaiInventory(produk: produk)
-        if (qtyTersedia > 0) {
-            boolean selesai = false
-            for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
-                for (ItemStok itemStok : p.cariPenambahanInventory().reverse()) {
-                    if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTersedia) {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(),
-                            cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
-                        selesai = true
-                        break
-                    } else {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah,
-                            cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
-                    }
+        if (qtyTerakhir > 0) {
+            List daftarItemStok = cacheGlobal.cariPenerimaan(produk)
+            for (ItemStok itemStok : daftarItemStok) {
+                if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTerakhir) {
+                    nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTerakhir - nilaiInventory.qty(),
+                        cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
+                    break
+                } else {
+                    nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah,
+                        cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
                 }
-                if (selesai) break
             }
         }
         nilaiInventory
@@ -144,28 +131,34 @@ class LabaRugiService {
 
     List hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         BigDecimal hasil = 0, ongkosKirim = 0
+        CacheGlobal cacheGlobal = new CacheGlobal()
+        cacheGlobal.perbaharui(tanggalMulai, tanggalSelesai)
         List<Produk> produks = findAllProduk()
         for (Produk produk: produks) {
             NilaiInventoryProduk info = new NilaiInventoryProduk()
-            hasil += hitungHPP(tanggalMulai, tanggalSelesai, produk, info)
+            hasil += hitungHPP(produk, info, cacheGlobal)
             ongkosKirim += ((info.qtyPenjualan?:0) * (produk.ongkosKirimBeli?:0))
         }
         [hasil, ongkosKirim]
     }
 
-    BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai, Produk produk, NilaiInventoryProduk informasi = null) {
-        NilaiInventory nilaiInventory = hitungInventory(tanggalMulai, produk)
+    BigDecimal hitungHPP(Produk produk, NilaiInventoryProduk informasi = null, CacheGlobal cacheGlobal = new CacheGlobal()) {
+        NilaiInventory nilaiInventory = hitungInventory(produk, cacheGlobal)
         if (informasi) {
             informasi.produk = produk
             informasi.nilaiAwal = nilaiInventory.nilai()
         }
-        List<ItemStok> itemStoks = produk.semuaItemStok(tanggalMulai, tanggalSelesai)
+        List<ItemStok> itemStoks = cacheGlobal.cariPerubahan(produk)
         long jumlahPenjualan = 0
         for (ItemStok itemStok: itemStoks) {
             // Abaikan transfer karena tidak mempengaruhi laba rugi
-            if ((itemStok.referensiStok == null) || (itemStok.referensiStok?.classGudang != Transfer.simpleName)) {
+            if (itemStok.referensiStok?.classGudang != Transfer.simpleName) {
                 if (itemStok.jumlah > 0) {
-                    nilaiInventory.tambah(itemStok.tanggal, itemStok?.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
+                    BigDecimal harga = cariHarga(produk, itemStok)
+                    nilaiInventory.tambah(itemStok.tanggal, itemStok?.referensiStok?.pihakTerkait, itemStok.jumlah, harga)
+                    if (informasi) {
+                        informasi.nilaiAwal += ((itemStok.jumlah?:0) * (harga?:0))
+                    }
                 } else {
                     jumlahPenjualan += itemStok.jumlah
                 }

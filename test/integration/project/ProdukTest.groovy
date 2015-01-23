@@ -18,7 +18,9 @@ package project
 
 import domain.inventory.Gudang
 import domain.inventory.ItemPenyesuaian
+import domain.inventory.ItemStok
 import domain.inventory.PenyesuaianStok
+import domain.inventory.ReferensiStok
 import project.inventory.PenyesuaianStokRepository
 import domain.inventory.Produk
 import domain.inventory.StokProduk
@@ -188,5 +190,142 @@ class ProdukTest extends DbUnitTestCase {
 
         // Pesan harus hilang
         assertTrue(pesanRepository.refresh().isEmpty())
+    }
+
+    public void testCariSeluruhPenerimaanBarang() {
+        Gudang gudang = produkRepository.findGudangByUtama(true)
+        Gudang gudang2 = produkRepository.findGudangById(-2l)
+        Produk produkAAA = new Produk(nama: 'AAA', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        Produk produkBBB = new Produk(nama: 'BBB', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        produkRepository.withTransaction {
+            persist(produkAAA)
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-03-01'), new ReferensiStok(classGudang: 'Transfer'), 40))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkAAA.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+            persist(produkBBB)
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkBBB.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+        }
+
+        List<ItemStok> hasil = produkRepository.cariSeluruhPenerimaan(produkAAA, gudang , LocalDate.now())
+        assertEquals(4, hasil.size())
+        assertEquals(40, hasil[0].jumlah)
+        assertEquals(30, hasil[1].jumlah)
+        assertEquals(20, hasil[2].jumlah)
+        assertEquals(10, hasil[3].jumlah)
+
+        hasil = produkRepository.cariSeluruhPenerimaan(produkAAA, gudang2, LocalDate.now())
+        assertEquals(1, hasil.size())
+        assertEquals(40, hasil[0].jumlah)
+
+        hasil = produkRepository.cariSeluruhPenerimaan(gudang, LocalDate.parse('2014-01-01'))
+        assertEquals(11, hasil.size())
+        assertEquals(4, hasil.findAll { (it[0] == produkAAA) || (it[0] == produkBBB) }.size())
+        List hasilAAA = hasil.findAll { it[0] == produkAAA }
+        assertEquals(produkAAA, hasilAAA[0][0])
+        assertEquals(20,        hasilAAA[0][1].jumlah)
+        assertEquals(produkAAA, hasilAAA[1][0])
+        assertEquals(10,        hasilAAA[1][1].jumlah)
+        List hasilBBB = hasil.findAll { it[0] == produkBBB }
+        assertEquals(produkBBB, hasilBBB[0][0])
+        assertEquals(20,        hasilBBB[0][1].jumlah)
+        assertEquals(produkBBB, hasilBBB[1][0])
+        assertEquals(10,        hasilBBB[1][1].jumlah)
+
+        hasil = produkRepository.cariSeluruhPenerimaan(gudang2, LocalDate.parse('2014-01-01'))
+        assertEquals(0, hasil.size())
+    }
+
+    public void testCariQtyTerakhir() {
+        Gudang gudang = produkRepository.findGudangByUtama(true)
+        Gudang gudang2 = produkRepository.findGudangById(-2l)
+        Produk produkAAA = new Produk(nama: 'AAA', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        Produk produkBBB = new Produk(nama: 'BBB', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        produkRepository.withTransaction {
+            persist(produkAAA)
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-03-01'), new ReferensiStok(classGudang: 'Transfer'), 40))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkAAA.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+            persist(produkBBB)
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkBBB.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+        }
+
+        List hasil = produkRepository.cariQtyTerakhir(LocalDate.parse('2014-01-01'))
+        assertEquals(70, hasil.find { it[0] == produkAAA}[1])
+        assertEquals(30, hasil.find { it[0] == produkBBB}[1])
+
+        hasil = produkRepository.cariQtyTerakhir(LocalDate.now())
+        assertEquals(210, hasil.find { it[0] == produkAAA}[1])
+        assertEquals(170, hasil.find { it[0] == produkBBB}[1])
+    }
+
+    public void testCariSeluruhPerubahan() {
+        Gudang gudang = produkRepository.findGudangByUtama(true)
+        Gudang gudang2 = produkRepository.findGudangById(-2l)
+        Produk produkAAA = new Produk(nama: 'AAA', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        Produk produkBBB = new Produk(nama: 'BBB', satuan: produkRepository.findSatuanById(-1l), hargaDalamKota: 1111, hargaLuarKota: 1111)
+        produkRepository.withTransaction {
+            persist(produkAAA)
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-03-01'), new ReferensiStok(classGudang: 'Transfer'), 40))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkAAA.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkAAA.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+            persist(produkBBB)
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-01-01'), null, 10))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2013-02-01'), null, 20))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), null, 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-01-01'), new ReferensiStok(classGudang: 'Transfer'), 30))
+            produkBBB.perubahanStok(gudang, new ItemStok(LocalDate.parse('2014-02-01'), null, 40))
+            produkBBB.perubahanStok(gudang2, new ItemStok(LocalDate.parse('2014-03-01'), null, 40))
+        }
+
+        List<ItemStok> hasil = produkRepository.cariSeluruhPerubahan(produkAAA, LocalDate.parse('2014-01-01'), LocalDate.now())
+        assertEquals(4, hasil.size())
+        assertEquals(30, hasil[0].jumlah)
+        assertEquals(30, hasil[1].jumlah)
+        assertEquals(40, hasil[2].jumlah)
+        assertEquals(40, hasil[3].jumlah)
+
+        hasil = produkRepository.cariSeluruhPerubahan(produkAAA, LocalDate.parse('2013-01-01'), LocalDate.parse('2013-12-01'))
+        assertEquals(3, hasil.size())
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+        assertEquals(40, hasil[2].jumlah)
+
+        hasil = produkRepository.cariSeluruhPerubahan(produkBBB, LocalDate.parse('2013-01-01'), LocalDate.parse('2013-12-01'))
+        assertEquals(2, hasil.size())
+        assertEquals(10, hasil[0].jumlah)
+        assertEquals(20, hasil[1].jumlah)
+
+        hasil = produkRepository.cariSeluruhPerubahan(LocalDate.parse('2013-01-01'), LocalDate.parse('2013-12-01'))
+        List hasilAAA = hasil.findAll { it[0] == produkAAA }
+        assertEquals(3,  hasilAAA.size())
+        assertEquals(10, hasilAAA[0][1].jumlah)
+        assertEquals(20, hasilAAA[1][1].jumlah)
+        assertEquals(40, hasilAAA[2][1].jumlah)
+        List hasilBBB = hasil.findAll { it[0] == produkBBB }
+        assertEquals(2,  hasilBBB.size())
+        assertEquals(10, hasilBBB[0][1].jumlah)
+        assertEquals(20, hasilBBB[1][1].jumlah)
     }
 }

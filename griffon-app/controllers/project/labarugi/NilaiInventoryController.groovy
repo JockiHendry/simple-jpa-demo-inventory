@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package project.labarugi
 
+import domain.labarugi.CacheGlobal
 import javax.swing.SwingUtilities
 import java.text.NumberFormat
 
@@ -30,7 +31,7 @@ class NilaiInventoryController {
     }
 
     def hitungNilaiInventory = {
-        model.nilaiInventory = labaRugiService.hitungInventory(model.tanggalSearch, model.produk)
+        model.nilaiInventory = labaRugiService.hitungInventory(model.produk, new CacheGlobal(tanggalMulai: model.tanggalSearch))
         execInsideUISync {
             model.itemNilaiInventory.clear()
             model.itemNilaiInventory.addAll(model.nilaiInventory.items)

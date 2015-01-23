@@ -16,6 +16,7 @@
 package project
 
 import domain.inventory.Produk
+import domain.labarugi.CacheGlobal
 import domain.labarugi.NilaiInventory
 import org.joda.time.LocalDate
 import project.labarugi.LabaRugiService
@@ -34,7 +35,7 @@ class LabaRugiServiceTests extends DbUnitTestCase {
 
     void testHitungInventory() {
         Produk produk = labaRugiService.findProdukById(1l)
-        NilaiInventory nilaiInventory = labaRugiService.hitungInventory(LocalDate.parse('2014-12-31'), produk)
+        NilaiInventory nilaiInventory = labaRugiService.hitungInventory(produk, new CacheGlobal(tanggalMulai: LocalDate.parse('2014-12-31')))
 
         assertEquals(2, nilaiInventory.items.size())
         assertEquals(LocalDate.parse('2014-12-19'), nilaiInventory.items[0].tanggal)

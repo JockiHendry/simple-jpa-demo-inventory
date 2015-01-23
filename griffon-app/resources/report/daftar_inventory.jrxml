@@ -101,7 +101,7 @@ JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell height="20" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="16" uuid="2db9aafd-2582-486f-86a4-bd25e5292d13"/>
 								<box>
 									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
@@ -173,7 +173,7 @@ JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell height="20" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="55" height="16" uuid="270607cb-ff63-4f50-9f4f-67e190aa086a"/>
 								<box>
 									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
@@ -206,7 +206,7 @@ JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell height="20" rowSpan="1">
-							<textField pattern="¤ #,##0" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="¤ #,##0" isBlankWhenNull="true">
 								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="16" uuid="920ff2b6-f298-46a9-815f-4e66f2aa2b21"/>
 								<box>
 									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
@@ -239,7 +239,7 @@ JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell height="20" rowSpan="1">
-							<textField pattern="¤ #,##0" isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" pattern="¤ #,##0" isBlankWhenNull="true">
 								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="102" height="16" uuid="1ba44aac-1696-4787-bb32-fca8e351865d"/>
 								<box>
 									<bottomPen lineWidth="0.5" lineStyle="Dotted"/>

@@ -16,7 +16,9 @@
 package project.laporan
 
 import domain.inventory.Produk
+import domain.labarugi.CacheGlobal
 import org.joda.time.LocalDate
+import project.inventory.ProdukRepository
 import project.labarugi.LabaRugiService
 import simplejpa.swing.DialogUtils
 import javax.swing.SwingUtilities
@@ -28,6 +30,7 @@ class LaporanDaftarInventoryController {
     LaporanDaftarInventoryModel model
     def view
     LabaRugiService labaRugiService
+    ProdukRepository produkRepository
 
     void mvcGroupInit(Map args) {
         model.tanggalSearch = LocalDate.now()
@@ -43,8 +46,10 @@ class LaporanDaftarInventoryController {
                 }
             }
             model.result = []
+            CacheGlobal cacheGlobal = new CacheGlobal()
+            cacheGlobal.perbaharui(model.tanggalSearch, null)
             for (Produk produk : daftarProduk) {
-                model.result << labaRugiService.hitungInventory(model.tanggalSearch, produk)
+                model.result << labaRugiService.hitungInventory(produk, cacheGlobal)
             }
         }
         close()

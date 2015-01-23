@@ -28,6 +28,7 @@
 	<field name="produk" class="domain.inventory.Produk">
 		<fieldDescription><![CDATA[produk]]></fieldDescription>
 	</field>
+	<sortField name="produk"/>
 	<variable name="nilaiAwal_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{nilaiAwal}]]></variableExpression>
 	</variable>
@@ -124,7 +125,7 @@
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="1" width="200" height="15" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="1" width="200" height="15" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -134,7 +135,7 @@
 				<textFieldExpression><![CDATA[$F{produk}.nama]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="200" y="0" width="119" height="16" uuid="1d40c631-f27f-41d8-89bb-c4c4a7140014"/>
+				<reportElement stretchType="RelativeToTallestObject" x="200" y="0" width="119" height="16" uuid="1d40c631-f27f-41d8-89bb-c4c4a7140014"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -144,7 +145,7 @@
 				<textFieldExpression><![CDATA[$F{nilaiAwal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="319" y="0" width="116" height="16" uuid="ec0ed97c-b93c-4415-89bc-a4a4a7824e3d"/>
+				<reportElement stretchType="RelativeToTallestObject" x="319" y="0" width="116" height="16" uuid="ec0ed97c-b93c-4415-89bc-a4a4a7824e3d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -154,7 +155,7 @@
 				<textFieldExpression><![CDATA[$F{nilaiHPP}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="435" y="0" width="120" height="16" uuid="b0716144-c16d-45e2-9200-28c61307c26b"/>
+				<reportElement stretchType="RelativeToTallestObject" x="435" y="0" width="120" height="16" uuid="b0716144-c16d-45e2-9200-28c61307c26b"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>

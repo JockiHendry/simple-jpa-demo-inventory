@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 package project.laporan
 
 import domain.inventory.Produk
+import domain.labarugi.CacheGlobal
 import laporan.NilaiInventoryProduk
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
+import project.inventory.ProdukRepository
 import project.labarugi.LabaRugiService
 import javax.swing.SwingUtilities
 
@@ -27,6 +30,8 @@ class LaporanNilaiInventoryController {
     LaporanNilaiInventoryModel model
     def view
     LabaRugiService labaRugiService
+    ProdukRepository produkRepository
+    GudangRepository gudangRepository
 
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
@@ -36,9 +41,11 @@ class LaporanNilaiInventoryController {
     def tampilkanLaporan = {
         def result = []
         labaRugiService.withTransaction {
-            findAllProdukFetchComplete().each { Produk produk ->
+            CacheGlobal cacheGlobal = new CacheGlobal()
+            cacheGlobal.perbaharui(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+            for (Produk produk: findAllProduk()) {
                 NilaiInventoryProduk info = new NilaiInventoryProduk()
-                labaRugiService.hitungHPP(model.tanggalMulaiCari, model.tanggalSelesaiCari, produk, info)
+                labaRugiService.hitungHPP(produk, info, cacheGlobal)
                 if (info.nilaiHPP > 0) {
                     result << info
                 }
