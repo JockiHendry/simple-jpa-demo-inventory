@@ -59,19 +59,19 @@ actions {
     action(id: 'penerimaanBarang', name: 'Terima Barang', smallIcon: imageIcon('/menu_penerimaan_barang.png'),
         mnemonic: KeyEvent.VK_T, closure: popupPenerimaanBarang)
     action(id: 'penerimaanPembelian', name: 'Terima Pembelian', actionCommandKey: 'purchaseOrder', mnemonic: KeyEvent.VK_P,
-        smallIcon: imageIcon('/menu_penerimaan_po.png'), closure: controller.switchPage.rcurry([mode: POViewMode.PENERIMAAN]))
-    action(id: 'penerimaanReturBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
-        smallIcon: imageIcon('/menu_penerimaan_retur_beli.png'), closure: controller.switchPage.rcurry([mode: ReturBeliViewMode.PENERIMAAN]))
+        smallIcon: imageIcon('/menu_beli_small.png'), closure: controller.switchPage.rcurry([mode: POViewMode.PENERIMAAN]))
+    action(id: 'penerimaanReturBeli', name: 'Terima Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
+        smallIcon: imageIcon('/menu_retur_beli_small.png'), closure: controller.switchPage.rcurry([mode: ReturBeliViewMode.PENERIMAAN]))
     action(id: 'pengeluaranBarang', name: 'Antar Barang', actionCommandKey: 'pengeluaranBarang', mnemonic: KeyEvent.VK_A,
         smallIcon: imageIcon('/menu_pengeluaran.png'), closure: popupPengeluaranBarang)
     action(id: 'pengeluaranBarangEceran', name: 'Antar Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_pengeluaran_eceran.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.PENGELUARAN]))
-    action(id: 'pengiriman', name: 'Antar Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
-        smallIcon: imageIcon('/menu_pengeluaran_sales.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_eceran_small.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.PENGELUARAN]))
     action(id: 'pengeluaranReturJualEceran', name: 'Antar Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_C,
-        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_sales.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
+        smallIcon: imageIcon('/menu_retur_eceran_small.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
+    action(id: 'pengiriman', name: 'Antar Dalam Kota', actionCommandKey: 'pengiriman', mnemonic: KeyEvent.VK_P,
+        smallIcon: imageIcon('/menu_sales_small.png'), closure: controller.switchPage)
     action(id: 'pengeluaranReturJualSales', name: 'Antar Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_R,
-        smallIcon: imageIcon('/menu_pengeluaran_retur_jual_eceran.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
+        smallIcon: imageIcon('/menu_retur_sales_small.png'), closure: controller.switchPage.rcurry([mode: ReturJualViewMode.PENGELUARAN]))
     action(id: 'buktiTerima', name: 'Bukti Terima', actionCommandKey: 'buktiTerima', mnemonic: KeyEvent.VK_T,
         smallIcon: imageIcon('/menu_bukti_terima.png'), closure: controller.switchPage)
 
@@ -82,9 +82,9 @@ actions {
     action(id: 'fakturJual', name: 'Penjualan', actionCommandKey: 'penjualan', mnemonic: KeyEvent.VK_J,
         smallIcon: imageIcon('/menu_penjualan.png'), closure: popupPenjualan)
     action(id: 'fakturJualEceran', name: 'Eceran', actionCommandKey: 'fakturJualEceran', mnemonic: KeyEvent.VK_E,
-        smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.FAKTUR]))
+        smallIcon: imageIcon('/menu_eceran_small.png'), closure: controller.switchPage.rcurry([mode: FakturEceranViewMode.FAKTUR]))
     action(id: 'fakturJualOlehSales', name: 'Sales', actionCommandKey: 'fakturJualOlehSales', mnemonic: KeyEvent.VK_S,
-        smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
+        smallIcon: imageIcon('/menu_sales_small.png'), closure: controller.switchPage)
     action(id: 'hutang', name: 'Hutang', actionCommandKey: 'hutang', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_hutang.png'), closure: controller.switchPage)
     action(id: 'piutang', name: 'Piutang', actionCommandKey: 'piutang', mnemonic: KeyEvent.VK_I,
@@ -107,9 +107,9 @@ actions {
     action(id: 'returJual', name: 'Retur Jual', actionCommandKey: 'returJual', mnemonic: KeyEvent.VK_U,
         smallIcon: imageIcon('/menu_retur_jual.png'), closure: popupReturJual)
     action(id: 'returJualEceran', name: 'Retur Jual Eceran', actionCommandKey: 'returJualEceran', mnemonic: KeyEvent.VK_E,
-            smallIcon: imageIcon('/menu_penjualan_eceran.png'), closure: controller.switchPage)
+            smallIcon: imageIcon('/menu_eceran_small.png'), closure: controller.switchPage)
     action(id: 'returJualOlehSales', name: 'Retur Jual Sales', actionCommandKey: 'returJualOlehSales', mnemonic: KeyEvent.VK_S,
-            smallIcon: imageIcon('/menu_penjualan_sales.png'), closure: controller.switchPage)
+            smallIcon: imageIcon('/menu_sales_small.png'), closure: controller.switchPage)
     action(id: 'returBeli', name: 'Retur Beli', actionCommandKey: 'returBeli', mnemonic: KeyEvent.VK_B,
         smallIcon: imageIcon('/menu_retur_beli.png'), closure: controller.switchPage)
 
@@ -192,9 +192,9 @@ application(id: 'mainFrame',
 
     popupMenu(id: 'pengeluaranBarangPopup') {
         menuItem(action: pengeluaranBarangEceran)
+        menuItem(action: pengeluaranReturJualEceran)
         menuItem(action: pengiriman)
         menuItem(action: pengeluaranReturJualSales)
-        menuItem(action: pengeluaranReturJualEceran)
     }
 
     popupMenu(id: 'penjualanPopup') {
