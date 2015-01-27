@@ -24,7 +24,7 @@ class NilaiInventory {
 
     Produk produk
 
-    List<ItemNilaiInventory> items = []
+    TreeSet<ItemNilaiInventory> items = new TreeSet<>()
 
     BigDecimal nilai() {
         items.sum { it.total() }?: 0
@@ -34,12 +34,17 @@ class NilaiInventory {
         items.sum { it.qty?: 0}?: 0
     }
 
+    List toList() {
+        isiHargaYangKosong()
+        items.toList()
+    }
+
     void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur = null) {
         items << new ItemNilaiInventory(tanggal, nama, qty, harga, faktur)
-        isiHargaYangKosong()
     }
 
     BigDecimal kurang(long qty) {
+        isiHargaYangKosong()
         BigDecimal hasil = 0
         int sisaQty = qty
         for (int i=0; i<items.size(); i++) {
@@ -62,9 +67,9 @@ class NilaiInventory {
             // Tidak bisa melakukan estimasi bila seluruh harga kosong!
             return
         }
-        BigDecimal hargaTerakhir = 0
-        items.reverse().each { ItemNilaiInventory item ->
-            if (item.harga == null) {
+        BigDecimal hargaTerakhir
+        items.each { ItemNilaiInventory item ->
+            if (hargaTerakhir && (item.harga == null)) {
                 item.harga = hargaTerakhir
             }
             hargaTerakhir = item.harga

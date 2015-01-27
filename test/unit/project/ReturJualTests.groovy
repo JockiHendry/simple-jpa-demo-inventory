@@ -24,6 +24,7 @@ import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
+import domain.inventory.ItemStok
 import domain.inventory.Produk
 import domain.pembelian.Supplier
 import domain.penjualan.BuktiTerima
@@ -94,6 +95,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
         Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
         Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
+        produk1.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
+        produk2.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
+        produk3.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
         Konsumen konsumen = new Konsumen()
         ReturJual retur = new ReturJualOlehSales(konsumen: konsumen, gudang: gudangUtama)
         retur.tambah(new ItemRetur(produk1, 1, [new KlaimTukar(produk1, 1)] as Set))
@@ -429,6 +433,9 @@ class ReturJualTests extends GriffonUnitTestCase {
         Produk produk1 = new Produk(nama: 'Produk A', supplier: supplier)
         Produk produk2 = new Produk(nama: 'Produk B', supplier: supplier)
         Produk produk3 = new Produk(nama: 'Produk C', supplier: supplier)
+        produk1.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
+        produk2.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
+        produk3.perubahanStok(gudangUtama, new ItemStok(LocalDate.now(), null, 1000))
         Konsumen konsumen = new Konsumen()
         ReturJualOlehSales retur = new ReturJualOlehSales(konsumen: konsumen, gudang: gudangUtama)
         retur.tambah(new ItemRetur(produk1, 10, [new KlaimTukar(produk1, 3), new KlaimTukar(produk1, 7)] as Set))

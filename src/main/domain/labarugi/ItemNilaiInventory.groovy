@@ -19,7 +19,7 @@ import groovy.transform.Canonical
 import org.joda.time.LocalDate
 
 @Canonical
-class ItemNilaiInventory {
+class ItemNilaiInventory implements Comparable {
 
     LocalDate tanggal
 
@@ -44,5 +44,56 @@ class ItemNilaiInventory {
             return true
         }
     }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof ItemNilaiInventory)) return false
+
+        ItemNilaiInventory that = (ItemNilaiInventory) o
+
+        if (faktur != that.faktur) return false
+        if (harga != that.harga) return false
+        if (nama != that.nama) return false
+        if (qty != that.qty) return false
+        if (tanggal != that.tanggal) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (tanggal != null ? tanggal.hashCode() : 0)
+        result = 31 * result + (nama != null ? nama.hashCode() : 0)
+        result = 31 * result + (qty != null ? qty.hashCode() : 0)
+        result = 31 * result + (harga != null ? harga.hashCode() : 0)
+        result = 31 * result + (faktur != null ? faktur.hashCode() : 0)
+        return result
+    }
+
+    @Override
+    int compareTo(Object o) {
+        if (o && (o instanceof ItemNilaiInventory)) {
+            if (this.equals(o)) {
+                return 0
+            } else {
+                int selisihTanggal = tanggal.compareTo(o.tanggal)
+                if (selisihTanggal == 0) {
+                    if (faktur.equals(o.faktur)) {
+                        if (qty == o.qty) {
+                            return -1
+                        } else {
+                            return qty.compareTo(o.qty)
+                        }
+                    } else {
+                        return faktur.compareTo(o.faktur)
+                    }
+                } else {
+                    return selisihTanggal
+                }
+            }
+        }
+        -1
+    }
+
 
 }

@@ -29,6 +29,9 @@
 	<field name="produk" class="domain.inventory.Produk">
 		<fieldDescription><![CDATA[produk]]></fieldDescription>
 	</field>
+	<field name="_THIS" class="java.lang.Object">
+		<fieldDescription><![CDATA[_THIS]]></fieldDescription>
+	</field>
 	<sortField name="produk"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -82,9 +85,9 @@
 			<componentElement>
 				<reportElement key="table" x="1" y="20" width="554" height="53" uuid="2b6d442d-e276-4612-8dc0-389a40d85390"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="itemInventory" uuid="730d754d-9785-4714-bdfc-06637470c206">
+					<datasetRun subDataset="itemInventory" uuid="b4ef3d9d-f350-4368-a7f4-79f893556a54">
 						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.
-JRBeanCollectionDataSource($F{items})]]></dataSourceExpression>
+JRBeanCollectionDataSource($F{_THIS}.toList())]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="60" uuid="990418b6-d7d8-47ee-a366-ff819f91054a">
 						<jr:tableFooter height="18" rowSpan="1"/>

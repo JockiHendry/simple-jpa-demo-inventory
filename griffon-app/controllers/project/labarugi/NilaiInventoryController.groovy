@@ -34,7 +34,7 @@ class NilaiInventoryController {
         model.nilaiInventory = labaRugiService.hitungInventory(model.produk, new CacheGlobal(tanggalMulai: model.tanggalSearch))
         execInsideUISync {
             model.itemNilaiInventory.clear()
-            model.itemNilaiInventory.addAll(model.nilaiInventory.items)
+            model.itemNilaiInventory.addAll(model.nilaiInventory.toList())
             model.informasi = "<html>Total Qty: <b>${model.nilaiInventory.qty()}</b> - Nilai Inventory: <b>${NumberFormat.currencyInstance.format(model.nilaiInventory.nilai())}</b></html>"
         }
     }
