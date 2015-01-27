@@ -26,7 +26,7 @@ actions {
 panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,grow]', '')) {
 
     label('Sampai Tanggal')
-    dateTimePicker(id: 'tanggalCari', localDate: bind('tanggalCari', target: model, mutual: true),
+    dateTimePicker(id: 'tanggalCari', localDate: bind('tanggalSearch', target: model, mutual: true),
         dateVisible: true, timeVisible: false, focusable: true, constraints: 'wrap')
 
     label('Dan', constraints: 'wrap')
