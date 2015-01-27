@@ -95,17 +95,21 @@ class LabaRugiService {
     BigDecimal cariHarga(Produk produk, ItemStok itemStok) {
         if (itemStok.referensiStok?.classFinance == PurchaseOrder.simpleName) {
             PurchaseOrder po = findPurchaseOrderByNomor(itemStok.referensiStok.nomorFinance)
-            Faktur f = po.fakturBeli?: po
-            for (ItemFaktur i: f.listItemFaktur) {
-                if (i.produk == produk) {
-                    return i.diskon?.hasil(i.harga)?: i.harga
+            if (po) {
+                Faktur f = po.fakturBeli ?: po
+                for (ItemFaktur i : f.listItemFaktur) {
+                    if (i.produk == produk) {
+                        return i.diskon?.hasil(i.harga) ?: i.harga
+                    }
                 }
             }
         } else if (itemStok.referensiStok?.classGudang == PenyesuaianStok.simpleName) {
             PenyesuaianStok ps = findPenyesuaianStokByNomor(itemStok.referensiStok.nomorGudang)
-            for (ItemPenyesuaian i: ps.items) {
-                if (i.produk == produk) {
-                    return i.harga?: null
+            if (ps) {
+                for (ItemPenyesuaian i : ps.items) {
+                    if (i.produk == produk) {
+                        return i.harga ?: null
+                    }
                 }
             }
         }
