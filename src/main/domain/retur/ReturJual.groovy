@@ -34,7 +34,6 @@ import org.hibernate.validator.constraints.NotEmpty
 import project.user.NomorService
 import simplejpa.DomainClass
 import griffon.util.*
-import simplejpa.SimpleJpaUtil
 import javax.persistence.*
 import javax.validation.Valid
 import javax.validation.constraints.*
@@ -106,9 +105,8 @@ abstract class ReturJual implements SebuahDaftarBarang, BolehPesanStok {
         }
 
         // Periksa apakah stok cukup
-        Gudang gudangUtama = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang').cariGudangUtama()
         for (ItemBarang i: daftarYangHarusDitukar.items) {
-            int jumlahTersedia = i.produk.stok(gudangUtama).jumlah
+            int jumlahTersedia = i.produk.stok(gudang).jumlah
             if (jumlahTersedia < i.jumlah) {
                 throw new StokTidakCukup(i.produk.nama, i.jumlah, jumlahTersedia)
             }
