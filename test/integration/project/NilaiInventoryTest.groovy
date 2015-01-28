@@ -22,17 +22,27 @@ import domain.labarugi.NilaiInventory
 import domain.pembelian.FakturBeli
 import domain.pembelian.PurchaseOrder
 import org.joda.time.LocalDate
+import project.inventory.GudangRepository
 import project.labarugi.LabaRugiService
+import simplejpa.SimpleJpaUtil
 import simplejpa.testing.DbUnitTestCase
 
 class NilaiInventoryTest extends DbUnitTestCase {
 
     LabaRugiService labaRugiService
+    GudangRepository gudangRepository
 
     protected void setUp() {
         super.setUp()
         setUpDatabase("/project/data_nilai_inventory.xlsx")
         labaRugiService = app.serviceManager.findService('LabaRugi')
+        gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')
+        gudangRepository.gudangUtama = null
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        gudangRepository.gudangUtama = null
     }
 
     void testHitungNilaiInventory() {

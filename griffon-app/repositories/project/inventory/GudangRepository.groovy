@@ -24,8 +24,8 @@ import simplejpa.transaction.Transaction
 @Transaction
 class GudangRepository {
 
-    private Gudang gudangUtama
-    private List<Gudang> bukanGudangUtama
+    Gudang gudangUtama
+    List<Gudang> bukanGudangUtama
 
     public Gudang cariGudangUtama() {
         if (!gudangUtama) {
