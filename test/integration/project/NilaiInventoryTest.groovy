@@ -15,9 +15,12 @@
  */
 package project
 
+import domain.faktur.ItemFaktur
 import domain.inventory.Produk
 import domain.labarugi.CacheGlobal
 import domain.labarugi.NilaiInventory
+import domain.pembelian.FakturBeli
+import domain.pembelian.PurchaseOrder
 import org.joda.time.LocalDate
 import project.labarugi.LabaRugiService
 import simplejpa.testing.DbUnitTestCase
@@ -119,6 +122,54 @@ class NilaiInventoryTest extends DbUnitTestCase {
         assertEquals(1, hasil[1].qty)
         assertEquals(1200, hasil[1].harga)
         assertEquals(7200, nilaiInventory.nilai())
+    }
+
+    void testHitungNilaiInventoryDenganTanggalBerbeda() {
+        Produk produk = labaRugiService.findProdukByNama('produk6')
+        NilaiInventory nilaiInventory = labaRugiService.hitungInventory(produk, new CacheGlobal(tanggalMulai: LocalDate.parse('2015-01-28')))
+        List hasil = nilaiInventory.toList()
+        assertTrue(hasil.empty)
+        assertEquals(0, nilaiInventory.nilai())
+
+        nilaiInventory = labaRugiService.hitungInventory(produk, new CacheGlobal(tanggalMulai: LocalDate.parse('2015-01-29')))
+        hasil = nilaiInventory.toList()
+        assertTrue(hasil.empty)
+        assertEquals(0, nilaiInventory.nilai())
+
+        nilaiInventory = labaRugiService.hitungInventory(produk, new CacheGlobal(tanggalMulai: LocalDate.parse('2015-01-30')))
+        hasil = nilaiInventory.toList()
+        assertEquals(1, hasil.size())
+        assertEquals(LocalDate.parse('2015-01-29'), hasil[0].tanggal)
+        assertEquals('supplier1', hasil[0].nama)
+        assertEquals('000004-PO-KB-012015', hasil[0].faktur)
+        assertEquals(5, hasil[0].qty)
+        assertEquals(1200, hasil[0].harga)
+        assertEquals(6000, nilaiInventory.nilai())
+    }
+
+    void testHitungNilaiInventorySetelahFaktur() {
+        labaRugiService.withTransaction {
+            PurchaseOrder po = findPurchaseOrderByNomor('000001-PO-KB-012015')
+            Produk produk = findProdukByNama('produk1')
+            FakturBeli f = new FakturBeli(tanggal: LocalDate.parse('2015-01-30'), jatuhTempo: LocalDate.now(), nomor: 'FA-001')
+            f.tambah(new ItemFaktur(produk, 5, 1500))
+            po.tambah(f, false)
+        }
+        Produk produk1 = labaRugiService.findProdukByNama('produk1')
+        NilaiInventory nilaiInventory = labaRugiService.hitungInventory(produk1, new CacheGlobal(tanggalMulai: LocalDate.parse('2015-01-31')))
+        List hasil = nilaiInventory.toList()
+        assertEquals(2, hasil.size())
+        assertEquals(LocalDate.parse('2015-01-28'), hasil[0].tanggal)
+        assertEquals('supplier1', hasil[0].nama)
+        assertEquals('000001-PO-KB-012015', hasil[0].faktur)
+        assertEquals(5, hasil[0].qty)
+        assertEquals(1500, hasil[0].harga)
+        assertEquals(LocalDate.parse('2015-01-28'), hasil[1].tanggal)
+        assertEquals('supplier1', hasil[1].nama)
+        assertEquals('000002-PO-KB-012015', hasil[1].faktur)
+        assertEquals(5, hasil[1].qty)
+        assertEquals(1100, hasil[1].harga)
+        assertEquals(13000, nilaiInventory.nilai())
     }
 
 }
