@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,13 @@ package project.user
 
 import domain.general.Pesan
 import simplejpa.transaction.Transaction
-import griffon.core.*
-import griffon.util.*
 
 @Transaction
 class PesanRepository {
 
     public static final String EVENT_UPDATE_PESAN = 'UpdatePesan'
 
-    GriffonApplication app = ApplicationHolder.application
+    def app
 
     public Pesan buat(Pesan pesan) {
         Pesan hasil = findPesanByPesan(pesan.pesan)

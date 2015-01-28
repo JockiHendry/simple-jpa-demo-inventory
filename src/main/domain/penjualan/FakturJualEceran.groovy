@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,57 +15,37 @@
  */
 package domain.penjualan
 
-import domain.exception.DataTidakBolehDiubah
 import domain.faktur.Faktur
-import project.inventory.GudangRepository
+import domain.pengaturan.KeyPengaturan
+import domain.penjualan.state.FakturJualEceranDiantar
+import domain.penjualan.state.FakturJualEceranDibuat
+import domain.penjualan.state.FakturJualEceranLunas
+import domain.penjualan.state.FakturJualEceranMulai
+import domain.penjualan.state.FakturJualEceranSingkatMulai
+import domain.penjualan.state.OperasiFakturJual
 import domain.inventory.ItemBarang
-import project.user.NomorService
+import project.pengaturan.PengaturanRepository
 import groovy.transform.*
 import simplejpa.DomainClass
 import simplejpa.SimpleJpaUtil
 import javax.persistence.*
 import javax.validation.constraints.*
 import org.hibernate.validator.constraints.*
-import griffon.util.*
 
-@NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
-    @NamedAttributeNode('listItemFaktur'),
-    @NamedAttributeNode('pengeluaranBarang')
+@NamedEntityGraphs([
+    @NamedEntityGraph(name='FakturJualEceran.Complete', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur'),
+        @NamedAttributeNode('pengeluaranBarang')
+    ]),
+    @NamedEntityGraph(name='FakturJualEceran.Items', attributeNodes=[
+        @NamedAttributeNode('listItemFaktur')
+    ])
 ])
 @DomainClass @Entity @Canonical @EqualsAndHashCode(callSuper=true)
 class FakturJualEceran extends FakturJual {
 
     @NotEmpty @Size(min=2, max=100)
     String namaPembeli
-
-    public void antar() {
-        if (!status.pengeluaranBolehDiubah) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: this.tanggal,
-            gudang: (SimpleJpaUtil.instance.repositoryManager.findRepository('GudangRepository') as GudangRepository).cariGudangUtama()
-        )
-        listItemFaktur.each {
-            pengeluaranBarang.tambah(new ItemBarang(produk: it.produk, jumlah: it.jumlah))
-        }
-        tambah(pengeluaranBarang)
-    }
-
-    public void batalAntar() {
-        if (status!=StatusFakturJual.DIANTAR) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        hapusPengeluaranBarang()
-    }
-
-    public void bayar() {
-        if (status != StatusFakturJual.DIANTAR) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        status = StatusFakturJual.LUNAS
-    }
 
     @Override
     boolean isBolehPesanStok() {
@@ -80,6 +60,23 @@ class FakturJualEceran extends FakturJual {
     @Override
     BigDecimal nilaiPenjualan() {
         total()
+    }
+
+    @Override
+    OperasiFakturJual getOperasiFakturJual() {
+        PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan') as PengaturanRepository
+        switch (status) {
+            case null:
+                if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+                    return new FakturJualEceranMulai()
+                } else {
+                    return new FakturJualEceranSingkatMulai()
+                }
+            case StatusFakturJual.DIBUAT: return new FakturJualEceranDibuat()
+            case StatusFakturJual.DIANTAR: return new FakturJualEceranDiantar()
+            case StatusFakturJual.LUNAS: return new FakturJualEceranLunas()
+        }
+        null
     }
 
     boolean equals(o) {

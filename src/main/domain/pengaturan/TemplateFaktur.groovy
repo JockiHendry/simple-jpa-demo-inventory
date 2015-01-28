@@ -13,10 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pengaturan;
+package domain.pengaturan
 
-public enum JenisNilai {
+import groovy.transform.*
+import simplejpa.DomainClass
+import javax.persistence.*
+import javax.validation.constraints.*
 
-    STRING, PASSWORD, INTEGER, BOOLEAN
+@DomainClass @Entity @Canonical
+class TemplateFaktur {
+
+    @NotNull @Enumerated
+    NamaTemplateFaktur nama
+
+    @Lob
+    String isi
 
 }
+

@@ -27,3 +27,6 @@ project.labarugi.KasRepository
 project.labarugi.JenisTransaksiKasRepository
 project.labarugi.LabaRugiService
 listener.LabaRugiEventListenerService
+project.pengaturan.TemplateFakturRepository
+listener.InventoryEventListenerService
+listener.ReturJualEventListenerService

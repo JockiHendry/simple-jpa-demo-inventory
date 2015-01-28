@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package domain.penjualan
 
-import domain.event.BayarPiutang
 import domain.event.PerubahanStok
 import domain.exception.BarangSelisih
 import domain.exception.DataTidakBolehDiubah
@@ -26,16 +25,24 @@ import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
 import domain.faktur.KewajibanPembayaran
 import domain.faktur.Pembayaran
-import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
+import domain.pengaturan.KeyPengaturan
+import domain.penjualan.state.FakturJualOlehSalesDiantar
+import domain.penjualan.state.FakturJualOlehSalesDibuat
+import domain.penjualan.state.FakturJualOlehSalesDiterima
+import domain.penjualan.state.FakturJualOlehSalesLunas
+import domain.penjualan.state.FakturJualOlehSalesMulai
+import domain.penjualan.state.FakturJualOlehSalesSingkatMulai
+import domain.penjualan.state.OperasiFakturJual
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import project.inventory.GudangRepository
+import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import domain.validation.InputPenjualanOlehSales
 import groovy.transform.*
@@ -95,32 +102,8 @@ class FakturJualOlehSales extends FakturJual {
     @Fetch(FetchMode.SUBSELECT) @OrderColumn
     List<ReturFaktur> retur = []
 
-    void kirim(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
-        if (status==StatusFakturJual.DIANTAR || !status.pengeluaranBolehDiubah) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: tanggal, gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
-        )
-        pengeluaranBarang.items = barangYangHarusDikirim().items
-        tambah(pengeluaranBarang)
-    }
-
     void buatSuratJalan(String alamatTujuan, LocalDate tanggal = LocalDate.now(), String keterangan = null) {
-        PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
-            nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
-            tanggal: tanggal, gudang: kirimDari(), keterangan: keterangan, alamatTujuan: alamatTujuan
-        )
-        pengeluaranBarang.items = barangYangHarusDikirim().items
-        tambah(pengeluaranBarang, false)
-    }
-
-    void kirimSuratJalan() {
-        if (!pengeluaranBarang || status != StatusFakturJual.DIBUAT) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        kirim()
+        (getOperasiFakturJual() as FakturJualOlehSalesDibuat).buatSuratJalan(this, alamatTujuan, tanggal, keterangan)
     }
 
     Gudang kirimDari() {
@@ -132,70 +115,16 @@ class FakturJualOlehSales extends FakturJual {
         piutang?.jumlah?: 0
     }
 
-    void tambah(BuktiTerima buktiTerima) {
-        super.tambah(buktiTerima)
-
-        // Menambah piutang
-        piutang = new KewajibanPembayaran(jumlah: total() - totalRetur())
-
-        // Menambah poin
-        DaftarBarangSementara daftarBarang = new DaftarBarangSementara(pengeluaranBarang.items)
-        retur.each { daftarBarang -= it}
-        daftarBarang.nomor = pengeluaranBarang.nomor
-        konsumen.tambahPoin(daftarBarang)
-    }
-
     void bayar(Pembayaran pembayaran) {
-        if (status!=StatusFakturJual.DITERIMA || piutang==null) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        piutang.bayar(pembayaran)
-        if (piutang.lunas) {
-            status = StatusFakturJual.LUNAS
-            konsumen.hapusFakturBelumLunas(this)
-        }
-        ApplicationHolder.application?.event(new BayarPiutang(this, pembayaran))
+        getOperasiFakturJual().proses(this, [operasi: 'bayar', pembayaran: pembayaran])
     }
 
     void hapusPembayaran(Pembayaran pembayaran) {
-        if (!status.piutangBolehDiubah || piutang==null) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        piutang.hapus(pembayaran)
-        if (status==StatusFakturJual.LUNAS) {
-            status = StatusFakturJual.DITERIMA
-            konsumen.tambahFakturBelumLunas(this)
-        }
-        ApplicationHolder.application?.event(new BayarPiutang(this, pembayaran, true))
+        getOperasiFakturJual().proses(this, [operasi: 'hapusPembayaran', pembayaran: pembayaran])
     }
 
     void hapusPembayaran(String nomorReferensi, String jenisReferensi = null) {
-        piutang.listPembayaran.find {
-            if (jenisReferensi) {
-                return (it.referensi.namaClass == jenisReferensi) && (it.referensi.nomor == nomorReferensi)
-            } else {
-                return (it.referensi.nomor == nomorReferensi)
-            }
-        }.each { Pembayaran pembayaran ->
-            hapusPembayaran(pembayaran)
-        }
-    }
-
-    @Override
-    void hapusPengeluaranBarang() {
-        super.hapusPengeluaranBarang()
-    }
-
-    @Override
-    void hapusBuktiTerima() {
-        if (piutang!=null && piutang.jumlahDibayar() > 0) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        super.hapusBuktiTerima()
-        piutang = null
-
-        // Menghapus poin pada konsumen
-        konsumen.hapusPoin(pengeluaranBarang.toPoin())
+        getOperasiFakturJual().proses(this, [operasi: 'hapusPembayaran', nomorReferensi: nomorReferensi, jenisReferensi: jenisReferensi])
     }
 
     BigDecimal sisaPiutang() {
@@ -220,7 +149,7 @@ class FakturJualOlehSales extends FakturJual {
     }
 
     void tambahBonus(List<ItemBarang> listItemBarang) {
-        if (!status.bolehDiubah || bonusPenjualan) {
+        if (bonusPenjualan) {
             throw new DataTidakBolehDiubah(bonusPenjualan)
         }
         BonusPenjualan bonusPenjualan = new BonusPenjualan(
@@ -232,9 +161,6 @@ class FakturJualOlehSales extends FakturJual {
     }
 
     void hapusBonus() {
-        if (!status.bolehDiubah) {
-            throw new DataTidakBolehDiubah(this.bonusPenjualan)
-        }
         if (!bonusPenjualan) {
             throw new DataTidakBolehDiubah('Bonus penjualan tidak ditemukan!')
         }
@@ -257,14 +183,7 @@ class FakturJualOlehSales extends FakturJual {
         hasil
     }
 
-    void tambahRetur(ReturFaktur returFaktur) {
-        // Periksa apakah barang yang dikembalikan adalah barang yang sudah dipesan sebelumnya.
-        if (status == StatusFakturJual.LUNAS) {
-            throw new DataTidakBolehDiubah('Faktur jual yang telah lunas tidak boleh di-retur!', this)
-        }
-        if (piutang && piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.TANPA_POTONGAN) > 0) {
-            throw new DataTidakBolehDiubah('Faktur jual yang telah dibayar tidak boleh di-retur!', this)
-        }
+    BigDecimal prosesTambahRetur(ReturFaktur returFaktur) {
         BigDecimal harga = 0
         returFaktur.gudang = kirimDari()
         returFaktur.normalisasi().each { ItemBarang barangRetur ->
@@ -275,26 +194,13 @@ class FakturJualOlehSales extends FakturJual {
                 throw new BarangSelisih("Tidak ada penjualan ${barangRetur.produk.nama} sejumlah ${barangRetur.jumlah} di faktur jual ${nomor}!")
             }
         }
-
-        // Tambahkan pada retur
         retur.add(returFaktur)
-
-        // Kurangi piutang bila ada
-        if (piutang) {
-            bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(RETUR_FAKTUR, returFaktur.nomor)))
-        }
-
-        // Kurangi bonus untuk konsumen tersebut
-        if (status == StatusFakturJual.DITERIMA) {
-            konsumen.hapusPoin(returFaktur)
-        }
-
-        // Lakukan Perubahan stok (bertambah)
         ReferensiStok ref = new ReferensiStokBuilder(returFaktur, this).buat()
         ApplicationHolder.application?.event(new PerubahanStok(returFaktur, ref))
+        harga
     }
 
-    void hapusRetur(String nomor) {
+    ReturFaktur prosesHapusRetur(String nomor) {
         // Periksa apakah barang yang dikembalikan adalah barang yang sudah dipesan sebelumnya.
         if (status == StatusFakturJual.LUNAS) {
             throw new DataTidakBolehDiubah('Faktur jual yang telah lunas tidak boleh di-retur!', this)
@@ -313,19 +219,10 @@ class FakturJualOlehSales extends FakturJual {
         }
         retur.remove(returFaktur)
 
-        // Hapus potongan piutang bila perlu
-        if (piutang) {
-            hapusPembayaran(nomor, RETUR_FAKTUR)
-        }
-
-        // Tambah bonus untuk konsumen tersebut bila perlu
-        if (status == StatusFakturJual.DITERIMA) {
-            konsumen.tambahPoin(returFaktur)
-        }
-
         // Lakukan Perubahan stok (berkurang akibat invers)
         ReferensiStok ref = new ReferensiStokBuilder(returFaktur, this).buat()
         ApplicationHolder.application?.event(new PerubahanStok(returFaktur, ref, true))
+        returFaktur
     }
 
     BigDecimal totalRetur() {
@@ -356,6 +253,24 @@ class FakturJualOlehSales extends FakturJual {
     @Override
     List<ItemBarang> yangDipesan() {
         barangYangHarusDikirim().items
+    }
+
+    @Override
+    OperasiFakturJual getOperasiFakturJual() {
+        PengaturanRepository pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan') as PengaturanRepository
+        switch (status) {
+            case null:
+                if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+                    return new FakturJualOlehSalesMulai()
+                } else {
+                    return new FakturJualOlehSalesSingkatMulai()
+                }
+            case StatusFakturJual.DIBUAT: return new FakturJualOlehSalesDibuat()
+            case StatusFakturJual.DIANTAR: return new FakturJualOlehSalesDiantar()
+            case StatusFakturJual.DITERIMA: return new FakturJualOlehSalesDiterima()
+            case StatusFakturJual.LUNAS: return new FakturJualOlehSalesLunas()
+        }
+        null
     }
 
     boolean equals(o) {

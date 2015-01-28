@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,60 +15,25 @@
  */
 package domain.penjualan
 
-import domain.event.PerubahanStok
-import domain.exception.DataTidakBolehDiubah
 import domain.exception.StokTidakCukup
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.inventory.BolehPesanStok
-import domain.inventory.ReferensiStok
-import domain.inventory.ReferensiStokBuilder
+import domain.penjualan.state.OperasiFakturJual
 import groovy.transform.*
 import simplejpa.DomainClass
 import javax.persistence.*
-import javax.validation.constraints.*
-import griffon.util.*
 
 @DomainClass @Entity @Canonical(excludes='pengeluaranBarang')
 abstract class FakturJual extends Faktur implements BolehPesanStok {
 
-    @NotNull @Enumerated
-    StatusFakturJual status = StatusFakturJual.DIBUAT
+    @Enumerated
+    StatusFakturJual status
 
     @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
     PengeluaranBarang pengeluaranBarang
 
     abstract BigDecimal nilaiPenjualan()
-
-    protected void tambah(PengeluaranBarang pengeluaranBarang, boolean langsungDikirim = true) {
-        if (!status.pengeluaranBolehDiubah || this.pengeluaranBarang) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        this.pengeluaranBarang = pengeluaranBarang
-        if (langsungDikirim) {
-            kirim()
-        }
-    }
-
-    protected void kirim() {
-        if (!status.pengeluaranBolehDiubah && !pengeluaranBarang) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        status = StatusFakturJual.DIANTAR
-        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, false, isBolehPesanStok()))
-    }
-
-    public void tambah(BuktiTerima buktiTerima) {
-        if (!status.pengeluaranBolehDiubah) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        if (pengeluaranBarang == null) {
-            throw new DataTidakBolehDiubah('Pengiriman belum dilakukan!', this)
-        }
-        pengeluaranBarang.diterima(buktiTerima)
-        status = StatusFakturJual.DITERIMA
-    }
 
     @Override
     void tambah(ItemFaktur itemFaktur) {
@@ -78,28 +43,30 @@ abstract class FakturJual extends Faktur implements BolehPesanStok {
         super.tambah(itemFaktur)
     }
 
-    public void hapusPengeluaranBarang() {
-        if (!status.pengeluaranBolehDiubah) {
-            throw new DataTidakBolehDiubah(this)
-        }
-        if (pengeluaranBarang == null) {
-            throw new DataTidakBolehDiubah('Pengeluaran tidak ditemukan!', this)
-        }
-        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, this).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, isBolehPesanStok()))
-        pengeluaranBarang = null
-        status = StatusFakturJual.DIBUAT
+    abstract OperasiFakturJual getOperasiFakturJual()
+
+    void proses(Map args = null) {
+        getOperasiFakturJual().proses(this, args?: [:])
     }
 
-    public void hapusBuktiTerima() {
-        if (status == StatusFakturJual.LUNAS) {
-            throw new DataTidakBolehDiubah(this)
+    void prosesSampai(StatusFakturJual statusTujuan, Map args = null) {
+        while (status != statusTujuan) {
+            def key = status? status.toString(): 'Mulai'
+            Map currentArgs = args? args[key]: [:]
+            getOperasiFakturJual().proses(this, currentArgs?:[:])
         }
-        if (pengeluaranBarang == null) {
-            throw new DataTidakBolehDiubah('Bukti terima tidak ditemukan!', this)
-        }
-        pengeluaranBarang.batalDiterima()
-        status = StatusFakturJual.DIANTAR
+    }
+
+    void hapus() {
+        getOperasiFakturJual().hapus(this)
+    }
+
+    void tambahRetur(ReturFaktur returFaktur) {
+        getOperasiFakturJual().tambahRetur(this, returFaktur)
+    }
+
+    void hapusRetur(String nomor) {
+        getOperasiFakturJual().hapusRetur(this, nomor)
     }
 
     boolean equals(o) {

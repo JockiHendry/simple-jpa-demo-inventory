@@ -13,10 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pengaturan;
+package laporan
 
-public enum JenisNilai {
+import domain.inventory.Produk
+import groovy.transform.Canonical
+import org.joda.time.LocalDate
 
-    STRING, PASSWORD, INTEGER, BOOLEAN
+@Canonical
+class PengambilanBarangSummary {
+
+    LocalDate tanggal
+
+    Produk produk
+
+    Long qtyJualSales = 0
+
+    Long qtyJualEceran = 0
+
+    Long qtyRetur = 0
+
+    Long qtyPenyesuaian = 0
+
+    Long qtyTransfer = 0
+
+    Long total() {
+        qtyJualSales + qtyJualEceran + qtyRetur + qtyPenyesuaian + qtyTransfer
+    }
 
 }

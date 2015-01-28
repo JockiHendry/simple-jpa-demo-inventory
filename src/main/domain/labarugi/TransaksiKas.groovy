@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@ package domain.labarugi
 
 import domain.general.ItemPeriodik
 import groovy.transform.*
+import simplejpa.DomainClass
 import javax.persistence.*
 import javax.validation.constraints.*
 
-@Embeddable @Canonical @TupleConstructor(includeSuperProperties=true)
+@DomainClass @Canonical @TupleConstructor(includeSuperProperties=true)
+@Entity
 class TransaksiKas extends ItemPeriodik {
 
     @Size(min=2, max=150)
@@ -61,13 +63,13 @@ class TransaksiKas extends ItemPeriodik {
 
     int hashCode() {
         int result
-        result = tanggal.hashCode()
-        result = 31 * result + jumlah.hashCode()
-        result = 31 * result + keterangan.hashCode()
-        result = 31 * result + saldo.hashCode()
-        result = 31 * result + jenis.nama.hashCode()
-        result = 31 * result + pihakTerkait.hashCode()
-        result = 31 * result + kategoriKas.nama.hashCode()
+        result = (tanggal?.hashCode()?: 0)
+        result = 31 * result + (jumlah?.hashCode()?: 0)
+        result = 31 * result + (keterangan?.hashCode()?: 0)
+        result = 31 * result + (saldo?.hashCode()?: 0)
+        result = 31 * result + (jenis?.nama?.hashCode()?: 0)
+        result = 31 * result + (pihakTerkait?.hashCode()?: 0)
+        result = 31 * result + (kategoriKas?.nama?.hashCode()?: 0)
         result
     }
 

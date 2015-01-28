@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import simplejpa.transaction.Transaction
 class GudangRepository {
 
     private Gudang gudangUtama
+    private List<Gudang> bukanGudangUtama
 
     public Gudang cariGudangUtama() {
         if (!gudangUtama) {
@@ -35,6 +36,13 @@ class GudangRepository {
             this.gudangUtama = gudangUtama
         }
         gudangUtama
+    }
+
+    public List<Gudang> cariBukanGudangUtama() {
+        if (!bukanGudangUtama) {
+            bukanGudangUtama = findAllGudangByUtama(false)
+        }
+        bukanGudangUtama
     }
 
     public List<Gudang> cari(String namaSearch) {

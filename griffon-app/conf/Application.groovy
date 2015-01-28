@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,34 @@ application {
     locale = 'id_ID'
 }
 mvcGroups {
+    // MVC Group for "templateFaktur"
+    'templateFaktur' {
+        model      = 'project.main.TemplateFakturModel'
+        view       = 'project.main.TemplateFakturView'
+        controller = 'project.main.TemplateFakturController'
+    }
+
+    // MVC Group for "laporanDaftarInventory"
+    'laporanDaftarInventory' {
+        model      = 'project.laporan.LaporanDaftarInventoryModel'
+        view       = 'project.laporan.LaporanDaftarInventoryView'
+        controller = 'project.laporan.LaporanDaftarInventoryController'
+    }
+
+    // MVC Group for "laporanPenjualanEceran"
+    'laporanPenjualanEceran' {
+        model      = 'project.laporan.LaporanPenjualanEceranModel'
+        view       = 'project.laporan.LaporanPenjualanEceranView'
+        controller = 'project.laporan.LaporanPenjualanEceranController'
+    }
+
+    // MVC Group for "laporanPengambilanBarang"
+    'laporanPengambilanBarang' {
+        model      = 'project.laporan.LaporanPengambilanBarangModel'
+        view       = 'project.laporan.LaporanPengambilanBarangView'
+        controller = 'project.laporan.LaporanPengambilanBarangController'
+    }
+
     // MVC Group for "jumlahPeriodeKasAsChild"
     'jumlahPeriodeKasAsChild' {
         model      = 'project.labarugi.JumlahPeriodeKasAsChildModel'

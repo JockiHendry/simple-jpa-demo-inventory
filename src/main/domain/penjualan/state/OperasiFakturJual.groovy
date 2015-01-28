@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package domain.pengaturan;
+package domain.penjualan.state
 
-public enum JenisNilai {
+import domain.penjualan.FakturJual
+import domain.penjualan.ReturFaktur
 
-    STRING, PASSWORD, INTEGER, BOOLEAN
+interface OperasiFakturJual {
+
+    void proses(FakturJual fakturJual, Map args)
+
+    void hapus(FakturJual fakturJual)
+
+    void tambahRetur(FakturJual fakturJual, ReturFaktur returFaktur)
+
+    void hapusRetur(FakturJual fakturJual, String nomor)
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,19 @@
  */
 package domain.labarugi
 
+import domain.inventory.ItemStok
+import domain.inventory.Produk
+import domain.penjualan.ReturFaktur
 import groovy.transform.Canonical
+import listener.InventoryEventListenerService
 import org.joda.time.LocalDate
 
 @Canonical
 class NilaiInventory {
 
-    List<ItemNilaiInventory> items = []
+    Produk produk
+
+    TreeSet<ItemNilaiInventory> items = new TreeSet<>()
 
     BigDecimal nilai() {
         items.sum { it.total() }?: 0
@@ -31,12 +37,31 @@ class NilaiInventory {
         items.sum { it.qty?: 0}?: 0
     }
 
-    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga) {
-        items << new ItemNilaiInventory(tanggal, nama, qty, harga)
+    List toList() {
         isiHargaYangKosong()
+        items.toList()
+    }
+
+    void tambah(ItemStok itemStok, Long qty, BigDecimal harga) {
+        ItemNilaiInventory item = new ItemNilaiInventory(qty: qty, harga: harga)
+        item.tanggal = itemStok.tanggal
+        item.nama = itemStok.referensiStok?.pihakTerkait
+        if (itemStok.referensiStok?.classGudang == ReturFaktur.simpleName) {
+            item.faktur = 'Retur Faktur: ' + itemStok.referensiStok?.deskripsiSingkat()
+        } else if (itemStok.keterangan == InventoryEventListenerService.KETERANGAN_INVERS_HAPUS) {
+            item.faktur = 'Penyeimbangan Hapus: ' + itemStok.referensiStok?.deskripsiSingkat()
+        } else {
+            item.faktur = itemStok.referensiStok?.deskripsiSingkat()
+        }
+        items << item
+    }
+
+    void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur = null) {
+        items << new ItemNilaiInventory(tanggal, nama, qty, harga, faktur)
     }
 
     BigDecimal kurang(long qty) {
+        isiHargaYangKosong()
         BigDecimal hasil = 0
         int sisaQty = qty
         for (int i=0; i<items.size(); i++) {
@@ -59,9 +84,9 @@ class NilaiInventory {
             // Tidak bisa melakukan estimasi bila seluruh harga kosong!
             return
         }
-        BigDecimal hargaTerakhir = 0
-        items.reverse().each { ItemNilaiInventory item ->
-            if (item.harga == null) {
+        BigDecimal hargaTerakhir
+        items.each { ItemNilaiInventory item ->
+            if (hargaTerakhir && (item.harga == null)) {
                 item.harga = hargaTerakhir
             }
             hargaTerakhir = item.harga

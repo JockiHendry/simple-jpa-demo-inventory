@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -30,16 +30,20 @@ import domain.inventory.ReferensiStokBuilder
 import domain.inventory.Transfer
 import domain.general.PesanLevelMinimum
 import org.joda.time.LocalDate
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import project.user.PesanRepository
 import simplejpa.transaction.Transaction
 
 @SuppressWarnings("GroovyUnusedDeclaration")
+@Transaction
 class InventoryEventListenerService {
+
+    public static final String KETERANGAN_INVERS_HAPUS = 'Invers Hapus'
+    private final Logger log = LoggerFactory.getLogger(InventoryEventListenerService)
 
     PesanRepository pesanRepository
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
-    @Transaction
     void onPerubahanStokTukar(PerubahanStokTukar perubahanStokTukar) {
         DaftarBarang daftarBarang = (DaftarBarang) perubahanStokTukar.source
         int pengali = daftarBarang.faktor() * (perubahanStokTukar.invers? -1: 1)
@@ -54,12 +58,12 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanRetur(PerubahanRetur perubahanRetur) {
         DaftarBarang daftarBarang = perubahanRetur.nilai()
         daftarBarang.items.each { ItemBarang itemBarang ->
             int pengali = (perubahanRetur.invers? -1: 1) * daftarBarang.faktor()
             int jumlahRetur = pengali * itemBarang.jumlah
+            itemBarang.produk = findProdukById(itemBarang.produk.id)
             if (itemBarang.produk.jumlahRetur == null) {
                 itemBarang.produk.jumlahRetur = jumlahRetur
             } else {
@@ -68,8 +72,6 @@ class InventoryEventListenerService {
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
-    @Transaction
     void onPesanStok(PesanStok pesanStok) {
         BolehPesanStok source = pesanStok.source
         if (!source.bolehPesanStok) return
@@ -78,10 +80,13 @@ class InventoryEventListenerService {
         source.yangDipesan().each {
             Produk produk = findProdukById(it.produk.id)
             produk.jumlahAkanDikirim = (produk.jumlahAkanDikirim?:0) + (pengali * (it.jumlah?:0))
+            if (produk.jumlahAkanDikirim < 0) {
+                log.warn "Jumlah akan dikirim untuk ${produk.nama} mencapai negatif: ${produk.jumlahAkanDikirim}."
+                produk.jumlahAkanDikirim = 0
+            }
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onPerubahanStok(PerubahanStok perubahanStok) {
         DaftarBarang daftarBarang = perubahanStok.source
         ReferensiStok referensiStok = perubahanStok.referensiStok
@@ -91,18 +96,22 @@ class InventoryEventListenerService {
             String keterangan = null
             if (perubahanStok.invers) {
                 pengali *= -1
-                keterangan = 'Invers Hapus'
+                keterangan = KETERANGAN_INVERS_HAPUS
             }
             ItemStok itemStok = new ItemStok(LocalDate.now(), referensiStok, pengali * i.jumlah, keterangan)
+            i.produk = findProdukById(i.produk.id)
             i.produk.perubahanStok(daftarBarang.gudang, itemStok)
             if (perubahanStok.pakaiYangSudahDipesan) {
                 i.produk.jumlahAkanDikirim += (pengali * i.jumlah)
+                if (i.produk.jumlahAkanDikirim < 0) {
+                    log.warn "Jumlah akan dikirim untuk ${i.produk.nama} mencapai negatif: ${i.produk.jumlahAkanDikirim}."
+                    i.produk.jumlahAkanDikirim = 0
+                }
             }
             periksaLevelMinimum(i.produk)
         }
     }
 
-    @SuppressWarnings("GroovyUnusedDeclaration")
     void onTransferStok(TransferStok transferStok) {
         Transfer transfer = transferStok.source
         transfer.normalisasi().each { ItemBarang i ->
@@ -110,8 +119,10 @@ class InventoryEventListenerService {
             String keterangan
             if (transferStok.invers) {
                 pengali = 1
-                keterangan = 'Invers Hapus'
+                keterangan = KETERANGAN_INVERS_HAPUS
             }
+
+            i.produk = findProdukById(i.produk.id)
 
             // Mengurangi gudang asal
             ItemStok itemStokAsal = new ItemStok(LocalDate.now(), new ReferensiStokBuilder(transfer).buat(),

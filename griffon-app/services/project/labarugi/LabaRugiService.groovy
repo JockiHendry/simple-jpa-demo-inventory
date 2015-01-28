@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@ package project.labarugi
 import domain.faktur.Faktur
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
-import domain.inventory.Gudang
 import domain.inventory.ItemPenyesuaian
 import domain.inventory.ItemStok
 import domain.inventory.PenyesuaianStok
-import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
-import domain.inventory.StokProduk
 import domain.inventory.Transfer
+import domain.labarugi.CacheGlobal
+import domain.labarugi.ItemNilaiInventory
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.KATEGORI_SISTEM
 import domain.labarugi.Kas
@@ -33,6 +32,7 @@ import domain.labarugi.KategoriKas
 import domain.labarugi.NilaiInventory
 import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJual
+import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
 import laporan.ItemLabaRugi
 import laporan.NilaiInventoryProduk
@@ -40,6 +40,7 @@ import org.joda.time.LocalDate
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import project.inventory.GudangRepository
+import project.inventory.ProdukRepository
 import simplejpa.transaction.Transaction
 import static project.labarugi.KategoriKasRepository.KATEGORI_LAIN
 import static project.labarugi.KategoriKasRepository.KATEGORI_TUKAR_BARANG
@@ -49,6 +50,7 @@ class LabaRugiService {
 
     final Logger log = LoggerFactory.getLogger(LabaRugiService)
 
+    ProdukRepository produkRepository
     GudangRepository gudangRepository
     KategoriKasRepository kategoriKasRepository
     KasRepository kasRepository
@@ -72,47 +74,66 @@ class LabaRugiService {
         }
     }
 
-    NilaiInventory hitungInventory(LocalDate sampaiTanggal, Produk produk) {
-        produk = findProdukById(produk.id)
-        StokProduk stokProduk = produk.stok(gudangRepository.cariGudangUtama())
-        int qtyTersedia = stokProduk.saldoKumulatifSebelum(sampaiTanggal)
+    NilaiInventory hitungInventory(Produk produk, CacheGlobal cacheGlobal = new CacheGlobal()) {
+        int qtyTerakhir = cacheGlobal.cariQtyTerakhir(produk)
+        NilaiInventory nilaiInventory = new NilaiInventory(produk: produk)
+        if (qtyTerakhir > 0) {
+            List daftarItemStok = cacheGlobal.cariPenerimaan(produk)
+            boolean selesai = false
+            int i, qty
+            BigDecimal harga
+            for (i=0; i<daftarItemStok.size(); i++) {
+                ItemStok itemStok = daftarItemStok[i]
+                if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTerakhir) {
+                    qty = qtyTerakhir - nilaiInventory.qty()
+                    harga = cariHarga(produk, itemStok)
+                    selesai = true
+                } else {
+                    qty = itemStok.jumlah
+                    harga = cariHarga(produk, itemStok)
+                }
+                nilaiInventory.tambah(itemStok, qty, harga)
+                if (selesai) break
+            }
 
-        // Tambahkan juga dengan jumlah yang tersedia di gudang lain (yang bukan gudang utama)
-        gudangRepository.findAllGudangByUtama(false).each { Gudang gudang ->
-            qtyTersedia += produk.stok(gudang).saldoKumulatifSebelum(sampaiTanggal)
-        }
-
-        // Hitung nilai inventory dengan menggunakan metode FIFO
-        NilaiInventory nilaiInventory = new NilaiInventory()
-        if (qtyTersedia > 0) {
-            for (PeriodeItemStok p : stokProduk.listPeriodeRiwayat.reverse()) {
-                for (ItemStok itemStok : p.cariPenambahanInventory().reverse()) {
-                    if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTersedia) {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTersedia - nilaiInventory.qty(), cariHarga(produk, itemStok))
-                        break
-                    } else {
-                        nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
+            // Bila ada inventory dengan nilai kosong di baris pertama, maka cari harga beli terakhir yang paling mendekati.
+            // Hal ini perlu dilakukan karena penambahan bisa disebabkan oleh invers hapus atau retur.
+            if (!nilaiInventory.toList().empty && (nilaiInventory.toList()[0].harga == null)) {
+                ItemNilaiInventory itemPertama = nilaiInventory.toList()[0]
+                selesai = false
+                for(;i<daftarItemStok.size(); i++) {
+                    ItemStok itemStok = daftarItemStok[i]
+                    harga = cariHarga(produk, itemStok)
+                    if (harga) {
+                        itemPertama.harga = harga
+                        selesai = true
                     }
+                    if (selesai) break
                 }
             }
         }
+
         nilaiInventory
     }
 
     BigDecimal cariHarga(Produk produk, ItemStok itemStok) {
         if (itemStok.referensiStok?.classFinance == PurchaseOrder.simpleName) {
             PurchaseOrder po = findPurchaseOrderByNomor(itemStok.referensiStok.nomorFinance)
-            Faktur f = po.fakturBeli?: po
-            for (ItemFaktur i: f.listItemFaktur) {
-                if (i.produk == produk) {
-                    return i.diskon?.hasil(i.harga)?: i.harga
+            if (po) {
+                Faktur f = po.fakturBeli ?: po
+                for (ItemFaktur i : f.listItemFaktur) {
+                    if (i.produk == produk) {
+                        return i.diskon?.hasil(i.harga) ?: i.harga
+                    }
                 }
             }
         } else if (itemStok.referensiStok?.classGudang == PenyesuaianStok.simpleName) {
             PenyesuaianStok ps = findPenyesuaianStokByNomor(itemStok.referensiStok.nomorGudang)
-            for (ItemPenyesuaian i: ps.items) {
-                if (i.produk == produk) {
-                    return i.harga?: null
+            if (ps) {
+                for (ItemPenyesuaian i : ps.items) {
+                    if (i.produk == produk) {
+                        return i.harga ?: null
+                    }
                 }
             }
         }
@@ -121,39 +142,51 @@ class LabaRugiService {
     }
 
     List hitungPenjualan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal penjualanKotor = 0, potonganPiutang = 0
+        BigDecimal penjualanSales = 0, penjualanEceran = 0, potonganPiutang = 0
         List<FakturJual> fakturJuals = findAllFakturJualByTanggalBetween(tanggalMulai, tanggalSelesai)
         for (FakturJual fakturJual: fakturJuals) {
-            penjualanKotor += fakturJual.nilaiPenjualan()
-            if ((fakturJual instanceof FakturJualOlehSales) && (fakturJual.piutang)) {
-                potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+            if (fakturJual instanceof FakturJualOlehSales) {
+                penjualanSales += fakturJual.nilaiPenjualan()
+                if (fakturJual.piutang) {
+                    potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+                }
+            } else if (fakturJual instanceof FakturJualEceran) {
+                penjualanEceran += fakturJual.nilaiPenjualan()
             }
         }
-        [penjualanKotor, potonganPiutang]
+        [penjualanSales, penjualanEceran, potonganPiutang]
     }
 
-    BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal hasil = 0
+    List hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        BigDecimal hasil = 0, ongkosKirim = 0
+        CacheGlobal cacheGlobal = new CacheGlobal()
+        cacheGlobal.perbaharui(tanggalMulai, tanggalSelesai)
         List<Produk> produks = findAllProduk()
         for (Produk produk: produks) {
-            hasil += hitungHPP(tanggalMulai, tanggalSelesai, produk)
+            NilaiInventoryProduk info = new NilaiInventoryProduk()
+            hasil += hitungHPP(produk, info, cacheGlobal)
+            ongkosKirim += ((info.qtyPenjualan?:0) * (produk.ongkosKirimBeli?:0))
         }
-        hasil
+        [hasil, ongkosKirim]
     }
 
-    BigDecimal hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai, Produk produk, NilaiInventoryProduk informasi = null) {
-        NilaiInventory nilaiInventory = hitungInventory(tanggalMulai, produk)
+    BigDecimal hitungHPP(Produk produk, NilaiInventoryProduk informasi = null, CacheGlobal cacheGlobal = new CacheGlobal()) {
+        NilaiInventory nilaiInventory = hitungInventory(produk, cacheGlobal)
         if (informasi) {
             informasi.produk = produk
             informasi.nilaiAwal = nilaiInventory.nilai()
         }
-        List<ItemStok> itemStoks = produk.semuaItemStok(tanggalMulai, tanggalSelesai)
+        List<ItemStok> itemStoks = cacheGlobal.cariPerubahan(produk)
         long jumlahPenjualan = 0
         for (ItemStok itemStok: itemStoks) {
             // Abaikan transfer karena tidak mempengaruhi laba rugi
-            if ((itemStok.referensiStok == null) || (itemStok.referensiStok?.classGudang != Transfer.simpleName)) {
+            if (itemStok.referensiStok?.classGudang != Transfer.simpleName) {
                 if (itemStok.jumlah > 0) {
-                    nilaiInventory.tambah(itemStok.tanggal, itemStok?.referensiStok?.pihakTerkait, itemStok.jumlah, cariHarga(produk, itemStok))
+                    BigDecimal harga = cariHarga(produk, itemStok)
+                    nilaiInventory.tambah(itemStok.tanggal, itemStok?.referensiStok?.pihakTerkait, itemStok.jumlah, harga)
+                    if (informasi) {
+                        informasi.nilaiAwal += ((itemStok.jumlah?:0) * (harga?:0))
+                    }
                 } else {
                     jumlahPenjualan += itemStok.jumlah
                 }
@@ -163,17 +196,21 @@ class LabaRugiService {
         if (informasi) {
             informasi.nilaiHPP = hasil
             informasi.nilaiAkhir = informasi.nilaiAwal - informasi.nilaiHPP
+            informasi.qtyPenjualan = Math.abs(jumlahPenjualan)
         }
         hasil
     }
 
     List<ItemLabaRugi> laporanLabaRugi(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         List<ItemLabaRugi> hasil = []
-        def (penjualanKotor, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (penjualanSales, penjualanEceran, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (hpp, ongkosKirimBeli) = hitungHPP(tanggalMulai, tanggalSelesai)
 
-        hasil << new ItemLabaRugi('Pendapatan Dari Penjualan', penjualanKotor, null)
+        hasil << new ItemLabaRugi('Pendapatan Piutang Penjualan Sales (Gross)', penjualanSales, null)
+        hasil << new ItemLabaRugi('Pendapatan Penjualan Eceran', penjualanEceran, null)
         hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
-        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hitungHPP(tanggalMulai, tanggalSelesai))
+        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hpp)
+        hasil << new ItemLabaRugi('Ongkos Kirim Pembelian', null, ongkosKirimBeli)
         hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)
         hasil << new ItemLabaRugi('Pengeluaran Operasional', null, totalPengeluaran(tanggalMulai, tanggalSelesai))
 

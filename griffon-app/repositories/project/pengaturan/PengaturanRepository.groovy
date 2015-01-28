@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ class PengaturanRepository {
 
     @Transaction(Transaction.Policy.SKIP)
     public def getValue(KeyPengaturan keyPengaturan) {
-        cache[keyPengaturan]?: keyPengaturan.defaultValue
+        cache.containsKey(keyPengaturan)? cache[keyPengaturan]: keyPengaturan.defaultValue
     }
 
     @Transaction(Transaction.Policy.SKIP)
@@ -46,6 +46,10 @@ class PengaturanRepository {
 
             case JenisNilai.INTEGER:
                 return ByteBuffer.allocate(4).putInt(value).array()
+
+            case JenisNilai.BOOLEAN:
+                return ByteBuffer.allocate(1).put((value as boolean)? (byte) 1: (byte) 0).array()
+
         }
     }
 
@@ -60,6 +64,9 @@ class PengaturanRepository {
 
             case JenisNilai.INTEGER:
                 return ByteBuffer.wrap(source).getInt()
+
+            case JenisNilai.BOOLEAN:
+                return (ByteBuffer.wrap(source).get() == 1)
         }
     }
 

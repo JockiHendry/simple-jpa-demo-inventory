@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,12 @@ import domain.inventory.Produk
 import domain.inventory.ReferensiStok
 import domain.inventory.ReferensiStokBuilder
 import domain.labarugi.KATEGORI_SISTEM
+import domain.pengaturan.KeyPengaturan
 import domain.penjualan.FakturJualOlehSales
 import domain.penjualan.PengeluaranBarang
 import domain.retur.*
 import org.joda.time.LocalDate
+import project.pengaturan.PengaturanRepository
 import project.penjualan.FakturJualRepository
 import project.user.NomorService
 import simplejpa.transaction.Transaction
@@ -41,14 +43,33 @@ import simplejpa.transaction.Transaction
 @Transaction
 class ReturJualRepository {
 
+    def app
+
     NomorService nomorService
     FakturJualRepository fakturJualRepository
+    PengaturanRepository pengaturanRepository
     
     List<ReturJual> cariReturOlehSales(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch, boolean excludeDeleted = false) {
         findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor', excludeDeleted: excludeDeleted]) {
             if (!nomorSearch) {
                 tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
             } else {
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                konsumen__nama like("%${konsumenSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
+    List<ReturJual> cariReturOlehSalesUntukDiantar(String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
+        findAllReturJualOlehSalesByDsl([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
                 nomor like("%${nomorSearch}%")
             }
             if (konsumenSearch) {
@@ -80,6 +101,22 @@ class ReturJualRepository {
         }
     }
 
+    List<ReturJual> cariReturEceranUntukDiantar(String nomorSearch, String konsumenSearch, Boolean sudahDiprosesSearch) {
+        findAllReturJualEceranByDsl([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
+                nomor like("%${nomorSearch}%")
+            }
+            if (konsumenSearch) {
+                and()
+                namaKonsumen like("%${konsumenSearch}%")
+            }
+            if (sudahDiprosesSearch != null) {
+                and()
+                sudahDiproses eq(sudahDiprosesSearch)
+            }
+        }
+    }
+
 	public ReturJual buat(ReturJual returJual) {
 		if (returJual.nomor && findReturJualByNomor(returJual.nomor)) {
 			throw new DataDuplikat(returJual)
@@ -89,32 +126,29 @@ class ReturJualRepository {
         }
         if (returJual instanceof ReturJualOlehSales) {
             returJual = buatReturOlehSales(returJual)
+            if (!returJual.gudang.utama && !returJual.getKlaimsTukar().empty) {
+                tukar(returJual)
+            }
         } else if (returJual instanceof ReturJualEceran) {
             returJual = buatReturEceran(returJual)
         }
 
-        def app = ApplicationHolder.application
-
-        // Khusus untuk retur jual yang bukan kirim dari gudang utama, barang yang ditukar dianggap langsung dikirim.
-        if (returJual instanceof ReturJualOlehSales && !returJual.gudang.utama && !returJual.getKlaimsTukar().empty) {
+        if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+            app?.event(new PesanStok(returJual))
+        } else if ((returJual.pengeluaranBarang == null) && !returJual.getKlaimsTukar(true).empty) {
+            // Workflow gudang dimatikan sehingga barang untuk penukaran retur dianggap sudah diantar!
             tukar(returJual)
         }
 
         if (returJual.bisaDijualKembali) {
-
             // Khusus untuk barang retur yang masih dijual kembali, tidak perlu mempengaruhi qty retur (retur beli).
             // Barang retur dalam kondisi bagus sehingga masuk kedalam inventory untuk dijual kembali.
             ReferensiStok ref = new ReferensiStokBuilder(returJual).buat()
             app?.event(new PerubahanStok(returJual.toDaftarBarang(), ref))
-
         } else {
-
             // Barang retur perlu menambah qty retur beli karena perlu diproses untuk di-retur beli.
             app?.event(new PerubahanRetur(returJual))
-
         }
-
-        app?.event(new PesanStok(returJual))
 
         // Periksa apakah klaim servis bisa dilakukan (bila ada klaim servis)
         DaftarBarang daftarKlaimServis = returJual.getDaftarBarangServis(true)
@@ -196,10 +230,10 @@ class ReturJualRepository {
         if (!returJual) {
             throw new DataTidakBolehDiubah(returJual)
         }
-        if (returJual.pengeluaranBarang != null) {
+        if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG) && (returJual.pengeluaranBarang != null)) {
             throw new DataTidakBolehDiubah(returJual)
         }
-        def app = ApplicationHolder.application
+
         app?.event(new PerubahanRetur(returJual, true))
         if (returJual instanceof ReturJualOlehSales) {
             // Hapus piutang khusus untuk retur jual oleh sales
@@ -209,10 +243,17 @@ class ReturJualRepository {
                 f.hapusPembayaran(returJual.nomor)
             }
         }
-        app?.event(new PesanStok(returJual, true))
+
         DaftarBarang daftarKlaimServis = returJual.getDaftarBarangServis()
         if (!daftarKlaimServis.items.empty) {
             app?.event(new PerubahanStokTukar(daftarKlaimServis, true))
+        }
+
+        // Langsung hapus pengeluaran barang bila workflow gudang tidak aktif
+        if (pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)) {
+            app?.event(new PesanStok(returJual, true))
+        } else {
+            returJual = hapusPengeluaranBarang(returJual)
         }
 
         // Hapus tukar tambah dan tukar uang (bila ada)
@@ -229,10 +270,13 @@ class ReturJualRepository {
 
     public ReturJual hapusPengeluaranBarang(ReturJual returJual) {
         returJual = findReturJualById(returJual.id)
-        PengeluaranBarang pengeluaranBarang = returJual.pengeluaranBarang
-        ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
-        ApplicationHolder.application?.event(new PerubahanStok(pengeluaranBarang, ref, true, true))
-        returJual.hapusPenukaran()
+        if (returJual.pengeluaranBarang != null) {
+            PengeluaranBarang pengeluaranBarang = returJual.pengeluaranBarang
+            ReferensiStok ref = new ReferensiStokBuilder(pengeluaranBarang, returJual).buat()
+            app?.event(new PerubahanStok(pengeluaranBarang, ref, true,
+                pengaturanRepository.getValue(KeyPengaturan.WORKFLOW_GUDANG)))
+            returJual.hapusPenukaran()
+        }
         returJual
     }
 
@@ -242,6 +286,26 @@ class ReturJualRepository {
         PengeluaranBarang pengeluaranBarang = returJual.tukar()
         persist(pengeluaranBarang)
         returJual
+    }
+
+    public void prosesSemuaReturJualSales() {
+        List daftar = findAllReturJualOlehSalesBySudahDiproses(false)
+        for (ReturJualOlehSales retur: daftar) {
+            if (!retur.getKlaimsTukar(true).empty) {
+                PengeluaranBarang pengeluaranBarang = retur.tukar()
+                persist(pengeluaranBarang)
+            }
+        }
+    }
+
+    public void prosesSemuaReturJualEceran() {
+        List daftar = findAllReturJualEceranBySudahDiproses(false)
+        for (ReturJualEceran retur: daftar) {
+            if (!retur.getKlaimsTukar(true).empty) {
+                PengeluaranBarang pengeluaranBarang = retur.tukar()
+                persist(pengeluaranBarang)
+            }
+        }
     }
 
 }

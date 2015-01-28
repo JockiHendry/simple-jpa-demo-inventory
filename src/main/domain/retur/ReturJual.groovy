@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package domain.retur
 
 import domain.event.PerubahanStok
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.StokTidakCukup
 import domain.inventory.BolehPesanStok
 import domain.inventory.DaftarBarang
 import domain.inventory.DaftarBarangSementara
@@ -102,6 +103,15 @@ abstract class ReturJual implements SebuahDaftarBarang, BolehPesanStok {
         if (daftarYangHarusDitukar.items.empty) {
             throw new UnsupportedOperationException("Tidak ada penukaran yang dapat dilakukan untuk retur jual [$nomor]")
         }
+
+        // Periksa apakah stok cukup
+        for (ItemBarang i: daftarYangHarusDitukar.items) {
+            int jumlahTersedia = i.produk.stok(gudang).jumlah
+            if (jumlahTersedia < i.jumlah) {
+                throw new StokTidakCukup(i.produk.nama, i.jumlah, jumlahTersedia)
+            }
+        }
+
         PengeluaranBarang pengeluaranBarang = new PengeluaranBarang(
             nomor: ApplicationHolder.application.serviceManager.findService('Nomor').buatNomor(NomorService.TIPE.PENGELUARAN_BARANG),
             tanggal: LocalDate.now(),

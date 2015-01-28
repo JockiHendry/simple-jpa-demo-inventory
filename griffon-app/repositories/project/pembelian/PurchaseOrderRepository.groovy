@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -135,6 +135,7 @@ class PurchaseOrderRepository {
             }
             if ((statusHutangSearch == StatusHutangSearch.BELUM_LUNAS) || (statusHutangSearch == StatusHutangSearch.SEMUA)) {
                 statusSearch << StatusPurchaseOrder.OK
+                statusSearch << StatusPurchaseOrder.FAKTUR_DITERIMA
             }
             and()
             status isIn(statusSearch)
@@ -196,20 +197,20 @@ class PurchaseOrderRepository {
     }
 
     public List hapus(PurchaseOrder purchaseOrder, PenerimaanBarang penerimaanBarang) {
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
         penerimaanBarang = findPenerimaanBarangById(penerimaanBarang.id)
         purchaseOrder.hapus(penerimaanBarang)
         [purchaseOrder, penerimaanBarang]
     }
 
     public PurchaseOrder hapusFaktur(PurchaseOrder purchaseOrder) {
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
         purchaseOrder.hapusFaktur()
         purchaseOrder
     }
 
     public PurchaseOrder hapus(PurchaseOrder purchaseOrder) {
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
         if (!purchaseOrder || !purchaseOrder.status.bolehDiubah) {
             throw new DataTidakBolehDiubah(purchaseOrder)
         }
@@ -218,13 +219,13 @@ class PurchaseOrderRepository {
     }
 
     public PurchaseOrder hapus(PurchaseOrder purchaseOrder, Pembayaran pembayaran) {
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
         purchaseOrder.hapus(pembayaran)
         purchaseOrder
     }
 
     public PurchaseOrder bayar(PurchaseOrder purchaseOrder, Pembayaran pembayaran, BilyetGiro bilyetGiro = null) {
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
         if (bilyetGiro) {
             if (bilyetGiro.id == null) {
                 persist(bilyetGiro)

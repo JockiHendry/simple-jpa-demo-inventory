@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -97,6 +97,9 @@ class Produk implements Comparable {
     Map<Gudang, StokProduk> daftarStok = [:]
 
     String keterangan
+
+    @Min(0l)
+    BigDecimal ongkosKirimBeli = 0
 
     public StokProduk stok(Gudang gudang) {
         StokProduk result = daftarStok[gudang]

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package project.penjualan
 
-import domain.event.PesanStok
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
 import domain.exception.MelebihiBatasKredit
@@ -36,17 +35,18 @@ import domain.inventory.ItemBarang
 import domain.inventory.Produk
 import domain.pengaturan.KeyPengaturan
 import org.joda.time.LocalDate
+import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import simplejpa.transaction.Transaction
 import util.SwingHelper
-import griffon.util.*
 
 @Transaction
 class FakturJualRepository {
 
     NomorService nomorService
     GudangRepository gudangRepository
+    PengaturanRepository pengaturanRepository
 
     List<FakturJual> cari(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualByDslFetchComplete([orderBy: 'tanggal,nomor', excludeDeleted: false]) {
@@ -106,11 +106,25 @@ class FakturJualRepository {
         }
     }
 
-    List<FakturJualOlehSales> cariFakturJualUntukPengiriman(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorSearch, String konsumenSearch, def statusSearch) {
+    List<FakturJualEceran> cariFakturJualEceranUntukDiantar(String nomorSearch, String namaPembeliSearch, def statusSearch) {
+        findAllFakturJualEceranByDslFetchComplete([orderBy: 'tanggal,nomor']) {
+            if (nomorSearch) {
+                nomor like("%${nomorSearch}%")
+            }
+            if (statusSearch != SwingHelper.SEMUA) {
+                and()
+                status eq(statusSearch)
+            }
+            if (namaPembeliSearch) {
+                and()
+                namaPembeli like("%${namaPembeliSearch}%")
+            }
+        }
+    }
+
+    List<FakturJualOlehSales> cariFakturJualOlehSalesUntukPengiriman(String nomorSearch, String konsumenSearch, def statusSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            if (!nomorSearch) {
-                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
-            } else {
+            if (nomorSearch) {
                 nomor like("%${nomorSearch}%")
             }
             if (statusSearch != SwingHelper.SEMUA) {
@@ -124,16 +138,12 @@ class FakturJualRepository {
         }
     }
 
-    List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(LocalDate tanggalMulaiSearch, LocalDate tanggalSelesaiSearch, String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch, def statusSearch) {
+    List<FakturJualOlehSales> cariFakturJualUntukBuktiTerima(String nomorFakturSearch, String nomorSuratJalanSearch, String konsumenSearch) {
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'tanggal,nomor']) {
-            if (!nomorFakturSearch) {
-                tanggal between(tanggalMulaiSearch, tanggalSelesaiSearch)
+            if (nomorFakturSearch) {
+                nomor like("%${nomorFakturSearch}")
             } else {
-                nomor like("%${nomorFakturSearch}%")
-            }
-            if (statusSearch != SwingHelper.SEMUA) {
-                and()
-                status eq(statusSearch)
+                status eq(StatusFakturJual.DIANTAR)
             }
             if (nomorSuratJalanSearch) {
                 and()
@@ -221,15 +231,6 @@ class FakturJualRepository {
 
         persist(fakturJual)
 
-        // Perlakuan khusus untuk faktur jual luar kota
-        if (!fakturJual.konsumen.sales.dalamKota() && !fakturJual.kirimDariGudangUtama) {
-            fakturJual.listItemFaktur.each {
-                it.produk = findProdukById(it.produk.id)
-            }
-            fakturJual.kirim('Luar Kota')
-            fakturJual.tambah(new BuktiTerima(fakturJual.tanggal, 'Luar Kota'))
-        }
-
         // Tambahkan faktur jual yang baru dibuat pada konsumen yang bersangkutan
         konsumen.tambahFakturBelumLunas(fakturJual)
 
@@ -273,7 +274,20 @@ class FakturJualRepository {
             fakturJual = buatFakturJualEceran(fakturJual)
         }
 
-        ApplicationHolder.application.event(new PesanStok(fakturJual, false))
+        fakturJual.status = null
+        fakturJual.proses()
+        fakturJual
+    }
+
+    FakturJual proses(FakturJual fakturJual, Map args = [:]) {
+        FakturJual faktur = findFakturJualById(fakturJual.id)
+        faktur.proses(args)
+        faktur
+    }
+
+    FakturJual hapus(FakturJual fakturJual) {
+        fakturJual = findFakturJualById(fakturJual.id)
+        fakturJual.hapus()
         fakturJual
     }
 
@@ -332,70 +346,16 @@ class FakturJualRepository {
         mergedFakturJual
     }
 
-    FakturJual hapus(FakturJual fakturJual) {
-        fakturJual = findFakturJualById(fakturJual.id)
-        if (!fakturJual || !fakturJual.status.bolehDiubah) {
-            throw new DataTidakBolehDiubah(fakturJual)
-        }
-        fakturJual.deleted = 'Y'
-        ApplicationHolder.application.event(new PesanStok(fakturJual, true))
-
-        // Hapus dari konsumen bila perlu
-        if (fakturJual instanceof FakturJualOlehSales) {
-            fakturJual.konsumen.hapusFakturBelumLunas(fakturJual)
-        }
-        fakturJual
-    }
-
-    FakturJualEceran antar(FakturJualEceran fakturJualEceran) {
-        fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
-        fakturJualEceran.antar()
-        fakturJualEceran
-    }
-
-    FakturJualEceran batalAntar(FakturJualEceran fakturJualEceran) {
-        fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
-        fakturJualEceran.batalAntar()
-        fakturJualEceran
-    }
-
-    FakturJualEceran bayar(FakturJualEceran fakturJualEceran) {
-        fakturJualEceran = findFakturJualEceranById(fakturJualEceran.id)
-        fakturJualEceran.bayar()
-        fakturJualEceran
-    }
-
-    FakturJualOlehSales kirim(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.kirim(alamatTujuan, tanggalKirim, keterangan)
-        faktur
-    }
-
     FakturJualOlehSales buatSuratJalan(FakturJualOlehSales faktur, String alamatTujuan, LocalDate tanggalKirim = LocalDate.now(), String keterangan = null) {
         faktur = findFakturJualOlehSalesById(faktur.id)
+        if (faktur.pengeluaranBarang) {
+            throw new DataTidakBolehDiubah("Surat jalan sudah pernah dibuat sebelumnya!", faktur)
+        }
         faktur.buatSuratJalan(alamatTujuan, tanggalKirim, keterangan)
         faktur
     }
 
-    FakturJualOlehSales kirimSuratJalan(FakturJualOlehSales faktur) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.kirimSuratJalan()
-        faktur
-    }
-
-    FakturJualOlehSales batalKirim(FakturJualOlehSales faktur) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.hapusPengeluaranBarang()
-        faktur
-    }
-
-    FakturJualOlehSales terima(FakturJualOlehSales faktur, BuktiTerima buktiTerima) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.tambah(buktiTerima)
-        faktur
-    }
-
-    FakturJualOlehSales retur(FakturJualOlehSales faktur, ReturFaktur returFaktur) {
+    FakturJualOlehSales tambahRetur(FakturJualOlehSales faktur, ReturFaktur returFaktur) {
         faktur = findFakturJualOlehSalesByIdFetchItems(faktur.id)
         if (!faktur) {
             throw new DataTidakBolehDiubah(faktur)
@@ -415,12 +375,6 @@ class FakturJualRepository {
         faktur
     }
 
-    FakturJualOlehSales hapusBuktiTerima(FakturJualOlehSales faktur) {
-        faktur = findFakturJualOlehSalesById(faktur.id)
-        faktur.hapusBuktiTerima()
-        faktur
-    }
-
     DaftarBarangSementara hitungBarangYangHarusDikirim() {
         DaftarBarangSementara hasil
         findAllFakturJualOlehSalesByDslFetchPengeluaranBarang {
@@ -434,6 +388,37 @@ class FakturJualRepository {
         }
         def items = (hasil?.normalisasi()?:[]).sort {it.produk.nama}
         new DaftarBarangSementara(items, 1)
+    }
+
+    void lunasiSemuaFakturJualEceran() {
+        findAllFakturJualEceranByDsl {
+            status ne(StatusFakturJual.LUNAS)
+        }.each { FakturJualEceran f ->
+            f.prosesSampai(StatusFakturJual.LUNAS)
+        }
+    }
+
+    void prosesSemuaFakturJualEceran() {
+        List daftarFaktur = findAllFakturJualEceranByDsl {
+            status ne(StatusFakturJual.LUNAS)
+            and()
+            status ne(StatusFakturJual.DIANTAR)
+        }
+        for (FakturJualEceran faktur: daftarFaktur) {
+            faktur.prosesSampai(StatusFakturJual.DIANTAR)
+        }
+    }
+
+    void prosesSemuaFakturJualSales() {
+        List daftarFaktur = findAllFakturJualOlehSalesByDsl {
+            status ne(StatusFakturJual.LUNAS)
+        }
+        for (FakturJualOlehSales faktur: daftarFaktur) {
+            faktur.prosesSampai(StatusFakturJual.DITERIMA, [
+                Dibuat: [alamatTujuan: ''],
+                Diantar: [buktiTerima: new BuktiTerima(LocalDate.now(), '', '')]
+            ])
+        }
     }
 
     public enum StatusPiutangSearch {

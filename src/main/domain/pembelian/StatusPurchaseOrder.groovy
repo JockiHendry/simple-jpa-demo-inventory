@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ public enum StatusPurchaseOrder {
     DIBUAT("Dibuat", true, true, true),
     FAKTUR_DITERIMA("Hanya Terima Faktur", false, true, true),
     BARANG_DITERIMA("Hanya Terima Barang", false, true, true),
-    OK("Diterima Penuh", false, false, false),
+    OK("Diterima Penuh", false, false, true),
     LUNAS("Lunas", false, false, false)
 
     String desc

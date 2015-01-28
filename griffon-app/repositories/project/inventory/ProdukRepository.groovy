@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,12 @@ package project.inventory
 
 import domain.exception.DataDuplikat
 import domain.inventory.Gudang
+import domain.inventory.ItemStok
 import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.pembelian.Supplier
+import org.joda.time.LocalDate
 import simplejpa.transaction.Transaction
 
 @Transaction
@@ -79,6 +81,7 @@ class ProdukRepository {
         p.nama = produk.nama
         p.hargaDalamKota = produk.hargaDalamKota
         p.hargaLuarKota = produk.hargaLuarKota
+        p.ongkosKirimBeli = produk.ongkosKirimBeli
         p.satuan = produk.satuan
         p.supplier = produk.supplier
         p.poin = produk.poin
@@ -91,8 +94,54 @@ class ProdukRepository {
         Produk p = findProdukByIdFetchComplete(produk.id)
         p.jumlahRetur = produk.jumlahRetur
         p.jumlahTukar = produk.jumlahTukar
-        p.jumlahAkanDikirim = produk.jumlahAkanDikirim
         p
+    }
+
+    public List<ItemStok> cariSeluruhPenerimaan(Produk produk, Gudang gudang, LocalDate sampaiTanggal) {
+        executeQuery('''
+            SELECT i
+            FROM StokProduk s LEFT JOIN s.listPeriodeRiwayat p LEFT JOIN p.listItem i
+            WHERE s.produk = :produk AND s.gudang = :gudang AND i.jumlah > 0
+            AND (i.referensiStok IS NULL OR i.referensiStok.classGudang<> 'Transfer')
+            AND i.tanggal < :sampaiTanggal
+            ORDER BY i.tanggal DESC, i.referensiStok.nomorGudang DESC
+        ''', [:], [gudang: gudang, produk: produk, sampaiTanggal: sampaiTanggal])
+    }
+
+    public List cariSeluruhPenerimaan(Gudang gudang, LocalDate sampaiTanggal) {
+        executeQuery('''
+            SELECT s.produk, i
+            FROM StokProduk s LEFT JOIN s.listPeriodeRiwayat p LEFT JOIN p.listItem i
+            WHERE s.gudang = :gudang AND i.jumlah > 0
+            AND (i.referensiStok IS NULL OR i.referensiStok.classGudang<> 'Transfer') AND i.tanggal < :sampaiTanggal
+            ORDER BY i.tanggal DESC
+        ''', [:], [gudang: gudang, sampaiTanggal: sampaiTanggal])
+    }
+
+    public List cariQtyTerakhir(LocalDate sebelumTanggal) {
+        executeQuery('''
+            SELECT s.produk, SUM(i.jumlah)
+            FROM StokProduk s JOIN s.listPeriodeRiwayat p JOIN p.listItem i ON i.tanggal < :tanggal
+            GROUP BY s.produk
+        ''', [:], [tanggal: sebelumTanggal])
+    }
+
+    public List<ItemStok> cariSeluruhPerubahan(Produk produk, LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        executeQuery('''
+            SELECT i
+            FROM StokProduk s LEFT JOIN s.listPeriodeRiwayat p LEFT JOIN p.listItem i
+            WHERE s.produk = :produk AND i.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+            ORDER BY i.tanggal
+        ''', [:], [produk: produk, tanggalMulai: tanggalMulai, tanggalSelesai: tanggalSelesai])
+    }
+
+    public List cariSeluruhPerubahan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        executeQuery('''
+            SELECT s.produk, i
+            FROM StokProduk s LEFT JOIN s.listPeriodeRiwayat p LEFT JOIN p.listItem i
+            WHERE i.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+            ORDER BY i.tanggal
+        ''', [:], [tanggalMulai: tanggalMulai, tanggalSelesai: tanggalSelesai])
     }
 
 }
