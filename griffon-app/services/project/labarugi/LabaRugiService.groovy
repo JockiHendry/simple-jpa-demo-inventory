@@ -24,6 +24,7 @@ import domain.inventory.PenyesuaianStok
 import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.labarugi.CacheGlobal
+import domain.labarugi.ItemNilaiInventory
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.KATEGORI_SISTEM
 import domain.labarugi.Kas
@@ -78,17 +79,40 @@ class LabaRugiService {
         NilaiInventory nilaiInventory = new NilaiInventory(produk: produk)
         if (qtyTerakhir > 0) {
             List daftarItemStok = cacheGlobal.cariPenerimaan(produk)
-            for (ItemStok itemStok : daftarItemStok) {
+            boolean selesai = false
+            int i, qty
+            BigDecimal harga
+            for (i=0; i<daftarItemStok.size(); i++) {
+                ItemStok itemStok = daftarItemStok[i]
                 if ((nilaiInventory.qty() + itemStok.jumlah) >= qtyTerakhir) {
-                    nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, qtyTerakhir - nilaiInventory.qty(),
-                        cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
-                    break
+                    qty = qtyTerakhir - nilaiInventory.qty()
+                    harga = cariHarga(produk, itemStok)
+                    selesai = true
                 } else {
-                    nilaiInventory.tambah(itemStok.tanggal, itemStok.referensiStok?.pihakTerkait, itemStok.jumlah,
-                        cariHarga(produk, itemStok), itemStok.referensiStok?.deskripsiSingkat())
+                    qty = itemStok.jumlah
+                    harga = cariHarga(produk, itemStok)
+                }
+                nilaiInventory.tambah(itemStok, qty, harga)
+                if (selesai) break
+            }
+
+            // Bila ada inventory dengan nilai kosong di baris pertama, maka cari harga beli terakhir yang paling mendekati.
+            // Hal ini perlu dilakukan karena penambahan bisa disebabkan oleh invers hapus atau retur.
+            if (!nilaiInventory.toList().empty && (nilaiInventory.toList()[0].harga == null)) {
+                ItemNilaiInventory itemPertama = nilaiInventory.toList()[0]
+                selesai = false
+                for(;i<daftarItemStok.size(); i++) {
+                    ItemStok itemStok = daftarItemStok[i]
+                    harga = cariHarga(produk, itemStok)
+                    if (harga) {
+                        itemPertama.harga = harga
+                        selesai = true
+                    }
+                    if (selesai) break
                 }
             }
         }
+
         nilaiInventory
     }
 

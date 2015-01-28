@@ -75,25 +75,18 @@ class ItemNilaiInventory implements Comparable {
         if (o && (o instanceof ItemNilaiInventory)) {
             if (this.equals(o)) {
                 return 0
-            } else {
-                int selisihTanggal = tanggal.compareTo(o.tanggal)
-                if (selisihTanggal == 0) {
-                    if (faktur.equals(o.faktur)) {
-                        if (qty == o.qty) {
-                            return -1
-                        } else {
-                            return qty.compareTo(o.qty)
-                        }
-                    } else {
-                        return faktur.compareTo(o.faktur)
-                    }
-                } else {
-                    return selisihTanggal
-                }
+            }
+            if ((tanggal && o.tanggal) && (tanggal.compareTo(o.tanggal) != 0)) {
+                return tanggal.compareTo(o.tanggal)
+            }
+            if ((faktur && o.faktur) && !faktur.equals(o.faktur)) {
+                return faktur.compareTo(o.faktur)
+            }
+            if ((qty && o.qty) && (qty != o.qty)) {
+                return qty.compareTo(o.qty)
             }
         }
         -1
     }
-
 
 }

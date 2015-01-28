@@ -104,7 +104,7 @@ class ProdukRepository {
             WHERE s.produk = :produk AND s.gudang = :gudang AND i.jumlah > 0
             AND (i.referensiStok IS NULL OR i.referensiStok.classGudang<> 'Transfer')
             AND i.tanggal < :sampaiTanggal
-            ORDER BY i.tanggal DESC
+            ORDER BY i.tanggal DESC, i.referensiStok.nomorGudang DESC
         ''', [:], [gudang: gudang, produk: produk, sampaiTanggal: sampaiTanggal])
     }
 

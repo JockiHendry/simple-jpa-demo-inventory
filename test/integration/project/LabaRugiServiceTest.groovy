@@ -23,7 +23,7 @@ import project.labarugi.LabaRugiService
 import simplejpa.testing.DbUnitTestCase
 import static org.junit.Assert.*
 
-class LabaRugiServiceTests extends DbUnitTestCase {
+class LabaRugiServiceTest extends DbUnitTestCase {
 
     LabaRugiService labaRugiService
 

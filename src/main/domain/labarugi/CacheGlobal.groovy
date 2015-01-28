@@ -31,7 +31,7 @@ class CacheGlobal {
     List daftarQtyTerakhir
     List daftarPenerimaan
     List daftarPerubahan
-    LocalDate tanggalMulai, tanggalSelesai
+    LocalDate tanggalMulai = LocalDate.now(), tanggalSelesai = LocalDate.now()
 
     ProdukRepository produkRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Produk')
     GudangRepository gudangRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Gudang')

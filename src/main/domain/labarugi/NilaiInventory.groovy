@@ -15,8 +15,11 @@
  */
 package domain.labarugi
 
+import domain.inventory.ItemStok
 import domain.inventory.Produk
+import domain.penjualan.ReturFaktur
 import groovy.transform.Canonical
+import listener.InventoryEventListenerService
 import org.joda.time.LocalDate
 
 @Canonical
@@ -37,6 +40,20 @@ class NilaiInventory {
     List toList() {
         isiHargaYangKosong()
         items.toList()
+    }
+
+    void tambah(ItemStok itemStok, Long qty, BigDecimal harga) {
+        ItemNilaiInventory item = new ItemNilaiInventory(qty: qty, harga: harga)
+        item.tanggal = itemStok.tanggal
+        item.nama = itemStok.referensiStok?.pihakTerkait
+        if (itemStok.referensiStok?.classGudang == ReturFaktur.simpleName) {
+            item.faktur = 'Retur Faktur: ' + itemStok.referensiStok?.deskripsiSingkat()
+        } else if (itemStok.keterangan == InventoryEventListenerService.KETERANGAN_INVERS_HAPUS) {
+            item.faktur = 'Penyeimbangan Hapus: ' + itemStok.referensiStok?.deskripsiSingkat()
+        } else {
+            item.faktur = itemStok.referensiStok?.deskripsiSingkat()
+        }
+        items << item
     }
 
     void tambah(LocalDate tanggal, String nama, Long qty, BigDecimal harga, String faktur = null) {
