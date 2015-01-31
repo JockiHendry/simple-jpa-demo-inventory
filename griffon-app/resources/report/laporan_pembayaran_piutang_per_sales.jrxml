@@ -38,10 +38,13 @@
 	<variable name="totalDibayar" class="java.lang.Number" resetType="Group" resetGroup="SalesGroup" calculation="Sum">
 		<variableExpression><![CDATA[$F{_THIS}.jumlahDibayar()?:0]]></variableExpression>
 	</variable>
+	<variable name="totalPotongan" class="java.lang.Number" resetType="Group" resetGroup="SalesGroup" calculation="Sum">
+		<variableExpression><![CDATA[$F{_THIS}.potonganPiutang()?:0]]></variableExpression>
+	</variable>
 	<group name="SalesGroup">
 		<groupExpression><![CDATA[$F{konsumen}.sales]]></groupExpression>
 		<groupHeader>
-			<band height="29">
+			<band height="30">
 				<textField>
 					<reportElement x="0" y="10" width="555" height="16" uuid="4e437089-af54-4553-a5fb-87a1867f080f"/>
 					<textElement>
@@ -55,13 +58,13 @@
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="79">
+			<band height="101">
 				<staticText>
 					<reportElement x="0" y="17" width="88" height="17" uuid="07078cb6-44ea-4c39-a531-0d8a24590bd4"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[Total Tagihan:]]></text>
+					<text><![CDATA[Total :]]></text>
 				</staticText>
 				<textField pattern="#,##0">
 					<reportElement x="88" y="17" width="146" height="17" uuid="3bb68fcb-78b8-4b76-8ea7-953d57ee09a0"/>
@@ -74,38 +77,52 @@
 					<reportElement x="0" y="0" width="555" height="1" uuid="51b6a273-1af7-415a-9417-cc32371762b0"/>
 				</line>
 				<textField pattern="#,##0">
-					<reportElement x="88" y="34" width="146" height="17" uuid="c928369c-af61-4b33-a99c-2da26c1fed3c"/>
+					<reportElement x="88" y="50" width="146" height="17" uuid="c928369c-af61-4b33-a99c-2da26c1fed3c"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{totalDibayar}?:0]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="34" width="88" height="17" uuid="93bc3936-527d-4767-9eaa-0f0c0d9acddd"/>
+					<reportElement x="0" y="50" width="88" height="17" uuid="93bc3936-527d-4767-9eaa-0f0c0d9acddd"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Total Dibayar:]]></text>
 				</staticText>
 				<line>
-					<reportElement x="0" y="51" width="234" height="1" uuid="b411c6ff-0efd-41e6-8db1-8f8bf5695659"/>
+					<reportElement x="0" y="67" width="234" height="1" uuid="b411c6ff-0efd-41e6-8db1-8f8bf5695659"/>
 					<graphicElement>
 						<pen lineWidth="2.0" lineStyle="Double"/>
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="0" y="52" width="88" height="17" uuid="7367583d-2c03-43e5-863b-43f1b10c1366"/>
+					<reportElement x="0" y="68" width="88" height="17" uuid="7367583d-2c03-43e5-863b-43f1b10c1366"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[Sisa:]]></text>
 				</staticText>
 				<textField pattern="#,##0">
-					<reportElement x="88" y="52" width="146" height="17" uuid="70bfa20b-c4de-4117-9af2-a63a88c096ca"/>
+					<reportElement x="88" y="68" width="146" height="17" uuid="70bfa20b-c4de-4117-9af2-a63a88c096ca"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($V{totalTagihan}?:0)-($V{totalDibayar}?:0)]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($V{totalTagihan}?:0)-($V{totalPotongan}?:0)-($V{totalDibayar}?:0)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="33" width="88" height="17" uuid="ee930c8b-3b30-4080-94cb-cb57db46069a"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Potongan:]]></text>
+				</staticText>
+				<textField pattern="#,##0">
+					<reportElement x="88" y="33" width="146" height="17" uuid="a7bdac1d-b7af-4c51-8adf-94994ebcb19d"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalPotongan}?:0]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -153,7 +170,7 @@
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement x="195" y="1" width="165" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
+				<reportElement x="167" y="1" width="128" height="20" uuid="306aac1d-387f-4902-9122-6aa9caaf5e0e"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -173,17 +190,17 @@
 				<text><![CDATA[Tanggal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="1" width="95" height="20" uuid="e4874fb9-6fb6-44ae-b19d-86d3785d2da9"/>
+				<reportElement x="294" y="1" width="79" height="20" uuid="e4874fb9-6fb6-44ae-b19d-86d3785d2da9"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Jumlah Tagihan]]></text>
+				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="56" y="1" width="139" height="20" uuid="04b3211d-0ad8-49ab-a17a-ee6d5d7f5b7b"/>
+				<reportElement x="56" y="1" width="111" height="20" uuid="04b3211d-0ad8-49ab-a17a-ee6d5d7f5b7b"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -193,7 +210,7 @@
 				<text><![CDATA[Nomor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="455" y="1" width="100" height="20" uuid="4ca15d69-bdbb-4687-9149-3db9dd5057da"/>
+				<reportElement x="440" y="1" width="89" height="20" uuid="4ca15d69-bdbb-4687-9149-3db9dd5057da"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>
 				</box>
@@ -202,20 +219,40 @@
 				</textElement>
 				<text><![CDATA[Jumlah Dibayar]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="373" y="1" width="68" height="20" uuid="d1cb0120-0221-47c6-9352-af3c423f54f5"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Potongan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="529" y="1" width="26" height="20" uuid="19a954ee-0bfa-49ab-8c92-a6cd3b4ad5f4"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lns]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="56" height="17" uuid="59dc4e70-2839-472d-86c5-0e858fce3d54"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="56" height="17" uuid="59dc4e70-2839-472d-86c5-0e858fce3d54"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{tanggal}.toString('dd-MM-YYYY')]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="360" y="1" width="95" height="16" uuid="ab3c9266-a9ac-4fd6-995c-f27e1f92179d"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="294" y="1" width="79" height="16" uuid="ab3c9266-a9ac-4fd6-995c-f27e1f92179d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -224,8 +261,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{_THIS}.jumlahPiutang()]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="56" y="0" width="139" height="17" isPrintWhenDetailOverflows="true" uuid="486876e3-69a2-4815-899f-51a8935ff1b6"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="56" y="0" width="111" height="17" isPrintWhenDetailOverflows="true" uuid="486876e3-69a2-4815-899f-51a8935ff1b6"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -234,8 +271,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nomor}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="455" y="1" width="99" height="16" uuid="3100b9a3-05a0-4397-a436-0c057583207d"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="440" y="1" width="89" height="16" uuid="3100b9a3-05a0-4397-a436-0c057583207d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -244,8 +281,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{_THIS}.jumlahDibayar()?:0]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="195" y="0" width="165" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="167" y="0" width="128" height="17" isPrintWhenDetailOverflows="true" uuid="d7eec0e7-37cd-4565-a71c-81d6a8602a1d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
 				</box>
@@ -253,6 +290,26 @@
 					<font fontName="SansSerif" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{konsumen}.nama]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="373" y="2" width="68" height="15" uuid="e393d6dc-7a01-4432-8a3f-99024fb2e1fe"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_THIS}.potonganPiutang()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="529" y="1" width="26" height="16" uuid="1af80950-8b99-418c-8b10-aabe9a75413e"/>
+				<box>
+					<bottomPen lineWidth="0.5" lineStyle="Dotted"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{_THIS}.piutang.lunas? "\u2713": '']]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
