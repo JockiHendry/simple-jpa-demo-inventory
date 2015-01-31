@@ -102,7 +102,7 @@ class LaporanPengambilanBarangController {
             // Penyesuaian stok
             List daftarPenyesuaianStok = executeQuery('''
                 SELECT f FROM PenyesuaianStok f WHERE f.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
-                AND f.gudang.utama = TRUE
+                AND f.gudang.utama = TRUE AND f.bertambah = FALSE
             ''', [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
             for (PenyesuaianStok p: daftarPenyesuaianStok) {
                 for (ItemPenyesuaian i: p.items) {
