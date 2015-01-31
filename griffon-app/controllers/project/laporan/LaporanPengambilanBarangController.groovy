@@ -133,8 +133,8 @@ class LaporanPengambilanBarangController {
 
             // Retur jual
             List daftarReturJual = executeQuery('''
-                SELECT r FROM ReturJual r WHERE r.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
-                AND r.pengeluaranBarang.gudang.utama = TRUE
+                SELECT r FROM ReturJual r JOIN FETCH r.pengeluaranBarang p WHERE p.tanggal BETWEEN :tanggalMulai AND :tanggalSelesai
+                AND p.gudang.utama = TRUE
             ''',  [:], [tanggalMulai: model.tanggalMulaiCari, tanggalSelesai: model.tanggalSelesaiCari])
             for (ReturJual r: daftarReturJual) {
                 for (ItemBarang i : r.pengeluaranBarang.items) {
