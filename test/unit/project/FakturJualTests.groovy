@@ -32,6 +32,7 @@ import project.inventory.GudangRepository
 import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
+import simplejpa.testing.StubRepositoryManager
 
 class FakturJualTests extends GriffonUnitTestCase {
 

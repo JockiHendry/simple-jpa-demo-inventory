@@ -29,6 +29,7 @@ import org.joda.time.LocalDate
 import project.inventory.GudangRepository
 import simplejpa.SimpleJpaUtil
 import griffon.core.*
+import simplejpa.testing.StubRepositoryManager
 
 class FakturJualEceranTests extends GriffonUnitTestCase {
 

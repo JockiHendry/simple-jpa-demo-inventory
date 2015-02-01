@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import domain.pembelian.StatusPurchaseOrder
 import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
 import simplejpa.SimpleJpaUtil
+import simplejpa.testing.StubRepositoryManager
 
 class PurchaseOrderTests extends GriffonUnitTestCase {
 

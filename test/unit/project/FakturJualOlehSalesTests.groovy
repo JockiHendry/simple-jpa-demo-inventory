@@ -34,6 +34,7 @@ import griffon.test.GriffonUnitTestCase
 import org.joda.time.LocalDate
 import project.pengaturan.PengaturanRepository
 import simplejpa.SimpleJpaUtil
+import simplejpa.testing.StubRepositoryManager
 
 class FakturJualOlehSalesTests extends GriffonUnitTestCase{
 

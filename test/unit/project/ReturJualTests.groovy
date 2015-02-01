@@ -47,6 +47,7 @@ import project.pengaturan.PengaturanRepository
 import project.user.NomorService
 import simplejpa.SimpleJpaUtil
 import griffon.core.*
+import simplejpa.testing.StubRepositoryManager
 
 class ReturJualTests extends GriffonUnitTestCase {
 
