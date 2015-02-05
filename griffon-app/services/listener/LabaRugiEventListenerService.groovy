@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -32,12 +32,9 @@ class LabaRugiEventListenerService {
     JenisTransaksiKasRepository jenisTransaksiKasRepository
 
     void onTransaksiSistem(TransaksiSistem transaksiSistem) {
-        KategoriKas kategori = kategoriKasRepository.getKategoriSistem(transaksiSistem.kategori)
+        KategoriKas kategori = kategoriKasRepository.getKategoriSistem(transaksiSistem.kategori, transaksiSistem.invers)
         TransaksiKas transaksiKas = new TransaksiKas(tanggal: LocalDate.now(), jumlah: transaksiSistem.jumlah,
             pihakTerkait: transaksiSistem.nomorReferensi, kategoriKas: kategori, jenis: jenisTransaksiKasRepository.cariUntukSistem())
-        if (transaksiSistem.invers) {
-            transaksiKas.jumlah = -1 * transaksiKas.jumlah
-        }
         kasRepository.cariUntukSistem().tambah(transaksiKas)
     }
 

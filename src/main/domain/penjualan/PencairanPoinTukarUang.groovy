@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,12 @@
  */
 package domain.penjualan
 
+import domain.event.TransaksiSistem
+import domain.labarugi.KATEGORI_SISTEM
 import simplejpa.DomainClass
 import javax.persistence.*
 import org.joda.time.*
+import griffon.util.*
 
 @DomainClass @Entity
 class PencairanPoinTukarUang extends PencairanPoin {
@@ -36,12 +39,13 @@ class PencairanPoinTukarUang extends PencairanPoin {
 
     @Override
     void proses() {
-        // Saat ini tidak melakukan apa-apa (belum ada fitur laba rugi)
+        ApplicationHolder.application?.event(new TransaksiSistem(getNominal(), nomor, KATEGORI_SISTEM.PENGELUARAN_LAIN))
     }
 
     @Override
     void hapus() {
-        // Saat ini tidak melakukan apa-apa (belum ada fitur laba rugi)
+        ApplicationHolder.application?.event(new TransaksiSistem(getNominal(), nomor, KATEGORI_SISTEM.PENGELUARAN_LAIN, true))
     }
+
 }
 

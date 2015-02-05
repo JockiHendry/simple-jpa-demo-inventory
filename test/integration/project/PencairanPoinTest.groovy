@@ -18,7 +18,12 @@ package project
 import domain.inventory.Gudang
 import domain.inventory.ItemBarang
 import domain.inventory.Produk
+import domain.labarugi.JENIS_KATEGORI_KAS
+import domain.labarugi.Kas
+import domain.labarugi.PeriodeKas
+import domain.labarugi.TransaksiKas
 import domain.pengaturan.KeyPengaturan
+import project.labarugi.KasRepository
 import project.pengaturan.PengaturanRepository
 import domain.penjualan.*
 import org.joda.time.LocalDate
@@ -32,22 +37,25 @@ class PencairanPoinTest extends DbUnitTestCase {
     FakturJualRepository fakturJualRepository
     PencairanPoinRepository pencairanPoinRepository
     PengaturanRepository pengaturanRepository
+    KasRepository kasRepository
 
     protected void setUp() {
         super.setUp()
-        setUpDatabase("/project/data_penjualan.xlsx")
+        setUpDatabase("/project/data_poin.xlsx")
         fakturJualRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('FakturJual')
         pencairanPoinRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('PencairanPoin')
         pengaturanRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Pengaturan')
+        kasRepository = SimpleJpaUtil.instance.repositoryManager.findRepository('Kas')
     }
 
     public void testCairkanPoinTukarUang() {
+        PencairanPoin p
         pencairanPoinRepository.withTransaction {
             Konsumen konsumen = findKonsumenById(-1l)
             assertEquals(50, konsumen.poinTerkumpul)
             assertEquals(2000, pengaturanRepository.getValue(KeyPengaturan.BONUS_POINT_RATE))
 
-            PencairanPoinTukarUang p = new PencairanPoinTukarUang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen)
+            p = new PencairanPoinTukarUang(tanggal: LocalDate.now(), jumlahPoin: 30, konsumen: konsumen)
             p = pencairanPoinRepository.buat(p)
 
             assertNotNull(p.nomor)
@@ -59,6 +67,45 @@ class PencairanPoinTest extends DbUnitTestCase {
             konsumen = findKonsumenById(-1l)
             assertEquals(20, konsumen.poinTerkumpul)
         }
+
+        pencairanPoinRepository.withTransaction {
+            // Pastikan transaksi sistem dengan kategori pengeluaran lain telah dibuat.
+            Kas kas = kasRepository.cariUntukSistem()
+            assertEquals(-60000, kas.jumlah)
+            PeriodeKas periodeKas = kas.getListPeriodeRiwayat()[0]
+            assertEquals(-60000, periodeKas.jumlah)
+            assertEquals(-60000, periodeKas.saldo)
+            TransaksiKas tr = periodeKas.getListTransaksiKas()[0]
+            assertEquals(p.nomor, tr.pihakTerkait)
+            assertEquals(JENIS_KATEGORI_KAS.PENGELUARAN, tr.kategoriKas.jenis)
+            assertEquals(60000, tr.jumlah)
+            assertEquals(-60000, tr.saldo)
+        }
+
+        // Test hapus pencairan tunai
+        pengaturanRepository.withTransaction {
+            pencairanPoinRepository.hapus(p)
+        }
+
+        pencairanPoinRepository.withTransaction {
+            // Pastiakan transasi sistem dengan kategori pengeluaran lain telah di-invers.
+            Kas kas = kasRepository.cariUntukSistem()
+            assertEquals(0, kas.jumlah)
+            PeriodeKas periodeKas = kas.getListPeriodeRiwayat()[0]
+            assertEquals(0, periodeKas.jumlah)
+            assertEquals(0, periodeKas.saldo)
+            TransaksiKas tr1 = periodeKas.getListTransaksiKas()[0]
+            assertEquals(p.nomor, tr1.pihakTerkait)
+            assertEquals(JENIS_KATEGORI_KAS.PENGELUARAN, tr1.kategoriKas.jenis)
+            assertEquals(60000, tr1.jumlah)
+            assertEquals(-60000, tr1.saldo)
+            TransaksiKas tr2 = periodeKas.getListTransaksiKas()[1]
+            assertEquals(p.nomor, tr2.pihakTerkait)
+            assertEquals(JENIS_KATEGORI_KAS.PENDAPATAN, tr2.kategoriKas.jenis)
+            assertEquals(60000, tr2.jumlah)
+            assertEquals(0, tr2.saldo)
+        }
+
     }
 
     public void testCairkanPoinTukarBarang() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,9 @@ class KasRepository {
             throw new DataTidakBolehDiubah(kas)
         }
         mergedKas.with {
-            nama = kas.nama
+            if (!kas.sistem) {
+                nama = kas.nama
+            }
             sistem = kas.sistem
             labaRugi = kas.labaRugi
         }

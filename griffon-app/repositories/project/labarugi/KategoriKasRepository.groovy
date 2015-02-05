@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -43,17 +43,31 @@ class KategoriKasRepository {
 		kategoriKas
 	}
 
-	public KategoriKas getKategoriSistem(KATEGORI_SISTEM kategoriSistem) {
-		if (kategoriSistem == KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG) {
-			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENDAPATAN, true)
-		} else if (kategoriSistem == KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG) {
-			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_TUKAR_BARANG, JENIS_KATEGORI_KAS.PENGELUARAN, true)
-		} else if (kategoriSistem == KATEGORI_SISTEM.PENDAPATAN_LAIN) {
-			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENDAPATAN, true)
-		} else if (kategoriSistem == KATEGORI_SISTEM.PENGELUARAN_LAIN) {
-			return findKategoriKasByNamaAndJenisAndSistem(KATEGORI_LAIN, JENIS_KATEGORI_KAS.PENGELUARAN, true)
-		}
-		throw new IllegalArgumentException('Kategori sistem tidak dikenal!')
+	public KategoriKas getKategoriSistem(KATEGORI_SISTEM kategoriSistem, boolean invers = false) {
+        String kategori
+        JENIS_KATEGORI_KAS jenisKategoriKas
+        switch (kategoriSistem) {
+            case KATEGORI_SISTEM.PENDAPATAN_TUKAR_BARANG:
+                kategori = KATEGORI_TUKAR_BARANG
+                jenisKategoriKas = invers? JENIS_KATEGORI_KAS.PENGELUARAN: JENIS_KATEGORI_KAS.PENDAPATAN
+                break
+            case KATEGORI_SISTEM.PENGELUARAN_TUKAR_BARANG:
+                kategori = KATEGORI_TUKAR_BARANG
+                jenisKategoriKas = invers? JENIS_KATEGORI_KAS.PENDAPATAN: JENIS_KATEGORI_KAS.PENGELUARAN
+                break
+            case KATEGORI_SISTEM.PENDAPATAN_LAIN:
+                kategori = KATEGORI_LAIN
+                jenisKategoriKas = invers? JENIS_KATEGORI_KAS.PENGELUARAN: JENIS_KATEGORI_KAS.PENDAPATAN
+                break
+            case KATEGORI_SISTEM.PENGELUARAN_LAIN:
+                kategori = KATEGORI_LAIN
+                jenisKategoriKas = invers? JENIS_KATEGORI_KAS.PENDAPATAN: JENIS_KATEGORI_KAS.PENGELUARAN
+                break
+            default:
+                throw new IllegalArgumentException('Kategori sistem tidak dikenal!')
+        }
+        KategoriKas hasil = findKategoriKasByNamaAndJenisAndSistem(kategori, jenisKategoriKas, true)
+        hasil
 	}
 
 	public KategoriKas update(KategoriKas kategoriKas) {
