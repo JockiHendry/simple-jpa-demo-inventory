@@ -93,20 +93,6 @@ class ProdukTest extends DbUnitTestCase {
 
         stok = produk.stok(warehouseC)
         assertEquals(5, stok.periode(Periode.dari('01-01-2014', '31-01-2014'))[0].jumlah)
-
-        shouldFail {
-            stok.periodeUntukArsip(2)
-        }
-
-        assertTrue(stok.periodeUntukArsip(3).isEmpty())
-
-        LocalDate lampau = Periode.format.parseLocalDate('15-01-2010')
-        PeriodeItemStok periodeLampau = stok.buatPeriode(lampau)
-        assertEquals(Periode.format.parseLocalDate('01-01-2010'), periodeLampau.tanggalMulai)
-        assertEquals(Periode.format.parseLocalDate('31-01-2010'), periodeLampau.tanggalSelesai)
-
-        assertNotNull(periodeLampau)
-        assertTrue(!stok.periodeUntukArsip(3).isEmpty())
     }
 
     public void testArsipItemStok() {

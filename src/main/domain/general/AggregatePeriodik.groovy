@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -69,18 +69,13 @@ abstract class AggregatePeriodik {
         p
     }
 
-    List<NilaiPeriodik> periodeUntukArsip(int deltaTahun) {
-        if (deltaTahun < 3) {
-            throw new IllegalArgumentException('Masa pengarsipan paling cepat adalah 3 tahun yang lalu')
-        }
-        List result = []
+    void arsip(int deltaTahun) {
         int tahunSekarang = LocalDate.now().year
         for (PeriodeItemStok p: getListNilaiPeriodik()) {
             if ((tahunSekarang - p.tanggalSelesai.year) >= deltaTahun) {
-                result << p
+                p.arsip()
             }
         }
-        result
     }
 
     long saldoKumulatifSebelum(NilaiPeriodik nilaiPeriodik) {

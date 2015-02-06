@@ -19,7 +19,6 @@ package project.inventory
 import domain.exception.DataDuplikat
 import domain.inventory.Gudang
 import domain.inventory.ItemStok
-import domain.inventory.PeriodeItemStok
 import domain.inventory.Produk
 import domain.inventory.StokProduk
 import domain.pembelian.Supplier
@@ -50,20 +49,13 @@ class ProdukRepository {
      * tidak boleh dilakukan lagi.  Setelah pengarsipan, data <code>PeriodeItemStok</code> menjadi
      * tidak memiliki <code>ItemStok</code> (dan tidak dapat dimodifikasi lagi).
      *
-     * @param deltaTahun adalah rentang waktu tahun yang akan diarsip, paling cepat adalah 3 tahun yang lalu.
+     * @param deltaTahun adalah rentang waktu tahun yang akan diarsip.
      */
     public arsipItemStok(int deltaTahun) {
-        if (deltaTahun < 3) {
-            throw new IllegalArgumentException('Masa pengarsipan paling cepat adalah 3 tahun yang lalu')
-        }
-
         List daftarProduk = findAllProduk()
         for (Produk p: daftarProduk) {
             p.daftarStok.each { Gudang g, StokProduk s ->
-                for (PeriodeItemStok pi: s.periodeUntukArsip(deltaTahun)) {
-                    pi.arsip = true
-                    pi.listItem.clear()
-                }
+                s.arsip(deltaTahun)
             }
         }
     }
