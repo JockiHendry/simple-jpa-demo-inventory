@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,11 @@ class ItemRetur {
 
     @SuppressWarnings("GroovyUnusedDeclaration")
     Integer qtyPotongPiutang() {
-        (jumlah - (jumlahBarangDitukar() + jumlahBarangDiservis()))?: 0
+        int hasil = 0
+        if (jumlahPotongPiutang() > 0) {
+            hasil = jumlah - (jumlahBarangDitukar() + jumlahBarangDiservis())
+        }
+        (hasil > 0)? hasil: 0
     }
 
     void tambahKlaim(Klaim klaim) {
