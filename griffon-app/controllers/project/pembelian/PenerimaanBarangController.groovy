@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,9 @@ class PenerimaanBarangController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         try {
             PenerimaanBarang penerimaanBarang = view.table.selectionModel.selected[0]
             def (resultPurchaseOrder,resultPenerimaanBarang) = purchaseOrderRepository.hapus(model.purchaseOrder, penerimaanBarang)

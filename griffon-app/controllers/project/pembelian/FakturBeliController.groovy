@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import simplejpa.swing.DialogUtils
 import javax.swing.*
 import javax.validation.groups.Default
 import domain.exception.DataDuplikat
+import java.awt.Dimension
 import java.text.NumberFormat
 
 @SuppressWarnings("GroovyUnusedDeclaration")
@@ -86,6 +87,9 @@ class FakturBeliController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         try {
             if (model.fakturBeli) {
                 model.purchaseOrder = purchaseOrderRepository.hapusFaktur(model.purchaseOrder)
@@ -107,6 +111,18 @@ class FakturBeliController {
     def hitungJatuhTempo = {
         if (!model.hariJatuhTempo) return
         model.jatuhTempo = model.tanggal.plusDays(model.hariJatuhTempo)
+    }
+
+    def showItemFaktur = {
+        execInsideUISync {
+            def args = [parent: model.fakturBeli, listItemFaktur: model.listItemFaktur, allowTambahProduk: model.allowTambahProduk]
+            def dialogProps = [title: 'Item Faktur', preferredSize: new Dimension(900,420)]
+            DialogUtils.showMVCGroup('itemFakturAsChild', args, view, dialogProps) { m, v, c ->
+                model.listItemFaktur.clear()
+                model.listItemFaktur.addAll(m.itemFakturList)
+                refreshInformasi()
+            }
+        }
     }
 
     def clear = {

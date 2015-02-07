@@ -24,16 +24,16 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'search', name: app.getMessage('simplejpa.search.label'), closure: controller.search)
-    action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
-    action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
-    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'showBarangRetur', name: 'Item Retur...', closure: controller.showBarangRetur, mnemonic: KeyEvent.VK_I)
     action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
-    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
-    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diantar', closure: controller.prosesTukar)
-    action(id: 'showBarangYangHarusDikirim', name: 'Barang Yang Belum Dikirim...', closure: controller.showBarangYangHarusDikirim)
-    action(id: 'hapusPengeluaran', name: 'Hapus Pengantaran', closure: controller.hapusPengeluaran)
-    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak, mnemonic: KeyEvent.VK_C)
+    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diantar', closure: controller.prosesTukar, mnemonic: KeyEvent.VK_T)
+    action(id: 'showBarangYangHarusDikirim', name: 'Barang Yang Belum Dikirim...', closure: controller.showBarangYangHarusDikirim, mnemonic: KeyEvent.VK_D)
+    action(id: 'hapusPengeluaran', name: 'Hapus Pengantaran', closure: controller.hapusPengeluaran, mnemonic: KeyEvent.VK_P)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur, mnemonic: KeyEvent.VK_R)
 }
 
 panel(id: 'mainPanel') {

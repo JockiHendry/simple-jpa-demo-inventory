@@ -16,7 +16,7 @@
 package project.penjualan
 
 import domain.penjualan.StatusFakturJual
-import simplejpa.swing.DialogUtils
+import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -24,10 +24,16 @@ import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
-    action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
-    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
-    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
-    action(id: 'lunasiSemuaFaktur', name: 'Lunasi Semua Faktur', closure: controller.lunasiSemuaFaktur)
+    action(id: 'showItemFaktur', name: 'Item Faktur Jual...', closure: controller.showItemFaktur, mnemonic: KeyEvent.VK_I)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak, mnemonic: KeyEvent.VK_C)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur, mnemonic: KeyEvent.VK_P)
+    action(id: 'lunasiSemuaFaktur', name: 'Lunasi Semua Faktur', closure: controller.lunasiSemuaFaktur, mnemonic: KeyEvent.VK_L)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'antar', name: 'Antar', closure: controller.antar, mnemonic: KeyEvent.VK_A)
+    action(id: 'batalAntar', name: 'Batal Antar', closure: controller.batalAntar, mnemonic: KeyEvent.VK_T)
+    action(id: 'bayar', name: 'Barang Diterima Dan Telah Dibayar', closure: controller.bayar, mnemonic: KeyEvent.VK_Y)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
 }
 
 panel(id: 'mainPanel') {
@@ -70,9 +76,9 @@ panel(id: 'mainPanel') {
         }
     }
 
-    panel(constraints: PAGE_END) {
+    panel(constraints: PAGE_END, focusCycleRoot: true) {
         borderLayout()
-        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, focusCycleRoot: true, visible: bind { model.allowAddFakturJual }) {
+        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, visible: bind { model.allowAddFakturJual }) {
             label('Nomor:')
             label(id: 'nomor', text: bind('nomor', source: model), errorPath: 'nomor')
             errorLabel(path: 'nomor', constraints: 'wrap')
@@ -113,34 +119,13 @@ panel(id: 'mainPanel') {
 
         panel(constraints: PAGE_END) {
             flowLayout(alignment: FlowLayout.LEADING)
-            button(app.getMessage("simplejpa.dialog.save.button"), visible: bind {
-                model.allowAddFakturJual
-            }, actionPerformed: {
-                if (model.id != null) {
-                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
-                        return
-                    }
-                }
-                controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
-            })
-            button('Antar', visible: bind('isRowSelected', source: table, converter: {it && model.showPenerimaan && model.allowAntar}),
-                actionPerformed: controller.antar)
-            button('Batal Antar', visible: bind('isRowSelected', source: table, converter: {it && model.showPenerimaan && (model.status == StatusFakturJual.DIANTAR)}),
-                actionPerformed: controller.batalAntar)
-            button('Barang Diterima Dan Telah Dibayar', visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }),
-                actionPerformed: controller.bayar)
+            button(action: save, visible: bind { model.allowAddFakturJual })
+            button(action: antar, visible: bind('isRowSelected', source: table, converter: {it && model.showPenerimaan && model.allowAntar}))
+            button(action: batalAntar, visible: bind('isRowSelected', source: table, converter: {it && model.showPenerimaan && (model.status == StatusFakturJual.DIANTAR)}))
+            button(action: bayar, visible: bind('isRowSelected', source: table, converter: { it && model.showFakturJual && (model.status == StatusFakturJual.DIANTAR) }))
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
-            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: controller.clear)
-            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind('isRowSelected', source: table, converter: {
-                it && model.allowAddFakturJual
-            }), actionPerformed: {
-                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
-                    controller.delete()
-                }
-            })
+            button(action: cancel, visible: bind { table.isRowSelected })
+            button(action: delete, visible: bind('isRowSelected', source: table, converter: { it && model.allowAddFakturJual }))
         }
     }
 }

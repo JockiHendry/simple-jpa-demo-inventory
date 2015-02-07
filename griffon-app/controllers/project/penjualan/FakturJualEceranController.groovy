@@ -74,9 +74,14 @@ class FakturJualEceranController {
     }
 
     def init = {
-        model.nomor = nomorService.getCalonNomorFakturJual()
-        model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
-        model.tanggalSelesaiSearch = LocalDate.now()
+        execInsideUISync {
+            model.nomor = nomorService.getCalonNomorFakturJual()
+            model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
+            model.tanggalSelesaiSearch = LocalDate.now()
+        }
+        execInsideUISync {
+            view?.nomorSearch?.requestFocusInWindow()
+        }
     }
 
     def search = {
@@ -95,6 +100,9 @@ class FakturJualEceranController {
     }
 
     def save = {
+        if (model.id && !DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         FakturJualEceran fakturJualEceran = new FakturJualEceran(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
             namaPembeli: model.namaPembeli, keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung))
         model.listItemFaktur.each { fakturJualEceran.tambah(it) }
@@ -128,6 +136,9 @@ class FakturJualEceranController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         try {
             FakturJualEceran fakturJualEceran = view.table.selectionModel.selected[0]
             fakturJualEceran = fakturJualRepository.hapus(fakturJualEceran)

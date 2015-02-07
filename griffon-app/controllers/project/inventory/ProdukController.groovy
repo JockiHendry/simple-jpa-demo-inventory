@@ -55,6 +55,9 @@ class ProdukController {
             model.supplierList.addAll(supplier)
         }
         if (model.namaSearch) search()
+        execInsideUISync {
+            view?.namaSearch?.requestFocusInWindow()
+        }
     }
 
     def search = {

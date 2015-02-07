@@ -15,7 +15,6 @@
  */
 package project.penjualan
 
-import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
@@ -24,12 +23,15 @@ import java.awt.*
 import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
-    action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur Jual...', closure: controller.showItemFaktur)
-    action(id: 'showBonus', name: 'Klik Disini Untuk Melihat Atau Mengisi Bonus...', closure: controller.showBonus)
-    action(id: 'retur', name: 'Retur', closure: controller.showRetur)
-    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
-    action(id: 'cetakSuratJalan', name: 'Cetak Surat Jalan', closure: controller.cetakSuratJalan)
-    action(id: 'cariKonsumen', name: 'Cari Konsumen', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
+    action(id: 'showItemFaktur', name: 'Item Faktur Jual...', closure: controller.showItemFaktur, mnemonic: KeyEvent.VK_I)
+    action(id: 'showBonus', name: 'Bonus...', closure: controller.showBonus, mnemonic: KeyEvent.VK_B)
+    action(id: 'retur', name: 'Retur', closure: controller.showRetur, mnemonic: KeyEvent.VK_R)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak, mnemonic:  KeyEvent.VK_C)
+    action(id: 'cetakSuratJalan', name: 'Cetak Surat Jalan', closure: controller.cetakSuratJalan, mnemonic:KeyEvent.VK_J)
+    action(id: 'cariKonsumen', name: 'Cari Konsumen...', closure: controller.cariKonsumen, mnemonic: KeyEvent.VK_K)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
 }
 
 panel(id: 'mainPanel') {
@@ -69,9 +71,9 @@ panel(id: 'mainPanel') {
         }
     }
 
-    panel(constraints: PAGE_END) {
+    panel(constraints: PAGE_END, focusCycleRoot: true) {
         borderLayout()
-        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, focusCycleRoot: true, visible: bind { model.allowAddFakturJual }) {
+        panel(id: "form", layout: new MigLayout('', '[right][left][left,grow]', ''), constraints: CENTER, visible: bind { model.allowAddFakturJual }) {
             label('Nomor:')
             label(id: 'nomor', text: bind('nomor', source: model), errorPath: 'nomor')
             errorLabel(path: 'nomor', constraints: 'wrap')
@@ -124,28 +126,12 @@ panel(id: 'mainPanel') {
 
         panel(constraints: PAGE_END) {
             flowLayout(alignment: FlowLayout.LEADING)
-            button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: {
-                if (model.id != null) {
-                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
-                        return
-                    }
-                }
-                controller.save()
-                //form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
-            })
+            button(id: 'save', action: save)
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
             button(id: 'cetakSuratJalan', action: cetakSuratJalan, visible: bind('isRowSelected', source: table, converter: {it && model.showFakturJual && model.allowPrint}))
             button(id: 'showRetur', action: retur, visible: bind { table.isRowSelected })
-            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: controller.clear)
-            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: {
-                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
-                    controller.delete()
-                }
-            })
+            button(id: 'cancel', action: cancel, visible: bind { table.isRowSelected })
+            button(id: 'delete', action: delete, visible: bind { table.isRowSelected })
         }
     }
 }

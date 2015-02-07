@@ -85,6 +85,9 @@ class ReturJualOlehSalesController {
             model.returJualList.clear()
             model.returJualList.addAll(result)
         }
+        execInsideUISync {
+            view?.gudang?.requestFocusInWindow()
+        }
     }
 
     def save = {

@@ -52,6 +52,9 @@ class FakturJualOlehSalesController {
             model.statusSearch.selectedItem = SwingHelper.SEMUA
             model.poinBerlaku = true
         }
+        execInsideUISync {
+            view?.nomorSearch?.requestFocusInWindow()
+        }
     }
 
     def search = {
@@ -64,6 +67,9 @@ class FakturJualOlehSalesController {
     }
 
     def save = {
+        if (model.id && !DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
             konsumen: model.konsumen, kirimDariGudangUtama: model.kirimDariGudangUtama, poinBerlaku: model.poinBerlaku)
@@ -111,6 +117,9 @@ class FakturJualOlehSalesController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         try {
             FakturJualOlehSales fakturJualOlehSales = view.table.selectionModel.selected[0]
             fakturJualOlehSales = fakturJualRepository.hapus(fakturJualOlehSales)
@@ -160,7 +169,7 @@ class FakturJualOlehSalesController {
     def showRetur = {
         execInsideUISync {
             def args = [fakturJualOlehSales: view.table.selectionModel.selected[0]]
-            def dialogProps = [title: 'Retur Faktur', size: new Dimension(900, 420)]
+            def dialogProps = [title: 'Retur Faktur', preferredSize: new Dimension(900, 420)]
             DialogUtils.showMVCGroup('retur', args, view, dialogProps) { m, v, c ->
                 view.table.selectionModel.selected[0] = m.fakturJualOlehSales
             }

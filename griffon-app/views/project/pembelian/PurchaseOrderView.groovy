@@ -17,16 +17,21 @@ package project.pembelian
 
 import net.miginfocom.swing.MigLayout
 import org.jdesktop.swingx.prompt.PromptSupport
-import simplejpa.swing.DialogUtils
-import javax.swing.JOptionPane
-import java.awt.Dimension
 import java.awt.FlowLayout
+import java.awt.event.KeyEvent
+
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.SINGLE_COLUMN
 import static javax.swing.SwingConstants.*
 
 actions {
-    action(id: 'showItemFaktur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Purchase Order...', closure: controller.showItemFaktur)
-    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
+    action(id: 'showItemFaktur', name: 'Item Purchase Order...', closure: controller.showItemFaktur, mnemonic: KeyEvent.VK_I)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak, mnemonic: KeyEvent.VK_C)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'showPenerimaanBarang', name: 'Penerimaan Barang', closure: controller.showPenerimaanBarang, mnemonic: KeyEvent.VK_P)
+    action(id: 'showSisaBelumDiterima', name: 'Sisa Belum Diterima', closure: controller.showSisaBelumDiterima, mnemonic: KeyEvent.VK_D)
+    action(id: 'showFakturBeli', name: 'Faktur Pembelian', controller.showFakturBeli, mnemonic: KeyEvent.VK_F)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
 }
 
 panel(id: 'mainPanel') {
@@ -114,47 +119,13 @@ panel(id: 'mainPanel') {
 
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
-            button(app.getMessage("simplejpa.dialog.save.button"),
-                    visible: bind { model.allowAddPO },
-                    actionPerformed: {
-                if (model.id != null) {
-                    if (!DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
-                        return
-                    }
-                }
-                controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form)?.requestFocusInWindow()
-            })
+            button(action: save, visible: bind { model.allowAddPO })
             button(id: 'cetak', action: cetak, visible: bind('isRowSelected', source: table, converter: {it && model.allowAddPO}))
-            mvcPopupButton(id: 'penerimaanBarang', text: 'Penerimaan Barang', mvcGroup: 'penerimaanBarang',
-                args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},
-                dialogProperties: [title: 'Penerimaan Barang', size: new Dimension(900,420)],
-                onFinish: {m, v, c ->
-                    view.table.selectionModel.selected[0] = m.purchaseOrder
-                },
-                visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan })
-            )
-            mvcPopupButton(id: 'itemBarangAsChild', text: 'Sisa Belum Diterima', mvcGroup: 'itemBarangAsChild', onBeforeDisplay: controller.onShowSisaBarang,
-                dialogProperties: [title: 'Penerimaan Barang', size: new Dimension(900,420)],
-                visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }))
-            mvcPopupButton(id: 'fakturBeli', text: 'Faktur Pembelian', mvcGroup: 'fakturBeli',
-                args: {[purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]},
-                dialogProperties: [title: 'Faktur Pembelian'],
-                onFinish: {m, v, c ->
-                    view.table.selectionModel.selected[0] = m.purchaseOrder
-                },
-                visible: bind('isRowSelected', source: table, converter: { it && model.showFakturBeli })
-            )
-            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: controller.clear)
-            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: {
-                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
-                    controller.delete()
-                }
-            })
+            button(action: showPenerimaanBarang, visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }))
+            button(action: showSisaBelumDiterima, visible: bind('isRowSelected', source: table, converter: { it && model.showPenerimaan }))
+            button(action: showFakturBeli, visible: bind('isRowSelected', source: table, converter: { it && model.showFakturBeli }))
+            button(action: cancel, visible: bind { table.isRowSelected })
+            button(action: delete, visible: bind { table.isRowSelected })
         }
 
     }

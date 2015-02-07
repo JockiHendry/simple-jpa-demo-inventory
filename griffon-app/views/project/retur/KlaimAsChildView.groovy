@@ -23,10 +23,10 @@ import java.awt.*
 import griffon.util.*
 
 actions {
-    action(id: 'save', name: 'Simpan', closure: controller.save)
-    action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
-    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'close', name: 'Tutup', closure: controller.close, mnemonic: KeyEvent.VK_T)
 }
 
 panel(id: 'mainPanel') {

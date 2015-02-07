@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,9 @@ class KlaimAsChildController {
         model.klaimList.addAll(args.'parentList' ?: [])
         model.jenisKlaim.selectedItem = JenisKlaim.POTONG_PIUTANG
         model.produkVisible = false
+        execInsideUISync {
+            view?.jenisKlaim?.requestFocusInWindow()
+        }
     }
 
     void mvcGroupDestroy() {

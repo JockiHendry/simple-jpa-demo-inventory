@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package project.pembelian
 
-import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
@@ -23,7 +22,10 @@ import net.miginfocom.swing.MigLayout
 import java.awt.*
 
 actions {
-    action(id: 'showItemBarang', name: 'Klik Disini Untuk Melihat Atau Mengisi Daftar Barang...', closure: controller.showItemBarang)
+    action(id: 'showItemBarang', name: 'Item Barang...', closure: controller.showItemBarang, mnemonic: KeyEvent.VK_I)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
 }
 
 panel(id: 'mainPanel') {
@@ -66,23 +68,9 @@ panel(id: 'mainPanel') {
 
         panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
             flowLayout(alignment: FlowLayout.LEADING)
-            button(app.getMessage("simplejpa.dialog.save.button"), visible: bind { !table.isRowSelected }, actionPerformed: {
-                controller.save()
-                form.getFocusTraversalPolicy().getFirstComponent(form).requestFocusInWindow()
-            })
-            button(app.getMessage("simplejpa.dialog.cancel.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: controller.clear)
-            button(app.getMessage("simplejpa.dialog.delete.button"), visible: bind {
-                table.isRowSelected
-            }, actionPerformed: {
-                if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
-                    controller.delete()
-                }
-            })
-            button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-                SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-            }, mnemonic: KeyEvent.VK_T)
+            button(action: save, visible: bind { !table.isRowSelected })
+            button(action: cancel, visible: bind { table.isRowSelected })
+            button(action: delete, visible: bind { table.isRowSelected })
         }
     }
 }

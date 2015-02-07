@@ -77,6 +77,9 @@ class PurchaseOrderController {
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.PURCHASE_ORDER)
             model.statusSearch.selectedItem = SwingHelper.SEMUA
         }
+        execInsideUISync {
+            view?.nomorPOSearch?.requestFocusInWindow()
+        }
     }
 
     def search = {
@@ -98,6 +101,9 @@ class PurchaseOrderController {
     }
 
     def save = {
+        if (model.id && !DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.update.message"), app.getMessage("simplejpa.dialog.update.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         PurchaseOrder purchaseOrder = new PurchaseOrder(id: model.id, nomor: model.nomor, tanggal: model.tanggal,
             keterangan: model.keterangan, supplier: model.supplier.selectedItem,
             diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung))
@@ -130,6 +136,9 @@ class PurchaseOrderController {
 
     @NeedSupervisorPassword
     def delete = {
+        if (!DialogUtils.confirm(view.mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
+            return
+        }
         try {
             PurchaseOrder purchaseOrder = view.table.selectionModel.selected[0]
             purchaseOrder = purchaseOrderRepository.hapus(purchaseOrder)
@@ -161,12 +170,6 @@ class PurchaseOrderController {
         }
     }
 
-    def onShowSisaBarang = { def button, Map args ->
-        PurchaseOrder selected = view.table.selectionModel.selected[0]
-        args.'listItemBarang' = selected.sisaBelumDiterima()
-        args.'editable' = false
-    }
-
     def showItemFaktur = {
         execInsideUISync {
             def args = [parent: view.table.selectionModel.selected[0], listItemFaktur: model.listItemFaktur,
@@ -176,6 +179,35 @@ class PurchaseOrderController {
                 model.listItemFaktur.clear()
                 model.listItemFaktur.addAll(m.itemFakturList)
                 refreshInformasi()
+            }
+        }
+    }
+
+    def showPenerimaanBarang = {
+        execInsideUISync {
+            def args = [purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]
+            def dialogProps = [title: 'Penerimaan Barang', preferredSize: new Dimension(900,420)]
+            DialogUtils.showMVCGroup('penerimaanBarang', args, view, dialogProps) { m, v, c ->
+                view.table.selectionModel.selected[0] = m.purchaseOrder
+            }
+        }
+    }
+
+    def showSisaBelumDiterima = {
+        execInsideUISync {
+            PurchaseOrder selected = view.table.selectionModel.selected[0]
+            def args = [listItemBarang: selected.sisaBelumDiterima(), editable: false]
+            def dialogProps = [title: 'Penerimaan Barang', preferredSize: new Dimension(900,420)]
+            DialogUtils.showMVCGroup('itemBarangAsChild', args, view, dialogProps)
+        }
+    }
+
+    def showFakturBeli = {
+        execInsideUISync {
+            def args = [purchaseOrder: view.table.selectionModel.selected[0], allowTambahProduk: model.allowTambahProduk]
+            def dialogProps = [title: 'Faktur Pembelian']
+            DialogUtils.showMVCGroup('fakturBeli', args, view, dialogProps) { m, v, c ->
+                view.table.selectionModel.selected[0] = m.purchaseOrder
             }
         }
     }

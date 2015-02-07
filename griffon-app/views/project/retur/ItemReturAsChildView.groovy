@@ -23,15 +23,15 @@ import net.miginfocom.swing.MigLayout
 import java.awt.*
 
 actions {
-    action(id: 'save', name: 'Simpan', closure: controller.save)
-    action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
-    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'close', name: app.getMessage("simplejpa.dialog.close.button"), closure: controller.close)
-    action(id: 'showKlaim', name: 'Klaims', closure: controller.showKlaim)
-    action(id: 'autoKlaim', name: 'Tukar Baru + Piutang', closure: controller.autoKlaim)
-    action(id: 'autoKlaimServis', name: 'Tukar Baru + Tukar Servis + Piutang', closure: controller.autoKlaimServis)
-    action(id: 'autoKlaimPiutang', name: 'Piutang', closure: controller.autoKlaimPiutang)
-    action(id: 'resetKlaim', name: 'Reset Klaim', closure: controller.resetKlaim)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'close', name: 'Tutup', closure: controller.close, mnemonic: KeyEvent.VK_T)
+    action(id: 'showKlaim', name: 'Klaims', closure: controller.showKlaim, mnemonic: KeyEvent.VK_K)
+    action(id: 'autoKlaim', name: 'Tukar Baru + Piutang', closure: controller.autoKlaim, mnemonic: KeyEvent.VK_U)
+    action(id: 'autoKlaimServis', name: 'Tukar Baru + Tukar Servis + Piutang', closure: controller.autoKlaimServis, mnemonic: KeyEvent.VK_V)
+    action(id: 'autoKlaimPiutang', name: 'Piutang', closure: controller.autoKlaimPiutang, mnemonic: KeyEvent.VK_P)
+    action(id: 'resetKlaim', name: 'Reset Klaim', closure: controller.resetKlaim, mnemonic: KeyEvent.VK_R)
 }
 
 panel(id: 'mainPanel') {

@@ -71,7 +71,7 @@ class ItemFakturAsChildController {
     def showProduk = {
         execInsideUISync {
             def args = [popup: true, allowTambahProduk: model.allowTambahProduk, showReturOnly: false, supplierSearch: null]
-            def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(900, 600)]
+            def dialogProps = [title: 'Cari Produk', preferredSize: new Dimension(1024, 600)]
             Produk produk = null
             DialogUtils.showMVCGroup('produk', args, view, dialogProps) { m, v, c ->
                 if (v.table.selectionModel.isSelectionEmpty()) {

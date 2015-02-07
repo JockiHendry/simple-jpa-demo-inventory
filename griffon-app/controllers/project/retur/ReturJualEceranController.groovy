@@ -67,6 +67,9 @@ class ReturJualEceranController {
             model.tanggalSelesaiSearch = LocalDate.now()
             model.nomor = nomorService.getCalonNomor(NomorService.TIPE.RETUR_JUAL_SALES)
         }
+        execInsideUISync {
+            view?.namaKonsumen?.requestFocusInWindow()
+        }
     }
 
     def search = {

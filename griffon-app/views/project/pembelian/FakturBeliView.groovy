@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,17 @@
  */
 package project.pembelian
 
-import simplejpa.swing.DialogUtils
 import java.awt.event.KeyEvent
 import net.miginfocom.swing.MigLayout
 import org.joda.time.*
 import java.awt.*
+
+actions {
+    action(id: 'showItemFaktur', name: 'Item Faktur...', closure: controller.showItemFaktur, mnemonic: KeyEvent.VK_I)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'cariTanggal', name: 'Cari Tanggal', closure: controller.hitungJatuhTempo, mnemonic: KeyEvent.VK_T)
+}
 
 panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')) {
     label('Nomor Faktur:')
@@ -34,7 +40,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
             errorPath: 'jatuhTempo', dateVisible: true, timeVisible: false)
         numberTextField(id: 'hariJatuhTempo', columns: 5, bindTo: 'hariJatuhTempo')
         label(' Hari ')
-        button('Cari Tanggal', actionPerformed: controller.hitungJatuhTempo)
+        button(action: cariTanggal)
     }
     errorLabel(path: 'jatuhTempo', constraints: 'wrap')
     label('Diskon:')
@@ -47,16 +53,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
     label('Isi:')
     panel {
         label(text: bind { model.informasi })
-        mvcPopupButton(id: 'listItemFaktur', text: 'Klik Disini Untuk Melihat Atau Mengisi Item Faktur...',
-            errorPath: 'listItemFaktur', mvcGroup: 'itemFakturAsChild',
-            args: {[parent: model.fakturBeli, listItemFaktur: model.listItemFaktur, allowTambahProduk: model.allowTambahProduk]},
-            dialogProperties: [title: 'Item Faktur', size: new Dimension(900,420)],
-            onFinish: {m, v, c ->
-                model.listItemFaktur.clear()
-                model.listItemFaktur.addAll(m.itemFakturList)
-                controller.refreshInformasi()
-            }
-        )
+        button(action: showItemFaktur, errorPath: 'listItemFaktur')
     }
     errorLabel(path: 'listItemFaktur', constraints: 'wrap')
     label('Keterangan:')
@@ -65,14 +62,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
 
     panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
         flowLayout(alignment: FlowLayout.LEADING)
-        button(app.getMessage("simplejpa.dialog.save.button"), actionPerformed: controller.save, visible: bind { model.showSave })
-        button(app.getMessage("simplejpa.dialog.delete.button"), actionPerformed: {
-            if (DialogUtils.confirm(mainPanel, app.getMessage("simplejpa.dialog.delete.message"), app.getMessage("simplejpa.dialog.delete.title"), JOptionPane.WARNING_MESSAGE)) {
-                controller.delete()
-            }
-        })
-        button(app.getMessage("simplejpa.dialog.close.button"), actionPerformed: {
-            SwingUtilities.getWindowAncestor(mainPanel)?.dispose()
-        }, mnemonic: KeyEvent.VK_T)
+        button(action: save, visible: bind { model.showSave })
+        button(action: delete)
     }
 }

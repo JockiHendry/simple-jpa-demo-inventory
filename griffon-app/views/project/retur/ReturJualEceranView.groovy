@@ -15,6 +15,7 @@
  */
 package project.retur
 
+import java.awt.event.KeyEvent
 import static ca.odell.glazedlists.gui.AbstractTableComparatorChooser.*
 import static javax.swing.SwingConstants.*
 import net.miginfocom.swing.MigLayout
@@ -23,13 +24,13 @@ import org.jdesktop.swingx.prompt.PromptSupport
 
 actions {
     action(id: 'search', name: app.getMessage('simplejpa.search.label'), closure: controller.search)
-    action(id: 'save', name: app.getMessage('simplejpa.dialog.save.button'), closure: controller.save)
-    action(id: 'cancel', name: app.getMessage("simplejpa.dialog.cancel.button"), closure: controller.clear)
-    action(id: 'delete', name: app.getMessage("simplejpa.dialog.delete.button"), closure: controller.delete)
-    action(id: 'showBarangRetur', name: 'Klik Disini Untuk Melihat Atau Mengisi Item Retur...', closure: controller.showBarangRetur)
-    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar)
-    action(id: 'cetak', name: 'Cetak', closure: controller.cetak)
-    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur)
+    action(id: 'save', name: 'Simpan', closure: controller.save, mnemonic: KeyEvent.VK_S)
+    action(id: 'cancel', name: 'Batal', closure: controller.clear, mnemonic: KeyEvent.VK_B)
+    action(id: 'delete', name: 'Hapus', closure: controller.delete, mnemonic: KeyEvent.VK_H)
+    action(id: 'showBarangRetur', name: 'Item Retur...', closure: controller.showBarangRetur, mnemonic: KeyEvent.VK_I)
+    action(id: 'penukaran', name: 'Barang Retur Yang Ditukar Telah Diterima...', closure: controller.prosesTukar, mnemonic: KeyEvent.VK_D)
+    action(id: 'cetak', name: 'Cetak', closure: controller.cetak, mnemonic: KeyEvent.VK_C)
+    action(id: 'prosesSemuaFaktur', name: 'Proses Semua Faktur', closure: controller.prosesSemuaFaktur, mnemonic: KeyEvent.VK_P)
 }
 
 panel(id: 'mainPanel') {
