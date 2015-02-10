@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package project.user
 
 import domain.exception.DataDuplikat
 import domain.exception.DataTidakBolehDiubah
+import domain.exception.TanggalLampau
 import domain.general.Menu
 import domain.general.User
 import org.joda.time.LocalDateTime
@@ -67,6 +68,11 @@ class UserRepository {
             buat(user)
         }
         if (user && passwordService.periksaPassword(user.password, inputPassword)) {
+            // Tanggal hari ini tidak boleh sebelum tanggal login terakhir
+            if (user.loginTerakhir && LocalDateTime.now().isBefore(user.loginTerakhir)) {
+                throw new TanggalLampau(LocalDateTime.now(), user.loginTerakhir)
+            }
+
             user.loginTerakhir = LocalDateTime.now()
             return user
         }

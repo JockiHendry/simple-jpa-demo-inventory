@@ -13,11 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import domain.general.User
 import domain.pengaturan.KeyPengaturan
+import org.joda.time.LocalDateTime
 import project.pengaturan.PengaturanRepository
 import simplejpa.SimpleJpaUtil
+import simplejpa.swing.DialogUtils
 import util.HttpUtil
 import util.SplashScreen
+import javax.swing.JOptionPane
 import javax.swing.UIManager
 import javax.swing.plaf.FontUIResource
 import java.awt.Font
@@ -66,3 +71,16 @@ SplashScreen.instance.dispose()
 execOutsideUI {
     HttpUtil.instance.sendNotification(SimpleJpaUtil.instance.user?.userName, "Version ${app?.metadata?.getApplicationVersion()} Startup...")
 }
+
+Thread.startDaemon('PemeriksaTanggal', {
+    //noinspection GroovyInfiniteLoopStatement
+    while (true) {
+        User user = SimpleJpaUtil.instance.user
+        if (user && LocalDateTime.now().isBefore(user.loginTerakhir)) {
+            DialogUtils.message(null, "Waktu sistem (${LocalDateTime.now().toString('dd-MM-YYYY HH:mm:ss')}) tidak boleh sebelum waktu login (${user.loginTerakhir.toString('dd-MM-YYYY HH:mm:ss')})",
+                'Kesalahan Tanggal', JOptionPane.ERROR_MESSAGE)
+            app.shutdown()
+        }
+        Thread.sleep(2000)
+    }
+})
