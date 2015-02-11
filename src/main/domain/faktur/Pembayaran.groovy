@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -57,6 +57,27 @@ class Pembayaran {
             return potongan
         }
         throw new IllegalArgumentException("Kriteria tidak dikenali: $kriteria")
+    }
+
+    boolean equals(o) {
+        if (this.is(o)) return true
+        if (!(o instanceof Pembayaran)) return false
+
+        Pembayaran that = (Pembayaran) o
+
+        if (jumlah != that.jumlah) return false
+        if (potongan != that.potongan) return false
+        if (tanggal != that.tanggal) return false
+
+        return true
+    }
+
+    int hashCode() {
+        int result
+        result = (tanggal != null ? tanggal.hashCode() : 0)
+        result = 31 * result + (jumlah != null ? jumlah.hashCode() : 0)
+        result = 31 * result + (potongan != null ? potongan.hashCode() : 0)
+        return result
     }
 
 }

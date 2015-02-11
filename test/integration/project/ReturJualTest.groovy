@@ -245,6 +245,33 @@ class ReturJualTest extends DbUnitTestCase {
         assertEquals(sisaPiutangAwal, k.jumlahPiutang())
     }
 
+    public void testHapusPotonganPiutang() {
+        Produk p1 = returJualRepository.findProdukById(-1l)
+        Produk p2 = returJualRepository.findProdukById(-2l)
+        Konsumen k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        BigDecimal sisaPiutangAwal = k.jumlahPiutang()
+        ReturJualOlehSales r = new ReturJualOlehSales(nomor: 'TEST-1', tanggal: LocalDate.now(), konsumen: k, gudang: gudangRepository.cariGudangUtama())
+        r.tambah(new ItemRetur(p1, 10, [new KlaimPotongPiutang(10000)] as Set))
+        r.tambah(new ItemRetur(p2, 20, [new KlaimPotongPiutang( 1000)] as Set))
+        r = returJualRepository.buat(r)
+        k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        assertEquals(sisaPiutangAwal - 11000, k.jumlahPiutang())
+
+        // Hapus
+        returJualRepository.hapus(r)
+
+        // Periksa apakah jumlah piutang berkurang
+        k = returJualRepository.findKonsumenByIdFetchComplete(-1l)
+        assertEquals(sisaPiutangAwal, k.jumlahPiutang())
+
+        // Periksa apakah potongan sudah hilang di masing-masing faktur
+        returJualRepository.withTransaction {
+            FakturJualOlehSales f = findFakturJualOlehSalesByNomor('000004/042014/SA')
+            def jumlahPotongan = f.piutang.listPembayaran.findAll { it.potongan }.size()
+            assertEquals(0, jumlahPotongan)
+        }
+    }
+
     public void testTukarPengeluaranBarang() {
         Produk produk1 = returJualRepository.findProdukById(-1l)
         Produk produk2 = returJualRepository.findProdukById(-2l)

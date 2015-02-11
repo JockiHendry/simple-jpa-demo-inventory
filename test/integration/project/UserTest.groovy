@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -63,6 +63,7 @@ class UserTest extends DbUnitTestCase {
         user = userRepository.buat(user)
         assertEquals(user, userRepository.login('theUser', userRepository.DEFAULT_PASSWORD))
         user = userRepository.setPassword(user, 'passwordBaru')
+        Thread.sleep(1000)
         assertEquals(user, userRepository.login('theUser', 'passwordBaru'))
 
         userRepository.remove(user)

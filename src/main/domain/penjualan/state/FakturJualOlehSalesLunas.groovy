@@ -67,11 +67,11 @@ class FakturJualOlehSalesLunas implements OperasiFakturJual {
     }
 
     void hapusPembayaran(FakturJualOlehSales fakturJual, String nomorReferensi, String jenisReferensi = null) {
-        fakturJual.piutang.listPembayaran.find {
+        fakturJual.piutang.listPembayaran.findAll {
             if (jenisReferensi) {
-                return (it.referensi.namaClass == jenisReferensi) && (it.referensi.nomor == nomorReferensi)
+                return (it.referensi?.namaClass == jenisReferensi) && (it.referensi?.nomor == nomorReferensi)
             } else {
-                return (it.referensi.nomor == nomorReferensi)
+                return (it.referensi?.nomor == nomorReferensi)
             }
         }.each { Pembayaran pembayaran ->
             hapusPembayaran(fakturJual, pembayaran)

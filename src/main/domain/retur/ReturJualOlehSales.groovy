@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package domain.retur
 
-import domain.exception.FakturTidakDitemukan
 import domain.faktur.Referensi
 import domain.inventory.DaftarBarang
 import domain.inventory.Gudang
@@ -84,10 +83,9 @@ class ReturJualOlehSales extends ReturJual {
 
     void hapusReferensiFaktur(String nomor) {
         Referensi referensi = fakturPotongPiutang.find { it.nomor == nomor }
-        if (!referensi) {
-            throw new FakturTidakDitemukan(nomor)
+        if (referensi) {
+            fakturPotongPiutang.remove(referensi)
         }
-        fakturPotongPiutang.remove(referensi)
     }
 
 }
