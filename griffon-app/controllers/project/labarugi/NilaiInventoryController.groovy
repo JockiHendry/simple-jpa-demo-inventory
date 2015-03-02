@@ -16,6 +16,7 @@
 package project.labarugi
 
 import domain.labarugi.CacheGlobal
+import org.joda.time.LocalDate
 import javax.swing.SwingUtilities
 import java.text.NumberFormat
 
@@ -31,7 +32,8 @@ class NilaiInventoryController {
     }
 
     def hitungNilaiInventory = {
-        model.nilaiInventory = labaRugiService.hitungInventory(model.produk, new CacheGlobal(tanggalMulai: model.tanggalSearch))
+        LocalDate sampaiTanggal = model.tanggalSearch.plusDays(1)
+        model.nilaiInventory = labaRugiService.hitungInventory(model.produk, new CacheGlobal(tanggalMulai: sampaiTanggal))
         execInsideUISync {
             model.itemNilaiInventory.clear()
             model.itemNilaiInventory.addAll(model.nilaiInventory.toList())
