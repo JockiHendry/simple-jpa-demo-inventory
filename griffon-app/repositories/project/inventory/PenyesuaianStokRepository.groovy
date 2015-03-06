@@ -77,6 +77,7 @@ class PenyesuaianStokRepository {
             tanggal = penyesuaianStok.tanggal
             keterangan = penyesuaianStok.keterangan
         }
+        mergedPenyesuaianStok.ubahHarga(penyesuaianStok.items)
         mergedPenyesuaianStok
     }
 

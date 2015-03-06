@@ -39,7 +39,6 @@ class FakturBeliController {
     void mvcGroupInit(Map args) {
         model.purchaseOrder = args.'purchaseOrder'
         model.fakturBeli = model.purchaseOrder.fakturBeli
-        model.showSave = model.fakturBeli? false: true
         model.editable = args.containsKey('editable')? args.'editable': false
         model.allowTambahProduk = args.containsKey('allowTambahProduk')? args.'allowTambahProduk': true
         refreshInformasi()
@@ -115,7 +114,7 @@ class FakturBeliController {
 
     def showItemFaktur = {
         execInsideUISync {
-            def args = [parent: model.fakturBeli, listItemFaktur: model.listItemFaktur, allowTambahProduk: model.allowTambahProduk]
+            def args = [parent: model.fakturBeli, listItemFaktur: model.listItemFaktur, allowTambahProduk: model.allowTambahProduk, editable: true]
             def dialogProps = [title: 'Item Faktur', preferredSize: new Dimension(900,420)]
             DialogUtils.showMVCGroup('itemFakturAsChild', args, view, dialogProps) { m, v, c ->
                 model.listItemFaktur.clear()

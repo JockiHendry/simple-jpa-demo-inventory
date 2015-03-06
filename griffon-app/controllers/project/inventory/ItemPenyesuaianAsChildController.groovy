@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ class ItemPenyesuaianAsChildController {
 
     void mvcGroupInit(Map args) {
         model.parent = args.'parent'
-        model.editable = args.containsKey('editable')? args.'editable': (model.parent?.id == null)
+        model.editable = true
         execInsideUISync {
             model.itemPenyesuaianList.clear()
             model.itemPenyesuaianList.addAll(args.'listItemPenyesuaian')

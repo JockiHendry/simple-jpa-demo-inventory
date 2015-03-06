@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,16 @@ abstract class Faktur implements Comparable, SebuahDaftarBarang {
         hasil.nomor = nomor
         hasil.tanggal = tanggal
         hasil
+    }
+
+    public void ubahItems(List<ItemFaktur> items) {
+        if (items.size() != listItemFaktur.size()) return
+        for (int i=0; i < listItemFaktur.size(); i++) {
+            ItemFaktur item = items[i]
+            if (listItemFaktur[i].produk == item.produk) {
+                listItemFaktur[i].harga = item.harga
+            }
+        }
     }
 
     boolean equals(o) {

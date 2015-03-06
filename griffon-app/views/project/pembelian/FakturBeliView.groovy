@@ -62,7 +62,7 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left][left,grow]', '')
 
     panel(constraints: 'span, growx, wrap', visible: bind {model.notDeleted}) {
         flowLayout(alignment: FlowLayout.LEADING)
-        button(action: save, visible: bind { model.showSave })
+        button(action: save)
         button(action: delete)
     }
 }

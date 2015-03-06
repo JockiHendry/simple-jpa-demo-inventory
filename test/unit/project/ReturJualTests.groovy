@@ -15,7 +15,6 @@
  */
 package project
 
-import domain.exception.FakturTidakDitemukan
 import domain.faktur.BilyetGiro
 import domain.faktur.ItemFaktur
 import domain.faktur.KRITERIA_PEMBAYARAN
@@ -466,9 +465,6 @@ class ReturJualTests extends GriffonUnitTestCase {
         assertTrue(r.fakturPotongPiutang.contains(new Referensi(FakturJualOlehSales, 'F-002')))
         r.hapusReferensiFaktur('F-002')
         assertTrue(r.fakturPotongPiutang.empty)
-        shouldFail(FakturTidakDitemukan) {
-            r.hapusReferensiFaktur('F-003')
-        }
     }
 
     void testNormalisasi() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,16 @@ class PenyesuaianStok implements SebuahDaftarBarang {
         hasil.gudang = gudang
         hasil.keterangan = keterangan
         hasil
+    }
+
+    public void ubahHarga(List<ItemPenyesuaian> itemsBaru) {
+        if (itemsBaru.size() != items.size()) return
+        for (int i=0; i < items.size(); i++) {
+            ItemPenyesuaian item = itemsBaru[i]
+            if (items[i].produk == item.produk) {
+                items[i].harga = item.harga
+            }
+        }
     }
 
 }

@@ -163,6 +163,8 @@ class PurchaseOrderRepository {
                 keterangan = purchaseOrder.keterangan
             }
         }
+        // Harga untuk setiap item boleh diubah kapan saja
+        mergedPurchaseOrder.ubahItems(purchaseOrder.listItemFaktur)
         purchaseOrder
     }
 
@@ -184,15 +186,20 @@ class PurchaseOrderRepository {
     }
 
     public PurchaseOrder tambah(PurchaseOrder purchaseOrder, FakturBeli fakturBeli, boolean strictMode = true) {
-        if (findFakturBeliByNomor(fakturBeli.nomor)) {
-            throw new DataDuplikat(fakturBeli)
+        purchaseOrder = findPurchaseOrderByIdFetchComplete(purchaseOrder.id)
+        if (purchaseOrder.fakturBeli) {
+            // Perubahan harga diperbolehkan
+            purchaseOrder.fakturBeli.ubahItems(fakturBeli.listItemFaktur)
+        } else {
+            if (findFakturBeliByNomor(fakturBeli.nomor)) {
+                throw new DataDuplikat(fakturBeli)
+            }
+            if (fakturBeli.id != null) {
+                throw new DataTidakBolehDiubah(fakturBeli)
+            }
+            purchaseOrder.tambah(fakturBeli, strictMode)
+            persist(fakturBeli)
         }
-        if (fakturBeli.id != null) {
-            throw new DataTidakBolehDiubah(fakturBeli)
-        }
-        purchaseOrder = findPurchaseOrderById(purchaseOrder.id)
-        purchaseOrder.tambah(fakturBeli, strictMode)
-        persist(fakturBeli)
         purchaseOrder
     }
 

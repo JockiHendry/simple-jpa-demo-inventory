@@ -50,7 +50,9 @@ class ItemFakturAsChildController {
 
     def save = {
         ItemFaktur itemFaktur = new ItemFaktur(produk: model.produk, jumlah: model.jumlah, harga: model.harga, keterangan: model.keterangan)
-        itemFaktur.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
+        if ((model.diskonPotonganLangsung > 0) || (model.diskonPotonganPersen > 0)) {
+            itemFaktur.diskon = new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung)
+        }
 
         if (!purchaseOrderRepository.validate(itemFaktur, Default, model)) return
 
@@ -107,6 +109,7 @@ class ItemFakturAsChildController {
             model.harga = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
+            model.keterangan = null
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -124,6 +127,7 @@ class ItemFakturAsChildController {
                 model.harga = selected.harga
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
+                model.keterangan = selected.keterangan
             }
         }
     }
