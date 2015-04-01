@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,10 @@
  */
 package project.laporan
 
+import domain.labarugi.CacheGlobal
+import domain.penjualan.FakturJualOlehSales
+import laporan.ProfitSales
+import project.labarugi.LabaRugiService
 import project.penjualan.FakturJualRepository
 import org.joda.time.LocalDate
 import simplejpa.swing.DialogUtils
@@ -27,6 +31,7 @@ class LaporanPenjualanPerSalesController {
     LaporanPenjualanPerSalesModel model
     def view
     FakturJualRepository fakturJualRepository
+    LabaRugiService labaRugiService
 
     void mvcGroupInit(Map args) {
         model.tanggalMulaiCari = LocalDate.now().withDayOfMonth(1)
@@ -41,7 +46,7 @@ class LaporanPenjualanPerSalesController {
     }
 
     def tampilkanLaporan = {
-        model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchItems([orderBy: 'konsumen__sales__nama,tanggal,nomor']) {
+        model.result = fakturJualRepository.findAllFakturJualOlehSalesByDslFetchPengeluaranBarang([orderBy: 'konsumen__sales__nama,tanggal,nomor']) {
             tanggal between(model.tanggalMulaiCari, model.tanggalSelesaiCari)
             if (model.sales.selectedItem) {
                 and()
@@ -50,6 +55,25 @@ class LaporanPenjualanPerSalesController {
             if (model.konsumenSearch) {
                 and()
                 konsumen eq(model.konsumenSearch)
+            }
+        }
+        if (model.profitSales) {
+            model.params.fileLaporan = "report/laporan_profit_sales.jasper"
+            fakturJualRepository.withTransaction {
+                CacheGlobal cacheGlobal = new CacheGlobal()
+                cacheGlobal.perbaharui(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+                Map daftarNilaiInventory = [:]
+                model.result = model.result.collect { FakturJualOlehSales f ->
+                    BigDecimal hargaModal = 0, ongkosKirim = 0
+                    f.barangYangHarusDikirim().items.each {
+                        if (!daftarNilaiInventory.containsKey(it.produk)) {
+                            daftarNilaiInventory[it.produk] = labaRugiService.hitungInventory(it.produk, cacheGlobal)
+                        }
+                        hargaModal +=  daftarNilaiInventory[it.produk].kurang(it.jumlah)
+                        ongkosKirim += ((it.produk.ongkosKirimBeli?:0) * it.jumlah)
+                    }
+                    new ProfitSales(f.tanggal, f.konsumen, f.nomor, f.totalSetelahRetur(), hargaModal, ongkosKirim)
+                }
             }
         }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari

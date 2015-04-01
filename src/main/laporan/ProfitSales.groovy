@@ -13,27 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package project.laporan
+package laporan
 
-import ca.odell.glazedlists.BasicEventList
-import ca.odell.glazedlists.swing.DefaultEventComboBoxModel
-import ca.odell.glazedlists.swing.GlazedListsSwing
 import domain.penjualan.Konsumen
-import domain.penjualan.Sales
+import groovy.transform.Canonical
 import org.joda.time.LocalDate
 
-class LaporanPenjualanPerSalesModel {
+@Canonical
+class ProfitSales {
 
-    @Bindable LocalDate tanggalMulaiCari
-    @Bindable LocalDate tanggalSelesaiCari
-    BasicEventList<Sales> salesList = new BasicEventList<>()
-    @Bindable DefaultEventComboBoxModel<Sales> sales = GlazedListsSwing.eventComboBoxModelWithThreadProxyList(salesList)
-    @Bindable Konsumen konsumenSearch
-    @Bindable Boolean profitSales
+    LocalDate tanggal
+    Konsumen konsumen
+    String nomor
+    BigDecimal hargaJual
+    BigDecimal hargaModal
+    BigDecimal ongkosKirim
 
-    List result
-    Map params = [:]
-
-    boolean batal = false
+    BigDecimal profit() {
+        hargaJual - hargaModal - ongkosKirim
+    }
 
 }

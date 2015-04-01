@@ -110,4 +110,16 @@ class FakturJualTests extends GriffonUnitTestCase {
         assertEquals('supir', f.pengeluaranBarang.buktiTerima.namaSupir)
     }
 
+    public void testOngkosKirim() {
+        Gudang g = new Gudang(nama: 'Gudang', utama: true)
+        Sales s = new Sales(nama: 'Sales', gudang: g)
+        Konsumen k = new Konsumen(nama: 'Konsumen', sales: s)
+        Produk produkA = new Produk(nama: 'Produk A', hargaDalamKota: 10000, jumlah: 50, ongkosKirimBeli: 1000)
+        Produk produkB = new Produk(nama: 'Produk B', hargaDalamKota: 12000, jumlah: 30, ongkosKirimBeli: 2000)
+        FakturJual f = new FakturJualOlehSales(konsumen: k)
+        f.tambah(new ItemFaktur(produkA, 50, 10000))
+        f.tambah(new ItemFaktur(produkB, 30, 20000))
+        assertEquals(110000, f.getOngkosKirim())
+    }
+
 }

@@ -46,6 +46,9 @@ panel(id: 'mainPanel', layout: new MigLayout('hidemode 2', '[right][left,left,gr
     label(text: bind {model.konsumenSearch? model.konsumenSearch.nama: '-'})
     button(action: cariKonsumen, constraints: 'wrap')
 
+    label('Profit Sales?')
+    checkBox(selected: bind('profitSales', target: model, mutual: true), constraints: 'wrap')
+
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
         button(action: reset)
