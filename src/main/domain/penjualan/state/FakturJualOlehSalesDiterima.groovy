@@ -59,7 +59,9 @@ class FakturJualOlehSalesDiterima implements OperasiFakturJual {
         }
         fakturJual.pengeluaranBarang.batalDiterima()
         fakturJual.piutang = null
-        fakturJual.konsumen.hapusPoin(fakturJual.pengeluaranBarang.toPoin())
+        if (fakturJual.poinBerlaku) {
+            fakturJual.konsumen.hapusPoin(fakturJual.pengeluaranBarang.toPoin())
+        }
         fakturJual.status = StatusFakturJual.DIANTAR
     }
 
@@ -70,7 +72,9 @@ class FakturJualOlehSalesDiterima implements OperasiFakturJual {
         }
         BigDecimal harga = fakturJual.prosesTambahRetur(returFaktur)
         fakturJual.bayar(new Pembayaran(LocalDate.now(), harga, true, null, new Referensi(FakturJualOlehSales.RETUR_FAKTUR, returFaktur.nomor)))
-        fakturJual.konsumen.hapusPoin(returFaktur)
+        if (fakturJual.poinBerlaku) {
+            fakturJual.konsumen.hapusPoin(returFaktur)
+        }
     }
 
     @Override
@@ -80,7 +84,9 @@ class FakturJualOlehSalesDiterima implements OperasiFakturJual {
         }
         ReturFaktur returFaktur = fakturJual.prosesHapusRetur(nomor)
         hapusPembayaran(fakturJual, nomor, FakturJualOlehSales.RETUR_FAKTUR)
-        fakturJual.konsumen.tambahPoin(returFaktur)
+        if (fakturJual.poinBerlaku) {
+            fakturJual.konsumen.tambahPoin(returFaktur)
+        }
     }
 
     void bayar(FakturJualOlehSales fakturJual, Pembayaran pembayaran) {

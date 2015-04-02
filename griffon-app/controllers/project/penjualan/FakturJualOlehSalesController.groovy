@@ -50,6 +50,7 @@ class FakturJualOlehSalesController {
             model.tanggalMulaiSearch = LocalDate.now().minusWeeks(1)
             model.tanggalSelesaiSearch = LocalDate.now()
             model.statusSearch.selectedItem = SwingHelper.SEMUA
+            model.poinBerlaku = true
         }
     }
 
@@ -65,7 +66,7 @@ class FakturJualOlehSalesController {
     def save = {
         FakturJualOlehSales fakturJualOlehSales = new FakturJualOlehSales(id: model.id, tanggal: model.tanggal,
             keterangan: model.keterangan, diskon: new Diskon(model.diskonPotonganPersen, model.diskonPotonganLangsung),
-            konsumen: model.konsumen, kirimDariGudangUtama: model.kirimDariGudangUtama)
+            konsumen: model.konsumen, kirimDariGudangUtama: model.kirimDariGudangUtama, poinBerlaku: model.poinBerlaku)
         model.listItemFaktur.each { fakturJualOlehSales.tambah(it) }
 
         if (!fakturJualRepository.validate(fakturJualOlehSales, InputPenjualanOlehSales, model)) return
@@ -218,6 +219,7 @@ class FakturJualOlehSalesController {
             model.tanggal = null
             model.konsumen = null
             model.kirimDariGudangUtama = Boolean.FALSE
+            model.poinBerlaku = Boolean.TRUE
             model.keterangan = null
             model.diskonPotonganLangsung = null
             model.diskonPotonganPersen = null
@@ -247,6 +249,7 @@ class FakturJualOlehSalesController {
                 model.tanggal = selected.tanggal
                 model.konsumen = selected.konsumen
                 model.kirimDariGudangUtama = selected.kirimDariGudangUtama
+                model.poinBerlaku = selected.poinBerlaku
                 model.keterangan = selected.keterangan
                 model.diskonPotonganLangsung = selected.diskon?.potonganLangsung
                 model.diskonPotonganPersen = selected.diskon?.potonganPersen

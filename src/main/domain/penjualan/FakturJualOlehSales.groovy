@@ -98,6 +98,8 @@ class FakturJualOlehSales extends FakturJual {
 
     Boolean kirimDariGudangUtama
 
+    Boolean poinBerlaku = Boolean.TRUE
+
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER) @JoinTable(name='FakturJual_retur')
     @Fetch(FetchMode.SUBSELECT) @OrderColumn
     List<ReturFaktur> retur = []

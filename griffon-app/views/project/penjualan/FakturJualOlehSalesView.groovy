@@ -97,6 +97,8 @@ panel(id: 'mainPanel') {
             panel {
                 label(text: bind { model.informasi })
                 button(id: 'listItemFaktur', action: showItemFaktur, errorPath: 'listItemFaktur')
+                checkBox('Mendapatkan Poin?', selected: bind('poinBerlaku', target: model, mutual: true), errorPath: 'poinBerlaku')
+                errorLabel(path: 'poinBerlaku')
             }
             errorLabel(path: 'listItemFaktur', constraints: 'wrap')
             label('Bonus:')

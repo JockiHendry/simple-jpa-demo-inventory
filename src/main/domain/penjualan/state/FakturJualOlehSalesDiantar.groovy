@@ -45,10 +45,12 @@ class FakturJualOlehSalesDiantar implements OperasiFakturJual {
         fakturJual.piutang = new KewajibanPembayaran(jumlah: fakturJual.totalSetelahRetur())
 
         // Menambah poin
-        DaftarBarangSementara daftarBarang = new DaftarBarangSementara(fakturJual.pengeluaranBarang.items)
-        fakturJual.retur.each { daftarBarang -= it}
-        daftarBarang.nomor = fakturJual.pengeluaranBarang.nomor
-        fakturJual.konsumen.tambahPoin(daftarBarang)
+        if (fakturJual.poinBerlaku) {
+            DaftarBarangSementara daftarBarang = new DaftarBarangSementara(fakturJual.pengeluaranBarang.items)
+            fakturJual.retur.each { daftarBarang -= it }
+            daftarBarang.nomor = fakturJual.pengeluaranBarang.nomor
+            fakturJual.konsumen.tambahPoin(daftarBarang)
+        }
     }
 
     @Override

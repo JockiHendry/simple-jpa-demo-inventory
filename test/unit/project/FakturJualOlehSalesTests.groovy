@@ -93,6 +93,28 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(150, konsumen.poinTerkumpul)
     }
 
+    public void testTambahBuktiTerimaTanpaPoin() {
+        Produk produkA = new Produk('Produk A', 10000, 10100, 50)
+        Produk produkB = new Produk('Produk B', 12000, 12100, 50)
+        produkA.poin = 10
+        produkB.poin = 0
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(nama: 'Konsumen', sales: showroom, poinTerkumpul: 50)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen, poinBerlaku: false)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
+        f.proses([alamatTujuan: 'Xtra Street'])
+        assertEquals(StatusFakturJual.DIANTAR, f.status)
+
+        f.proses([buktiTerima: new BuktiTerima(LocalDate.now(), 'Mr. Stranger', 'Mr. Nice Guy')])
+        assertNotNull(f.pengeluaranBarang.buktiTerima)
+        assertEquals(StatusFakturJual.DITERIMA, f.status)
+        assertNotNull(f.piutang)
+        assertEquals(0, f.total().compareTo(f.piutang.jumlah))
+        assertEquals(50, konsumen.poinTerkumpul)
+    }
+
     public void testBayar() {
         Produk produkA = new Produk('Produk A', 10000, 10100, 50)
         Produk produkB = new Produk('Produk B', 12000, 12100, 50)
@@ -300,6 +322,30 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(-80, konsumen.listRiwayatPoin[2].poin)
     }
 
+    public void testReturFakturDiterimaTanpaPoin() {
+        Produk produkA = new Produk('Produk A', 50, 10000, 10100)
+        produkA.setPoin(3)
+        Produk produkB = new Produk('Produk B', 50, 12000, 12100)
+        produkB.setPoin(4)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(sales: showroom, poinTerkumpul: 0)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen, poinBerlaku: false)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
+        f.proses([alamatTujuan: 'Tujuan'])
+        f.proses([buktiTerima: new BuktiTerima()])
+        assertEquals(0, konsumen.poinTerkumpul)
+        ReturFaktur retur1 = new ReturFaktur()
+        retur1.tambah(new ItemBarang(produkA, 5))
+        f.tambahRetur(retur1)
+        assertEquals(0, konsumen.poinTerkumpul)
+        ReturFaktur retur2 = new ReturFaktur()
+        retur2.tambah(new ItemBarang(produkB, 20))
+        f.tambahRetur(retur2)
+        assertEquals(0, konsumen.poinTerkumpul)
+    }
+
     public void testReturFakturDiantar() {
         Produk produkA = new Produk('Produk A', 50, 10000, 10100)
         produkA.setPoin(3)
@@ -334,6 +380,32 @@ class FakturJualOlehSalesTests extends GriffonUnitTestCase{
         assertEquals(50000, f.piutang.jumlah)
         assertEquals(15, konsumen.poinTerkumpul)
     }
+
+    public void testReturFakturDiantarTanpaPoin() {
+        Produk produkA = new Produk('Produk A', 50, 10000, 10100)
+        produkA.setPoin(3)
+        Produk produkB = new Produk('Produk B', 50, 12000, 12100)
+        produkB.setPoin(4)
+        Sales showroom = new Sales('Showroom', null, gudangUtama)
+        Konsumen konsumen = new Konsumen(sales: showroom, poinTerkumpul: 0)
+        FakturJualOlehSales f = new FakturJualOlehSales(konsumen: konsumen, poinBerlaku: false)
+        f.tambah(new ItemFaktur(produkA, 10, 10000))
+        f.tambah(new ItemFaktur(produkB, 20, 12000))
+        f.proses()
+        f.proses([alamatTujuan: 'Tujuan'])
+
+        ReturFaktur retur1 = new ReturFaktur()
+        retur1.tambah(new ItemBarang(produkA, 5))
+        f.tambahRetur(retur1)
+        assertEquals(0, konsumen.poinTerkumpul)
+        ReturFaktur retur2 = new ReturFaktur()
+        retur2.tambah(new ItemBarang(produkB, 20))
+        f.tambahRetur(retur2)
+        assertEquals(0, konsumen.poinTerkumpul)
+        f.proses([buktiTerima: new BuktiTerima()])
+        assertEquals(0, konsumen.poinTerkumpul)
+    }
+
 
     public void testTotalRetur() {
         Produk produkA = new Produk('Produk A', 50, 10000, 10100)
