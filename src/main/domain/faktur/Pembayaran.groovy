@@ -39,6 +39,8 @@ class Pembayaran {
     @Embedded
     Referensi referensi
 
+    String keteranganPembayaran
+
 //    public void melaluiGiro(String nomorSeri, LocalDate tanggalPenerbitan, LocalDate tanggalEfektif) {
 //        if (bilyetGiro) {
 //            throw new DataTidakBolehDiubah(this)

@@ -47,7 +47,7 @@ class PembayaranHutangAsChildController {
             DialogUtils.message(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
             return
         }
-        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan)
+        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan, keteranganPembayaran: model.keteranganPembayaran)
         if (!purchaseOrderRepository.validate(pembayaran, Default, model)) return
 
         try {
@@ -106,6 +106,7 @@ class PembayaranHutangAsChildController {
             model.jumlah = null
             model.bilyetGiro = null
             model.potongan = false
+            model.keteranganPembayaran = null
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -122,6 +123,7 @@ class PembayaranHutangAsChildController {
                 model.jumlah = selected.jumlah
                 model.potongan = selected.potongan as boolean
                 model.bilyetGiro = selected.bilyetGiro
+                model.keteranganPembayaran = selected.keteranganPembayaran
             }
         }
     }

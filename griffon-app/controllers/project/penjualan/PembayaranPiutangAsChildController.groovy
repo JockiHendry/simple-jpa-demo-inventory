@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ class PembayaranPiutangAsChildController {
             DialogUtils.message(view.mainPanel, 'Pembayaran tidak dapat di-edit.  Hapus dan buat pembayaran baru bila perlu!', 'Edit Pembayaran', JOptionPane.ERROR_MESSAGE)
             return
         }
-        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan)
+        Pembayaran pembayaran = new Pembayaran(tanggal: model.tanggal, jumlah: model.jumlah, potongan: model.potongan, keteranganPembayaran: model.keteranganPembayaran)
         if (model.jenisReferensi.selectedItem && model.nomorReferensi) {
             pembayaran.referensi = new Referensi(model.jenisReferensi.selectedItem.clazz, model.nomorReferensi)
         }
@@ -117,6 +117,7 @@ class PembayaranPiutangAsChildController {
             model.jumlah = null
             model.bilyetGiro = null
             model.potongan = false
+            model.keteranganPembayaran = null
             model.errors.clear()
             view.table.selectionModel.clearSelection()
         }
@@ -133,6 +134,7 @@ class PembayaranPiutangAsChildController {
                 model.jumlah = selected.jumlah
                 model.potongan = selected.potongan as boolean
                 model.bilyetGiro = selected.bilyetGiro
+                model.keteranganPembayaran = selected.keteranganPembayaran
             }
         }
     }

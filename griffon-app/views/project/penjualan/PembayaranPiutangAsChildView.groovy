@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ panel(id: 'mainPanel') {
                     templateRenderer(exp: {!it?'':it.nomorSeri})
                 }
                 glazedColumn(name: 'Referensi', property: 'referensi')
+                glazedColumn(name: 'Keterangan', property: 'keteranganPembayaran')
             }
         }
     }
@@ -77,6 +78,9 @@ panel(id: 'mainPanel') {
             button(action: hapusBilyetGiro)
         }
         errorLabel(path: 'bilyetGiro', constraints: 'wrap')
+        label('Keterangan:')
+        textField(id: 'keteranganPembayaran', columns: 100, text: bind('keteranganPembayaran', target: model, mutual: true), errorPath: 'keteranganPembayaran')
+        errorLabel(path: 'keteranganPembayaran', constraints: 'wrap')
         panel(constraints: 'span, growx, wrap') {
             flowLayout(alignment: FlowLayout.LEADING)
             button(action: save, visible: bind{model.editable})

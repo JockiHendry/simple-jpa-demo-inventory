@@ -268,7 +268,7 @@
 		</band>
 	</detail>
 	<summary>
-		<band height="51">
+		<band height="43">
 			<textField pattern="#,##0">
 				<reportElement x="438" y="10" width="117" height="20" uuid="7f3de1ce-2911-4a90-99fc-de477ffd8842"/>
 				<textElement textAlignment="Right">
@@ -277,11 +277,15 @@
 				<textFieldExpression><![CDATA[$V{totalSemua}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="319" y="10" width="119" height="20" uuid="41e45e97-a9ba-4eeb-bf50-0371734c97be"/>
+				<reportElement x="365" y="10" width="73" height="20" uuid="41e45e97-a9ba-4eeb-bf50-0371734c97be"/>
 				<textElement textAlignment="Right">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="10" width="287" height="32" uuid="ff6cc2ef-70ea-4f11-918a-6fdb318ce8a7"/>
+				<text><![CDATA[*) Nilai profit termasuk piutang yang belum lunas, tidak mencakup potongan piutang, retur penjualan dan biaya lainnya.]]></text>
 			</staticText>
 		</band>
 	</summary>
