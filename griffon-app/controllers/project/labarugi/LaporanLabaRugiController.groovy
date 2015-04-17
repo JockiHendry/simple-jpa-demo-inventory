@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,11 @@ class LaporanLabaRugiController {
     }
 
     def tampilkanLaporan = {
-        model.result = labaRugiService.laporanLabaRugi(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+        if (model.versiDetail) {
+            model.result = labaRugiService.laporanLabaRugiDetail(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+        } else {
+            model.result = labaRugiService.laporanLabaRugi(model.tanggalMulaiCari, model.tanggalSelesaiCari)
+        }
         model.params.'tanggalMulaiCari' = model.tanggalMulaiCari
         model.params.'tanggalSelesaiCari' = model.tanggalSelesaiCari
         close()

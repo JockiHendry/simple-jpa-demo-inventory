@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -40,6 +40,11 @@ class KewajibanPembayaran {
 
     BigDecimal jumlahDibayar(KRITERIA_PEMBAYARAN kriteria = KRITERIA_PEMBAYARAN.SEMUA) {
         listPembayaran.findAll{ it.matches(kriteria) }.sum { it.jumlah } ?: 0
+    }
+
+    BigDecimal jumlahPotongan(String jenisReferensi) {
+        jenisReferensi? (listPembayaran.findAll { it.potongan && it.referensi?.namaClass == jenisReferensi }.sum { it.jumlah } ?: 0):
+            (listPembayaran.findAll { it.potongan && !it.referensi }.sum { it.jumlah }?: 0)
     }
 
     boolean isLunas() {

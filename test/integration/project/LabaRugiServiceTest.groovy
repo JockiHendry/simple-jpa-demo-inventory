@@ -50,13 +50,16 @@ class LabaRugiServiceTest extends DbUnitTestCase {
     }
 
     void testHitungPendapatanKotor() {
-        def (penjualanSales, penjualanEceran, potonganPiutang) = labaRugiService.hitungPenjualan(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
+        def (penjualanSales, penjualanEceran, potonganPiutangReturFaktur, potonganPiutangReturJual, potonganPiutangPoin, potonganPiutangLain) = labaRugiService.hitungPenjualan(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
         assertEquals(20000, penjualanSales as Integer)
         assertEquals(5000, penjualanEceran as Integer)
-        assertEquals(0, potonganPiutang as Integer)
+        assertEquals(0, potonganPiutangReturFaktur as Integer)
+        assertEquals(0, potonganPiutangReturJual as Integer)
+        assertEquals(0, potonganPiutangPoin as Integer)
+        assertEquals(0, potonganPiutangLain as Integer)
 
         def (hpp, ongkosKirimBeli) = labaRugiService.hitungHPP(LocalDate.parse('2014-12-01'), LocalDate.parse('2014-12-31'))
-        assertEquals(11000, hpp.toInteger())
+        assertEquals(11000, hpp.totalNilai().toInteger())
         assertEquals(10000, ongkosKirimBeli.toInteger())
     }
 

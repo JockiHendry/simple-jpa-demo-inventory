@@ -24,6 +24,7 @@ import domain.inventory.PenyesuaianStok
 import domain.inventory.Produk
 import domain.inventory.Transfer
 import domain.labarugi.CacheGlobal
+import domain.labarugi.HargaPokokPenjualan
 import domain.labarugi.ItemNilaiInventory
 import domain.labarugi.JENIS_KATEGORI_KAS
 import domain.labarugi.KATEGORI_SISTEM
@@ -34,6 +35,9 @@ import domain.pembelian.PurchaseOrder
 import domain.penjualan.FakturJual
 import domain.penjualan.FakturJualEceran
 import domain.penjualan.FakturJualOlehSales
+import domain.penjualan.PencairanPoin
+import domain.penjualan.ReturFaktur
+import domain.retur.ReturJual
 import laporan.ItemLabaRugi
 import laporan.NilaiInventoryProduk
 import org.joda.time.LocalDate
@@ -142,42 +146,66 @@ class LabaRugiService {
     }
 
     List hitungPenjualan(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal penjualanSales = 0, penjualanEceran = 0, potonganPiutang = 0
+        BigDecimal penjualanSales = 0, penjualanEceran = 0, potonganPiutangReturFaktur = 0,
+                   potonganPiutangReturJual = 0, potonganPiutangPoin = 0, potonganPiutangLain = 0
         List<FakturJual> fakturJuals = findAllFakturJualByTanggalBetween(tanggalMulai, tanggalSelesai)
         for (FakturJual fakturJual: fakturJuals) {
             if (fakturJual instanceof FakturJualOlehSales) {
                 penjualanSales += fakturJual.nilaiPenjualan()
                 if (fakturJual.piutang) {
-                    potonganPiutang += fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+                    BigDecimal nilaiReturFaktur = fakturJual.piutang.jumlahPotongan(ReturFaktur.simpleName)
+                    BigDecimal nilaiReturJual = fakturJual.piutang.jumlahPotongan(ReturJual.simpleName)
+                    BigDecimal nilaiPencairanPoin = fakturJual.piutang.jumlahPotongan(PencairanPoin.simpleName)
+                    potonganPiutangReturFaktur += nilaiReturFaktur
+                    potonganPiutangReturJual += nilaiReturJual
+                    potonganPiutangPoin += nilaiPencairanPoin
+                    potonganPiutangLain += (fakturJual.piutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN) -
+                        nilaiReturFaktur - nilaiReturJual - nilaiPencairanPoin)
                 }
             } else if (fakturJual instanceof FakturJualEceran) {
                 penjualanEceran += fakturJual.nilaiPenjualan()
             }
         }
-        [penjualanSales, penjualanEceran, potonganPiutang]
+        [penjualanSales, penjualanEceran, potonganPiutangReturFaktur, potonganPiutangReturJual, potonganPiutangPoin, potonganPiutangLain]
+    }
+
+    BigDecimal hitungPotonganHutang(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        BigDecimal hasil = 0
+        List<PurchaseOrder> purchaseOrders = findAllPurchaseOrderByTanggalBetween(tanggalMulai, tanggalSelesai)
+        for (PurchaseOrder po: purchaseOrders) {
+            if (po.fakturBeli?.hutang) {
+                hasil += po.fakturBeli.hutang.jumlahDibayar(KRITERIA_PEMBAYARAN.HANYA_POTONGAN)
+            }
+        }
+        hasil
     }
 
     List hitungHPP(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
-        BigDecimal hasil = 0, ongkosKirim = 0
+        BigDecimal ongkosKirim = 0
+        HargaPokokPenjualan hpp
         CacheGlobal cacheGlobal = new CacheGlobal()
         cacheGlobal.perbaharui(tanggalMulai, tanggalSelesai)
         List<Produk> produks = findAllProduk()
         for (Produk produk: produks) {
             NilaiInventoryProduk info = new NilaiInventoryProduk()
-            hasil += hitungHPP(produk, info, cacheGlobal)
+            if (!hpp) {
+                hpp = hitungHPP(produk, info, cacheGlobal)
+            } else {
+                hpp.tambah(hitungHPP(produk, info, cacheGlobal))
+            }
             ongkosKirim += ((info.qtyPenjualan?:0) * (produk.ongkosKirimBeli?:0))
         }
-        [hasil, ongkosKirim]
+        [hpp, ongkosKirim]
     }
 
-    BigDecimal hitungHPP(Produk produk, NilaiInventoryProduk informasi = null, CacheGlobal cacheGlobal = new CacheGlobal()) {
+    HargaPokokPenjualan hitungHPP(Produk produk, NilaiInventoryProduk informasi = null, CacheGlobal cacheGlobal = new CacheGlobal()) {
         NilaiInventory nilaiInventory = hitungInventory(produk, cacheGlobal)
+        HargaPokokPenjualan hasil = new HargaPokokPenjualan(nilaiInventory)
         if (informasi) {
             informasi.produk = produk
             informasi.nilaiAwal = nilaiInventory.nilai()
         }
         List<ItemStok> itemStoks = cacheGlobal.cariPerubahan(produk)
-        long jumlahPenjualan = 0
         for (ItemStok itemStok: itemStoks) {
             // Abaikan transfer karena tidak mempengaruhi laba rugi
             if (itemStok.referensiStok?.classGudang != Transfer.simpleName) {
@@ -188,30 +216,59 @@ class LabaRugiService {
                         informasi.nilaiAwal += ((itemStok.jumlah?:0) * (harga?:0))
                     }
                 } else {
-                    jumlahPenjualan += itemStok.jumlah
+                    hasil.tambah(itemStok.referensiStok, Math.abs(itemStok.jumlah))
                 }
             }
         }
-        BigDecimal hasil = nilaiInventory.kurang(Math.abs(jumlahPenjualan))
         if (informasi) {
-            informasi.nilaiHPP = hasil
+            informasi.nilaiHPP = hasil.totalNilai()
             informasi.nilaiAkhir = informasi.nilaiAwal - informasi.nilaiHPP
-            informasi.qtyPenjualan = Math.abs(jumlahPenjualan)
+            informasi.qtyPenjualan = hasil.totalQty()
         }
         hasil
     }
 
     List<ItemLabaRugi> laporanLabaRugi(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
         List<ItemLabaRugi> hasil = []
-        def (penjualanSales, penjualanEceran, potonganPiutang) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (penjualanSales, penjualanEceran, potonganPiutangReturFaktur, potonganPiutangReturJual, potonganPiutangPoin, potonganPiutangLain) = hitungPenjualan(tanggalMulai, tanggalSelesai)
         def (hpp, ongkosKirimBeli) = hitungHPP(tanggalMulai, tanggalSelesai)
 
         hasil << new ItemLabaRugi('Pendapatan Piutang Penjualan Sales (Gross)', penjualanSales, null)
         hasil << new ItemLabaRugi('Pendapatan Penjualan Eceran', penjualanEceran, null)
         hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
-        hasil << new ItemLabaRugi('Harga Pokok Penjualan (HPP)', null, hpp)
+        hasil << new ItemLabaRugi('HPP (Penjualan Sales)', null, hpp.nilaiPenjualanOlehSales)
+        hasil << new ItemLabaRugi('HPP (Penjualan Eceran)', null, hpp.nilaiPenjualanEceran)
         hasil << new ItemLabaRugi('Ongkos Kirim Pembelian', null, ongkosKirimBeli)
-        hasil << new ItemLabaRugi('Potongan Piutang', null, potonganPiutang)
+        hasil << new ItemLabaRugi('Potongan Piutang (Retur Faktur)', null, potonganPiutangReturFaktur)
+        hasil << new ItemLabaRugi('Potongan Piutang (Retur Jual)', null, potonganPiutangReturJual)
+        hasil << new ItemLabaRugi('Potongan Piutang (Pencairan Poin)', null, potonganPiutangPoin)
+        hasil << new ItemLabaRugi('Potongan Piutang (Lain-Lain)', null, potonganPiutangLain)
+        hasil << new ItemLabaRugi('Pengeluaran Operasional', null, totalPengeluaran(tanggalMulai, tanggalSelesai))
+
+        hasil
+    }
+
+    List<ItemLabaRugi> laporanLabaRugiDetail(LocalDate tanggalMulai, LocalDate tanggalSelesai) {
+        List<ItemLabaRugi> hasil = []
+        def (penjualanSales, penjualanEceran, potonganPiutangReturFaktur, potonganPiutangReturJual, potonganPiutangPoin, potonganPiutangLain) = hitungPenjualan(tanggalMulai, tanggalSelesai)
+        def (hpp, ongkosKirimBeli) = hitungHPP(tanggalMulai, tanggalSelesai)
+        def potonganHutang = hitungPotonganHutang(tanggalMulai, tanggalSelesai)
+
+        hasil << new ItemLabaRugi('Pendapatan Piutang Penjualan Sales (Gross)', penjualanSales, null)
+        hasil << new ItemLabaRugi('Pendapatan Penjualan Eceran', penjualanEceran, null)
+        hasil << new ItemLabaRugi('Pendapatan Operasional', totalPendapatan(tanggalMulai, tanggalSelesai), null)
+        hasil << new ItemLabaRugi('Potongan Hutang', potonganHutang, null)
+        hasil << new ItemLabaRugi('HPP (Penjualan Sales)', null, hpp.nilaiPenjualanOlehSales)
+        hasil << new ItemLabaRugi('HPP (Penjualan Eceran)', null, hpp.nilaiPenjualanEceran)
+        hasil << new ItemLabaRugi('HPP (Retur Sales)', null, hpp.nilaiReturSales)
+        hasil << new ItemLabaRugi('HPP (Retur Eceran)', null, hpp.nilaiReturEceran)
+        hasil << new ItemLabaRugi('HPP (Penyesuaian)', null, hpp.nilaiPenyesuaianStok)
+        hasil << new ItemLabaRugi('HPP (Lain-Lain)', null, hpp.nilaiLain)
+        hasil << new ItemLabaRugi('Ongkos Kirim Pembelian', null, ongkosKirimBeli)
+        hasil << new ItemLabaRugi('Potongan Piutang (Retur Faktur)', null, potonganPiutangReturFaktur)
+        hasil << new ItemLabaRugi('Potongan Piutang (Retur Jual)', null, potonganPiutangReturJual)
+        hasil << new ItemLabaRugi('Potongan Piutang (Pencairan Poin)', null, potonganPiutangPoin)
+        hasil << new ItemLabaRugi('Potongan Piutang (Lain-Lain)', null, potonganPiutangLain)
         hasil << new ItemLabaRugi('Pengeluaran Operasional', null, totalPengeluaran(tanggalMulai, tanggalSelesai))
 
         hasil

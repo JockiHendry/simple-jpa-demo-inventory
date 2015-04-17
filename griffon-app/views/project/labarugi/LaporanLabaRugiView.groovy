@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Jocki Hendry.
+ * Copyright 2015 Jocki Hendry.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,9 @@ panel(id: 'mainPanel', layout: new MigLayout('', '[right][left,left,grow]', ''))
         dateTimePicker(id: 'tanggalSelesaiCari', localDate: bind('tanggalSelesaiCari', target: model, mutual: true),
                 dateVisible: true, timeVisible: false, focusable: true)
     }
+
+    label('Versi Detail?')
+    checkBox(selected: bind('versiDetail', target: model, mutual: true), constraints: 'wrap')
 
     panel(constraints: 'span, growx, wrap') {
         button('OK', id: 'defaultButton', defaultCapable: true, actionPerformed: controller.tampilkanLaporan)
